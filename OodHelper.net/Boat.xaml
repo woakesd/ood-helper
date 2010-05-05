@@ -1,0 +1,63 @@
+﻿<Window x:Class="OodHelper.net.Boat"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+        Width="394" Height="518"
+      d:DesignHeight="518" d:DesignWidth="394"
+	Title="Boat">
+
+    <Grid Height="478">
+        <Label Content="Boat name" Height="28" HorizontalAlignment="Left" Margin="12,12,0,0" Name="labelBoatName" VerticalAlignment="Top" />
+        <Label Content="Boat class" Height="28" HorizontalAlignment="Left" Margin="12,36,0,0" Name="labelBoatClass" VerticalAlignment="Top" />
+        <Label Content="Sail number" Height="28" HorizontalAlignment="Left" Margin="12,60,0,0" Name="labelSailno" VerticalAlignment="Top" />
+        <Label Content="Dinghy" Height="28" HorizontalAlignment="Left" Margin="12,84,0,0" Name="labelDinghy" VerticalAlignment="Top" />
+        <Label Content="Hull type" Height="28" HorizontalAlignment="Left" Margin="12,108,0,0" Name="labelHull" VerticalAlignment="Top" />
+        <Label Content="Open handicap" Height="28" HorizontalAlignment="Left" Margin="12,132,0,0" Name="labelOpenHandicap" VerticalAlignment="Top" />
+        <Label Content="Handicap status" Height="28" HorizontalAlignment="Left" Margin="12,156,0,0" Name="labelHandicapStatus" VerticalAlignment="Top" />
+        <Label Content="Rolling handicap" Height="28" HorizontalAlignment="Left" Margin="12,180,0,0" Name="labelRollingHandicap" VerticalAlignment="Top" />
+        <Label Content="Small cat handicap" Height="28" HorizontalAlignment="Left" Margin="12,204,0,0" Name="labelSmallCatHandicap" VerticalAlignment="Top" />
+        <Label Content="Engine/Propeller" Height="28" HorizontalAlignment="Left" Margin="12,228,0,0" Name="labelEngine" VerticalAlignment="Top" />
+        <Label Content="Keel" Height="28" HorizontalAlignment="Left" Margin="12,252,0,0" Name="labelKeel" VerticalAlignment="Top" />
+        <Label Content="Non standard features" Height="28" HorizontalAlignment="Left" Margin="12,276,0,0" Name="labelDeviations" VerticalAlignment="Top" />
+        <Label Content="Notes" Height="28" HorizontalAlignment="Left" Margin="12,324,0,0" Name="labelNotes" VerticalAlignment="Top" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="154,12,0,0" Name="boatName" VerticalAlignment="Top" Width="200" MaxLength="20" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="154,36,0,0" Name="boatClass" VerticalAlignment="Top" Width="120" MaxLength="20" />
+        <Button Content="Select" Height="23" HorizontalAlignment="Right" Margin="0,37,18,0" Name="selectClass" VerticalAlignment="Top" Width="75" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="154,60,0,0" Name="sailNumber" VerticalAlignment="Top" Width="120" MaxLength="8" />
+        <CheckBox Content="" Height="16" HorizontalAlignment="Left" Margin="154,88,0,0" Name="dinghy" VerticalAlignment="Top" />
+        <ComboBox Height="23" SelectedItem="id" SelectedIndex="0" HorizontalAlignment="Left" Margin="154,108,0,0" Name="hullType" VerticalAlignment="Top" Width="120">
+            <ComboBoxItem Content="Monohull" />
+            <ComboBoxItem Content="Catamaran (C)" />
+            <ComboBoxItem Content="Open keelboat (K)" />
+        </ComboBox>
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="154,132,0,0" MaxLength="4" Name="openHandicap" VerticalAlignment="Top" Width="74" />
+        <ComboBox Height="23" SelectedIndex="0" HorizontalAlignment="Left" Margin="154,156,0,0" Name="handicapStatus" VerticalAlignment="Top" Width="162">
+            <ComboBoxItem Content="Primary Yardstick (PY)" Name="PY" />
+            <ComboBoxItem Content="Secondary Yardstick (SY)" Name="SY" />
+            <ComboBoxItem Content="Tertiary Number (TN)" Name="TN" />
+            <ComboBoxItem Content="Club Number (CN)" Name="CN" />
+        </ComboBox>
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="154,180,0,0" MaxLength="4" Name="rollingHandicap" VerticalAlignment="Top" Width="74" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="154,204,0,0" MaxLength="5" Name="smallCatHandicap" VerticalAlignment="Top" Width="74" />
+        <ComboBox Height="23" SelectedIndex="0" HorizontalAlignment="Left" Margin="154,228,0,0" Name="engine" VerticalAlignment="Top" Width="102">
+            <ComboBoxItem Content="" />
+            <ComboBoxItem Content="Outboard (OB)" Name="OB" />
+            <ComboBoxItem Content="2 Blade (IB2)" Name="IB2" />
+            <ComboBoxItem Content="3 Blade (IB3)" Name="IB3" />
+            <ComboBoxItem Content="Folding (IBF)" Name="IBF" />
+        </ComboBox>
+        <ComboBox Height="23" SelectedIndex="0" HorizontalAlignment="Left" Margin="154,252,0,0" Name="keel" VerticalAlignment="Top" Width="145">
+            <ComboBoxItem Content="" />
+            <ComboBoxItem Content="Central Keel (F)" Name="keelF" />
+            <ComboBoxItem Content="Adjustable Drop (D)" Name="keelD" />
+            <ComboBoxItem Content="Twin bilge (2K)" Name="keel2K" />
+            <ComboBoxItem Content="Central and bilge (3K)" Name="keel3K" />
+        </ComboBox>
+        <TextBox Height="47" HorizontalAlignment="Left" Margin="154,276,0,0" MaxLength="30" Name="deviations" VerticalAlignment="Top" Width="200" />
+        <TextBox Height="107" HorizontalAlignment="Left" Margin="154,324,0,0" Name="notes" VerticalAlignment="Top" Width="200" />
+        <Button Content="Cancel" Click="cancel_Click" Height="23" HorizontalAlignment="Left" Margin="64,0,0,12" Name="cancel" VerticalAlignment="Bottom" Width="75" />
+        <Button Content="OK" Click="ok_Click" IsDefault="True" Height="23" HorizontalAlignment="Right" Margin="212,0,64,12" Name="ok" VerticalAlignment="Bottom" Width="75" />
+    </Grid>
+</Window>

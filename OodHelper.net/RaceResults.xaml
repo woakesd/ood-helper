@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="OodHelper.net.RaceResults"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+    <Grid>
+        <ToolBarTray Height="36 " Name="toolBarTray1" VerticalAlignment="Top">
+            <ToolBar Height="34 " Name="toolBar1" VerticalAlignment="Top" Margin="3,3,0,0" >
+                <Button Name="ChooseBoats" Click="ChooseBoats_Click" Margin="2" BorderBrush="DarkSeaGreen" BorderThickness="1">Select Boats</Button>
+                <Button Name="Print" Click="Print_Click" Margin="2" BorderBrush="DarkSeaGreen" BorderThickness="1">Print</Button>
+                <Button Name="Close" Click="Close_Click" Margin="2" BorderBrush="DarkSeaGreen" BorderThickness="1">Close</Button>
+            </ToolBar>
+        </ToolBarTray>
+        <DockPanel Margin="0,36,0,0" Name="dockPanel1"  VerticalAlignment="Stretch">
+            <Grid>
+                <TabControl Name="raceTabControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                </TabControl>
+            </Grid>
+        </DockPanel>
+    </Grid>
+</UserControl>

@@ -1,0 +1,20 @@
+﻿<Window x:Class="OodHelper.net.SelectBoats"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="SelectBoats" xmlns:my="http://schemas.microsoft.com/wpf/2008/toolkit"
+        Height="595" Width="788">
+    <Grid >
+        <Grid Height="45" Name="ButtonsPanel" VerticalAlignment="Top">
+            <TextBox Name="Boatname" Width="259" HorizontalAlignment="Left" Margin="47,11,0,11" />
+            <Label Margin="6,11,0,11" Name="findtext" HorizontalAlignment="Left" Width="35">Find</Label>
+            <Button HorizontalAlignment="Right" Margin="0,11,168,11" Name="NewBoat" Width="75" Click="NewBoat_Click">New Boat</Button>
+            <Button HorizontalAlignment="Right" Margin="0,11,87,11" Name="Cancel" Width="75" Click="Cancel_Click">Cancel</Button>
+            <Button HorizontalAlignment="Right" Margin="0,11,6,11" Name="Ok" Width="75" Click="Ok_Click">OK</Button>
+        </Grid>
+        <DockPanel Margin="0,51,386,0" Name="dockPanel1">
+            <DataGrid VerticalAlignment="Stretch" Name="Boats" HorizontalAlignment="Stretch" MouseDoubleClick="Boats_MouseDoubleClick" />
+        </DockPanel>
+        <Grid HorizontalAlignment="Right" Margin="0,52,0,-1" Name="Fleets" Width="350" />
+        <Button Height="23" HorizontalAlignment="Right" Margin="0,151,356,0" Name="Add" VerticalAlignment="Top" Width="23" Click="Add_Click">>></Button>
+    </Grid>
+</Window>
