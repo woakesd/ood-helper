@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,7 +24,23 @@ namespace OodHelper.net
         {
             InitializeComponent();
             Db c = new Db("SELECT * FROM boats");
-            BoatData.ItemsSource = c.GetData(null).DefaultView;
+            DataTable bts = c.GetData(null);
+            BoatData.ItemsSource = bts.DefaultView;
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void AddBoat_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void EditBoat_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -57,8 +57,8 @@ namespace OodHelper.net
             Boats b = new Boats();
             b.ShowDialog();
             //dock.Children.Add(b);
-            //b.HorizontalAlignment = HorizontalAlignment.Stretch;
-            //b.VerticalAlignment = VerticalAlignment.Stretch;
+            b.HorizontalAlignment = HorizontalAlignment.Stretch;
+            b.VerticalAlignment = VerticalAlignment.Stretch;
 
         }
     }
