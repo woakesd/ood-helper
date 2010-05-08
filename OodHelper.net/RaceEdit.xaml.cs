@@ -49,8 +49,6 @@ namespace OodHelper.net
         {
             InitializeComponent();
 
-            scorer = new RollingHandicap();
-
             rid = r;
 
             LoadGrid();
@@ -66,7 +64,7 @@ namespace OodHelper.net
 
         public void LoadGrid()
         {
-            Db c = new Db("SELECT start, timelimit, extension, day, date, event, class, spec " +
+            Db c = new Db("SELECT start, timelimit, extension, day, date, event, class, spec, hc " +
                     "FROM calendar " +
                     "WHERE rid = @rid");
             Hashtable p = new Hashtable();
@@ -82,7 +80,16 @@ namespace OodHelper.net
             racename = eventname + " - " + caldata["class"].ToString().Trim();
             raceclass = caldata["class"].ToString().Trim();
 
-            //ra = new raceTableAdapter();
+            switch (caldata["hc"].ToString())
+            {
+                case "r":
+                    scorer = new RollingHandicap();
+                    break;
+                case "o":
+                    scorer = new OpenHandicap();
+                    break;
+            }
+
             rddb = new Db("SELECT r.rid, r.bid, boatname, boatclass, sailno, r.start, " +
                     "r.fincode, r.fintime, r.laps, r.override_points, r.elapsed, r.standard_corrected, r.corrected, r.place, " +
                     "r.points, r.open_handicap, r.rolling_handicap, r.achieved_handicap, " +
