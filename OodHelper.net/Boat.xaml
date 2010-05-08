@@ -57,7 +57,7 @@
         </ComboBox>
         <TextBox Height="47" HorizontalAlignment="Left" Margin="154,276,0,0" MaxLength="30" Name="deviations" VerticalAlignment="Top" Width="200" />
         <TextBox Height="107" HorizontalAlignment="Left" Margin="154,324,0,0" Name="notes" VerticalAlignment="Top" Width="200" />
-        <Button Content="Cancel" Click="cancel_Click" Height="23" HorizontalAlignment="Left" Margin="64,0,0,12" Name="cancel" VerticalAlignment="Bottom" Width="75" />
+        <Button Content="Cancel" Click="cancel_Click" IsCancel="True" Height="23" HorizontalAlignment="Left" Margin="64,0,0,12" Name="cancel" VerticalAlignment="Bottom" Width="75" />
         <Button Content="OK" Click="ok_Click" IsDefault="True" Height="23" HorizontalAlignment="Right" Margin="212,0,64,12" Name="ok" VerticalAlignment="Bottom" Width="75" />
     </Grid>
 </Window>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -34,17 +35,14 @@ namespace OodHelper.net
             if (rids != null)
             {
                 RaceResults r = new RaceResults(rids);
-                //r.ShowDialog();
                 dock.Children.Add(r);
                 r.HorizontalAlignment = HorizontalAlignment.Stretch;
                 r.VerticalAlignment = VerticalAlignment.Stretch;
-                //dock.Children[0].
             }
         }
 
         private void Admin_Click(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void MySql_Click(object sender, RoutedEventArgs e)
@@ -61,11 +59,19 @@ namespace OodHelper.net
         {
             Boats b = new Boats();
             b.ShowDialog();
-            //dock.Children.Add(b);
             b.HorizontalAlignment = HorizontalAlignment.Stretch;
             b.VerticalAlignment = VerticalAlignment.Stretch;
-
         }
 
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            //Db.Compact();
+        }
+
+        private void MySqlConfig_Click(object sender, RoutedEventArgs e)
+        {
+            MySqlForm f = new MySqlForm();
+            f.ShowDialog();
+        }
     }
 }

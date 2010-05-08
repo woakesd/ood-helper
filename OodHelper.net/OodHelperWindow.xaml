@@ -2,7 +2,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="OodHelper.net" WindowState="Maximized" >
+    Title="OodHelper.net" WindowState="Maximized" Closing="Window_Closing">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -15,7 +15,9 @@
                 <MenuItem Header="_Boats" Name="Boats" Click="Boats_Click" />
                 <MenuItem Header="_People" />
             </MenuItem>
-            <MenuItem Header="_Admin" />
+            <MenuItem Header="_Admin">
+                <MenuItem Header="_MySql" Name="MySqlConfig" Click="MySqlConfig_Click" />
+            </MenuItem>
         </Menu>
         <ToolBarTray Name="mainToolbarTray" VerticalAlignment="Top" Grid.Row="1">
             <ToolBar Name="mainToolbar" VerticalAlignment="Top" Margin="0,0,0,0" >

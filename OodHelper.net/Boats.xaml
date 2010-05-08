@@ -7,7 +7,7 @@
             <ToolBar>
                 <Button Name="AddBoat" Click="AddBoat_Click">Add</Button>
                 <Button Name="EditBoat" Click="EditBoat_Click">Edit</Button>
-                <Button Name="Close" Click="Close_Click">Close</Button>
+                <Button Name="CloseBoats" Click="Close_Click">Close</Button>
             </ToolBar>
         </ToolBarTray>
         <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >

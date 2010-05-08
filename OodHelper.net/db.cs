@@ -11,6 +11,13 @@ namespace OodHelper.net
     [Svn("$Id: db.cs 17583 2010-05-02 17:23:57Z david $")]
     class Db
     {
+        public Db(string connectionString, string sql)
+        {
+            mCon = new SqlCeConnection();
+            mCon.ConnectionString = Properties.Settings.Default.OodHelperConnectionString;
+            mCmd = new SqlCeCommand(sql, mCon);
+        }
+
         public Db(string sql)
         {
             mCon = new SqlCeConnection();
@@ -24,7 +31,7 @@ namespace OodHelper.net
 
             if (File.Exists(".\\data\\oodhelper.sdf"))
             {
-                File.Move(".\\data\\oodhelper.sdf", ".\\data\\oodhelper-" + DateTime.Now.Millisecond.ToString() + ".sdf");
+                File.Move(".\\data\\oodhelper.sdf", ".\\data\\oodhelper-" + DateTime.Now.Ticks.ToString() + ".sdf");
             }
 
             SqlCeEngine ce = new SqlCeEngine(constr);
@@ -303,6 +310,13 @@ CREATE TABLE [series] (
             if (mCon != null) mCon.Dispose();
             if (mCmd != null) mCmd.Dispose();
             if (mAdapt != null) mAdapt.Dispose();
+        }
+
+        public static void Compact()
+        {
+            SqlCeEngine ce = new SqlCeEngine();
+            ce.Compact(Properties.Settings.Default.OodHelperConnectionString);
+            ce.Dispose();
         }
     }
 }
