@@ -112,7 +112,7 @@ namespace OodHelper.net
                     Boat edit = new Boat(bid);
                     if (edit.ShowDialog().Value)
                     {
-                        Db c = new Db("SELECT bid, rhp, ohstat, ohp " +
+                        Db c = new Db("SELECT bid, rolling_handicap, handicap_status, open_handicap " +
                             "FROM boats WHERE bid = @bid");
                         Hashtable p = new Hashtable();
                         p["bid"] = bid;
@@ -121,9 +121,9 @@ namespace OodHelper.net
                             p[o] = d[o];
                         p["rid"] = rr.Rid;
                         c = new Db("UPDATE races " +
-                                "SET hcap = @rhp, " +
-                                "ohstat = @ohstat, " +
-                                "ohp = @ohp " +
+                                "SET rolling_handicap = @rolling_handicap, " +
+                                "handicap_status = @handicap_status, " +
+                                "open_handicap = @open_handicap " +
                                 "WHERE rid = @rid " +
                                 "AND bid = @bid");
                         c.ExecuteNonQuery(p);
@@ -171,11 +171,10 @@ namespace OodHelper.net
                     Db c = new Db(@"UPDATE races
                             SET rid = @torid
                             , start = @start
-                            , bstart = @bstart
                             WHERE rid = @fromrid
                             AND bid = @bid");
                     p["fromrid"] = fromRid;
-                    p["bstart"] = p["start"] + ":00";
+                    p["start"] = p["start"] + ":00";
                     foreach (DataRowView drv in races.SelectedItems)
                     {
                         p["bid"] = drv.Row["bid"];

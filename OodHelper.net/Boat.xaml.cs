@@ -33,10 +33,11 @@ namespace OodHelper.net
             InitializeComponent();
             if (bid != 0)
             {
-                Db get = new Db("SELECT boatname, boatclass, sailno, dngy, h, ohp, ohstat, " +
-                        "rhp, schr, eng, kl, deviations, boatmemo " +
-                        "FROM boats " +
-                        "WHERE bid = @bid");
+                Db get = new Db("SELECT boatname, boatclass, sailno, dinghy, " +
+                    "hulltype, open_handicap, handicap_status, " +
+                    "rolling_handicap, small_cat_handicap_rating, engine_propeller, keel, deviations, boatmemo " +
+                    "FROM boats " +
+                    "WHERE bid = @bid");
                 Hashtable p = new Hashtable();
                 p["bid"] = Bid;
                 Hashtable data = get.GetHashtable(p);
@@ -44,9 +45,9 @@ namespace OodHelper.net
                 boatName.Text = data["boatname"].ToString();
                 boatClass.Text = data["boatclass"].ToString();
                 sailNumber.Text = data["sailno"].ToString();
-                dinghy.IsChecked = (bool)data["dngy"];
-                openHandicap.Text = data["ohp"].ToString();
-                switch (data["ohstat"].ToString())
+                dinghy.IsChecked = (bool)data["dinghy"];
+                openHandicap.Text = data["open_handicap"].ToString();
+                switch (data["handicap_status"].ToString())
                 {
                     case "PY":
                         handicapStatus.SelectedValue = PY;
@@ -61,9 +62,9 @@ namespace OodHelper.net
                         handicapStatus.SelectedValue = CN;
                         break;
                 }
-                rollingHandicap.Text = data["rhp"].ToString();
-                smallCatHandicap.Text = data["schr"].ToString();
-                switch (data["eng"].ToString())
+                rollingHandicap.Text = data["rolling_handicap"].ToString();
+                smallCatHandicap.Text = data["small_cat_handicap_rating"].ToString();
+                switch (data["engine_propeller"].ToString())
                 {
                     case "OB":
                         engine.SelectedValue = OB;
@@ -78,7 +79,7 @@ namespace OodHelper.net
                         engine.SelectedValue = IBF;
                         break;
                 }
-                switch (data["kl"].ToString())
+                switch (data["keel"].ToString())
                 {
                     case "F":
                         keel.SelectedValue = keelF;
@@ -238,21 +239,23 @@ namespace OodHelper.net
             Db save;
             if (Bid == 0)
                 save = new Db("INSERT INTO boats " +
-                        "(boatname, boatclass, sailno, dngy, h, ohp, ohstat, rhp, schr, eng, kl, deviations, boatmemo) " +
+                        "(boatname, boatclass, sailno, dinghy, hulltype, open_handicap, " +
+                        "handicap_status, rolling_handicap, small_cat_handicap_status, " +
+                        "engine_propeller, keel, deviations, boatmemo) " +
                         "VALUES (@boatname, @boatclass, @sailno, @dngy, @h, @ohp, @ohstat, @rhp, @schr, @eng, @kl, @deviations, @boatmemo)");
             else
                 save = new Db("UPDATE boats " +
                         "SET boatname = @boatname, " +
                         "boatclass = @boatclass, " +
                         "sailno = @sailno, " +
-                        "dngy = @dngy, " +
-                        "h = @h, " +
-                        "ohp = @ohp, " +
-                        "ohstat = @ohstat, " +
-                        "rhp = @rhp, " +
-                        "schr = @schr, " +
-                        "eng = @eng, " +
-                        "kl = @kl, " +
+                        "dinghy = @dngy, " +
+                        "hulltype = @h, " +
+                        "open_handicap = @ohp, " +
+                        "handicap_status = @ohstat, " +
+                        "rolling_handicap = @rhp, " +
+                        "small_cat_handicap_rating = @schr, " +
+                        "engine_propeller = @eng, " +
+                        "keel = @kl, " +
                         "deviations = @deviations, " +
                         "boatmemo = @boatmemo " +
                         "WHERE bid = @bid");
