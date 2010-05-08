@@ -47,7 +47,7 @@ namespace OodHelper.net.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Server=192.168.2.2;Database=peycrace;User Id=peycrace;Password=xxxxxxxx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Server=192.168.2.2;Database=peycrace;User Id=peycrace;Password=xxxxxxx")]
         public string mysql {
             get {
                 return ((string)(this["mysql"]));

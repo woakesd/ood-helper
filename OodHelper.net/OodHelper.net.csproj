@@ -168,6 +168,7 @@
   <ItemGroup>
     <Compile Include="Common.cs" />
     <Compile Include="db.cs" />
+    <Compile Include="OpenHandicap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -188,7 +189,9 @@
       <DependentUpon>RaceResults.xaml</DependentUpon>
     </Compile>
     <Compile Include="RaceScore.cs" />
-    <Compile Include="RollingHandicap.cs" />
+    <Compile Include="RollingHandicap.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="SelectBoats.xaml.cs">
       <DependentUpon>SelectBoats.xaml</DependentUpon>
     </Compile>
@@ -251,9 +254,7 @@
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="data\oodhelper.sdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Folder Include="data\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

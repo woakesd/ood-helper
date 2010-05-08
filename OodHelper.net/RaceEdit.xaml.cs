@@ -66,29 +66,27 @@ namespace OodHelper.net
 
         public void LoadGrid()
         {
-            Db c = new Db("SELECT * " +
+            Db c = new Db("SELECT start, timelimit, extension, day, date, event, class, spec " +
                     "FROM calendar " +
                     "WHERE rid = @rid");
             Hashtable p = new Hashtable();
             p["rid"] = Rid;
             caldata = c.GetHashtable(p);
-            //rcaldata = new calRaceEditTableAdapter();
-            //caldata = rcaldata.GetData(Rid);
 
             start.Text = caldata["start"].ToString();
             timeLimit.Text = caldata["timelimit"].ToString();
             extension.Text = caldata["extension"].ToString();
-            raceName.Content = caldata["dow"].ToString() + " " +
+            raceName.Content = caldata["day"].ToString() + " " +
                 ((DateTime)caldata["date"]).ToString("dd MMM yyyy");
             eventname = caldata["event"].ToString().Trim();
             racename = eventname + " - " + caldata["class"].ToString().Trim();
             raceclass = caldata["class"].ToString().Trim();
 
             //ra = new raceTableAdapter();
-            rddb = new Db("SELECT r.rid, r.bid, boatname, boatclass, sailno, r.bstart, r.start, " +
-                    "r.fincode, r.fintime, r.laps, r.elapsed, r.stdcorr, r.corrected, r.place, " +
-                    "r.pts, r.ohp, r.hcap, r.achhc, " +
-                    "r.newhc, r.ohstat, r.c, r.a " +
+            rddb = new Db("SELECT r.rid, r.bid, boatname, boatclass, sailno, r.start, " +
+                    "r.fincode, r.fintime, r.laps, r.override_points, r.elapsed, r.standard_corrected, r.corrected, r.place, " +
+                    "r.points, r.open_handicap, r.rolling_handicap, r.achieved_handicap, " +
+                    "r.new_rolling_handicap, r.handicap_status, r.c, r.a " +
                     "FROM races r INNER JOIN boats ON boats.bid = r.bid " +
                     "WHERE r.rid = @rid " +
                     "ORDER BY place");
@@ -107,6 +105,7 @@ namespace OodHelper.net
             rd.Columns["fincode"].ReadOnly = false;
             rd.Columns["fintime"].ReadOnly = false;
             rd.Columns["laps"].ReadOnly = false;
+            rd.Columns["override_points"].ReadOnly = false;
 
             Races.ItemsSource = rd.DefaultView;
 
@@ -123,7 +122,7 @@ namespace OodHelper.net
             b.Converter = new intTimeSpan();
             col.Binding = b;
 
-            col = (DataGridTextColumn)Races.Columns[rd.Columns["stdcorr"].Ordinal];
+            col = (DataGridTextColumn)Races.Columns[rd.Columns["standard_corrected"].Ordinal];
             b = (Binding)col.Binding;
             b.Converter = new dblTimeSpan();
             col.Binding = b;
@@ -138,13 +137,13 @@ namespace OodHelper.net
             x.R = 240;
             x.B = 240;
             x.G = 240;
-            SolidColorBrush lg = new SolidColorBrush(x);
+            SolidColorBrush vlg = new SolidColorBrush(x);
             foreach (DataGridColumn c in Races.Columns)
             {
                 if (rd.Columns[(string) c.Header].ReadOnly)
                 {
                     c.CellStyle = new System.Windows.Style();
-                    c.CellStyle.Setters.Add(new Setter(DataGridCell.BackgroundProperty, lg));
+                    c.CellStyle.Setters.Add(new Setter(DataGridCell.BackgroundProperty, vlg));
                     c.CellStyle.Setters.Add(new Setter(DataGridCell.ForegroundProperty, Brushes.Black));
                 }
             }
@@ -175,8 +174,8 @@ namespace OodHelper.net
         public void DoAutoPopulate()
         {
             Db add = new Db(@"INSERT INTO races
-                    (rid, date, bid, hcap, ohstat, start, bstart, ohp, ihp)
-                    SELECT c.rid, c.date, b.bid, b.rhp, b.ohstat, c.start, c.start + ':00', b.ohp, b.ihp
+                    (rid, date, bid, rolling_handicap, handicap_status, start, open_handicap)
+                    SELECT c.rid, c.date, b.bid, b.rolling_handicap, b.handicap_status, c.start + ':00', b.open_handicap
                     FROM boats b, calendar c
                     WHERE b.bid = @bid
                     AND c.rid = @rid");
@@ -286,12 +285,11 @@ namespace OodHelper.net
             if (rx.IsMatch(start.Text))
             {
                 Db u = new Db(@"UPDATE races
-                        SET start = @start, bstart = @bstart
+                        SET start = @start
                         WHERE rid = @rid");
                 Hashtable p = new Hashtable();
                 start.Text = start.Text.Replace(' ', ':');
-                p["start"] = start.Text;
-                p["bstart"] = start.Text + ":00";
+                p["start"] = start.Text + ":00";
                 p["rid"] = Rid;
                 u.ExecuteNonQuery(p);
 

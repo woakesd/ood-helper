@@ -52,6 +52,11 @@ namespace OodHelper.net
             Common.copyMySqlData();
         }
 
+        private void SqlCe_Click(object sender, RoutedEventArgs e)
+        {
+            Db.CreateDb();
+        }
+
         private void Boats_Click(object sender, RoutedEventArgs e)
         {
             Boats b = new Boats();
@@ -61,5 +66,6 @@ namespace OodHelper.net
             b.VerticalAlignment = VerticalAlignment.Stretch;
 
         }
+
     }
 }

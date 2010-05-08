@@ -14,7 +14,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="mysql" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Server=192.168.2.2;Database=peycrace;User Id=peycrace;Password=xxxxxxxx</Value>
+      <Value Profile="(Default)">Server=192.168.2.2;Database=peycrace;User Id=peycrace;Password=xxxxxxx</Value>
     </Setting>
   </Settings>
 </SettingsFile>

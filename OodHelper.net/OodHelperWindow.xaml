@@ -22,6 +22,7 @@
                 <Button Name="Results" Click="Results_Click" Margin="2" BorderBrush="DarkSeaGreen" BorderThickness="1">Results</Button>
                 <Button Name="Admin" Click="Admin_Click" Margin="2" BorderBrush="DarkSeaGreen" BorderThickness="1">Admin</Button>
                 <Button Name="MySql" Click="MySql_Click" Margin="2" BorderBrush="DarkSeaGreen" BorderThickness="1">MySql</Button>
+                <Button Name="SqlCe" Click="SqlCe_Click" Margin="2" BorderBrush="DarkSeaGreen" BorderThickness="1">SqlCe</Button>
             </ToolBar>
         </ToolBarTray>
         <DockPanel Grid.Row="2" Margin="0,0,0,0" Name="dock">

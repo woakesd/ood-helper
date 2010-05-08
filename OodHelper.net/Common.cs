@@ -59,23 +59,19 @@ namespace OodHelper.net
             scmd.CommandText = "DELETE FROM boats";
             scmd.ExecuteNonQuery();
 
-            scmd.CommandText = "SET IDENTITY_INSERT boats ON";
-            scmd.ExecuteNonQuery();
-            
-            SqlCeCommand ins = new SqlCeCommand("INSERT INTO [boats] ([boatname], [boatclass], [sailno], [dngy], [h], [bid], [distance], [crewname], [ohp], [ohstat], [chp], [rhp], [ihp], [csf], [eng], [kl], [deviations], [subscriptn], [p], [s], [id], [beaten], [berth], [boatmemo], [hired]) " +
-                "VALUES (@boatname, @boatclass, @sailno, @dngy, @h, @bid, @distance, @crewname, @ohp, @ohstat, @chp, @rhp, @ihp, @csf, @eng, @kl, @deviations, @subscriptn, @p, @s, @id, @beaten, @berth, @boatmemo, @hired)"
+            SqlCeCommand ins = new SqlCeCommand("INSERT INTO [boats] " +
+                "([bid], [id], [boatname], [boatclass], [sailno], [dinghy], [hulltype], [distance], [crewname], [open_handicap], [handicap_status], [rolling_handicap], [crew_skill_factor], [engine_propeller], [keel], [deviations], [subscription], [berth], [boatmemo], [hired], [p], [s], [beaten]) " +
+                "VALUES " +
+                "(@bid, @id, @boatname, @boatclass, @sailno, @dngy, @h, @distance, @crewname, @ohp, @ohstat, @rhp, @csf, @eng, @kl, @deviations, @subscriptn, @berth, @boatmemo, @hired, @p, @s, @beaten)"
                 , scon);
             
             copyData(mtable, ins);
 
-            scmd.CommandText = "SET IDENTITY_INSERT boats OFF";
-            scmd.ExecuteNonQuery();
-
             //
             // Events
             //
-            ins.CommandText = "INSERT INTO [calendar] ([rid], [date], [dow], [class], [event], [start], [gp], [course], [ood], [venue], [spec], [hc], [hc_ul], [hc_meth], [vis], [flag], [timelimit], [extension], [computer], [memo], [r], [app], [p], [sct], [check]) " +
-                "VALUES (@rid, @date, @dow, @class, @event, @start, @gp, @course, @ood, @venue, @spec, @hc, @hc_ul, @hc_meth, @vis, @flag, @timelimit, @extension, @computer, @memo, @r, @app, @p, @sct, @check)";
+            ins.CommandText = "INSERT INTO [calendar] ([rid], [date], [day], [class], [event], [start], [gp], [course], [ood], [venue], [spec], [hc], [hc_ul], [hc_meth], [vis], [flag], [timelimit], [extension], [computer], [memo], [raced], [app], [p], [standard_corrected_time]) " +
+                "VALUES (@rid, @date, @dow, @class, @event, @start, @gp, @course, @ood, @venue, @spec, @hc, @hc_ul, @hc_meth, @vis, @flag, @timelimit, @extension, @computer, @memo, @r, @app, @p, @sct)";
 
             myadp = new MySqlDataAdapter("SELECT * FROM calendar", mcon);
             mtable = new DataTable();
@@ -84,19 +80,13 @@ namespace OodHelper.net
             scmd.CommandText = "DELETE FROM calendar";
             scmd.ExecuteNonQuery();
 
-            scmd.CommandText = "SET IDENTITY_INSERT calendar ON";
-            scmd.ExecuteNonQuery();
-
             copyData(mtable, ins);
-
-            scmd.CommandText = "SET IDENTITY_INSERT calendar OFF";
-            scmd.ExecuteNonQuery();
 
             //
             // People
             //
-            ins.CommandText = "INSERT INTO [PEOPLE] ([id], [firstname], [surname], [address1], [address2], [address3], [address4], [postcode], [hometel], [worktel], [mobile], [email], [club], [member], [cp], [s], [sid], [check], [manmemo], [novice]) " +
-                "VALUES (@id, @firstname, @surname, @address1, @address2, @address3, @address4, @postcode, @hometel, @worktel, @mobile, @email, @club, @member, @cp, @s, @sid, @check, @manmemo, @novice)";
+            ins.CommandText = "INSERT INTO [PEOPLE] ([id], [main_id], [firstname], [surname], [address1], [address2], [address3], [address4], [postcode], [hometel], [worktel], [mobile], [email], [club], [member], [cp], [s], [manmemo], [novice]) " +
+                "VALUES (@id, @sid, @firstname, @surname, @address1, @address2, @address3, @address4, @postcode, @hometel, @worktel, @mobile, @email, @club, @member, @cp, @s, @manmemo, @novice)";
 
             myadp = new MySqlDataAdapter("SELECT * FROM people", mcon);
             mtable = new DataTable();
@@ -105,19 +95,13 @@ namespace OodHelper.net
             scmd.CommandText = "DELETE FROM people";
             scmd.ExecuteNonQuery();
 
-            scmd.CommandText = "SET IDENTITY_INSERT people ON";
-            scmd.ExecuteNonQuery();
-
             copyData(mtable, ins);
-
-            scmd.CommandText = "SET IDENTITY_INSERT people OFF";
-            scmd.ExecuteNonQuery();
 
             //
             // Races
             //
-            ins.CommandText = "INSERT INTO [races] ([rid], [date], [bid], [fincode], [fintime], [findate], [laps], [elapsed], [corrected], [hcap], [place], [stdcorr], [ohstat], [a], [achhc], [prfdx], [newhc], [c], [start], [bstart], [pts], [ov_pts], [ohp], [ihp], [check]) " +
-                "VALUES (@rid, @date, @bid, @fincode, @fintime, @findate, @laps, @elapsed, @corrected, @hcap, @place, @stdcorr, @ohstat, @a, @achhc, @prfdx, @newhc, @c, @start, @bstart, @pts, @ov_pts, @ohp, @ihp, @check)";
+            ins.CommandText = "INSERT INTO [races] ([rid], [bid], [date], [start], [fincode], [fintime], [findate], [laps], [elapsed], [corrected], [standard_corrected], [handicap_status], [open_handicap], [rolling_handicap], [achieved_handicap], [new_rolling_handicap], [place], [points], [override_points], [performance_index], [a], [c]) " +
+                "VALUES (@rid, @bid, @date, @bstart, @fincode, @fintime, @findate, @laps, @elapsed, @corrected, @stdcorr, @ohstat, @ohp, @hcap, @achhc, @newhc, @place, @pts, @ov_pts, @prfdx, @a, @c)";
             myadp = new MySqlDataAdapter("SELECT * FROM races", mcon);
             mtable = new DataTable();
             myadp.Fill(mtable);

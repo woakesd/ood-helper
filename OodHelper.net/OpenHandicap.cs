@@ -8,8 +8,8 @@ using System.Collections;
 
 namespace OodHelper.net
 {
-    [Svn("$Id: RollingHandicap.cs 17583 2010-05-02 17:23:57Z david $")]
-    class RollingHandicap : RaceScore
+    [Svn("$Id$")]
+    class OpenHandicap : RaceScore
     {
         private double standardCorrectedTime;
         private double averageCorrectedTime;
@@ -40,6 +40,7 @@ namespace OodHelper.net
             Hashtable res = c.GetHashtable(p);
             rdate = (DateTime)res["date"];
             racetype = res["spec"].ToString();
+            //handicap = res["hc"].ToString();
             CorrectedTime();
             CalculateSct();
             Score();
@@ -96,8 +97,7 @@ namespace OodHelper.net
 
                         int l = (int) dr["laps"];
                         
-                        int hcap = (int) dr["rolling_handicap"];
-                        int ohp = (int) dr["open_handicap"];
+                        int hcap = (int) dr["open_handicap"];
 
                         //
                         // if spec is 'a' then this is average lap so corrected times are per lap,
@@ -106,13 +106,12 @@ namespace OodHelper.net
                         if (racetype == "a")
                         {
                             dr["corrected"] = Math.Round(e.TotalSeconds * 1000 / hcap / l);
-                            dr["standard_corrected"] = Math.Round(e.TotalSeconds * 1000 / ohp / l);
                         }
                         else
                         {
                             dr["corrected"] = Math.Round(e.TotalSeconds * 1000 / hcap);
-                            dr["standard_corrected"] = Math.Round(e.TotalSeconds * 1000 / ohp);
                         }
+                        dr["standard_corrected"] = dr["corrected"];
                         dr["place"] = 0;
                     }
                 }
@@ -126,9 +125,6 @@ namespace OodHelper.net
 
         private void CalculateSct()
         {
-            Properties.Settings s = new Properties.Settings();
-            bool useStd = s.useStd;
-
             //
             // First select the boats in the race that have Portsmouth, Secondary, Recorded or
             // Club numbers (handicaps).  These will be called good boats in the comments.
@@ -163,10 +159,7 @@ namespace OodHelper.net
 
             for (int i = 0; i < n; i++)
             {
-                if (useStd)
-                    total = total + (double) d.Rows[i]["standard_corrected"];
-                else
-                    total = total + (double) d.Rows[i]["corrected"];
+                total = total + (double) d.Rows[i]["standard_corrected"];
             }
 
             averageCorrectedTime = total / n;
@@ -190,10 +183,7 @@ namespace OodHelper.net
                 {
                     row["a"] = DBNull.Value;
                     goodBoats++;
-                    if (useStd)
-                        standardCorrectedTime = standardCorrectedTime + (double)row["standard_corrected"];
-                    else
-                        standardCorrectedTime = standardCorrectedTime + (double)row["corrected"];
+                    standardCorrectedTime = standardCorrectedTime + (double)row["standard_corrected"];
                 }           
             }
 
