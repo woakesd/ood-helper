@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         >
     <Grid>
-        <ToolBarTray Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,0,0">
+        <ToolBarTray Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,0,0">
             <ToolBar>
                 <Button Name="AddBoat" Click="AddBoat_Click">Add</Button>
                 <Button Name="EditBoat" Click="EditBoat_Click">Edit</Button>
@@ -11,7 +11,13 @@
             </ToolBar>
         </ToolBarTray>
         <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
-            <DataGrid Margin="0,27,0,0" Name="BoatData" IsReadOnly="True" />
+            <DataGrid Margin="0,25,0,0" Name="BoatData" IsReadOnly="True" >
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Edit" Click="EditBoat_Click" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+            </DataGrid>
         </DockPanel>
     </Grid>
 </Window>

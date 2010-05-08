@@ -23,6 +23,11 @@ namespace OodHelper.net
         public Boats()
         {
             InitializeComponent();
+            LoadGrid();
+        }
+
+        private void LoadGrid()
+        {
             Db c = new Db("SELECT * FROM boats");
             DataTable bts = c.GetData(null);
             BoatData.ItemsSource = bts.DefaultView;
@@ -35,10 +40,27 @@ namespace OodHelper.net
 
         private void AddBoat_Click(object sender, RoutedEventArgs e)
         {
-
+            Boat b = new Boat(0);
+            if (b.ShowDialog().Value)
+            {
+                LoadGrid();
+            }
         }
 
         private void EditBoat_Click(object sender, RoutedEventArgs e)
+        {
+            if (BoatData.SelectedItem != null)
+            {
+                DataRowView i = (DataRowView) BoatData.SelectedItem;
+                Boat b = new Boat((int)i.Row["bid"]);
+                if (b.ShowDialog().Value)
+                {
+                    LoadGrid();
+                }
+            }
+        }
+
+        private void Edit_Click(object sender, RoutedEventArgs e)
         {
 
         }
