@@ -37,8 +37,10 @@ namespace OodHelper.net
 
         public static void copyMySqlData()
         {
-            //Properties.Settings s = new Properties.Settings();
             string mysql = (string)DbSettings.GetSetting("mysql");
+            MySqlConnectionStringBuilder mcsb = new MySqlConnectionStringBuilder(mysql);
+            mcsb.SslMode = MySqlSslMode.Required;
+            mysql = mcsb.ConnectionString;
             MySqlConnection mcon = new MySqlConnection(mysql);
             mcon.Open();
 

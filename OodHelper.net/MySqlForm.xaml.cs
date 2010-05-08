@@ -17,17 +17,20 @@ namespace OodHelper.net
     /// <summary>
     /// Interaction logic for MySqlForm.xaml
     /// </summary>
+    [Svn("$Id$")]
     public partial class MySqlForm : Window
     {
         public MySqlForm()
         {
             InitializeComponent();
             string myconstring = (string)DbSettings.GetSetting("mysql");
+            myconstring += ";Ssl Mode=Required";
             MySqlConnectionStringBuilder mcsb = new MySqlConnectionStringBuilder(myconstring);
             Server.Text = mcsb.Server;
             Username.Text = mcsb.UserID;
             Password.Text = mcsb.Password;
             Database.Text = mcsb.Database;
+            Port.Text = mcsb.Port.ToString();
             UseCompression.IsChecked = mcsb.UseCompression;
         }
 
@@ -39,6 +42,10 @@ namespace OodHelper.net
             mcsb.Password = Password.Text;
             mcsb.Database = Database.Text;
             mcsb.UseCompression = UseCompression.IsChecked.Value;
+            MySqlSslMode ms = new MySqlSslMode();
+            uint port = mcsb.Port;
+            UInt32.TryParse(Port.Text, out port);
+            mcsb.Port = port;
             DbSettings.AddSetting("mysql", mcsb.ConnectionString);
             DialogResult = true;
         }
