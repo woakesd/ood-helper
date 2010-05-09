@@ -24,8 +24,9 @@
         <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
             <DataGrid Margin="0,55,0,0" Name="PeopleData" IsReadOnly="True" >
                 <DataGrid.ContextMenu>
-                    <ContextMenu>
+                    <ContextMenu Opened="ContextMenu_Opened">
                         <MenuItem Header="Edit" Click="EditPerson_Click" />
+                        <MenuItem Header="Add family member" Click="AddFamilyMember_Click" Name="AddFamilyMember" />
                     </ContextMenu>
                 </DataGrid.ContextMenu>
             </DataGrid>

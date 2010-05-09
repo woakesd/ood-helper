@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using System.Windows;
@@ -10,31 +9,36 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace OodHelper.net
 {
     /// <summary>
-    /// Interaction logic for Boat.xaml
+    /// Interaction logic for FamilyMember.xaml
     /// </summary>
-    [Svn("$Id$")]
-    public partial class Person : Window
+    public partial class FamilyMember : Window
     {
-        private int id;
+        private int mId;
         public int Id
         {
-            get { return id; }
+            get { return mId; }
         }
 
-        public Person(int pid)
+        private int mMainId;
+        public int MainId
         {
-            id = pid;
+            get { return mMainId; }
+        }
+
+        public FamilyMember(int id, int mainid)
+        {
             InitializeComponent();
+            mId = id;
+            mMainId = mainid;
             if (Id != 0)
             {
-                Db get = new Db("SELECT firstname, surname, address1, address2, address3, address4, " +
-                    "postcode, hometel, mobile, worktel, email, club, member, manmemo " +
+                Db get = new Db("SELECT firstname, surname, " +
+                    "hometel, mobile, worktel, email, manmemo " +
                     "FROM people " +
                     "WHERE id = @id");
                 Hashtable p = new Hashtable();
@@ -44,18 +48,11 @@ namespace OodHelper.net
                 ID.Text = Id.ToString();
                 FirstName.Text = data["firstname"].ToString();
                 LastName.Text = data["surname"].ToString();
-                Address1.Text = data["address1"].ToString();
-                Address2.Text = data["address2"].ToString();
-                Address3.Text = data["address3"].ToString();
-                Address4.Text = data["address4"].ToString();
-                Postcode.Text = data["postcode"].ToString();
                 HomePhone.Text = data["hometel"].ToString();
                 MobilePhone.Text = data["mobile"].ToString();
                 WorkPhone.Text = data["worktel"].ToString();
                 Email.Text = data["email"].ToString();
-                Club.Text = data["club"].ToString();
-                Membership.Text = data["member"].ToString();
-                Notes.Text = data["manmemo"].ToString();
+                Notes.Text = data["manmemo"].ToString();                
             }
             else
             {
@@ -75,7 +72,6 @@ namespace OodHelper.net
                 }
             }
         }
-
         private void cancel_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
@@ -88,18 +84,13 @@ namespace OodHelper.net
             Hashtable p = new Hashtable();
             p["firstname"] = FirstName.Text;
             p["surname"] = LastName.Text;
-            p["address1"] = Address1.Text;
-            p["address2"] = Address2.Text;
-            p["address3"] = Address3.Text;
-            p["address4"] = Address4.Text;
-            p["postcode"] = Postcode.Text;
             p["hometel"] = HomePhone.Text;
             p["mobile"] = MobilePhone.Text;
             p["worktel"] = WorkPhone.Text;
             p["email"] = Email.Text;
-            p["club"] = Club.Text;
-            p["member"] = Membership.Text;
+            p["member"] = "Fmemb";
             p["manmemo"] = Notes.Text;
+            p["main_id"] = MainId;
             p["id"] = Id;
             Db save;
             if (Id == 0)
@@ -107,28 +98,21 @@ namespace OodHelper.net
                 save = new Db("INSERT INTO people " +
                     "(main_id, firstname, surname, address1, address2, address3, address4, " +
                     "postcode, hometel, mobile, worktel, email, club, member, manmemo) " +
-                    "VALUES (@main_id, @firstname, @surname, @address1, @address2, @address3, @address4, " +
-                    "@postcode, @hometel, @mobile, @worktel, @email, @club, @member, @manmemo)");
-                id = save.GetNextIdentity("people", "id");
-                p["main_id"] = Id;
+                    "SELECT id, @firstname, @surname, address1, address2, address3, address4, " +
+                    "postcode, @hometel, @mobile, @worktel, @email, club, @member, @manmemo " +
+                    "FROM people " +
+                    "WHERE id = @main_id");
                 save.ExecuteNonQuery(p);
-             }
+            }
             else
             {
                 save = new Db("UPDATE people " +
-                        "SET main_id = @id, " +
-                        "firstname = @firstname, " +
+                        "SET firstname = @firstname, " +
                         "surname = @surname, " +
-                        "address1 = @address1, " +
-                        "address2 = @address2, " +
-                        "address3 = @address3, " +
-                        "address4 = @address4, " +
-                        "postcode = @postcode, " +
                         "hometel = @hometel, " +
                         "mobile = @mobile, " +
                         "worktel = @worktel, " +
                         "email = @email, " +
-                        "club = @club, " +
                         "member = @member, " +
                         "manmemo = @manmemo " +
                         "WHERE id = @id");

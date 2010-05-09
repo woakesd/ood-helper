@@ -54,10 +54,21 @@ namespace OodHelper.net
             if (PeopleData.SelectedItem != null)
             {
                 DataRowView i = (DataRowView) PeopleData.SelectedItem;
-                Person p = new Person((int)i.Row["id"]);
-                if (p.ShowDialog().Value)
+                if ((int)i.Row["id"] == (int)i.Row["main_id"])
                 {
-                    LoadGrid();
+                    Person p = new Person((int)i.Row["id"]);
+                    if (p.ShowDialog().Value)
+                    {
+                        LoadGrid();
+                    }
+                }
+                else
+                {
+                    FamilyMember f = new FamilyMember((int)i.Row["id"], (int)i.Row["main_id"]);
+                    if (f.ShowDialog().Value)
+                    {
+                        LoadGrid();
+                    }
                 }
             }
         }
@@ -111,6 +122,29 @@ namespace OodHelper.net
             catch (Exception ex)
             {
                 string x = ex.Message;
+            }
+        }
+
+        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            if (PeopleData.SelectedItem != null)
+            {
+                DataRowView i = (DataRowView)PeopleData.SelectedItem;
+                if ((int)i.Row["id"] == (int)i.Row["main_id"])
+                    AddFamilyMember.IsEnabled = true;
+                else
+                    AddFamilyMember.IsEnabled = false;
+            }
+        }
+
+        private void AddFamilyMember_Click(object sender, RoutedEventArgs e)
+        {
+            DataRowView i = (DataRowView) PeopleData.SelectedItem;
+            if ((int)i.Row["id"] == (int)i.Row["main_id"] && (string)i.Row["member"] == "Family")
+            {
+                FamilyMember f = new FamilyMember(0, (int)i.Row["main_id"]);
+                if (f.ShowDialog().Value)
+                    LoadGrid();
             }
         }
     }

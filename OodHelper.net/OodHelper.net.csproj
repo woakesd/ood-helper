@@ -114,6 +114,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="FamilyMember.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="People.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -175,6 +179,9 @@
     </Compile>
     <Compile Include="Boats.xaml.cs">
       <DependentUpon>Boats.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FamilyMember.xaml.cs">
+      <DependentUpon>FamilyMember.xaml</DependentUpon>
     </Compile>
     <Compile Include="People.xaml.cs">
       <DependentUpon>People.xaml</DependentUpon>

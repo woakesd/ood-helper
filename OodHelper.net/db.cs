@@ -296,6 +296,27 @@ CREATE TABLE [series] (
             return t;
         }
 
+        public int GetNextIdentity(string table, string column)
+        {
+            mCon.Open();
+            try
+            {
+                SqlCeCommand cmd = mCon.CreateCommand();
+                cmd.CommandText = @"SELECT autoinc_next
+                    FROM information_schema.columns
+                    WHERE table_name = @table
+                    AND column_name = @column";
+                cmd.Parameters.Add("table", table);
+                cmd.Parameters.Add("column", column);
+                long nextid = (long)cmd.ExecuteScalar();
+                return (int)nextid;
+            }
+            finally
+            {
+                mCon.Close();
+            }
+        }
+
         public int Commit(DataTable d)
         {
             SqlCeCommandBuilder cmb = new SqlCeCommandBuilder(mAdapt);
