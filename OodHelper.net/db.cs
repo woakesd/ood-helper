@@ -45,7 +45,7 @@ namespace OodHelper.net
                 SqlCeCommand cmd = con.CreateCommand();
                 cmd.CommandText = @"
 CREATE TABLE [boats] (
-  [bid] int NOT NULL
+  [bid] int NOT NULL IDENTITY (1,1)
 , [id] int NULL
 , [boatname] nvarchar(20) NULL
 , [boatclass] nvarchar(20) NULL
@@ -74,7 +74,7 @@ CREATE TABLE [boats] (
 
                 cmd.CommandText = @"
 CREATE TABLE [calendar] (
-  [rid] int NOT NULL
+  [rid] int NOT NULL IDENTITY (1,1)
 , [date] datetime NULL
 , [day] nvarchar(3) NULL
 , [class] nvarchar(20) NULL
@@ -110,7 +110,7 @@ CREATE TABLE [calendar_series_join] (
 
                 cmd.CommandText = @"
 CREATE TABLE [people] (
-  [id] int NOT NULL
+  [id] int NOT NULL IDENTITY (1,1)
 , [main_id] int NULL
 , [firstname] nvarchar(20) NULL
 , [surname] nvarchar(28) NULL
@@ -161,7 +161,7 @@ CREATE TABLE [races] (
 
                 cmd.CommandText = @"
 CREATE TABLE [series] (
-  [sid] int NOT NULL IDENTITY (22,1)
+  [sid] int NOT NULL IDENTITY (1,1)
 , [sname] nvarchar(34) NULL
 )";
                 cmd.ExecuteNonQuery();

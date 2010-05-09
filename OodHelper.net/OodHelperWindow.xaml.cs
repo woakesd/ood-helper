@@ -73,5 +73,19 @@ namespace OodHelper.net
             MySqlForm f = new MySqlForm();
             f.ShowDialog();
         }
+
+        private void People_Click(object sender, RoutedEventArgs e)
+        {
+            People p = new People();
+            p.ShowDialog();
+            p.HorizontalAlignment = HorizontalAlignment.Stretch;
+            p.VerticalAlignment = VerticalAlignment.Stretch;
+        }
+
+        private void Seed_Click(object sender, RoutedEventArgs e)
+        {
+            Seed s = new Seed();
+            s.ShowDialog();
+        }
     }
 }

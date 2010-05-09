@@ -1,13 +1,13 @@
-﻿<Window x:Class="OodHelper.net.Boats"
+﻿<Window x:Class="OodHelper.net.People"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         >
     <Grid>
         <ToolBarTray Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,0,0">
             <ToolBar>
-                <Button Name="AddBoat" Click="AddBoat_Click">Add</Button>
-                <Button Name="EditBoat" Click="EditBoat_Click">Edit</Button>
-                <Button Name="CloseBoats" Click="Close_Click">Close</Button>
+                <Button Name="AddPerson" Click="AddPerson_Click">Add</Button>
+                <Button Name="EditPerson" Click="EditPerson_Click">Edit</Button>
+                <Button Name="ClosePeople" Click="Close_Click">Close</Button>
             </ToolBar>
         </ToolBarTray>
         <Grid Margin="0,25,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Left" >
@@ -19,13 +19,13 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Label Margin="0" Grid.Column="0" Name="findtext">Find</Label>
-            <TextBox Name="Boatname" Grid.Column="1" Margin="3,3,3,3" Width="250"/>
+            <TextBox Name="Peoplename" Grid.Column="1" Margin="3,3,3,3" Width="250"/>
         </Grid>
         <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
-            <DataGrid Margin="0,55,0,0" Name="BoatData" IsReadOnly="True" >
+            <DataGrid Margin="0,55,0,0" Name="PeopleData" IsReadOnly="True" >
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Edit" Click="EditBoat_Click" />
+                        <MenuItem Header="Edit" Click="EditPerson_Click" />
                     </ContextMenu>
                 </DataGrid.ContextMenu>
             </DataGrid>

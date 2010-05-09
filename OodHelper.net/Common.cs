@@ -39,7 +39,6 @@ namespace OodHelper.net
         {
             string mysql = (string)DbSettings.GetSetting("mysql");
             MySqlConnectionStringBuilder mcsb = new MySqlConnectionStringBuilder(mysql);
-            mcsb.SslMode = MySqlSslMode.Required;
             mysql = mcsb.ConnectionString;
             MySqlConnection mcon = new MySqlConnection(mysql);
             mcon.Open();
@@ -67,8 +66,14 @@ namespace OodHelper.net
                 "VALUES " +
                 "(@bid, @id, @boatname, @boatclass, @sailno, @dngy, @h, @distance, @crewname, @ohp, @ohstat, @rhp, @csf, @eng, @kl, @deviations, @subscriptn, @berth, @boatmemo, @hired, @p, @s, @beaten)"
                 , scon);
-            
+
+            scmd.CommandText = "SET IDENTITY_INSERT boats ON";
+            scmd.ExecuteNonQuery();
+
             copyData(mtable, ins);
+
+            scmd.CommandText = "SET IDENTITY_INSERT boats OFF";
+            scmd.ExecuteNonQuery();
 
             //
             // Events
@@ -83,7 +88,13 @@ namespace OodHelper.net
             scmd.CommandText = "DELETE FROM calendar";
             scmd.ExecuteNonQuery();
 
+            scmd.CommandText = "SET IDENTITY_INSERT calendar ON";
+            scmd.ExecuteNonQuery();
+
             copyData(mtable, ins);
+
+            scmd.CommandText = "SET IDENTITY_INSERT calendar OFF";
+            scmd.ExecuteNonQuery();
 
             //
             // People
@@ -98,7 +109,13 @@ namespace OodHelper.net
             scmd.CommandText = "DELETE FROM people";
             scmd.ExecuteNonQuery();
 
+            scmd.CommandText = "SET IDENTITY_INSERT people ON";
+            scmd.ExecuteNonQuery();
+
             copyData(mtable, ins);
+
+            scmd.CommandText = "SET IDENTITY_INSERT people OFF";
+            scmd.ExecuteNonQuery();
 
             //
             // Races
@@ -150,6 +167,8 @@ namespace OodHelper.net
 
             scon.Close();
             mcon.Close();
+
+            Seed.ReseedDatabase();
         }
 
         private static void copyData(DataTable rset, SqlCeCommand ins)

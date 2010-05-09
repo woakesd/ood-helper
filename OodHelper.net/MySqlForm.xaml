@@ -15,6 +15,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Label Grid.Column="0" Grid.Row="0">Server</Label>
         <Label Grid.Column="0" Grid.Row="1">Username</Label>
@@ -22,13 +24,21 @@
         <Label Grid.Column="0" Grid.Row="3">Database</Label>
         <Label Grid.Column="0" Grid.Row="4">Use Compression</Label>
         <Label Grid.Column="0" Grid.Row="5">Port</Label>
+        <Label Grid.Column="0" Grid.Row="6">SSL Mode</Label>
         <TextBox Grid.Column="1" Grid.Row="0" Margin="1" Width="150" Name="Server" />
         <TextBox Grid.Column="1" Grid.Row="1" Margin="1" Width="150" Name="Username" />
         <TextBox Grid.Column="1" Grid.Row="2" Margin="1" Width="150" Name="Password" />
         <TextBox Grid.Column="1" Grid.Row="3" Margin="1" Width="150" Name="Database" />
         <CheckBox Grid.Column="1" Grid.Row="4" Margin="6" Name="UseCompression"/>
         <TextBox Grid.Column="1" Grid.Row="5" Margin="1" Width="150" Name="Port" />
-        <Grid Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="6">
+        <ComboBox Grid.Column="1" Grid.Row="6" Margin="1" SelectedIndex="0" Name="SSL">
+            <ComboBoxItem Name="SslNone">Don't use</ComboBoxItem>
+            <ComboBoxItem Name="SslPreferred">Preferred</ComboBoxItem>
+            <ComboBoxItem Name="SslRequired">Required</ComboBoxItem>
+            <ComboBoxItem Name="SslVerifyCA">Verify CA</ComboBoxItem>
+            <ComboBoxItem Name="SslVerifyFull">Verify Full</ComboBoxItem>
+        </ComboBox>
+        <Grid Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>

@@ -114,6 +114,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="People.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Person.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MySqlForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -142,6 +150,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Seed.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SelectBoats.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -163,6 +175,12 @@
     </Compile>
     <Compile Include="Boats.xaml.cs">
       <DependentUpon>Boats.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="People.xaml.cs">
+      <DependentUpon>People.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Person.xaml.cs">
+      <DependentUpon>Person.xaml</DependentUpon>
     </Compile>
     <Compile Include="DbSettings.cs" />
     <Compile Include="MySqlForm.xaml.cs">
@@ -199,6 +217,9 @@
     <Compile Include="RaceScore.cs" />
     <Compile Include="RollingHandicap.cs">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Seed.xaml.cs">
+      <DependentUpon>Seed.xaml</DependentUpon>
     </Compile>
     <Compile Include="SelectBoats.xaml.cs">
       <DependentUpon>SelectBoats.xaml</DependentUpon>

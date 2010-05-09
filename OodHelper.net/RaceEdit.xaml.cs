@@ -75,7 +75,8 @@ namespace OodHelper.net
             timeLimit.Text = caldata["timelimit"].ToString();
             extension.Text = caldata["extension"].ToString();
             raceName.Content = caldata["day"].ToString() + " " +
-                ((DateTime)caldata["date"]).ToString("dd MMM yyyy");
+                ((DateTime)caldata["date"]).ToString("dd MMM yyyy") +
+                " (" + ((caldata["hc"].ToString() == "r") ? "Rolling " : "Open ") + "handicap)";
             eventname = caldata["event"].ToString().Trim();
             racename = eventname + " - " + caldata["class"].ToString().Trim();
             raceclass = caldata["class"].ToString().Trim();

@@ -8,7 +8,7 @@
     xmlns:my="http://schemas.microsoft.com/wpf/2008/toolkit">
     <Grid>
         <Canvas Name="canvas1" Height="70" VerticalAlignment="Top">
-            <Label Canvas.Left="6" Canvas.Top="6" Height="28" Name="raceName" Width="243">Label</Label>
+            <Label Canvas.Left="6" Canvas.Top="6" Height="28" Name="raceName" Width="376">Label</Label>
             <Label Canvas.Left="6" Canvas.Top="40" Height="28" Name="startLabel" >Start</Label>
             <TextBox Canvas.Left="42" Canvas.Top="38" Height="23" Name="start" Width="60" />
             <Label Canvas.Left="108" Canvas.Top="40" Height="28" Name="timeLimitLabel" Width="65">Time Limit</Label>

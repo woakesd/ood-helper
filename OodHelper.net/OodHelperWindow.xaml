@@ -13,10 +13,11 @@
             <MenuItem Header="_File" />
             <MenuItem Header="_Edit">
                 <MenuItem Header="_Boats" Name="Boats" Click="Boats_Click" />
-                <MenuItem Header="_People" />
+                <MenuItem Header="_People" Name="People" Click="People_Click" />
             </MenuItem>
             <MenuItem Header="_Admin">
                 <MenuItem Header="_MySql" Name="MySqlConfig" Click="MySqlConfig_Click" />
+                <MenuItem Header="_Seed" Name="Seed" Click="Seed_Click"/>
             </MenuItem>
         </Menu>
         <ToolBarTray Name="mainToolbarTray" VerticalAlignment="Top" Grid.Row="1">

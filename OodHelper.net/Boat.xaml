@@ -38,6 +38,7 @@
             <ComboBoxItem Content="Secondary Yardstick (SY)" Name="SY" />
             <ComboBoxItem Content="Tertiary Number (TN)" Name="TN" />
             <ComboBoxItem Content="Club Number (CN)" Name="CN" />
+            <ComboBoxItem Content="Recorded Number (RN)" Name="RN" />
         </ComboBox>
         <TextBox Height="23" HorizontalAlignment="Left" Margin="154,180,0,0" MaxLength="4" Name="rollingHandicap" VerticalAlignment="Top" Width="74" />
         <TextBox Height="23" HorizontalAlignment="Left" Margin="154,204,0,0" MaxLength="5" Name="smallCatHandicap" VerticalAlignment="Top" Width="74" />

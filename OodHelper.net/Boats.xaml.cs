@@ -24,6 +24,8 @@ namespace OodHelper.net
         {
             InitializeComponent();
             LoadGrid();
+
+            Boatname.TextChanged += new TextChangedEventHandler(Boatname_TextChanged);
         }
 
         private void LoadGrid()
@@ -60,9 +62,46 @@ namespace OodHelper.net
             }
         }
 
-        private void Edit_Click(object sender, RoutedEventArgs e)
-        {
+        System.Timers.Timer t = null;
 
+        void Boatname_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (t == null)
+                t = new System.Timers.Timer(500);
+            else
+                t.Stop();
+            t.AutoReset = false;
+            t.Elapsed += new System.Timers.ElapsedEventHandler(t_Elapsed);
+            t.Start();
+        }
+
+        void t_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            try
+            {
+                Dispatcher.Invoke(new dFilterBoats(FilterBoats), null);
+            }
+            catch (Exception ex)
+            {
+                string x = ex.Message;
+            }
+        }
+
+        public delegate void dFilterBoats();
+
+        public void FilterBoats()
+        {
+            try
+            {
+                ((DataView)BoatData.ItemsSource).RowFilter =
+                    "boatname LIKE '%" + Boatname.Text + "%'" +
+                    "or sailno LIKE '%" + Boatname.Text + "%'" +
+                    "or boatclass LIKE '%" + Boatname.Text + "%'";
+            }
+            catch (Exception ex)
+            {
+                string x = ex.Message;
+            }
         }
     }
 }
