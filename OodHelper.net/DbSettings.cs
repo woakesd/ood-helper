@@ -9,6 +9,7 @@ using System.Runtime.Serialization.Formatters;
 
 namespace OodHelper.net
 {
+    [Svn("$Id$")]
     class DbSettings
     {
         private static void CreateSettingsDb()

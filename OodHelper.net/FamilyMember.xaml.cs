@@ -16,6 +16,7 @@ namespace OodHelper.net
     /// <summary>
     /// Interaction logic for FamilyMember.xaml
     /// </summary>
+    [Svn("$Id$")]
     public partial class FamilyMember : Window
     {
         private int mId;
