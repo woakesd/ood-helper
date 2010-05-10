@@ -335,7 +335,9 @@ CREATE TABLE [series] (
 
         public static void Compact()
         {
+            Properties.Settings s = new Properties.Settings();
             SqlCeEngine ce = new SqlCeEngine();
+            ce.LocalConnectionString = Properties.Settings.Default.OodHelperConnectionString;
             ce.Compact(Properties.Settings.Default.OodHelperConnectionString);
             ce.Dispose();
         }

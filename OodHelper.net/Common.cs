@@ -169,6 +169,7 @@ namespace OodHelper.net
             mcon.Close();
 
             Seed.ReseedDatabase();
+            Db.Compact();
         }
 
         private static void copyData(DataTable rset, SqlCeCommand ins)

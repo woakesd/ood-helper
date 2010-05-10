@@ -65,7 +65,7 @@ namespace OodHelper.net
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            //Db.Compact();
+            Db.Compact();
         }
 
         private void MySqlConfig_Click(object sender, RoutedEventArgs e)

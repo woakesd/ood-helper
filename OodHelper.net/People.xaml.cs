@@ -33,6 +33,7 @@ namespace OodHelper.net
             Db c = new Db("SELECT * FROM people");
             DataTable ppl = c.GetData(null);
             PeopleData.ItemsSource = ppl.DefaultView;
+            if (Peoplename.Text != "") FilterPeople();
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
@@ -73,6 +74,32 @@ namespace OodHelper.net
             }
         }
 
+        private void DeletePerson_Click(object sender, RoutedEventArgs e)
+        {
+            if (PeopleData.SelectedItem != null)
+            {
+                bool change = false;
+                foreach (DataRowView i in PeopleData.SelectedItems)
+                {
+                    string name = i.Row["firstname"].ToString() + " " +
+                        i.Row["surname"].ToString();
+                    MessageBoxResult result = MessageBox.Show("Are you sure you want to delete " + name + "?",
+                        "Confirm Delete", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                    if (result == MessageBoxResult.Cancel) break;
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        Db del = new Db("DELETE FROM people " +
+                            "WHERE id = @id");
+                        Hashtable d = new Hashtable();
+                        d["id"] = (int)i.Row["id"];
+                        del.ExecuteNonQuery(d);
+                        change = true;
+                    }
+                }
+                if (change) LoadGrid();
+            }
+        }
+
         System.Timers.Timer t = null;
 
         void Peoplename_TextChanged(object sender, TextChangedEventArgs e)
@@ -104,20 +131,27 @@ namespace OodHelper.net
         {
             try
             {
-                ((DataView)PeopleData.ItemsSource).RowFilter =
-                    "firstname LIKE '%" + Peoplename.Text + "%'" +
-                    " or surname LIKE '%" + Peoplename.Text + "%'" +
-                    " or address1 LIKE '%" + Peoplename.Text + "%'" +
-                    " or address2 LIKE '%" + Peoplename.Text + "%'" +
-                    " or address3 LIKE '%" + Peoplename.Text + "%'" +
-                    " or address4 LIKE '%" + Peoplename.Text + "%'" +
-                    " or postcode LIKE '%" + Peoplename.Text + "%'" +
-                    " or hometel LIKE '%" + Peoplename.Text + "%'" +
-                    " or worktel LIKE '%" + Peoplename.Text + "%'" +
-                    " or mobile LIKE '%" + Peoplename.Text + "%'" +
-                    " or email LIKE '%" + Peoplename.Text + "%'" +
-                    " or club LIKE '%" + Peoplename.Text + "%'" +
-                    " or member LIKE '%" + Peoplename.Text + "%'";
+                if (Peoplename.Text != "")
+                {
+                    ((DataView)PeopleData.ItemsSource).RowFilter =
+                        "firstname LIKE '%" + Peoplename.Text + "%'" +
+                        " or surname LIKE '%" + Peoplename.Text + "%'" +
+                        " or address1 LIKE '%" + Peoplename.Text + "%'" +
+                        " or address2 LIKE '%" + Peoplename.Text + "%'" +
+                        " or address3 LIKE '%" + Peoplename.Text + "%'" +
+                        " or address4 LIKE '%" + Peoplename.Text + "%'" +
+                        " or postcode LIKE '%" + Peoplename.Text + "%'" +
+                        " or hometel LIKE '%" + Peoplename.Text + "%'" +
+                        " or worktel LIKE '%" + Peoplename.Text + "%'" +
+                        " or mobile LIKE '%" + Peoplename.Text + "%'" +
+                        " or email LIKE '%" + Peoplename.Text + "%'" +
+                        " or club LIKE '%" + Peoplename.Text + "%'" +
+                        " or member LIKE '%" + Peoplename.Text + "%'";
+                }
+                else
+                {
+                    ((DataView)PeopleData.ItemsSource).RowFilter = null;
+                }
             }
             catch (Exception ex)
             {

@@ -7,6 +7,7 @@
             <ToolBar>
                 <Button Name="AddPerson" Click="AddPerson_Click">Add</Button>
                 <Button Name="EditPerson" Click="EditPerson_Click">Edit</Button>
+                <Button Name="DeletePerson" Click="DeletePerson_Click">Delete</Button>
                 <Button Name="ClosePeople" Click="Close_Click">Close</Button>
             </ToolBar>
         </ToolBarTray>
