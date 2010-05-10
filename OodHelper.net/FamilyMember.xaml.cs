@@ -81,8 +81,14 @@ namespace OodHelper.net
 
         private void ok_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = true;
             Hashtable p = new Hashtable();
+            Db save;
+            save = new Db("SELECT * " +
+                "FROM people " +
+                "WHERE id = @id");
+            p["id"] = MainId;
+            p = save.GetHashtable(p);
+            
             p["firstname"] = FirstName.Text;
             p["surname"] = LastName.Text;
             p["hometel"] = HomePhone.Text;
@@ -93,16 +99,13 @@ namespace OodHelper.net
             p["manmemo"] = Notes.Text;
             p["main_id"] = MainId;
             p["id"] = Id;
-            Db save;
             if (Id == 0)
             {
                 save = new Db("INSERT INTO people " +
                     "(main_id, firstname, surname, address1, address2, address3, address4, " +
                     "postcode, hometel, mobile, worktel, email, club, member, manmemo) " +
-                    "SELECT id, @firstname, @surname, address1, address2, address3, address4, " +
-                    "postcode, @hometel, @mobile, @worktel, @email, club, @member, @manmemo " +
-                    "FROM people " +
-                    "WHERE id = @main_id");
+                    "VALUES (@main_id, @firstname, @surname, @address1, @address2, @address3, @address4, " +
+                    "@postcode, @hometel, @mobile, @worktel, @email, @club, @member, @manmemo)");
                 save.ExecuteNonQuery(p);
             }
             else
@@ -119,6 +122,7 @@ namespace OodHelper.net
                         "WHERE id = @id");
                 save.ExecuteNonQuery(p);
             }
+            this.DialogResult = true;
             this.Close();
         }
     }
