@@ -17,7 +17,7 @@ namespace OodHelper.net
     /// <summary>
     /// Interaction logic for RaceResults.xaml
     /// </summary>
-    [Svn("$Id: RaceResults.xaml.cs 17589 2010-05-04 21:35:53Z david $")]
+    [Svn("$Id$")]
     public partial class RaceResults : UserControl
     {
         private RaceEdit[] reds;

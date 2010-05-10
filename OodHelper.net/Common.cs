@@ -8,7 +8,7 @@ using System.Data.SqlServerCe;
 
 namespace OodHelper.net
 {
-    [Svn("$Id: Common.cs 17588 2010-05-04 19:37:30Z david $")]
+    [Svn("$Id$")]
     class Common
     {
         public static TimeSpan? tspan(String s)

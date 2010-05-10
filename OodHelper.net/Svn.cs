@@ -9,7 +9,7 @@ namespace OodHelper.net
     /// Summary description for EKISSVNAttribute.
     /// </summary>
     [AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = true)]
-    [Svn("$Id: Svn.cs 17588 2010-05-04 19:37:30Z david $")]
+    [Svn("$Id$")]
     public class Svn : System.Attribute
     {
         private string keyword;

@@ -8,7 +8,7 @@ using System.Data.SqlServerCe;
 
 namespace OodHelper.net
 {
-    [Svn("$Id: db.cs 17583 2010-05-02 17:23:57Z david $")]
+    [Svn("$Id$")]
     class Db
     {
         public Db(string connectionString, string sql)

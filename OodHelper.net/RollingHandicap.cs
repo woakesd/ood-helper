@@ -8,7 +8,7 @@ using System.Collections;
 
 namespace OodHelper.net
 {
-    [Svn("$Id: RollingHandicap.cs 17583 2010-05-02 17:23:57Z david $")]
+    [Svn("$Id$")]
     class RollingHandicap : RaceScore
     {
         private double standardCorrectedTime;

@@ -19,7 +19,7 @@ namespace OodHelper.net
     /// <summary>
     /// Interaction logic for RaceEdit.xaml
     /// </summary>
-    [Svn("$Id: RaceEdit.xaml.cs 17588 2010-05-04 19:37:30Z david $")]
+    [Svn("$Id$")]
     public partial class RaceEdit : UserControl
     {
         private Db rddb;
