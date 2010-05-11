@@ -3,7 +3,11 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      mc:Ignorable="d" Title="Person" d:DesignHeight="460" d:DesignWidth="342" SizeToContent="WidthAndHeight">
+      mc:Ignorable="d" Title="Person" 
+        Loaded="Window_Loaded"
+        d:DesignHeight="460"
+        d:DesignWidth="342"
+        SizeToContent="WidthAndHeight">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />

@@ -6,7 +6,7 @@
       mc:Ignorable="d" 
         Width="394" Height="518"
       d:DesignHeight="518" d:DesignWidth="394"
-	Title="Boat">
+	Title="Boat" Loaded="Window_Loaded">
 
     <Grid Height="478">
         <Label Content="Boat name" Height="28" HorizontalAlignment="Left" Margin="12,12,0,0" Name="labelBoatName" VerticalAlignment="Top" />

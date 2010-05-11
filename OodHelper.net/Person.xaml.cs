@@ -57,23 +57,6 @@ namespace OodHelper.net
                 Membership.Text = data["member"].ToString();
                 Notes.Text = data["manmemo"].ToString();
             }
-            else
-            {
-                int topseed = 1999, nextval = 1;
-                object o = DbSettings.GetSetting("topseed");
-                if (o != null) topseed = (int)o;
-
-                Db seed = new Db("");
-                nextval = seed.GetNextIdentity("people", "id");
-
-                if (nextval > topseed)
-                {
-                    MessageBox.Show("You need to get a new set of seed values", "Cannot add a new person",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    this.DialogResult = false;
-                    this.Close();
-                }
-            }
         }
 
         private void cancel_Click(object sender, RoutedEventArgs e)
@@ -135,6 +118,27 @@ namespace OodHelper.net
                 save.ExecuteNonQuery(p);
             }
             this.Close();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (Id == 0)
+            {
+                int topseed = 1999, nextval = 1;
+                object o = DbSettings.GetSetting("topseed");
+                if (o != null) topseed = (int)o;
+
+                Db seed = new Db("");
+                nextval = seed.GetNextIdentity("people", "id");
+
+                if (nextval > topseed)
+                {
+                    MessageBox.Show("You need to get a new set of seed values", "Cannot add a new person",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    this.DialogResult = false;
+                    this.Close();
+                }
+            }
         }
     }
 }

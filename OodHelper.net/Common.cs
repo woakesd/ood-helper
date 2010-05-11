@@ -168,7 +168,6 @@ namespace OodHelper.net
             scon.Close();
             mcon.Close();
 
-            Seed.ReseedDatabase();
             Db.Compact();
         }
 

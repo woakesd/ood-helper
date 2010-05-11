@@ -99,27 +99,6 @@ namespace OodHelper.net
             }
             else
             {
-                int bottomseed = 1, topseed = 1999, nextval = 1;
-                object o = DbSettings.GetSetting("bottomseed");
-                if (o != null) bottomseed = (int)o;
-                o = DbSettings.GetSetting("topseed");
-                if (o != null) topseed = (int)o;
-                Db seed = new Db("SELECT MAX(bid) " +
-                    "FROM boats " +
-                    "WHERE bid BETWEEN @bottomseed AND @topseed");
-                Hashtable p = new Hashtable();
-                p["topseed"] = topseed;
-                p["bottomseed"] = bottomseed;
-                o = seed.GetScalar(p);
-                if (o != null) nextval = (int)o + 1;
-
-                if (nextval > topseed)
-                {
-                    MessageBox.Show("You need to get a new set of seed values", "Cannot add a new boat",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    this.DialogResult = false;
-                    this.Close();
-                }
             }
         }
 
@@ -285,6 +264,27 @@ namespace OodHelper.net
                         "WHERE bid = @bid");
             save.ExecuteNonQuery(p);
             this.Close();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (Bid == 0)
+            {
+                int topseed = 1999, nextval = 1;
+                object o = DbSettings.GetSetting("topseed");
+                if (o != null) topseed = (int)o;
+
+                Db seed = new Db("");
+                nextval = seed.GetNextIdentity("boats", "bid");
+
+                if (nextval > topseed)
+                {
+                    MessageBox.Show("You need to get a new set of seed values", "Cannot add a new boat",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    this.DialogResult = false;
+                    this.Close();
+                }
+            }
         }
     }
 }

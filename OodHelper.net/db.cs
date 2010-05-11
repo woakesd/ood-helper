@@ -340,6 +340,11 @@ CREATE TABLE [series] (
             ce.LocalConnectionString = Properties.Settings.Default.OodHelperConnectionString;
             ce.Compact(Properties.Settings.Default.OodHelperConnectionString);
             ce.Dispose();
+
+            //
+            // After compacting we need to adjust seed values on identity columns
+            //
+            Seed.ReseedDatabase();
         }
     }
 }
