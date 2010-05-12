@@ -49,73 +49,9 @@ namespace OodHelper.net
             {
                 DbSettings.AddSetting("topseed", t);
             }
-            ReseedDatabase();
+            Db.ReseedDatabase();
             this.DialogResult = true;
             this.Close();
-        }
-
-        public static void ReseedDatabase()
-        {
-            Object o;
-            int b, t;
-            if ((o = DbSettings.GetSetting("bottomseed")) != null)
-                b = (int) o;
-            else
-                b = 1;
-            if ((o = DbSettings.GetSetting("topseed")) != null)
-                t = (int) o;
-            else
-                t = 1999;
-
-            ReseedTable("boats", "bid", b, t);
-            ReseedTable("people", "id", b, t);
-            ReseedTable("calendar", "rid");
-            ReseedTable("series", "sid");
-        }
-
-        private static void ReseedTable(string tname, string ident, int b, int t)
-        {
-            if (b < t && b != 0 && t != 0)
-            {
-                Db s = new Db("SELECT MAX(" + ident + ") " +
-                    "FROM " + tname + " " +
-                    "WHERE " + ident + " BETWEEN @b AND @t");
-                Hashtable p = new Hashtable();
-                p["b"] = b;
-                p["t"] = t;
-                object o;
-                int seedvalue;
-                if ((o = s.GetScalar(p)) != null)
-                {
-                    seedvalue = ((int)o) + 1;
-                }
-                else
-                {
-                    seedvalue = b;
-                }
-                s = new Db("ALTER TABLE " + tname + " " +
-                    "ALTER COLUMN " + ident + " IDENTITY(" + seedvalue.ToString() + ",1)");
-                s.ExecuteNonQuery(null);
-            }
-        }
-
-        private static void ReseedTable(string tname, string ident)
-        {
-            Db s = new Db("SELECT MAX(" + ident + ") " +
-                "FROM " + tname);
-            object o;
-            int seedvalue;
-            if ((o = s.GetScalar(null)) != null)
-            {
-                seedvalue = ((int)o) + 1;
-            }
-            else
-            {
-                seedvalue = 1;
-            }
-            s = new Db("ALTER TABLE " + tname + " " +
-                "ALTER COLUMN " + ident + " IDENTITY(" + seedvalue.ToString() + ",1)");
-            s.ExecuteNonQuery(null);
         }
     }
 }
