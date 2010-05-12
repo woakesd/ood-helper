@@ -270,19 +270,22 @@ namespace OodHelper.net
         {
             if (Bid == 0)
             {
-                int topseed = 1999, nextval = 1;
                 object o = DbSettings.GetSetting("topseed");
-                if (o != null) topseed = (int)o;
-
-                Db seed = new Db("");
-                nextval = seed.GetNextIdentity("boats", "bid");
-
-                if (nextval > topseed)
+                if (o != null)
                 {
-                    MessageBox.Show("You need to get a new set of seed values", "Cannot add a new boat",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    this.DialogResult = false;
-                    this.Close();
+                    int topseed, nextval;
+                    topseed = (int)o;
+
+                    Db seed = new Db("");
+                    nextval = seed.GetNextIdentity("boats", "bid");
+
+                    if (nextval > topseed)
+                    {
+                        MessageBox.Show("You need to get a new set of seed values", "Cannot add a new boat",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                        this.DialogResult = false;
+                        this.Close();
+                    }
                 }
             }
         }

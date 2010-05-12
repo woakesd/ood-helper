@@ -41,17 +41,26 @@ namespace OodHelper.net
         private void ok_Click(object sender, RoutedEventArgs e)
         {
             int b = 0, t = 0;
+
             if (Int32.TryParse(BottomSeed.Text, out b) && b != 0)
-            {
                 DbSettings.AddSetting("bottomseed", b);
-            }
+            else
+                DbSettings.DeleteSetting("bottomseed");
+
             if (Int32.TryParse(TopSeed.Text, out t) && t != 0)
-            {
                 DbSettings.AddSetting("topseed", t);
-            }
+            else
+                DbSettings.DeleteSetting("topseed");
+
             Db.ReseedDatabase();
             this.DialogResult = true;
             this.Close();
+        }
+
+        private void clear_Click(object sender, RoutedEventArgs e)
+        {
+            BottomSeed.Text = "";
+            TopSeed.Text = "";
         }
     }
 }

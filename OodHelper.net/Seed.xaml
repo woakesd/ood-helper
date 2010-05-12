@@ -20,9 +20,11 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Button Content="Cancel" Click="cancel_Click" Grid.Column="0" IsCancel="True" Margin="5" Name="cancel" />
-            <Button Content="OK" Click="ok_Click" Grid.Column="1" IsDefault="True" Margin="5" Name="ok" />
+            <Button Content="Clear" Click="clear_Click" Grid.Column="0" Margin="5" Name="clear" />
+            <Button Content="Cancel" Click="cancel_Click" Grid.Column="1" IsCancel="True" Margin="5" Name="cancel" />
+            <Button Content="OK" Click="ok_Click" Grid.Column="2" IsDefault="True" Margin="5" Name="ok" />
         </Grid>
     </Grid>
 </Window>

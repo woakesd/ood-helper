@@ -356,14 +356,20 @@ CREATE TABLE [series] (
             else
                 b = 1;
             if ((o = DbSettings.GetSetting("topseed")) != null)
+            {
                 t = (int)o;
+                ReseedTable("boats", "bid", b, t);
+                ReseedTable("people", "id", b, t);
+                ReseedTable("calendar", "rid");
+                ReseedTable("series", "sid");
+            }
             else
-                t = 1999;
-
-            ReseedTable("boats", "bid", b, t);
-            ReseedTable("people", "id", b, t);
-            ReseedTable("calendar", "rid");
-            ReseedTable("series", "sid");
+            {
+                ReseedTable("boats", "bid");
+                ReseedTable("people", "id");
+                ReseedTable("calendar", "rid");
+                ReseedTable("series", "sid");
+            }
         }
 
         private static void ReseedTable(string tname, string ident, int b, int t)

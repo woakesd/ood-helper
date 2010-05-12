@@ -124,19 +124,22 @@ namespace OodHelper.net
         {
             if (Id == 0)
             {
-                int topseed = 1999, nextval = 1;
                 object o = DbSettings.GetSetting("topseed");
-                if (o != null) topseed = (int)o;
-
-                Db seed = new Db("");
-                nextval = seed.GetNextIdentity("people", "id");
-
-                if (nextval > topseed)
+                if (o != null)
                 {
-                    MessageBox.Show("You need to get a new set of seed values", "Cannot add a new person",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    this.DialogResult = false;
-                    this.Close();
+                    int topseed, nextval;
+                    topseed = (int)o;
+
+                    Db seed = new Db("");
+                    nextval = seed.GetNextIdentity("people", "id");
+
+                    if (nextval > topseed)
+                    {
+                        MessageBox.Show("You need to get a new set of seed values", "Cannot add a new person",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                        this.DialogResult = false;
+                        this.Close();
+                    }
                 }
             }
         }

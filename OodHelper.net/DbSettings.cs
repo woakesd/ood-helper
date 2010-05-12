@@ -26,10 +26,10 @@ namespace OodHelper.net
                 con.Open();
                 SqlCeCommand cmd = new SqlCeCommand();
                 cmd.Connection = con;
-                cmd.CommandText = @"CREATE TABLE [settings] (
-  [id] int NOT NULL IDENTITY(1,1)
-, [name] nvarchar(50) NOT NULL
-, [value] image NOT NULL)";
+                cmd.CommandText = "CREATE TABLE [settings] (" +
+                    "[id] int NOT NULL IDENTITY(1,1) " +
+                    ", [name] nvarchar(50) NOT NULL" +
+                    ", [value] image NOT NULL)";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = @"ALTER TABLE [settings] ADD CONSTRAINT [PK_settings] PRIMARY KEY ([id])";
                 cmd.ExecuteNonQuery();
@@ -66,6 +66,26 @@ namespace OodHelper.net
                         "VALUES (@name, @value)";
                     int cnt = cmd.ExecuteNonQuery();
                 }
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        public static void DeleteSetting(string name)
+        {
+            CreateSettingsDb();
+            SqlCeConnection con = new SqlCeConnection(Properties.Settings.Default.SettingsConnectionString);
+            try
+            {
+                con.Open();
+                SqlCeCommand cmd = new SqlCeCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "DELETE FROM settings " +
+                    "WHERE name = @name";
+                cmd.Parameters.Add(new SqlCeParameter("name", name));
+                cmd.ExecuteNonQuery();
             }
             finally
             {
