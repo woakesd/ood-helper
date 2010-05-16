@@ -219,7 +219,7 @@ namespace OodHelper.net
             RaceEdit race = reds[PageNo];
             Font lfnt = new Font("Lucida Console", 10);
             Font lbfnt = new Font("Lucida Console", 10, System.Drawing.FontStyle.Bold);
-            Font sfnt = new Font("Lucida Console", 7);
+            Font sfnt = new Font("MS Gothic", (float)8);
             System.Drawing.Brush b = System.Drawing.Brushes.Black;
 
             //PrintRaces.OriginAtMargins = true;
@@ -311,40 +311,52 @@ namespace OodHelper.net
             e.Graphics.DrawLine(new System.Drawing.Pen(System.Drawing.Color.Black, 2), lmargin, (int)(resoff + tsize.Height * 3.5),
                 lmargin + tsize.Width, (int)(resoff + tsize.Height * 3.5));
 
-            /*For i As Integer = 0 To race.Races.Rows.Count - 1
-
-                outs = PadRight(race.Races.Rows(i).Cells("boatname").Value.ToString(), 19) & " " & _
-                PadRight(race.Races.Rows(i).Cells("boatclass").Value.ToString(), 18) & " " & _
-                PadRight(race.Races.Rows(i).Cells("sailno").Value.ToString(), 7) & " " & _
-                PadLeft(race.Races.Rows(i).Cells("hcap").Value.ToString(), 5) & " " & _
-                race.Races.Rows(i).Cells("fintime").Value.ToString().PadRight(8, " ") & "  " & _
-                Common.hms(race.Races.Rows(i).Cells("elapsed").Value.ToString()) & "  " & _
-                race.Races.Rows(i).Cells("laps").Value.ToString().PadLeft(3, " ") & "  " & _
-                Common.hms(race.Races.Rows(i).Cells("corrected").Value).ToString().PadLeft(9, " ") & "   " & _
-                race.Races.Rows(i).Cells("place").Value.ToString().PadLeft(4, " ") & " " & _
-                race.Races.Rows(i).Cells("achhc").Value.ToString().PadLeft(6, " ") & " " & _
-                (race.Races.Rows(i).Cells("achhc").Value - race.Races.Rows(i).Cells("ohp").Value).ToString.PadLeft(5, " ") & "   " & _
-                race.Races.Rows(i).Cells("newhc").Value.ToString().PadLeft(4, " ") & "  " & _
-                race.Races.Rows(i).Cells("c").Value.ToString().PadRight(1, " ") & " " & _
-                race.Races.Rows(i).Cells("a").Value.ToString().PadRight(1, " ") & " " & _
-                race.Races.Rows(i).Cells("ohstat").Value.ToString().PadLeft(2, " ")
-                tsize = e.Graphics.MeasureString(outs, sfnt)
-                e.Graphics.DrawString(outs, sfnt, b, lmargin, resoff + (tsize.Height * 1.5) * (i + 3.5))
-
-            Next*/
-
+            for (int i = 0; i < race.Races.Items.Count; i++)
+            {
+                DataRow r = ((DataRowView)race.Races.Items[i]).Row;
+                object o = r["corrected"];
+                double el = (double)o;
+                outs = r["boatname"].ToString().PadRight(19) + " " +
+                    r["boatclass"].ToString().PadRight(18) + " " +
+                    r["sailno"].ToString().PadRight(8) + " " +
+                    r["open_handicap"].ToString().PadLeft(5) + " " +
+                    r["fintime"].ToString().PadRight(8) + "  " +
+                    HMS((int)r["elapsed"]) + "  " +
+                    r["laps"].ToString().PadLeft(3) + "  " +
+                    HMS((double)r["corrected"]).PadLeft(9) + "   " +
+                    r["place"].ToString().PadLeft(4) + " " +
+                    r["achieved_handicap"].ToString().PadLeft(6) + " " +
+                    r["performance_index"].ToString().PadLeft(5) + "   " +
+                    r["new_rolling_handicap"].ToString().PadLeft(4) + "  " +
+                    r["c"].ToString().PadRight(1) + " " +
+                    r["a"].ToString().PadRight(1) + " " +
+                    r["handicap_status"].ToString().PadLeft(2);
+                tsize = e.Graphics.MeasureString(outs, sfnt);
+                e.Graphics.DrawString(outs, sfnt, b, lmargin, (float)(resoff + (tsize.Height * 1.5) * (i + 3.5)));
+            }
             e.HasMorePages = false;
             PageNo += 1;
-                while (PageNo < reds.Length)
-                {
-                    race = reds[PageNo];
+            while (PageNo < reds.Length)
+            {
+                race = reds[PageNo];
                 if (race.Races.Items.Count > 0)
                 {
                     e.HasMorePages = true;
                     break;
                 }
-        PageNo += 1;
-                }
+                PageNo += 1;
+            }
+        }
+
+        private string HMS(double t)
+        {
+            int s = (int)t % 60;
+            int m = (int)t / 60;
+            int h = m / 60;
+            m = m % 60;
+            return h.ToString().PadLeft(2, '0') + ':' +
+                m.ToString().PadLeft(2, '0') + ':' +
+                s.ToString().PadLeft(2, '0');
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)

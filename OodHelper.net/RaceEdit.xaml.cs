@@ -123,7 +123,7 @@ namespace OodHelper.net
             rddb = new Db("SELECT r.rid, r.bid, boatname, boatclass, sailno, r.start, " +
                     "r.fincode, r.fintime, r.laps, r.override_points, r.elapsed, r.standard_corrected, r.corrected, r.place, " +
                     "r.points, r.open_handicap, r.rolling_handicap, r.achieved_handicap, " +
-                    "r.new_rolling_handicap, r.handicap_status, r.c, r.a " +
+                    "r.new_rolling_handicap, r.handicap_status, r.c, r.a, r.performance_index " +
                     "FROM races r INNER JOIN boats ON boats.bid = r.bid " +
                     "WHERE r.rid = @rid " +
                     "ORDER BY place");

@@ -67,7 +67,7 @@ namespace OodHelper.net
             // Next select all boats and work out elapsed, corrected and stdcorr
             //
             sql = @"SELECT bid, rid, start, fintime, rolling_handicap, open_handicap, laps, 
-                elapsed, corrected, standard_corrected, place
+                elapsed, corrected, standard_corrected, place, performance_index
                 FROM races
                 WHERE rid = @rid";
             c = new Db(sql);
@@ -318,7 +318,7 @@ namespace OodHelper.net
             //
 
             Db c = new Db(@"SELECT bid, rid, start, standard_corrected, rolling_handicap, open_handicap, 
-                    achieved_handicap, new_rolling_handicap, c
+                    achieved_handicap, new_rolling_handicap, c, performance_index
                     FROM races
                     WHERE rid = @rid
                     AND place <> 999
@@ -405,6 +405,8 @@ namespace OodHelper.net
                         }
                     }
 
+                    dr["performance_index"] = (int)dr["achieved_handicap"] - (int)dr["open_handicap"];
+
                     //
                     // if this doesn't count as a slow race then adjust the handicap if the new value
                     // falls between +/- 5% of open.
@@ -418,7 +420,7 @@ namespace OodHelper.net
                         // go outside the 5% band.
                         //
                         int working = achhc;
-                        if (achhc > (int) dr["open_handicap"] * 1.05)
+                        if (achhc > (int)dr["open_handicap"] * 1.05)
                             working = (int)Math.Round(1.05 * (int)dr["open_handicap"], 0);
                         if (achhc < (int)dr["open_handicap"] * 0.95)
                             working = (int)Math.Round(0.95 * (int)dr["open_handicap"], 0);
