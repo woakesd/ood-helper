@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml;
+using System.Windows.Markup;
 
 namespace OodHelper.net
 {
@@ -45,9 +47,13 @@ namespace OodHelper.net
         {
         }
 
-        private void MySql_Click(object sender, RoutedEventArgs e)
+        private void Download_Click(object sender, RoutedEventArgs e)
         {
             Common.copyMySqlData();
+        }
+
+        private void Upload_Click(object sender, RoutedEventArgs e)
+        {
         }
 
         private void SqlCe_Click(object sender, RoutedEventArgs e)
@@ -57,6 +63,15 @@ namespace OodHelper.net
 
         private void Boats_Click(object sender, RoutedEventArgs e)
         {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.IndentChars = new string(' ', 4);
+            settings.NewLineOnAttributes = true;
+            StringBuilder strbuild = new StringBuilder();
+            XmlWriter xmlwrite = XmlWriter.Create(strbuild, settings);
+            ControlTemplate ct = Download.Template;
+            XamlWriter.Save(Download.Template, xmlwrite);
+
             Boats b = new Boats();
             b.ShowDialog();
             b.HorizontalAlignment = HorizontalAlignment.Stretch;

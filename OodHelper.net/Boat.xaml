@@ -3,62 +3,103 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      mc:Ignorable="d" 
-        Width="394" Height="518"
-      d:DesignHeight="518" d:DesignWidth="394"
-	Title="Boat" Loaded="Window_Loaded">
-
-    <Grid Height="478">
-        <Label Content="Boat name" Height="28" HorizontalAlignment="Left" Margin="12,12,0,0" Name="labelBoatName" VerticalAlignment="Top" />
-        <Label Content="Boat class" Height="28" HorizontalAlignment="Left" Margin="12,36,0,0" Name="labelBoatClass" VerticalAlignment="Top" />
-        <Label Content="Sail number" Height="28" HorizontalAlignment="Left" Margin="12,60,0,0" Name="labelSailno" VerticalAlignment="Top" />
-        <Label Content="Dinghy" Height="28" HorizontalAlignment="Left" Margin="12,84,0,0" Name="labelDinghy" VerticalAlignment="Top" />
-        <Label Content="Hull type" Height="28" HorizontalAlignment="Left" Margin="12,108,0,0" Name="labelHull" VerticalAlignment="Top" />
-        <Label Content="Open handicap" Height="28" HorizontalAlignment="Left" Margin="12,132,0,0" Name="labelOpenHandicap" VerticalAlignment="Top" />
-        <Label Content="Handicap status" Height="28" HorizontalAlignment="Left" Margin="12,156,0,0" Name="labelHandicapStatus" VerticalAlignment="Top" />
-        <Label Content="Rolling handicap" Height="28" HorizontalAlignment="Left" Margin="12,180,0,0" Name="labelRollingHandicap" VerticalAlignment="Top" />
-        <Label Content="Small cat handicap" Height="28" HorizontalAlignment="Left" Margin="12,204,0,0" Name="labelSmallCatHandicap" VerticalAlignment="Top" />
-        <Label Content="Engine/Propeller" Height="28" HorizontalAlignment="Left" Margin="12,228,0,0" Name="labelEngine" VerticalAlignment="Top" />
-        <Label Content="Keel" Height="28" HorizontalAlignment="Left" Margin="12,252,0,0" Name="labelKeel" VerticalAlignment="Top" />
-        <Label Content="Non standard features" Height="28" HorizontalAlignment="Left" Margin="12,276,0,0" Name="labelDeviations" VerticalAlignment="Top" />
-        <Label Content="Notes" Height="28" HorizontalAlignment="Left" Margin="12,324,0,0" Name="labelNotes" VerticalAlignment="Top" />
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="154,12,0,0" Name="boatName" VerticalAlignment="Top" Width="200" MaxLength="20" />
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="154,36,0,0" Name="boatClass" VerticalAlignment="Top" Width="120" MaxLength="20" />
-        <Button Content="Select" Height="23" HorizontalAlignment="Right" Margin="0,37,18,0" Name="selectClass" VerticalAlignment="Top" Width="75" />
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="154,60,0,0" Name="sailNumber" VerticalAlignment="Top" Width="120" MaxLength="8" />
-        <CheckBox Content="" Height="16" HorizontalAlignment="Left" Margin="154,88,0,0" Name="dinghy" VerticalAlignment="Top" />
-        <ComboBox Height="23" SelectedItem="id" SelectedIndex="0" HorizontalAlignment="Left" Margin="154,108,0,0" Name="hullType" VerticalAlignment="Top" Width="120">
-            <ComboBoxItem Content="Monohull" />
-            <ComboBoxItem Content="Catamaran (C)" />
-            <ComboBoxItem Content="Open keelboat (K)" />
+      mc:Ignorable="d" Title="Boat" Loaded="Window_Loaded" d:DesignHeight="535" d:DesignWidth="382" SizeToContent="WidthAndHeight">
+    <Window.Resources>
+        <ResourceDictionary Source="Buttons.xaml" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <Label Content="Boat name" Grid.Row="0" Grid.Column="0" Name="labelBoatName" />
+        <Label Content="Boat class" Grid.Row="1" Grid.Column="0" Name="labelBoatClass" />
+        <Label Content="Boat owner" Grid.Row="2" Grid.Column="0" Name="labelBoatOwner" />
+        <Label Content="Sail number" Grid.Row="3" Grid.Column="0" Name="labelSailno" />
+        <Label Content="Dinghy" Grid.Row="4" Grid.Column="0" Name="labelDinghy" />
+        <Label Content="Hull type" Grid.Row="5" Grid.Column="0" Name="labelHull" />
+        <Label Content="Open handicap" Grid.Row="6" Grid.Column="0" Name="labelOpenHandicap" />
+        <Label Content="Handicap status" Grid.Row="7" Grid.Column="0" Name="labelHandicapStatus" />
+        <Label Content="Rolling handicap" Grid.Row="8" Grid.Column="0" Name="labelRollingHandicap" />
+        <Label Content="Small cat handicap" Grid.Row="9" Grid.Column="0" Name="labelSmallCatHandicap" />
+        <Label Content="Engine/Propeller" Grid.Row="10" Grid.Column="0" Name="labelEngine" />
+        <Label Content="Keel" Grid.Row="11" Grid.Column="0" Name="labelKeel" />
+        <Label Content="Non standard features" Grid.Row="12" Grid.Column="0" Name="labelDeviations" />
+        <Label Content="Notes" Grid.Row="13" Grid.Column="0" Name="labelNotes" />
+        <TextBox Grid.Row="0" Grid.Column="1" Name="boatName" HorizontalAlignment="Left" Width="200" MaxLength="20" Margin="2" />
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" Name="boatClass" Width="120" MaxLength="20" Margin="2" />
+            <Button Grid.Column="1" Content="Select Class" Name="SelectClass" Margin="2" Padding="14,0,15,0" />
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" Name="BoatOwner" IsReadOnly="True" Width="120" MaxLength="20" Margin="2" />
+            <Button Grid.Column="1" Content="Select Person" Name="SelectPerson" Margin="2" Padding="10,0" Click="SelectPerson_Click" />
+        </Grid>
+        <TextBox Grid.Row="3" Grid.Column="1" Name="sailNumber" HorizontalAlignment="Left" Width="120" MaxLength="8" Margin="2" />
+        <CheckBox Grid.Row="4" Grid.Column="1" Content="" HorizontalAlignment="Left" VerticalAlignment="Center" Name="dinghy" Margin="2" />
+        <ComboBox Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" SelectedIndex="0" Name="hullType" Width="120" Margin="2">
+            <ComboBoxItem Content="Monohull" Name="hulltypeM"/>
+            <ComboBoxItem Content="Catamaran (C)" Name="hulltypeC"/>
+            <ComboBoxItem Content="Open keelboat (K)" Name="hulltypeK"/>
         </ComboBox>
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="154,132,0,0" MaxLength="4" Name="openHandicap" VerticalAlignment="Top" Width="74" />
-        <ComboBox Height="23" SelectedIndex="0" HorizontalAlignment="Left" Margin="154,156,0,0" Name="handicapStatus" VerticalAlignment="Top" Width="162">
+        <TextBox Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" MaxLength="4" Name="openHandicap" Width="74" Margin="2" />
+        <ComboBox Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" SelectedIndex="0" Name="handicapStatus" Width="162" Margin="2" >
             <ComboBoxItem Content="Primary Yardstick (PY)" Name="PY" />
             <ComboBoxItem Content="Secondary Yardstick (SY)" Name="SY" />
             <ComboBoxItem Content="Tertiary Number (TN)" Name="TN" />
             <ComboBoxItem Content="Club Number (CN)" Name="CN" />
             <ComboBoxItem Content="Recorded Number (RN)" Name="RN" />
         </ComboBox>
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="154,180,0,0" MaxLength="4" Name="rollingHandicap" VerticalAlignment="Top" Width="74" />
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="154,204,0,0" MaxLength="5" Name="smallCatHandicap" VerticalAlignment="Top" Width="74" />
-        <ComboBox Height="23" SelectedIndex="0" HorizontalAlignment="Left" Margin="154,228,0,0" Name="engine" VerticalAlignment="Top" Width="102">
-            <ComboBoxItem Content="" />
+        <TextBox Grid.Row="8" Grid.Column="1" HorizontalAlignment="Left" MaxLength="4" Name="rollingHandicap" Width="74" Margin="2" />
+        <TextBox Grid.Row="9" Grid.Column="1" HorizontalAlignment="Left" MaxLength="5" Name="smallCatHandicap" Width="74" Margin="2" />
+        <ComboBox Grid.Row="10" Grid.Column="1" HorizontalAlignment="Left" SelectedItem="None" Name="engine" Width="102" Margin="2" >
+            <ComboBoxItem Content="" Name="None" />
             <ComboBoxItem Content="Outboard (OB)" Name="OB" />
             <ComboBoxItem Content="2 Blade (IB2)" Name="IB2" />
             <ComboBoxItem Content="3 Blade (IB3)" Name="IB3" />
             <ComboBoxItem Content="Folding (IBF)" Name="IBF" />
         </ComboBox>
-        <ComboBox Height="23" SelectedIndex="0" HorizontalAlignment="Left" Margin="154,252,0,0" Name="keel" VerticalAlignment="Top" Width="145">
-            <ComboBoxItem Content="" />
+        <ComboBox Grid.Row="11" Grid.Column="1" HorizontalAlignment="Left" SelectedItem="keelNone" Name="keel" Width="145" Margin="2" >
+            <ComboBoxItem Content="" Name="keelNone"/>
             <ComboBoxItem Content="Central Keel (F)" Name="keelF" />
             <ComboBoxItem Content="Adjustable Drop (D)" Name="keelD" />
             <ComboBoxItem Content="Twin bilge (2K)" Name="keel2K" />
             <ComboBoxItem Content="Central and bilge (3K)" Name="keel3K" />
         </ComboBox>
-        <TextBox Height="47" HorizontalAlignment="Left" Margin="154,276,0,0" MaxLength="30" Name="deviations" VerticalAlignment="Top" Width="200" />
-        <TextBox Height="107" HorizontalAlignment="Left" Margin="154,324,0,0" Name="notes" VerticalAlignment="Top" Width="200" />
-        <Button Content="Cancel" Click="cancel_Click" IsCancel="True" Height="23" HorizontalAlignment="Left" Margin="64,0,0,12" Name="cancel" VerticalAlignment="Bottom" Width="75" />
-        <Button Content="OK" Click="ok_Click" IsDefault="True" Height="23" HorizontalAlignment="Right" Margin="212,0,64,12" Name="ok" VerticalAlignment="Bottom" Width="75" />
+        <TextBox Grid.Row="12" Grid.Column="1" HorizontalAlignment="Left" Height="47" MaxLength="30" Name="deviations" Width="200" Margin="2" />
+        <TextBox Grid.Row="13" Grid.Column="1" HorizontalAlignment="Left" Height="107" Name="notes" Width="200" Margin="2" />
+        <Grid Grid.Row="14" Grid.ColumnSpan="2" Grid.Column="0" Margin="2" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Margin="20,2" Template="{StaticResource ResourceKey=CancelButton}" Click="cancel_Click" IsCancel="True" Name="cancel" />
+            <Button Grid.Column="1" Margin="20,2" Template="{StaticResource ResourceKey=OkButton}" Click="ok_Click" IsDefault="True" Name="ok" />
+        </Grid>
     </Grid>
 </Window>

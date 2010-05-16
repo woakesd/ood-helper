@@ -30,9 +30,12 @@ namespace OodHelper.net
 
         private void LoadGrid()
         {
-            Db c = new Db("SELECT * FROM boats");
+            Db c = new Db("SELECT * " + 
+                "FROM boats " +
+                "ORDER BY boatname");
             DataTable bts = c.GetData(null);
             BoatData.ItemsSource = bts.DefaultView;
+            if (Boatname.Text != "") FilterBoats();
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
@@ -40,7 +43,7 @@ namespace OodHelper.net
             Close();
         }
 
-        private void AddBoat_Click(object sender, RoutedEventArgs e)
+        private void Add_Click(object sender, RoutedEventArgs e)
         {
             Boat b = new Boat(0);
             if (b.ShowDialog().Value)
@@ -49,7 +52,7 @@ namespace OodHelper.net
             }
         }
 
-        private void EditBoat_Click(object sender, RoutedEventArgs e)
+        private void Edit_Click(object sender, RoutedEventArgs e)
         {
             if (BoatData.SelectedItem != null)
             {
@@ -101,6 +104,31 @@ namespace OodHelper.net
             catch (Exception ex)
             {
                 string x = ex.Message;
+            }
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            if (BoatData.SelectedItem != null)
+            {
+                bool change = false;
+                foreach (DataRowView i in BoatData.SelectedItems)
+                {
+                    string name = i.Row["boatname"].ToString();
+                    MessageBoxResult result = MessageBox.Show("Are you sure you want to delete " + name + "?",
+                        "Confirm Delete", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                    if (result == MessageBoxResult.Cancel) break;
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        Db del = new Db("DELETE FROM boats " +
+                            "WHERE bid = @bid");
+                        Hashtable d = new Hashtable();
+                        d["bid"] = (int)i.Row["bid"];
+                        del.ExecuteNonQuery(d);
+                        change = true;
+                    }
+                }
+                if (change) LoadGrid();
             }
         }
     }

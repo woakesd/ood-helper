@@ -8,6 +8,9 @@
         d:DesignHeight="460"
         d:DesignWidth="342"
         SizeToContent="WidthAndHeight">
+    <Window.Resources>
+        <ResourceDictionary Source="Buttons.xaml" />
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -63,8 +66,8 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Button Content="Cancel" Click="cancel_Click" Grid.Column="0" IsCancel="True" Margin="5" Name="cancel" />
-            <Button Content="OK" Click="ok_Click" Grid.Column="1" IsDefault="True" Margin="5" Name="ok" />
+            <Button Grid.Column="0" Margin="20,2" Template="{StaticResource ResourceKey=CancelButton}" Click="cancel_Click" IsCancel="True" Name="cancel" />
+            <Button Grid.Column="1" Margin="20,2" Template="{StaticResource ResourceKey=OkButton}" Click="ok_Click" IsDefault="True" Name="ok" />
         </Grid>
     </Grid>
 </Window>

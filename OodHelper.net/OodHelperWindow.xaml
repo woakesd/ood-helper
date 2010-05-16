@@ -16,16 +16,48 @@
                 <MenuItem Header="_People" Name="People" Click="People_Click" />
             </MenuItem>
             <MenuItem Header="_Admin">
-                <MenuItem Header="_MySql" Name="MySqlConfig" Click="MySqlConfig_Click" />
-                <MenuItem Header="_Seed" Name="Seed" Click="Seed_Click"/>
+                <MenuItem Header="_Web Database Settings" Name="MySqlConfig" Click="MySqlConfig_Click" />
+                <MenuItem Header="_Seed for Boat/People" Name="Seed" Click="Seed_Click"/>
+                <Separator/>
+                <MenuItem Header="_Create Results DB" Name="CreateResultsDB" Click="SqlCe_Click">
+                    <MenuItem.Icon>
+                        <Image Source="/OodHelper.net;component/Images/Database.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
         </Menu>
         <ToolBarTray Name="mainToolbarTray" VerticalAlignment="Top" Grid.Row="1">
             <ToolBar Name="mainToolbar" VerticalAlignment="Top" Margin="0,0,0,0" >
-                <Button Name="Results" Click="Results_Click" Margin="2" BorderBrush="DarkSeaGreen" BorderThickness="1">Results</Button>
-                <Button Name="Admin" Click="Admin_Click" Margin="2" BorderBrush="DarkSeaGreen" BorderThickness="1">Admin</Button>
-                <Button Name="MySql" Click="MySql_Click" Margin="2" BorderBrush="DarkSeaGreen" BorderThickness="1">MySql</Button>
-                <Button Name="SqlCe" Click="SqlCe_Click" Margin="2" BorderBrush="DarkSeaGreen" BorderThickness="1">SqlCe</Button>
+                <Button Name="Results" Click="Results_Click" BorderThickness="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Results.png"/>
+                        <Label Grid.Column="1">Results</Label>
+                    </Grid>
+                </Button>
+                <Button Name="Download" Click="Download_Click" BorderThickness="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Download.png"/>
+                        <Label Grid.Column="1">Download from Web</Label>
+                    </Grid>
+                </Button>
+                <Button Name="Upload" Click="Upload_Click" BorderThickness="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="/OodHelper.net;component/Images/Upload.png" />
+                        <Label Grid.Column="1">Upload to Web</Label>
+                    </Grid>
+                </Button>
             </ToolBar>
         </ToolBarTray>
         <DockPanel Grid.Row="2" Margin="0,0,0,0" Name="dock">

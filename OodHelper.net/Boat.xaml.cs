@@ -27,13 +27,19 @@ namespace OodHelper.net
             get { return bid; }
         }
 
+        private int? id;
+        public int? Id
+        {
+            get { return id; }
+        }
+
         public Boat(int b)
         {
             bid = b;
             InitializeComponent();
             if (bid != 0)
             {
-                Db get = new Db("SELECT boatname, boatclass, sailno, dinghy, " +
+                Db get = new Db("SELECT id, boatname, boatclass, sailno, dinghy, " +
                     "hulltype, open_handicap, handicap_status, " +
                     "rolling_handicap, small_cat_handicap_rating, engine_propeller, keel, deviations, boatmemo " +
                     "FROM boats " +
@@ -42,6 +48,11 @@ namespace OodHelper.net
                 p["bid"] = Bid;
                 Hashtable data = get.GetHashtable(p);
 
+                if (data["id"] != DBNull.Value)
+                {
+                    id = (int)data["id"];
+                    SetOwner();
+                }
                 boatName.Text = data["boatname"].ToString();
                 boatClass.Text = data["boatclass"].ToString();
                 sailNumber.Text = data["sailno"].ToString();
@@ -102,6 +113,18 @@ namespace OodHelper.net
             }
         }
 
+        private void SetOwner()
+        {
+            Db get = new Db("SELECT firstname, surname " +
+                "FROM people " +
+                "WHERE id = @id");
+            Hashtable p = new Hashtable();
+            p["id"] = Id.Value;
+            Hashtable owner = get.GetHashtable(p);
+            BoatOwner.Text = (owner["firstname"].ToString() + " " +
+                owner["surname"].ToString()).Trim();
+        }
+
         private void cancel_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
@@ -110,12 +133,25 @@ namespace OodHelper.net
 
         private void ok_Click(object sender, RoutedEventArgs e)
         {
+            if (boatName.Text.Trim() == "")
+            {
+                MessageBox.Show("Boat name required", "Input Required", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             this.DialogResult = true;
             Hashtable p = new Hashtable();
+
+            if (id != null)
+                p["id"] = id.Value;
+            else
+                p["id"] = DBNull.Value;
+
             p["boatname"] = boatName.Text;
             p["boatclass"] = boatClass.Text;
             p["sailno"] = sailNumber.Text;
             p["dngy"] = dinghy.IsChecked.Value;
+
             switch (hullType.Text)
             {
                 case "Catamaran (C)":
@@ -128,6 +164,7 @@ namespace OodHelper.net
                     p["h"] = DBNull.Value;
                     break;
             }
+
             int hcap;
             if (openHandicap.Text != "")
             {
@@ -241,14 +278,18 @@ namespace OodHelper.net
             p["bid"] = Bid;
             Db save;
             if (Bid == 0)
+            {
                 save = new Db("INSERT INTO boats " +
-                        "(boatname, boatclass, sailno, dinghy, hulltype, open_handicap, " +
-                        "handicap_status, rolling_handicap, small_cat_handicap_status, " +
+                        "(id, boatname, boatclass, sailno, dinghy, hulltype, open_handicap, " +
+                        "handicap_status, rolling_handicap, small_cat_handicap_rating, " +
                         "engine_propeller, keel, deviations, boatmemo) " +
-                        "VALUES (@boatname, @boatclass, @sailno, @dngy, @h, @ohp, @ohstat, @rhp, @schr, @eng, @kl, @deviations, @boatmemo)");
+                        "VALUES (@id, @boatname, @boatclass, @sailno, @dngy, @h, @ohp, @ohstat, @rhp, @schr, @eng, @kl, @deviations, @boatmemo)");
+                bid = save.GetNextIdentity("boats", "bid");
+            }
             else
                 save = new Db("UPDATE boats " +
-                        "SET boatname = @boatname, " +
+                        "SET id = @id, " + 
+                        "boatname = @boatname, " +
                         "boatclass = @boatclass, " +
                         "sailno = @sailno, " +
                         "dinghy = @dngy, " +
@@ -287,6 +328,17 @@ namespace OodHelper.net
                         this.Close();
                     }
                 }
+            }
+        }
+
+        private void SelectPerson_Click(object sender, RoutedEventArgs e)
+        {
+            People ppl = new People(Id);
+            ppl.ShowDialog();
+            if (Id.Value != ppl.Id)
+            {
+                id = ppl.Id;
+                SetOwner();
             }
         }
     }

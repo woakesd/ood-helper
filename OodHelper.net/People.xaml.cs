@@ -28,9 +28,25 @@ namespace OodHelper.net
             Peoplename.TextChanged += new TextChangedEventHandler(Peoplename_TextChanged);
         }
 
+        int? id;
+        public int? Id
+        {
+            get
+            {
+                return id;
+            }
+        }
+
+        public People(int? id) : this()
+        {
+            this.id = id;
+        }
+
         private void LoadGrid()
         {
-            Db c = new Db("SELECT * FROM people");
+            Db c = new Db("SELECT * " +
+                "FROM people " +
+                "ORDER BY surname, firstname");
             DataTable ppl = c.GetData(null);
             PeopleData.ItemsSource = ppl.DefaultView;
             if (Peoplename.Text != "") FilterPeople();
@@ -38,10 +54,12 @@ namespace OodHelper.net
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
+            if (PeopleData.SelectedItem != null)
+                id = (int)((DataRowView)PeopleData.SelectedItem).Row["id"];
             Close();
         }
 
-        private void AddPerson_Click(object sender, RoutedEventArgs e)
+        private void Add_Click(object sender, RoutedEventArgs e)
         {
             Person p = new Person(0);
             if (p.ShowDialog().Value)
@@ -50,7 +68,7 @@ namespace OodHelper.net
             }
         }
 
-        private void EditPerson_Click(object sender, RoutedEventArgs e)
+        private void Edit_Click(object sender, RoutedEventArgs e)
         {
             if (PeopleData.SelectedItem != null)
             {
@@ -74,7 +92,7 @@ namespace OodHelper.net
             }
         }
 
-        private void DeletePerson_Click(object sender, RoutedEventArgs e)
+        private void Delete_Click(object sender, RoutedEventArgs e)
         {
             if (PeopleData.SelectedItem != null)
             {
@@ -179,6 +197,23 @@ namespace OodHelper.net
                 FamilyMember f = new FamilyMember(0, (int)i.Row["main_id"]);
                 if (f.ShowDialog().Value)
                     LoadGrid();
+            }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (id != null)
+            {
+                foreach (DataRowView vr in PeopleData.Items)
+                {
+                    DataRow r = vr.Row;
+                    if (((int)r["id"]) == id.Value)
+                    {
+                        PeopleData.SelectedItem = vr;
+                        PeopleData.ScrollIntoView(vr);
+                        break;
+                    }
+                }
             }
         }
     }

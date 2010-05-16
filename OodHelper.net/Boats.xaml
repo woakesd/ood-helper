@@ -3,14 +3,51 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         >
     <Grid>
-        <ToolBarTray Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,0,0">
+        <ToolBarTray Height="36" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,0,0">
             <ToolBar>
-                <Button Name="AddBoat" Click="AddBoat_Click">Add</Button>
-                <Button Name="EditBoat" Click="EditBoat_Click">Edit</Button>
-                <Button Name="CloseBoats" Click="Close_Click">Close</Button>
+                <Button Name="Add" Click="Add_Click">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Add.png" />
+                        <Label Grid.Column="1">Add</Label>
+                    </Grid>
+                </Button>
+                <Button Name="Edit" Click="Edit_Click">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Edit.png" />
+                        <Label Grid.Column="1">Edit</Label>
+                    </Grid>
+                </Button>
+                <Button Name="Delete" Click="Delete_Click">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Delete.png" />
+                        <Label Grid.Column="1">Delete</Label>
+                    </Grid>
+                </Button>
+                <Button Name="Close" Click="Close_Click">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Cancel.png" />
+                        <Label Grid.Column="1">Close</Label>
+                    </Grid>
+                </Button>
             </ToolBar>
         </ToolBarTray>
-        <Grid Margin="0,25,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Left" >
+        <Grid Margin="0,36,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Left" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
@@ -22,10 +59,19 @@
             <TextBox Name="Boatname" Grid.Column="1" Margin="3,3,3,3" Width="250"/>
         </Grid>
         <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
-            <DataGrid Margin="0,55,0,0" Name="BoatData" IsReadOnly="True" >
+            <DataGrid Margin="0,62,0,0" Name="BoatData" IsReadOnly="True" >
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Edit" Click="EditBoat_Click" />
+                        <MenuItem Header="Edit" Click="Edit_Click">
+                            <MenuItem.Icon>
+                                <Image Source="/OodHelper.net;component/Images/Edit.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Delete" Click="Delete_Click">
+                            <MenuItem.Icon>
+                                <Image Source="/OodHelper.net;component/Images/Delete.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
                     </ContextMenu>
                 </DataGrid.ContextMenu>
             </DataGrid>
