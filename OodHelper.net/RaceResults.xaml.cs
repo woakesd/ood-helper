@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -191,7 +192,159 @@ namespace OodHelper.net
 
         private void Print_Click(object sender, RoutedEventArgs e)
         {
+            System.Windows.Forms.PrintPreviewDialog pv = new System.Windows.Forms.PrintPreviewDialog();
+            PrintRaces = new System.Drawing.Printing.PrintDocument();
+            pv.Document = PrintRaces;
+            PrintRaces.BeginPrint += new System.Drawing.Printing.PrintEventHandler(pd_BeginPrint);
+            PrintRaces.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(pd_PrintPage);
+            pv.ShowDialog();
+        }
 
+        System.Drawing.Printing.PrintDocument PrintRaces;
+        private int PageNo;
+
+        void pd_BeginPrint(object sender, System.Drawing.Printing.PrintEventArgs e)
+        {
+            //PrintRaces.PrinterSettings.PrinterName = "HP Photosmart C6180";
+
+            foreach (RaceEdit rac in reds)
+            {
+                rac.Calculate();
+            }
+            PageNo = 0;
+        }
+
+        void pd_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            RaceEdit race = reds[PageNo];
+            Font lfnt = new Font("Lucida Console", 10);
+            Font lbfnt = new Font("Lucida Console", 10, System.Drawing.FontStyle.Bold);
+            Font sfnt = new Font("Lucida Console", 7);
+            System.Drawing.Brush b = System.Drawing.Brushes.Black;
+
+            //PrintRaces.OriginAtMargins = true;
+
+            string outs = "Port Edgar Yacht Club Race Results";
+            RectangleF ps = PrintRaces.DefaultPageSettings.PrintableArea;
+            //ps.Offset(50, 50)
+            //ps.Inflate(-50, -50)
+            int tmargin = 30;
+            int lmargin = 50;
+
+            SizeF tsize = e.Graphics.MeasureString(outs, lfnt);
+
+            float ptop = ps.Top + tmargin;
+            float pleft = ps.Left + lmargin;
+
+            e.Graphics.DrawString(outs, lbfnt, b, (ps.Width - tsize.Width) / 2 + ps.X, ptop - tsize.Height);
+
+            outs = "Date of Race: " + race.RaceDate.ToShortDateString();
+            tsize = e.Graphics.MeasureString(outs, lfnt);
+            e.Graphics.DrawString(outs, lfnt, b, (float)(15 + pleft), (float)(ptop + tsize.Height * 0.5));
+
+            outs = "OOD: " + race.Ood;
+            tsize = e.Graphics.MeasureString(outs, lfnt);
+            e.Graphics.DrawString(outs, lfnt, b, (float)(ps.Width - lmargin - tsize.Width - 15), (float)(ptop + tsize.Height * 0.5));
+
+            outs = "Race No: " + race.Rid.ToString();
+            tsize = e.Graphics.MeasureString(outs, lfnt);
+            e.Graphics.DrawString(outs, lfnt, b, 15 + pleft, ptop + tsize.Height * 2);
+
+            outs = race.RaceName + " - " + race.RaceClass;
+            tsize = e.Graphics.MeasureString(outs, lbfnt);
+            e.Graphics.DrawString(outs, lbfnt, b, (ps.Width - tsize.Width) / 2, ptop + tsize.Height * 2);
+
+            outs = "Start: " + race.RaceStart;
+            tsize = e.Graphics.MeasureString(outs, lfnt);
+            e.Graphics.DrawString(outs, lfnt, b, (float)(15 + pleft), (float)(ptop + tsize.Height * 3.5));
+
+            if (race.Handicap == "r")
+                outs = "Rolling Handicap Used";
+            else
+                outs = "Open Handicap Used";
+            tsize = e.Graphics.MeasureString(outs, lfnt);
+            e.Graphics.DrawString(outs, lfnt, b, (float)((ps.Width - tsize.Width) / 2), (float)(ptop + tsize.Height * 3.5));
+
+            //outs = "SCT = " & Common.hmsh(race.SCT)
+            //tsize = e.Graphics.MeasureString(outs, lfnt)
+            //e.Graphics.DrawString(outs, lfnt, b, ps.Width - lmargin - tsize.Width - 15, ptop + tsize.Height * 3.5)
+
+            float resoff = ptop + tsize.Height * 5;
+
+            outs = "Boatname            " +
+                "Boatclass          " +
+                "Sail No  " +
+                "HCap " +
+                " Finish   " +
+                "Elapsed   " +
+                "Laps  " +
+                "Corrected  " +
+                "Place  " +
+                "Achd  " +
+                "  PI   " +
+                "New   " +
+                "C " +
+                "A " +
+                "PY";
+            tsize = e.Graphics.MeasureString(outs, sfnt);
+            lmargin = (int)((ps.Width - tsize.Width) / 2 + ps.X);
+            e.Graphics.DrawString(outs, sfnt, b, lmargin, resoff + tsize.Height);
+
+            outs = "                    " +
+                "                   " +
+                "         " +
+                "     " +
+                "          " +
+                "          " +
+                "      " +
+                "           " +
+                "       " +
+                "Hcap  " +
+                "       " +
+                "Hcap  " +
+                "  " +
+                "  " +
+                " |";
+            tsize = e.Graphics.MeasureString(outs, sfnt);
+            e.Graphics.DrawString(outs.Replace("|", ""), sfnt, b, lmargin, resoff + tsize.Height * 2);
+
+            e.Graphics.DrawLine(new System.Drawing.Pen(System.Drawing.Color.Black, 2), lmargin, (int)(resoff + tsize.Height * 3.5),
+                lmargin + tsize.Width, (int)(resoff + tsize.Height * 3.5));
+
+            /*For i As Integer = 0 To race.Races.Rows.Count - 1
+
+                outs = PadRight(race.Races.Rows(i).Cells("boatname").Value.ToString(), 19) & " " & _
+                PadRight(race.Races.Rows(i).Cells("boatclass").Value.ToString(), 18) & " " & _
+                PadRight(race.Races.Rows(i).Cells("sailno").Value.ToString(), 7) & " " & _
+                PadLeft(race.Races.Rows(i).Cells("hcap").Value.ToString(), 5) & " " & _
+                race.Races.Rows(i).Cells("fintime").Value.ToString().PadRight(8, " ") & "  " & _
+                Common.hms(race.Races.Rows(i).Cells("elapsed").Value.ToString()) & "  " & _
+                race.Races.Rows(i).Cells("laps").Value.ToString().PadLeft(3, " ") & "  " & _
+                Common.hms(race.Races.Rows(i).Cells("corrected").Value).ToString().PadLeft(9, " ") & "   " & _
+                race.Races.Rows(i).Cells("place").Value.ToString().PadLeft(4, " ") & " " & _
+                race.Races.Rows(i).Cells("achhc").Value.ToString().PadLeft(6, " ") & " " & _
+                (race.Races.Rows(i).Cells("achhc").Value - race.Races.Rows(i).Cells("ohp").Value).ToString.PadLeft(5, " ") & "   " & _
+                race.Races.Rows(i).Cells("newhc").Value.ToString().PadLeft(4, " ") & "  " & _
+                race.Races.Rows(i).Cells("c").Value.ToString().PadRight(1, " ") & " " & _
+                race.Races.Rows(i).Cells("a").Value.ToString().PadRight(1, " ") & " " & _
+                race.Races.Rows(i).Cells("ohstat").Value.ToString().PadLeft(2, " ")
+                tsize = e.Graphics.MeasureString(outs, sfnt)
+                e.Graphics.DrawString(outs, sfnt, b, lmargin, resoff + (tsize.Height * 1.5) * (i + 3.5))
+
+            Next*/
+
+            e.HasMorePages = false;
+            PageNo += 1;
+                while (PageNo < reds.Length)
+                {
+                    race = reds[PageNo];
+                if (race.Races.Items.Count > 0)
+                {
+                    e.HasMorePages = true;
+                    break;
+                }
+        PageNo += 1;
+                }
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)

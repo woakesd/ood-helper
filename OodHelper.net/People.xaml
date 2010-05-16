@@ -1,7 +1,7 @@
 ﻿<Window x:Class="OodHelper.net.People"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded" Icon="/OodHelper.net;component/Images/Man.png" Title="People">
     <Grid>
         <ToolBarTray Height="36" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,0,0">
             <ToolBar>

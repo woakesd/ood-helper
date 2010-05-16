@@ -40,6 +40,23 @@ namespace OodHelper.net
             get { return racename; }
         }
 
+        private DateTime mRaceDate;
+        public DateTime RaceDate
+        {
+            get { return mRaceDate; }
+        }
+
+        private string mOod;
+        public string Ood
+        {
+            get { return mOod; }
+        }
+
+        public string RaceStart
+        {
+            get { return start.Text; }
+        }
+
         private int rid;
         public int Rid { get { return rid; } }
 
@@ -56,6 +73,15 @@ namespace OodHelper.net
             Races.Loaded += new RoutedEventHandler(Races_Loaded);
         }
 
+        private string mHandicap;
+        public string Handicap
+        {
+            get
+            {
+                return mHandicap;
+            }
+        }
+
         private bool PreviousCompetitors(int rid)
         {
             return false;
@@ -64,7 +90,7 @@ namespace OodHelper.net
 
         public void LoadGrid()
         {
-            Db c = new Db("SELECT start, timelimit, extension, day, date, event, class, spec, hc " +
+            Db c = new Db("SELECT start, timelimit, extension, day, date, event, class, spec, hc, ood " +
                     "FROM calendar " +
                     "WHERE rid = @rid");
             Hashtable p = new Hashtable();
@@ -80,8 +106,11 @@ namespace OodHelper.net
             eventname = caldata["event"].ToString().Trim();
             racename = eventname + " - " + caldata["class"].ToString().Trim();
             raceclass = caldata["class"].ToString().Trim();
+            mRaceDate = (DateTime)caldata["date"];
+            mOod = caldata["ood"].ToString();
+            mHandicap = (string)caldata["hc"];
 
-            switch (caldata["hc"].ToString())
+            switch (Handicap)
             {
                 case "r":
                     scorer = new RollingHandicap();
@@ -332,6 +361,11 @@ namespace OodHelper.net
         }
 
         private void buttonCalculate_Click(object sender, RoutedEventArgs e)
+        {
+            Calculate();
+        }
+
+        public void Calculate()
         {
             if (scorer != null) scorer.Calculate(Rid);
             LoadGrid();
