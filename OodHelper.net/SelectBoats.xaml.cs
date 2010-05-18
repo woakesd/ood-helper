@@ -94,9 +94,9 @@ namespace OodHelper.net
             }
 
             if (!dinghies && yachts)
-                sql += @"WHERE dngy = 0 ";
+                sql += @"WHERE dinghy = 0 ";
             else if (dinghies && !yachts)
-                sql += @"WHERE dngy = 1 ";
+                sql += @"WHERE dinghy = 1 ";
 
             sql += @"ORDER BY boatname";
 
@@ -180,10 +180,10 @@ namespace OodHelper.net
                 }
                 if (!alreadySelected)
                 {
-                    bool dngy = (bool)rv["dngy"];
-                    int ohp = (int)rv["ohp"];
+                    bool dngy = (bool)rv["dinghy"];
+                    int ohp = (int)rv["open_handicap"];
                     string h = "";
-                    if (rv["h"] != DBNull.Value) h = (string)rv["h"];
+                    if (rv["hulltype"] != DBNull.Value) h = (string)rv["hulltype"];
                     if (dngy)
                     {
                         if (boatClasses.ContainsKey("C Dinghy") && h == "C")
@@ -237,8 +237,8 @@ namespace OodHelper.net
         {
             Db delete = new Db("DELETE FROM races WHERE rid = @rid AND bid = @bid");
             Db add = new Db(@"INSERT INTO races
-                    (rid, date, bid, hcap, ohstat, start, bstart, ohp, ihp)
-                    SELECT c.rid, c.date, b.bid, b.rhp, b.ohstat, c.start, c.start + ':00', b.ohp, b.ihp
+                    (rid, date, bid, open_handicap, handicap_status, start, rolling_handicap)
+                    SELECT c.rid, c.date, b.bid, b.open_handicap, b.handicap_status, c.start + ':00', b.rolling_handicap
                     FROM boats b, calendar c
                     WHERE b.bid = @bid
                     AND c.rid = @rid");

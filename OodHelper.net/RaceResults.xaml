@@ -3,14 +3,45 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
     <Grid>
-        <ToolBarTray Height="36 " Name="toolBarTray1" VerticalAlignment="Top">
-            <ToolBar Height="34 " Name="toolBar1" VerticalAlignment="Top" Margin="3,3,0,0" >
-                <Button Name="ChooseBoats" Click="ChooseBoats_Click" Margin="2" BorderBrush="DarkSeaGreen" BorderThickness="1">Select Boats</Button>
-                <Button Name="Print" Click="Print_Click" Margin="2" BorderBrush="DarkSeaGreen" BorderThickness="1">Print</Button>
-                <Button Name="Close" Click="Close_Click" Margin="2" BorderBrush="DarkSeaGreen" BorderThickness="1">Close</Button>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ToolBarTray Grid.Row="0" Name="toolBarTray1" VerticalAlignment="Top">
+            <ToolBar Name="toolBar1" VerticalAlignment="Top">
+                <Button Name="ChooseBoats" Click="ChooseBoats_Click" Margin="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper.net;component/Images/Boat.png"/>
+                        <Label Grid.Column="1">Select Boats</Label>
+                    </Grid>
+                </Button>
+                <Button Name="Print" Click="Print_Click" Margin="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper.net;component/Images/Printer.png"/>
+                        <Label Grid.Column="1">Print</Label>
+                    </Grid>
+                </Button>
+                <Button Name="Close" Click="Close_Click" Margin="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper.net;component/Images/Cancel.png"/>
+                        <Label Grid.Column="1">Cancel</Label>
+                    </Grid>
+                </Button>
             </ToolBar>
         </ToolBarTray>
-        <DockPanel Margin="0,36,0,0" Name="dockPanel1"  VerticalAlignment="Stretch">
+        <DockPanel Grid.Row="1" Name="dockPanel1"  VerticalAlignment="Stretch">
             <Grid>
                 <TabControl Name="raceTabControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 </TabControl>
