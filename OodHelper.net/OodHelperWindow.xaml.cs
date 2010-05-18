@@ -102,5 +102,10 @@ namespace OodHelper.net
             Seed s = new Seed();
             s.ShowDialog();
         }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

@@ -9,7 +9,7 @@
         </Grid.RowDefinitions>
         <ToolBarTray Grid.Row="0" Name="toolBarTray1" VerticalAlignment="Top">
             <ToolBar Name="toolBar1" VerticalAlignment="Top">
-                <Button Name="ChooseBoats" Click="ChooseBoats_Click" Margin="2">
+                <Button Name="ChooseBoats" Click="ChooseBoats_Click">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>
@@ -19,7 +19,7 @@
                         <Label Grid.Column="1">Select Boats</Label>
                     </Grid>
                 </Button>
-                <Button Name="Print" Click="Print_Click" Margin="2">
+                <Button Name="Print" Click="Print_Click">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>
@@ -29,7 +29,7 @@
                         <Label Grid.Column="1">Print</Label>
                     </Grid>
                 </Button>
-                <Button Name="Close" Click="Close_Click" Margin="2">
+                <Button Name="Close" Click="Close_Click">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>
