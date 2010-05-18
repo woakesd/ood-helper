@@ -69,8 +69,6 @@ namespace OodHelper.net
             rid = r;
 
             LoadGrid();
-
-            Races.Loaded += new RoutedEventHandler(Races_Loaded);
         }
 
         private string mHandicap;
@@ -85,7 +83,6 @@ namespace OodHelper.net
         private bool PreviousCompetitors(int rid)
         {
             return false;
-            //Db cnt = new Db("SELECT COUNT(1) 
         }
 
         public void LoadGrid()
@@ -188,9 +185,74 @@ namespace OodHelper.net
             Races.PreparingCellForEdit += new EventHandler<DataGridPreparingCellForEditEventArgs>(Races_PreparingCellForEdit);
             Races.CellEditEnding += new EventHandler<DataGridCellEditEndingEventArgs>(Races_CellEditEnding);
 
-            //Races.Columns[rd.Columns["rid"].Ordinal].Visibility = Visibility.Hidden;
+            Races.Columns[rd.Columns["rid"].Ordinal].Visibility = Visibility.Hidden;
+            Races.Columns[rd.Columns["bid"].Ordinal].Visibility = Visibility.Hidden;
         }
 
+        private void DataGridCell_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Down || e.Key == Key.Up)
+            {
+                DataGridCell cell = sender as DataGridCell;
+                if (cell != null)
+                {
+                    cell.IsEditing = false;
+                    DataGridRow row = FindVisualParent<DataGridRow>(cell);
+                }
+                e.Handled = false;
+                //Races.CellEditEnding.
+            }
+        }
+
+        //
+        // SINGLE CLICK EDITING
+        //
+        private void DataGridCell_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            DataGridCell cell = sender as DataGridCell;
+            if (cell != null && !cell.IsEditing && !cell.IsReadOnly)
+            {
+                preEdit = ((TextBlock)cell.Content).Text;
+                if (!cell.IsFocused)
+                {
+                    cell.Focus();
+                }
+                DataGrid dataGrid = FindVisualParent<DataGrid>(cell);
+                if (dataGrid != null)
+                {
+                    if (dataGrid.SelectionUnit != DataGridSelectionUnit.FullRow)
+                    {
+                        if (!cell.IsSelected)
+                            cell.IsSelected = true;
+                    }
+                    else
+                    {
+                        DataGridRow row = FindVisualParent<DataGridRow>(cell);
+                        if (row != null && !row.IsSelected)
+                        {
+                            row.IsSelected = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        static T FindVisualParent<T>(UIElement element) where T : UIElement
+        {
+            UIElement parent = element;
+            while (parent != null)
+            {
+                T correctlyTyped = parent as T;
+                if (correctlyTyped != null)
+                {
+                    return correctlyTyped;
+                }
+
+                parent = VisualTreeHelper.GetParent(parent) as UIElement;
+            }
+            return null;
+        }
+        
         private DataTable autoPopulateData = null;
 
         public int CountAutoPopulateData()
@@ -230,7 +292,15 @@ namespace OodHelper.net
 
         void Races_PreparingCellForEdit(object sender, DataGridPreparingCellForEditEventArgs e)
         {
-            preEdit = ((TextBox)e.EditingElement).Text;
+            TextBox te = e.EditingElement as TextBox;
+            DataGridCell cell = te.Parent as DataGridCell;
+            if (te != null)
+            {
+                DataGridRow row = FindVisualParent<DataGridRow>(cell);
+                DataRowView x = cell.DataContext as DataRowView;
+                preEdit = x.Row[Races.Columns.IndexOf(cell.Column)].ToString();
+                te.SelectAll();
+            }
         }
 
         void Races_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
@@ -353,11 +423,6 @@ namespace OodHelper.net
         void start_GotFocus(object sender, RoutedEventArgs e)
         {
             pcStart = start.Text;
-        }
-
-        void Races_Loaded(object sender, RoutedEventArgs e)
-        {
-            //Races.cells;
         }
 
         private void buttonCalculate_Click(object sender, RoutedEventArgs e)

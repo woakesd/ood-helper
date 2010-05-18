@@ -18,7 +18,14 @@
             <Button Canvas.Left="406" Canvas.Top="24" Height="23" Name="buttonCalculate" Click="buttonCalculate_Click" Width="75">Calculate</Button>
         </Canvas>
         <DockPanel Margin="0,69,0,0" Name="racesDockPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <DataGrid Name="Races" ItemsSource="{Binding}" CanUserDeleteRows="False" CanUserAddRows="False" IsReadOnly="False" AutoGenerateColumns="True" />
+            <DataGrid SelectionMode="Single" Name="Races" CanUserDeleteRows="False" CanUserAddRows="False" IsReadOnly="False">
+                <DataGrid.Resources>
+                    <Style TargetType="{x:Type DataGridCell}">
+                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridCell_PreviewMouseLeftButtonDown" />
+                        <EventSetter Event="PreviewKeyDown" Handler="DataGridCell_PreviewKeyDown" />
+                    </Style>
+                </DataGrid.Resources>
+            </DataGrid>
         </DockPanel>
     </Grid>
 </UserControl>
