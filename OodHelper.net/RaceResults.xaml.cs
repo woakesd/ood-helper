@@ -217,9 +217,11 @@ namespace OodHelper.net
         void pd_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
         {
             RaceEdit race = reds[PageNo];
-            Font lfnt = new Font("Lucida Console", 10);
-            Font lbfnt = new Font("Lucida Console", 10, System.Drawing.FontStyle.Bold);
-            Font sfnt = new Font("MS Gothic", (float)8);
+            string fname = "Lucida Console";
+            //string fname = "MS Gothic";
+            Font lfnt = new Font(fname, 10);
+            Font lbfnt = new Font(fname, 10, System.Drawing.FontStyle.Bold);
+            Font sfnt = new Font(fname, (float)7);
             System.Drawing.Brush b = System.Drawing.Brushes.Black;
 
             //PrintRaces.OriginAtMargins = true;
@@ -229,7 +231,7 @@ namespace OodHelper.net
             //ps.Offset(50, 50)
             //ps.Inflate(-50, -50)
             int tmargin = 30;
-            int lmargin = 50;
+            int lmargin = 0;
 
             SizeF tsize = e.Graphics.MeasureString(outs, lfnt);
 
@@ -275,10 +277,10 @@ namespace OodHelper.net
                 "Boatclass          " +
                 "Sail No  " +
                 "HCap " +
-                " Finish   " +
-                "Elapsed   " +
+                "   Finish   " +
+                "Elapsed  " +
                 "Laps  " +
-                "Corrected  " +
+                "Corrected   " +
                 "Place  " +
                 "Achd  " +
                 "  PI   " +
@@ -298,7 +300,7 @@ namespace OodHelper.net
                 "          " +
                 "      " +
                 "           " +
-                "       " +
+                "         " +
                 "Hcap  " +
                 "       " +
                 "Hcap  " +
@@ -314,23 +316,24 @@ namespace OodHelper.net
             for (int i = 0; i < race.Races.Items.Count; i++)
             {
                 DataRow r = ((DataRowView)race.Races.Items[i]).Row;
-                object o = r["corrected"];
-                double el = (double)o;
                 outs = r["boatname"].ToString().PadRight(19) + " " +
                     r["boatclass"].ToString().PadRight(18) + " " +
                     r["sailno"].ToString().PadRight(8) + " " +
-                    r["open_handicap"].ToString().PadLeft(5) + " " +
-                    r["fintime"].ToString().PadRight(8) + "  " +
-                    HMS((int)r["elapsed"]) + "  " +
-                    r["laps"].ToString().PadLeft(3) + "  " +
-                    HMS((double)r["corrected"]).PadLeft(9) + "   " +
-                    r["place"].ToString().PadLeft(4) + " " +
-                    r["achieved_handicap"].ToString().PadLeft(6) + " " +
-                    r["performance_index"].ToString().PadLeft(5) + "   " +
-                    r["new_rolling_handicap"].ToString().PadLeft(4) + "  " +
-                    r["c"].ToString().PadRight(1) + " " +
-                    r["a"].ToString().PadRight(1) + " " +
-                    r["handicap_status"].ToString().PadLeft(2);
+                    r["open_handicap"].ToString().PadLeft(5) + "  " +
+                    r["fintime"].ToString().PadRight(8) + "  ";
+                if (r["place"].ToString() != "999")
+                {
+                    outs += HMS((int)r["elapsed"]) + "  " +
+                        r["laps"].ToString().PadLeft(3) + "  " +
+                        HMS((double)r["corrected"]).PadLeft(9) + "   " +
+                        r["place"].ToString().PadLeft(4) + " " +
+                        r["achieved_handicap"].ToString().PadLeft(6) + " " +
+                        r["performance_index"].ToString().PadLeft(5) + "   " +
+                        r["new_rolling_handicap"].ToString().PadLeft(4) + "  " +
+                        r["c"].ToString().PadRight(1) + " " +
+                        r["a"].ToString().PadRight(1) + " " +
+                        r["handicap_status"].ToString().PadLeft(2);
+                }
                 tsize = e.Graphics.MeasureString(outs, sfnt);
                 e.Graphics.DrawString(outs, sfnt, b, lmargin, (float)(resoff + (tsize.Height * 1.5) * (i + 3.5)));
             }
@@ -350,13 +353,18 @@ namespace OodHelper.net
 
         private string HMS(double t)
         {
-            int s = (int)t % 60;
-            int m = (int)t / 60;
-            int h = m / 60;
-            m = m % 60;
-            return h.ToString().PadLeft(2, '0') + ':' +
-                m.ToString().PadLeft(2, '0') + ':' +
-                s.ToString().PadLeft(2, '0');
+            if (t != 999999)
+            {
+                int s = (int)t % 60;
+                int m = (int)t / 60;
+                int h = m / 60;
+                m = m % 60;
+                return h.ToString().PadLeft(2, '0') + ':' +
+                    m.ToString().PadLeft(2, '0') + ':' +
+                    s.ToString().PadLeft(2, '0');
+            }
+            else
+                return "";
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)

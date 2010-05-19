@@ -16,12 +16,12 @@
             <MenuItem Header="_Edit">
                 <MenuItem Header="_Boats" Name="Boats" Click="Boats_Click">
                     <MenuItem.Icon>
-                        <Image Width="24" Height="24" Margin="1" Source="/OodHelper.net;component/Images/Boat.png" />
+                        <Image Width="16" Height="16" Margin="1" Source="/OodHelper.net;component/Images/Boat-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="_People" Name="People" Click="People_Click" >
                     <MenuItem.Icon>
-                        <Image Width="24" Height="24" Margin="1" Source="/OodHelper.net;component/Images/Man.png" />
+                        <Image Width="16" Height="16" Margin="1" Source="/OodHelper.net;component/Images/Man.png" />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
