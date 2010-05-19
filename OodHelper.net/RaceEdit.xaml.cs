@@ -196,11 +196,25 @@ namespace OodHelper.net
                 DataGridCell cell = sender as DataGridCell;
                 if (cell != null)
                 {
+                    Races.CommitEdit();
                     cell.IsEditing = false;
                     DataGridRow row = FindVisualParent<DataGridRow>(cell);
                 }
                 e.Handled = false;
                 //Races.CellEditEnding.
+            }
+        }
+
+        void DataGridCell_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Down || e.Key == Key.Up)
+            {
+                DataGridCell cell = sender as DataGridCell;
+                if (cell != null && !cell.IsEditing && !cell.IsReadOnly)
+                {
+                    cell.Focus();
+                    Races.BeginEdit();
+                }
             }
         }
 
@@ -296,9 +310,8 @@ namespace OodHelper.net
             DataGridCell cell = te.Parent as DataGridCell;
             if (te != null)
             {
-                DataGridRow row = FindVisualParent<DataGridRow>(cell);
-                DataRowView x = cell.DataContext as DataRowView;
-                preEdit = x.Row[Races.Columns.IndexOf(cell.Column)].ToString();
+                DataRowView rowview = cell.DataContext as DataRowView;
+                preEdit = rowview.Row[Races.Columns.IndexOf(cell.Column)].ToString();
                 te.SelectAll();
             }
         }

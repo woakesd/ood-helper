@@ -23,6 +23,7 @@
                     <Style TargetType="{x:Type DataGridCell}">
                         <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridCell_PreviewMouseLeftButtonDown" />
                         <EventSetter Event="PreviewKeyDown" Handler="DataGridCell_PreviewKeyDown" />
+                        <EventSetter Event="KeyUp" Handler="DataGridCell_KeyUp" />
                     </Style>
                 </DataGrid.Resources>
             </DataGrid>
