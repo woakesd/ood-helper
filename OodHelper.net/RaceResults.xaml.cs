@@ -217,11 +217,11 @@ namespace OodHelper.net
         void pd_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
         {
             RaceEdit race = reds[PageNo];
-            string fname = "Lucida Console";
-            //string fname = "MS Gothic";
+            //string fname = "Lucida Console";
+            string fname = "MS Gothic";
             Font lfnt = new Font(fname, 10);
             Font lbfnt = new Font(fname, 10, System.Drawing.FontStyle.Bold);
-            Font sfnt = new Font(fname, (float)7);
+            Font sfnt = new Font(fname, (float)8);
             System.Drawing.Brush b = System.Drawing.Brushes.Black;
 
             //PrintRaces.OriginAtMargins = true;

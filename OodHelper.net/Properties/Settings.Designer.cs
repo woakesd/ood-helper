@@ -26,7 +26,7 @@ namespace OodHelper.net.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=|DataDirectory|\\data\\OodHelper.sdf")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=data\\OodHelper.sdf")]
         public string OodHelperConnectionString {
             get {
                 return ((string)(this["OodHelperConnectionString"]));
@@ -48,7 +48,7 @@ namespace OodHelper.net.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=|DataDirectory|\\data\\Settings.sdf")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=data\\Settings.sdf")]
         public string SettingsConnectionString {
             get {
                 return ((string)(this["SettingsConnectionString"]));
