@@ -404,7 +404,7 @@ CREATE TABLE [series] (
                 "FROM " + tname);
             object o;
             int seedvalue;
-            if ((o = s.GetScalar(null)) != null)
+            if ((o = s.GetScalar(null)) != DBNull.Value)
             {
                 seedvalue = ((int)o) + 1;
             }
