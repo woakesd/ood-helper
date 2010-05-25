@@ -56,7 +56,7 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Label Margin="0" Grid.Column="0" Name="findtext">Find</Label>
-            <TextBox Name="Peoplename" Grid.Column="1" Margin="3,3,3,3" Width="250"/>
+            <TextBox Name="Peoplename" Grid.Column="1" Margin="2" Width="250" TextChanged="Peoplename_TextChanged"/>
         </Grid>
         <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
             <DataGrid Margin="0,72,0,0" Name="PeopleData" IsReadOnly="True" >

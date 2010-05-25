@@ -23,9 +23,6 @@ namespace OodHelper.net
         public People()
         {
             InitializeComponent();
-            LoadGrid();
-
-            Peoplename.TextChanged += new TextChangedEventHandler(Peoplename_TextChanged);
         }
 
         int? id;
@@ -202,6 +199,7 @@ namespace OodHelper.net
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            LoadGrid();
             if (id != null)
             {
                 foreach (DataRowView vr in PeopleData.Items)

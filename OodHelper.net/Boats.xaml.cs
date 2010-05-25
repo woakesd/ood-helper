@@ -23,9 +23,11 @@ namespace OodHelper.net
         public Boats()
         {
             InitializeComponent();
-            LoadGrid();
+        }
 
-            Boatname.TextChanged += new TextChangedEventHandler(Boatname_TextChanged);
+        void Boats_Loaded(object sender, RoutedEventArgs e)
+        {
+            LoadGrid();
         }
 
         private void LoadGrid()
