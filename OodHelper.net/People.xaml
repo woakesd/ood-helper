@@ -3,7 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Loaded="Window_Loaded" Icon="/OodHelper.net;component/Images/Man.png" Title="People">
     <Grid>
-        <ToolBarTray Height="36" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ToolBarTray>
             <ToolBar>
                 <Button Name="Add" Click="Add_Click">
                     <Grid>
@@ -47,19 +52,16 @@
                 </Button>
             </ToolBar>
         </ToolBarTray>
-        <Grid Margin="0,36,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Left" >
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
-            <Label Margin="0" Grid.Column="0" Name="findtext">Find</Label>
+            <Label Margin="2" Grid.Column="0" Name="findtext">Find</Label>
             <TextBox Name="Peoplename" Grid.Column="1" Margin="2" Width="250" TextChanged="Peoplename_TextChanged"/>
         </Grid>
-        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
-            <DataGrid Margin="0,72,0,0" Name="PeopleData" IsReadOnly="True" >
+        <DockPanel Grid.Row="2" >
+            <DataGrid Name="PeopleData" IsReadOnly="True" >
                 <DataGrid.ContextMenu>
                     <ContextMenu Opened="ContextMenu_Opened">
                         <MenuItem Header="Edit" Click="Edit_Click">

@@ -105,8 +105,6 @@ namespace OodHelper.net
 
             Boats.ItemsSource = dt.DefaultView;
             Boats.IsReadOnly = true;
-
-            Boatname.TextChanged += new TextChangedEventHandler(Boatname_TextChanged);
         }
 
         System.Timers.Timer t = null;

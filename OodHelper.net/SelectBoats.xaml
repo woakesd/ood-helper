@@ -5,7 +5,7 @@
         Height="595" Width="788">
     <Grid >
         <Grid Height="45" Name="ButtonsPanel" VerticalAlignment="Top">
-            <TextBox Name="Boatname" Width="259" HorizontalAlignment="Left" Margin="47,11,0,11" />
+            <TextBox Name="Boatname" Width="259" HorizontalAlignment="Left" Margin="47,11,0,11" TextChanged="Boatname_TextChanged"/>
             <Label Margin="6,11,0,11" Name="findtext" HorizontalAlignment="Left" Width="35">Find</Label>
             <Button HorizontalAlignment="Right" Margin="0,11,168,11" Name="NewBoat" Width="75" Click="NewBoat_Click">New Boat</Button>
             <Button HorizontalAlignment="Left" Margin="604,11,0,11" Name="Cancel" Width="75" Click="Cancel_Click">Cancel</Button>
