@@ -22,7 +22,6 @@ namespace OodHelper.net
         public PrintPreview()
         {
             InitializeComponent();
-            string DVXAML = System.Windows.Markup.XamlWriter.Save(Viewer.Template);
         }
     }
 }

@@ -26,6 +26,7 @@ namespace OodHelper.net
         {
             InitializeComponent();
 
+            red.scorer.Calculate(red.Rid);
             RaceDate.Text = "Date of Race: " + red.RaceDate.ToShortDateString();
             EventDescription.Text = red.RaceName;
             OodName.Text = "OOD: " + red.Ood;
@@ -34,7 +35,7 @@ namespace OodHelper.net
 
             Db c = new Db("SELECT b.boatname Boat, b.boatclass [Class], b.sailno [Sail No], r.rolling_handicap as Hcap, " +
                 "r.fintime Finish, r.elapsed Elapsed, r.laps Laps, r.corrected Corrected, r.place Pos, " +
-                "r.achieved_handicap Achp, r.new_rolling_handicap [New\nhcap], r.performance_index PI, r.c C, r.a A, " +
+                "r.achieved_handicap Achp, r.new_rolling_handicap [nhcp], r.performance_index PI, r.c C, r.a A, " +
                 "r.handicap_status PY " +
                 "FROM boats b INNER JOIN races r ON r.bid = b.bid " +
                 "WHERE r.rid = @rid " +
@@ -83,19 +84,30 @@ namespace OodHelper.net
             Results.Columns[1].Width = Width * .16;
             Results.Columns[2].Width = Width * .088;
             Results.Columns[3].Width = Width * .048;
+            SetRightAlignment(Results.Columns[3]);
             Results.Columns[4].Width = Width * .072;
             Results.Columns[5].Width = Width * .072;
             Results.Columns[6].Width = Width * .04;
             Results.Columns[7].Width = Width * .072;
             Results.Columns[8].Width = Width * .04;
+            SetRightAlignment(Results.Columns[8]);
             Results.Columns[9].Width = Width * .048;
+            Results.Columns[9].Header = "Achd\nHcap";
+            SetRightAlignment(Results.Columns[9]);
             Results.Columns[10].Width = Width * .048;
+            Results.Columns[10].Header = "New\nHcap";
+            SetRightAlignment(Results.Columns[10]);
             Results.Columns[11].Width = Width * .048;
-            Results.Columns[11].CellStyle = this.Resources["RightAlignCell"] as Style;
-            Results.Columns[11].HeaderStyle = this.Resources["RightAlignHeader"] as Style;
-            Results.Columns[12].Width = Width * .012;
-            Results.Columns[13].Width = Width * .012;
-            Results.Columns[14].Width = Width * .016;
+            SetRightAlignment(Results.Columns[11]);
+            Results.Columns[12].Width = Width * .008;
+            Results.Columns[13].Width = Width * .008;
+            Results.Columns[14].Width = Width * .012;
+        }
+
+        private void SetRightAlignment(DataGridColumn c)
+        {
+            c.CellStyle = this.Resources["RightAlignCell"] as Style;
+            c.HeaderStyle = this.Resources["RightAlignHeader"] as Style;
         }
     }
 }
