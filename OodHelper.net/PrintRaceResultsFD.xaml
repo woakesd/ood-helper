@@ -1,0 +1,112 @@
+﻿<FlowDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              ColumnWidth="400" FontSize="10" FontFamily="MS Gothic" >
+    <Table>
+        <TableRowGroup>
+            <TableRow>
+                <TableCell ColumnSpan="3">
+                    <Paragraph TextAlignment="Center">Port Edgar Yacht Club Race Results</Paragraph>
+                </TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell>
+                    <Paragraph TextDecorations="">Date of Race:
+                        <TextBlock Name="DateOfRace"/>
+                    </Paragraph>
+                </TableCell>
+                <TableCell>
+                </TableCell>
+                <TableCell>
+                    <Paragraph>OOD:
+                        <TextBlock Name="OODName"/>
+                    </Paragraph>
+                </TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell>
+                    <Paragraph>Race No:
+                        <TextBlock Name="Rid"/>
+                    </Paragraph>
+                </TableCell>
+                <TableCell>
+                    <Paragraph>
+                        <TextBlock Name="EventDescription"/>
+                    </Paragraph>
+                </TableCell>
+                <TableCell>
+                </TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell>
+                    <Paragraph>Start:
+                        <TextBlock Name="Start"/>
+                    </Paragraph>
+                </TableCell>
+                <TableCell>
+                    <Paragraph>Rolling Handicap used</Paragraph>
+                </TableCell>
+                <TableCell>
+                </TableCell>
+            </TableRow>
+        </TableRowGroup>
+    </Table>
+    <Table>
+        <Table.Resources>
+            <Style x:Key="headerRowStyle" TargetType="{x:Type TableRowGroup}">
+                <Setter Property="FontSize" Value="8"/>
+            </Style>
+            <Style x:Key="headerCellStyle" TargetType="{x:Type Paragraph}">
+                <Setter Property="TextDecorations" Value="Underline"/>
+            </Style>
+        </Table.Resources>
+        <TableRowGroup Style="{StaticResource headerRowStyle}">
+            <TableRow>
+                <TableCell>
+                    <Paragraph>Boat name</Paragraph>
+                </TableCell>
+                <TableCell>
+                    <Paragraph>Boat class</Paragraph>
+                </TableCell>
+                <TableCell>
+                    <Paragraph>Sail no</Paragraph>
+                </TableCell>
+                <TableCell>
+                    <Paragraph>Hcap</Paragraph>
+                </TableCell>
+                <TableCell>
+                    <Paragraph>Finish</Paragraph>
+                </TableCell>
+                <TableCell>
+                    <Paragraph>Elapsed</Paragraph>
+                </TableCell>
+                <TableCell>
+                    <Paragraph>Laps</Paragraph>
+                </TableCell>
+                <TableCell>
+                    <Paragraph>Corrected</Paragraph>
+                </TableCell>
+                <TableCell>
+                    <Paragraph>Place</Paragraph>
+                </TableCell>
+                <TableCell>
+                    <Paragraph>Achd</Paragraph>
+                </TableCell>
+                <TableCell>
+                    <Paragraph>PI</Paragraph>
+                </TableCell>
+                <TableCell>
+                    <Paragraph>New</Paragraph>
+                </TableCell>
+                <TableCell>
+                    <Paragraph>C</Paragraph>
+                </TableCell>
+                <TableCell>
+                    <Paragraph>A</Paragraph>
+                </TableCell>
+                <TableCell>
+                    <Paragraph>PY</Paragraph>
+                </TableCell>
+            </TableRow>
+        </TableRowGroup>
+    </Table>
+</FlowDocument>

@@ -26,7 +26,7 @@ namespace OodHelper.net
         private DataTable rd;
         private Hashtable caldata;
 
-        RaceScore scorer;
+        public IRaceScore scorer;
 
         private string raceclass = "";
         public string RaceClass
@@ -107,14 +107,17 @@ namespace OodHelper.net
             mOod = caldata["ood"].ToString();
             mHandicap = (string)caldata["hc"];
 
-            switch (Handicap)
+            if (scorer == null)
             {
-                case "r":
-                    scorer = new RollingHandicap();
-                    break;
-                case "o":
-                    scorer = new OpenHandicap();
-                    break;
+                switch (Handicap)
+                {
+                    case "r":
+                        scorer = new RollingHandicap();
+                        break;
+                    case "o":
+                        scorer = new OpenHandicap();
+                        break;
+                }
             }
 
             rddb = new Db("SELECT r.rid, r.bid, boatname, boatclass, sailno, r.start, " +
@@ -148,17 +151,17 @@ namespace OodHelper.net
         {
             DataGridTextColumn col = (DataGridTextColumn)Races.Columns[rd.Columns["elapsed"].Ordinal];
             Binding b = (Binding)col.Binding;
-            b.Converter = new intTimeSpan();
+            b.Converter = new IntTimeSpan();
             col.Binding = b;
 
             col = (DataGridTextColumn)Races.Columns[rd.Columns["standard_corrected"].Ordinal];
             b = (Binding)col.Binding;
-            b.Converter = new dblTimeSpan();
+            b.Converter = new DoubleTimeSpan();
             col.Binding = b;
 
             col = (DataGridTextColumn)Races.Columns[rd.Columns["corrected"].Ordinal];
             b = (Binding)col.Binding;
-            b.Converter = new dblTimeSpan();
+            b.Converter = new DoubleTimeSpan();
             col.Binding = b;
 
             Color x = new Color();
@@ -209,9 +212,6 @@ namespace OodHelper.net
             }
         }
 
-        //
-        // SINGLE CLICK EDITING
-        //
         private void DataGridCell_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             DataGridCell cell = sender as DataGridCell;
@@ -438,72 +438,6 @@ namespace OodHelper.net
         {
             if (scorer != null) scorer.Calculate(Rid);
             LoadGrid();
-        }
-
-        private class intTimeSpan : IValueConverter
-        {
-            public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-            {
-                if (value != DBNull.Value)
-                {
-                    int seconds = (Int32)value;
-                    if (seconds < 999999)
-                    {
-                        TimeSpan s = new TimeSpan(0, 0, seconds);
-                        return s.ToString();
-                    }
-                    return seconds.ToString();
-                }
-                else
-                {
-                    return "";
-                }
-            }
-
-            public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-            {
-                string strValue = value as string;
-                TimeSpan resultDateTime;
-                if (TimeSpan.TryParse(strValue, out resultDateTime))
-                {
-                    return (int)resultDateTime.TotalSeconds;
-                }
-                return DependencyProperty.UnsetValue;
-            }
-        }
-
-        private class dblTimeSpan : IValueConverter
-        {
-            public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-            {
-                if (value != DBNull.Value)
-                {
-                    double seconds = (double)value;
-                    if (seconds < 999999)
-                    {
-                        TimeSpan s = new TimeSpan(0, 0, 0, (int)Math.Truncate(seconds),
-                            (int)Math.Round((seconds - Math.Truncate(seconds)) * 1000));
-                        return s.ToString().Replace("00000", "");
-                    }
-                    else
-                        return seconds.ToString();
-                }
-                else
-                {
-                    return "";
-                }
-            }
-
-            public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-            {
-                string strValue = value as string;
-                TimeSpan resultDateTime;
-                if (TimeSpan.TryParse(strValue, out resultDateTime))
-                {
-                    return (int)resultDateTime.TotalSeconds;
-                }
-                return DependencyProperty.UnsetValue;
-            }
         }
     }
 }

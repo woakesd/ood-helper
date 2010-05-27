@@ -185,5 +185,20 @@ namespace OodHelper.net
             }
         }
 
+        public static string HMS(double t)
+        {
+            if (t != 999999)
+            {
+                int s = (int)t % 60;
+                int m = (int)t / 60;
+                int h = m / 60;
+                m = m % 60;
+                return h.ToString().PadLeft(2, '0') + ':' +
+                    m.ToString().PadLeft(2, '0') + ':' +
+                    s.ToString().PadLeft(2, '0');
+            }
+            else
+                return "";
+        }
     }
 }

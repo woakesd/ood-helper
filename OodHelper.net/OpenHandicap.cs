@@ -9,7 +9,7 @@ using System.Collections;
 namespace OodHelper.net
 {
     [Svn("$Id$")]
-    class OpenHandicap : RaceScore
+    class OpenHandicap : IRaceScore
     {
         private double standardCorrectedTime;
         private double averageCorrectedTime;
@@ -18,6 +18,11 @@ namespace OodHelper.net
         private DateTime rdate;
         private string racetype;
         private int rid;
+
+        public double StandardCorrectedTime
+        {
+            get { return standardCorrectedTime; }
+        }
 
         public double SlowLimit
         {

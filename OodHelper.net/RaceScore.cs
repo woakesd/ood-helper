@@ -6,8 +6,10 @@ using System.Text;
 namespace OodHelper.net
 {
     [Svn("$Id$")]
-    public interface RaceScore
+    public interface IRaceScore
     {
+        double StandardCorrectedTime { get; }
+
         void Calculate(int rid);
     }
 }

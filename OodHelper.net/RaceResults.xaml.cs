@@ -2,13 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
@@ -192,18 +192,38 @@ namespace OodHelper.net
 
         private void Print_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Forms.PrintPreviewDialog pv = new System.Windows.Forms.PrintPreviewDialog();
-            PrintRaces = new System.Drawing.Printing.PrintDocument();
-            pv.Document = PrintRaces;
-            PrintRaces.BeginPrint += new System.Drawing.Printing.PrintEventHandler(pd_BeginPrint);
-            PrintRaces.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(pd_PrintPage);
+            PrintDialog pd = new PrintDialog();
+            
+            FixedDocument fd = new FixedDocument();
+            fd.DocumentPaginator.PageSize = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
+            FixedPage p1 = new FixedPage();
+            p1.Width = fd.DocumentPaginator.PageSize.Width;
+            p1.Height = fd.DocumentPaginator.PageSize.Height;
+
+            RollingHandicapResultsPage p = new RollingHandicapResultsPage(reds[0]);
+            p.Width = p1.Width;
+            
+            Frame f = new Frame();
+            f.Navigate(p);
+            f.Width = p1.Width;
+            //f.HorizontalAlignment = HorizontalAlignment.Stretch;
+            p1.Children.Add(f);
+
+            PageContent pc = new PageContent();
+            IAddChild ac = pc as IAddChild;
+            ac.AddChild(p1);
+
+            PrintPreview pv = new PrintPreview();
+            fd.Pages.Add(pc);
+            pv.Viewer.Document = fd;
+            pv.Viewer.FitToWidth();
             pv.ShowDialog();
         }
 
         System.Drawing.Printing.PrintDocument PrintRaces;
         private int PageNo;
 
-        void pd_BeginPrint(object sender, System.Drawing.Printing.PrintEventArgs e)
+        /*void pd_BeginPrint(object sender, System.Drawing.Printing.PrintEventArgs e)
         {
             //PrintRaces.PrinterSettings.PrinterName = "HP Photosmart C6180";
 
@@ -349,23 +369,7 @@ namespace OodHelper.net
                 }
                 PageNo += 1;
             }
-        }
-
-        private string HMS(double t)
-        {
-            if (t != 999999)
-            {
-                int s = (int)t % 60;
-                int m = (int)t / 60;
-                int h = m / 60;
-                m = m % 60;
-                return h.ToString().PadLeft(2, '0') + ':' +
-                    m.ToString().PadLeft(2, '0') + ':' +
-                    s.ToString().PadLeft(2, '0');
-            }
-            else
-                return "";
-        }
+        }*/
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
