@@ -16,6 +16,7 @@ namespace OodHelper.net
     /// <summary>
     /// Interaction logic for PrintPreview.xaml
     /// </summary>
+    [Svn("$Id$")]
     public partial class PrintPreview : Window
     {
         public PrintPreview()

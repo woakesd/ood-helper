@@ -4,6 +4,7 @@ using System.Windows.Data;
 
 namespace OodHelper.net
 {
+    [Svn("$Id$")]
     class IntTimeSpan : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
