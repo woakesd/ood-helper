@@ -79,29 +79,25 @@ namespace OodHelper.net
             b.Converter = new DoubleTimeSpan();
             col.Binding = b;
 
-            double Width = this.Width - 96;
-            Results.Columns[0].Width = Width * .168;
-            Results.Columns[1].Width = Width * .16;
-            Results.Columns[2].Width = Width * .088;
-            Results.Columns[3].Width = Width * .048;
+            double[] widths = new double[] { .16, .152, .088, .048, .08, .08, .036, .084, .04, .048, .048, .048, .006, .006, .012 };
+
+            double sumWidths = 0;
+            foreach (double w in widths)
+                sumWidths += w;
+
+            double printableWidth = Width - 96;
+
+            for (int i = 0; i < widths.Length; i++)
+                Results.Columns[i].Width = printableWidth * widths[i]/sumWidths - 4;
+
             SetRightAlignment(Results.Columns[3]);
-            Results.Columns[4].Width = Width * .072;
-            Results.Columns[5].Width = Width * .072;
-            Results.Columns[6].Width = Width * .04;
-            Results.Columns[7].Width = Width * .072;
-            Results.Columns[8].Width = Width * .04;
             SetRightAlignment(Results.Columns[8]);
-            Results.Columns[9].Width = Width * .048;
-            Results.Columns[9].Header = "Achd\nHcap";
             SetRightAlignment(Results.Columns[9]);
-            Results.Columns[10].Width = Width * .048;
-            Results.Columns[10].Header = "New\nHcap";
             SetRightAlignment(Results.Columns[10]);
-            Results.Columns[11].Width = Width * .048;
             SetRightAlignment(Results.Columns[11]);
-            Results.Columns[12].Width = Width * .008;
-            Results.Columns[13].Width = Width * .008;
-            Results.Columns[14].Width = Width * .012;
+
+            Results.Columns[9].Header = "Achd\nHcap";
+            Results.Columns[10].Header = "New\nHcap";
         }
 
         private void SetRightAlignment(DataGridColumn c)
