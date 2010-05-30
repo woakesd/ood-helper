@@ -112,6 +112,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="About.xaml.cs">
+      <DependentUpon>About.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DoubleTimeSpan.cs" />
     <Compile Include="IntTimeSpan.cs" />
     <Compile Include="RollingHandicapResultsPage.xaml.cs">
@@ -120,6 +123,10 @@
     <Compile Include="WebProgress.xaml.cs">
       <DependentUpon>WebProgress.xaml</DependentUpon>
     </Compile>
+    <Page Include="About.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Boat.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

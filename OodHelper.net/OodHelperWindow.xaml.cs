@@ -26,7 +26,6 @@ namespace OodHelper.net
         public OodHelperWindow()
         {
             InitializeComponent();
-            int i = Svn.Revision();
         }
 
         private void Results_Click(object sender, RoutedEventArgs e)
@@ -106,6 +105,12 @@ namespace OodHelper.net
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void About_Click(object sender, RoutedEventArgs e)
+        {
+            About a = new About();
+            a.ShowDialog();
         }
     }
 }
