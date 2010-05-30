@@ -123,6 +123,9 @@
     <Compile Include="WebProgress.xaml.cs">
       <DependentUpon>WebProgress.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Working.xaml.cs">
+      <DependentUpon>Working.xaml</DependentUpon>
+    </Compile>
     <Page Include="About.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -231,6 +234,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="WebProgress.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Working.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

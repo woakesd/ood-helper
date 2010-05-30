@@ -44,9 +44,11 @@ namespace OodHelper.net
 
         private delegate void DSetGridSource(DataTable ppl);
         private DSetGridSource dSetGridSource;
+        Working w;
 
         private void LoadGrid()
         {
+            w = new Working(this);
             PeopleData.ItemsSource = null;
             Task.Factory.StartNew(() =>
             {
@@ -76,6 +78,7 @@ namespace OodHelper.net
                     }
                 }
             }
+            w.Hide();
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)

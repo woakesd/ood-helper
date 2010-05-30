@@ -33,9 +33,11 @@ namespace OodHelper.net
 
         private delegate void DSetGridSource(DataTable ppl);
         private DSetGridSource dSetGridSource;
+        Working w;
 
         private void LoadGrid()
         {
+            w = new Working(this);
             BoatData.ItemsSource = null;
             Task.Factory.StartNew(() =>
             {
@@ -51,6 +53,7 @@ namespace OodHelper.net
         {
             BoatData.ItemsSource = bts.DefaultView;
             if (Boatname.Text != "") FilterBoats();
+            w.Hide();
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)

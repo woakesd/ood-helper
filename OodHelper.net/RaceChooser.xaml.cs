@@ -21,6 +21,7 @@ namespace OodHelper.net
     public partial class RaceChooser : Window
     {
         private DataTable cal;
+        Working w;
 
         public RaceChooser()
         {
@@ -38,6 +39,7 @@ namespace OodHelper.net
 
         void RaceChooser_Loaded(object sender, RoutedEventArgs e)
         {
+            w = new Working(this);
             System.Threading.Tasks.Task.Factory.StartNew(() =>
                 {
                     Db d = new Db("SELECT rid, date, start, event, class, timelimit, extension " +
@@ -71,6 +73,7 @@ namespace OodHelper.net
                     break;
                 }
             }
+            w.Hide();
         }
 
         void cal_MouseDoubleClick(object sender, MouseButtonEventArgs e)
