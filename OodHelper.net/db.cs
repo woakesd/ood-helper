@@ -291,8 +291,14 @@ CREATE TABLE [series] (
             }
             mAdapt = new SqlCeDataAdapter(mCmd);
             mCon.Open();
-            mAdapt.Fill(t);
-            mCon.Close();
+            try
+            {
+                mAdapt.Fill(t);
+            }
+            finally
+            {
+                mCon.Close();
+            }
             return t;
         }
 
