@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Threading.Tasks;
 
 namespace OodHelper.net
 {
@@ -30,12 +31,24 @@ namespace OodHelper.net
             LoadGrid();
         }
 
+        private delegate void DSetGridSource(DataTable ppl);
+        private DSetGridSource dSetGridSource;
+
         private void LoadGrid()
         {
-            Db c = new Db("SELECT * " + 
-                "FROM boats " +
-                "ORDER BY boatname");
-            DataTable bts = c.GetData(null);
+            BoatData.ItemsSource = null;
+            Task.Factory.StartNew(() =>
+            {
+                Db c = new Db("SELECT * " +
+                    "FROM boats " +
+                    "ORDER BY boatname");
+                DataTable bts = c.GetData(null);
+                Dispatcher.Invoke(dSetGridSource = SetGridSource, bts);
+            });
+        }
+
+        private void SetGridSource(DataTable bts)
+        {
             BoatData.ItemsSource = bts.DefaultView;
             if (Boatname.Text != "") FilterBoats();
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Text;
 using System.Windows;
@@ -11,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Threading.Tasks;
 
 namespace OodHelper.net
 {
@@ -18,11 +20,12 @@ namespace OodHelper.net
     /// Interaction logic for Boats.xaml
     /// </summary>
     [Svn("$Id$")]
-    public partial class People : Window
+    public partial class People : Window, ISynchronizeInvoke
     {
         public People()
         {
             InitializeComponent();
+            dSetGridSource = SetGridSource;
         }
 
         int? id;
@@ -39,14 +42,40 @@ namespace OodHelper.net
             this.id = id;
         }
 
+        private delegate void DSetGridSource(DataTable ppl);
+        private DSetGridSource dSetGridSource;
+
         private void LoadGrid()
         {
-            Db c = new Db("SELECT * " +
-                "FROM people " +
-                "ORDER BY surname, firstname");
-            DataTable ppl = c.GetData(null);
+            PeopleData.ItemsSource = null;
+            Task.Factory.StartNew(() =>
+            {
+                Db c = new Db("SELECT * " +
+                    "FROM people " +
+                    "ORDER BY surname, firstname");
+                DataTable ppl = c.GetData(null);
+                c.Dispose();
+                Dispatcher.Invoke(dSetGridSource, ppl);
+            });
+        }
+
+        private void SetGridSource(DataTable ppl)
+        {
             PeopleData.ItemsSource = ppl.DefaultView;
             if (Peoplename.Text != "") FilterPeople();
+            if (id != null)
+            {
+                foreach (DataRowView vr in PeopleData.Items)
+                {
+                    DataRow r = vr.Row;
+                    if (((int)r["id"]) == id.Value)
+                    {
+                        PeopleData.SelectedItem = vr;
+                        PeopleData.ScrollIntoView(vr);
+                        break;
+                    }
+                }
+            }
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
@@ -200,19 +229,26 @@ namespace OodHelper.net
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             LoadGrid();
-            if (id != null)
-            {
-                foreach (DataRowView vr in PeopleData.Items)
-                {
-                    DataRow r = vr.Row;
-                    if (((int)r["id"]) == id.Value)
-                    {
-                        PeopleData.SelectedItem = vr;
-                        PeopleData.ScrollIntoView(vr);
-                        break;
-                    }
-                }
-            }
+        }
+
+        IAsyncResult ISynchronizeInvoke.BeginInvoke(Delegate method, object[] args)
+        {
+            throw new NotImplementedException();
+        }
+
+        object ISynchronizeInvoke.EndInvoke(IAsyncResult result)
+        {
+            throw new NotImplementedException();
+        }
+
+        object ISynchronizeInvoke.Invoke(Delegate method, object[] args)
+        {
+            return null;
+        }
+
+        bool ISynchronizeInvoke.InvokeRequired
+        {
+            get { throw new NotImplementedException(); }
         }
     }
 }

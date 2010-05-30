@@ -33,13 +33,23 @@ namespace OodHelper.net
             c.Binding.StringFormat = "dd MMM yyyy";
         }
 
+        private delegate void DSetGridSource();
+        private DSetGridSource dSetGridSource;
+
         void RaceChooser_Loaded(object sender, RoutedEventArgs e)
         {
-            Db d = new Db("SELECT rid, date, start, event, class, timelimit, extension " +
-                "FROM calendar WHERE computer IN (1,2) " +
-                "ORDER BY date, start");
-            cal = d.GetData(null);
+            System.Threading.Tasks.Task.Factory.StartNew(() =>
+                {
+                    Db d = new Db("SELECT rid, date, start, event, class, timelimit, extension " +
+                        "FROM calendar WHERE computer IN (1,2) " +
+                        "ORDER BY date, start");
+                    cal = d.GetData(null);
+                    Dispatcher.Invoke(dSetGridSource = SetGridSource, null);
+                });
+        }
 
+        private void SetGridSource()
+        {
             CalGrid.ItemsSource = cal.DefaultView;
 
             Db v = new Db("SELECT MAX(date) " +
@@ -49,12 +59,12 @@ namespace OodHelper.net
             Hashtable p = new Hashtable();
             p["today"] = DateTime.Today;
             Object o;
-            DateTime lr = (o = v.GetScalar(p)) == DBNull.Value ? DateTime.Today: (DateTime) o;
+            DateTime lr = (o = v.GetScalar(p)) == DBNull.Value ? DateTime.Today : (DateTime)o;
 
             foreach (DataRowView vr in CalGrid.Items)
             {
                 DataRow r = vr.Row;
-                if ((DateTime) r["date"] == lr)
+                if ((DateTime)r["date"] == lr)
                 {
                     CalGrid.ScrollIntoView(vr);
                     CalGrid.SelectedItem = vr;
