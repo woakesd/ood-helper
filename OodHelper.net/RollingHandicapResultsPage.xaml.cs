@@ -79,7 +79,7 @@ namespace OodHelper.net
             b.Converter = new DoubleTimeSpan();
             col.Binding = b;
 
-            double[] widths = new double[] { .16, .152, .088, .048, .08, .08, .036, .084, .04, .048, .048, .048, .006, .006, .012 };
+            double[] widths = new double[] { 20, 19, 11, 6, 10, 10, 4.5, 10.5, 5, 6, 6, 6, .75, .75, 1.5 };
 
             double sumWidths = 0;
             foreach (double w in widths)
