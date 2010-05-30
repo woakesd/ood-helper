@@ -101,21 +101,24 @@ namespace OodHelper.net
             ArrayList res = new ArrayList();
             res.Add(r);
 
-            for (int i = rowIndex-1; i >= 0; i--)
+            if (st != null)
             {
-                TimeSpan? t = Common.tspan(((DataRowView)CalGrid.Items[i]).Row["start"].ToString());
-                DateTime d = (DateTime) ((DataRowView)CalGrid.Items[i]).Row["date"];
-                if (d != rd || ((TimeSpan)(st - t)).TotalMinutes > 15)
-                    break;
-                res.Add(((DataRowView)CalGrid.Items[i]).Row["rid"]);
-            }
-            for (int i = rowIndex+1; i < CalGrid.Items.Count; i++)
-            {
-                TimeSpan? t = Common.tspan(((DataRowView)CalGrid.Items[i]).Row["start"].ToString());
-                DateTime d = (DateTime) ((DataRowView)CalGrid.Items[i]).Row["date"];
-                if (d != rd || ((TimeSpan)(t - st)).TotalMinutes > 15)
-                    break;
-                res.Add(((DataRowView)CalGrid.Items[i]).Row["rid"]);
+                for (int i = rowIndex - 1; i >= 0; i--)
+                {
+                    TimeSpan? t = Common.tspan(((DataRowView)CalGrid.Items[i]).Row["start"].ToString());
+                    DateTime d = (DateTime)((DataRowView)CalGrid.Items[i]).Row["date"];
+                    if (d != rd || t == null || ((TimeSpan)(st - t)).TotalMinutes > 15)
+                        break;
+                    res.Add(((DataRowView)CalGrid.Items[i]).Row["rid"]);
+                }
+                for (int i = rowIndex + 1; i < CalGrid.Items.Count; i++)
+                {
+                    TimeSpan? t = Common.tspan(((DataRowView)CalGrid.Items[i]).Row["start"].ToString());
+                    DateTime d = (DateTime)((DataRowView)CalGrid.Items[i]).Row["date"];
+                    if (d != rd || t == null || ((TimeSpan)(t - st)).TotalMinutes > 15)
+                        break;
+                    res.Add(((DataRowView)CalGrid.Items[i]).Row["rid"]);
+                }
             }
             res.Sort();
             rids = (int[]) res.ToArray(Type.GetType("System.Int32"));
