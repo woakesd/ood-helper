@@ -73,7 +73,7 @@ namespace OodHelper.net
                     break;
                 }
             }
-            w.Hide();
+            w.Close();
         }
 
         void cal_MouseDoubleClick(object sender, MouseButtonEventArgs e)

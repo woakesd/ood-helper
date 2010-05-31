@@ -24,6 +24,7 @@ namespace OodHelper.net
         public Boats()
         {
             InitializeComponent();
+            dSetGridSource = SetGridSource;
         }
 
         void Boats_Loaded(object sender, RoutedEventArgs e)
@@ -45,7 +46,8 @@ namespace OodHelper.net
                     "FROM boats " +
                     "ORDER BY boatname");
                 DataTable bts = c.GetData(null);
-                Dispatcher.Invoke(dSetGridSource = SetGridSource, bts);
+                c.Dispose();
+                Dispatcher.Invoke(dSetGridSource, bts);
             });
         }
 
@@ -53,7 +55,7 @@ namespace OodHelper.net
         {
             BoatData.ItemsSource = bts.DefaultView;
             if (Boatname.Text != "") FilterBoats();
-            w.Hide();
+            w.Close();
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
