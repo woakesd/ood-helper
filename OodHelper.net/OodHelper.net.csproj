@@ -115,8 +115,15 @@
     <Compile Include="About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SelectClass.xaml.cs">
+      <DependentUpon>SelectClass.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DoubleTimeSpan.cs" />
     <Compile Include="IntTimeSpan.cs" />
+    <Compile Include="HandicapDb.cs" />
+    <Compile Include="PNImport.xaml.cs">
+      <DependentUpon>PNImport.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RollingHandicapResultsPage.xaml.cs">
       <DependentUpon>RollingHandicapResultsPage.xaml</DependentUpon>
     </Compile>
@@ -142,6 +149,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="SelectClass.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="FamilyMember.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -155,6 +166,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="MySqlForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PNImport.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -375,6 +390,9 @@
   <ItemGroup>
     <Resource Include="Images\Boat-16.png" />
     <Resource Include="Images\Man-16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Database-16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

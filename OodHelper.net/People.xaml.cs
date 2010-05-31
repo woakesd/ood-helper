@@ -20,7 +20,7 @@ namespace OodHelper.net
     /// Interaction logic for Boats.xaml
     /// </summary>
     [Svn("$Id$")]
-    public partial class People : Window, ISynchronizeInvoke
+    public partial class People : Window
     {
         public People()
         {
@@ -232,26 +232,6 @@ namespace OodHelper.net
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             LoadGrid();
-        }
-
-        IAsyncResult ISynchronizeInvoke.BeginInvoke(Delegate method, object[] args)
-        {
-            throw new NotImplementedException();
-        }
-
-        object ISynchronizeInvoke.EndInvoke(IAsyncResult result)
-        {
-            throw new NotImplementedException();
-        }
-
-        object ISynchronizeInvoke.Invoke(Delegate method, object[] args)
-        {
-            return null;
-        }
-
-        bool ISynchronizeInvoke.InvokeRequired
-        {
-            get { throw new NotImplementedException(); }
         }
     }
 }

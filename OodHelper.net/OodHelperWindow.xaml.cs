@@ -112,5 +112,16 @@ namespace OodHelper.net
             About a = new About();
             a.ShowDialog();
         }
+
+        private void importPY_Click(object sender, RoutedEventArgs e)
+        {
+            PNImport pni = new PNImport();
+            pni.ShowDialog();
+        }
+
+        private void CreateHandicapDB_Click(object sender, RoutedEventArgs e)
+        {
+            HandicapDb.CreateDb();
+        }
     }
 }

@@ -14,7 +14,7 @@ namespace OodHelper.net
         public Db(string connectionString, string sql)
         {
             mCon = new SqlCeConnection();
-            mCon.ConnectionString = Properties.Settings.Default.OodHelperConnectionString;
+            mCon.ConnectionString = connectionString;
             mCmd = new SqlCeCommand(sql, mCon);
         }
 

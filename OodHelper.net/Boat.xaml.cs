@@ -61,16 +61,19 @@ namespace OodHelper.net
                 switch (data["handicap_status"].ToString())
                 {
                     case "PY":
-                        handicapStatus.SelectedValue = PY;
+                        handicapStatus.SelectedValue = hstat_PY;
                         break;
                     case "SY":
-                        handicapStatus.SelectedValue = SY;
+                        handicapStatus.SelectedValue = hstat_SY;
                         break;
                     case "TN":
-                        handicapStatus.SelectedValue = TN;
+                        handicapStatus.SelectedValue = hstat_TN;
                         break;
                     case "CN":
-                        handicapStatus.SelectedValue = CN;
+                        handicapStatus.SelectedValue = hstat_CN;
+                        break;
+                    case "EN":
+                        handicapStatus.SelectedValue = hstat_EN;
                         break;
                 }
                 rollingHandicap.Text = data["rolling_handicap"].ToString();
@@ -216,6 +219,12 @@ namespace OodHelper.net
                 case "Club Number (CN)":
                     p["ohstat"] = "CN";
                     break;
+                case "Recorded Number (RN)":
+                    p["ohstat"] = "RN";
+                    break;
+                case "Experimental Number (EN)":
+                    p["ohstat"] = "EN";
+                    break;
             }
 
             Double schr;
@@ -339,6 +348,78 @@ namespace OodHelper.net
             {
                 id = ppl.Id;
                 SetOwner();
+            }
+        }
+
+        private void SelectClass_Click(object sender, RoutedEventArgs e)
+        {
+            SelectClass cls = new SelectClass();
+            if (cls.ShowDialog().Value)
+            {
+                Hashtable p = new Hashtable();
+                p["id"] = cls.Id;
+                HandicapDb hdb = new HandicapDb("SELECT * FROM portsmouth_numbers WHERE id = @id");
+                Hashtable data = hdb.GetHashtable(p);
+
+                boatClass.Text = data["class_name"].ToString();
+                openHandicap.Text = data["number"].ToString();
+                if (rollingHandicap.Text == "")
+                    rollingHandicap.Text = data["number"].ToString();
+                switch (data["status"].ToString())
+                {
+                    case "P":
+                        handicapStatus.SelectedValue = hstat_PY;
+                        break;
+                    case "S":
+                        handicapStatus.SelectedValue = hstat_SY;
+                        break;
+                    case "C":
+                        handicapStatus.SelectedValue = hstat_CN;
+                        break;
+                    case "R":
+                        handicapStatus.SelectedValue = hstat_RN;
+                        break;
+                    case "E":
+                        handicapStatus.SelectedValue = hstat_EN;
+                        break;
+                }
+
+                if (data["engine"] != DBNull.Value)
+                {
+                    switch (data["engine"].ToString())
+                    {
+                        case "OB":
+                            engine.SelectedValue = OB;
+                            break;
+                        case "IB2":
+                            engine.SelectedValue = IB2;
+                            break;
+                        case "IB3":
+                            engine.SelectedValue = IB3;
+                            break;
+                        case "IBF":
+                            engine.SelectedValue = IBF;
+                            break;
+                    }
+                }
+                else
+                    engine.SelectedIndex = 0;
+
+                if (data["keel"] != DBNull.Value)
+                {
+                    switch (data["keel"] as int?)
+                    {
+                        case 1:
+                            keel.SelectedValue = keelF;
+                            break;
+                        case 2:
+                            keel.SelectedValue = keel2K;
+                            break;
+                        case 3:
+                            keel.SelectedValue = keel3K;
+                            break;
+                    }
+                }
             }
         }
     }

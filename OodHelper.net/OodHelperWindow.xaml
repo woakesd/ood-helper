@@ -31,9 +31,16 @@
                 <Separator/>
                 <MenuItem Header="_Create Results DB" Name="CreateResultsDB" Click="SqlCe_Click">
                     <MenuItem.Icon>
-                        <Image Source="/OodHelper.net;component/Images/Database.png" />
+                        <Image Source="/OodHelper.net;component/Images/Database-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="_Create Handicap DB" Name="CreateHandicapDB" Click="CreateHandicapDB_Click">
+                    <MenuItem.Icon>
+                        <Image Source="/OodHelper.net;component/Images/Database-16.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="Import _PY" Name="importPY" Click="importPY_Click" />
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_About" Click="About_Click" />
