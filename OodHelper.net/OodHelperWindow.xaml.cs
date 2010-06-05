@@ -48,7 +48,8 @@ namespace OodHelper.net
 
         private void Download_Click(object sender, RoutedEventArgs e)
         {
-            Common.copyMySqlData();
+            Working p = new Working(this, "Loading Boats", false, 0, 6);
+            Common.copyMySqlData(p);
         }
 
         private void Upload_Click(object sender, RoutedEventArgs e)

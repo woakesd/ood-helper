@@ -87,7 +87,7 @@ namespace OodHelper.net
 
         public void LoadGrid()
         {
-            Db c = new Db("SELECT start, timelimit, extension, day, date, event, class, spec, hc, ood " +
+            Db c = new Db("SELECT start, timelimit, extension, day, date, event, class, spec, hc, standard_corrected_time " +
                     "FROM calendar " +
                     "WHERE rid = @rid");
             Hashtable p = new Hashtable();
@@ -104,8 +104,9 @@ namespace OodHelper.net
             racename = eventname + " - " + caldata["class"].ToString().Trim();
             raceclass = caldata["class"].ToString().Trim();
             mRaceDate = (DateTime)caldata["date"];
-            mOod = caldata["ood"].ToString();
+            //mOod = caldata["ood"].ToString();
             mHandicap = (string)caldata["hc"];
+            sct.Text = Common.HMS((double)caldata["standard_corrected_time"]);
 
             if (scorer == null)
             {
@@ -175,8 +176,11 @@ namespace OodHelper.net
                 if (rd.Columns[(string) c.Header].ReadOnly)
                 {
                     c.CellStyle = new System.Windows.Style();
+                    //c.CellStyle.BasedOn = App.Current.Resources.FindName("DataGridCellFont") as Style;
                     c.CellStyle.Setters.Add(new Setter(DataGridCell.BackgroundProperty, vlg));
                     c.CellStyle.Setters.Add(new Setter(DataGridCell.ForegroundProperty, Brushes.Black));
+                    c.CellStyle.Setters.Add(new Setter(TextOptions.TextFormattingModeProperty, TextFormattingMode.Display));
+                    //c.CellStyle.Setters.Add(new Setter(DataGridCell.FontSizeProperty, 14.0));
                 }
             }
 

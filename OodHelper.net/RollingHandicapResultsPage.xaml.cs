@@ -35,6 +35,7 @@ namespace OodHelper.net
 
             Db c = new Db("SELECT b.boatname Boat, b.boatclass [Class], b.sailno [Sail No], r.rolling_handicap as Hcap, " +
                 "r.fintime Finish, r.elapsed Elapsed, r.laps Laps, r.corrected Corrected, r.place Pos, " +
+                "CASE WHEN override_points = 0 THEN points ELSE override_points END Pts, " +
                 "r.achieved_handicap Achp, r.new_rolling_handicap [nhcp], r.performance_index PI, r.c C, r.a A, " +
                 "r.handicap_status PY " +
                 "FROM boats b INNER JOIN races r ON r.bid = b.bid " +
@@ -52,6 +53,7 @@ namespace OodHelper.net
                     r["laps"] = DBNull.Value;
                     r["corrected"] = DBNull.Value;
                     r["Pos"] = DBNull.Value;
+                    r["Pts"] = DBNull.Value;
                     r["achp"] = DBNull.Value;
                     r["pi"] = DBNull.Value;
                     r["nhcp"] = DBNull.Value;
@@ -79,31 +81,53 @@ namespace OodHelper.net
             b.Converter = new DoubleTimeSpan();
             col.Binding = b;
 
-            double[] widths = new double[] { 20, 19, 11, 6, 10, 10, 4.5, 10.5, 5, 6, 6, 6, .75, .75, 1.5 };
+            SetRightAlignment(Results.Columns[rd.Columns["hcap"].Ordinal]);
+            SetRightAlignment(Results.Columns[rd.Columns["Pos"].Ordinal]);
+            SetRightAlignment(Results.Columns[rd.Columns["Pts"].Ordinal]);
+            SetRightAlignment(Results.Columns[rd.Columns["achp"].Ordinal]);
+            SetRightAlignment(Results.Columns[rd.Columns["pi"].Ordinal]);
+            SetRightAlignment(Results.Columns[rd.Columns["nhcp"].Ordinal]);
+
+            Hashtable widths = new Hashtable();
+            widths["Boat"] = 22.0;
+            widths["Class"] = 19.0;
+            widths["Sail No"] = 9.0;
+            widths["Hcap"] = 6.0;
+            widths["Finish"] = 10.5;
+            widths["Elapsed"] = 10.5;
+            widths["Laps"] = 4.5;
+            widths["Corrected"] = 10.5;
+            widths["Pos"] = 5.0;
+            widths["Pts"] = 5.0;
+            widths["achp"] = 6.0;
+            widths["pi"] = 6.0;
+            widths["nhcp"] = 6.0;
+            widths["c"] = .75;
+            widths["a"] = .75;
+            widths["py"] = 1.5;
 
             double sumWidths = 0;
-            foreach (double w in widths)
+            foreach (double w in widths.Values)
                 sumWidths += w;
 
-            double printableWidth = Width - 96;
+            double printableWidth = Width - PageMainGrid.Margin.Left - PageMainGrid.Margin.Right;
 
-            for (int i = 0; i < widths.Length; i++)
-                Results.Columns[i].Width = printableWidth * widths[i]/sumWidths - 4;
+            foreach (string colname in widths.Keys)
+                Results.Columns[rd.Columns[colname].Ordinal].Width = printableWidth * ((double)widths[colname]) / sumWidths - 4;
 
-            SetRightAlignment(Results.Columns[3]);
-            SetRightAlignment(Results.Columns[8]);
-            SetRightAlignment(Results.Columns[9]);
-            SetRightAlignment(Results.Columns[10]);
-            SetRightAlignment(Results.Columns[11]);
-
-            Results.Columns[9].Header = "Achd\nHcap";
-            Results.Columns[10].Header = "New\nHcap";
+            Results.Columns[rd.Columns["achp"].Ordinal].Header = "Achd\nHcap";
+            Results.Columns[rd.Columns["nhcp"].Ordinal].Header = "New\nHcap";
         }
 
         private void SetRightAlignment(DataGridColumn c)
         {
             c.CellStyle = this.Resources["RightAlignCell"] as Style;
             c.HeaderStyle = this.Resources["RightAlignHeader"] as Style;
+        }
+
+        private void Results_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Results.SelectedItems.Clear();
         }
     }
 }

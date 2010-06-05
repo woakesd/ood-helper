@@ -35,9 +35,9 @@ namespace OodHelper.net
             return t;
         }
 
-        public static void copyMySqlData()
+        public static void copyMySqlData(Working p)
         {
-            WebProgress p = new WebProgress();
+            p.SetProgress("Loading Boats", 0);
             System.Threading.Tasks.Task.Factory.StartNew(() =>
             {
                 string mysql = (string)DbSettings.GetSetting("mysql");
@@ -54,7 +54,6 @@ namespace OodHelper.net
                 //
                 // Boats
                 //
-                p.Progress("Loading Boats", 0);
                 MySqlDataAdapter myadp = new MySqlDataAdapter("SELECT * FROM boats", mcon);
                 DataTable mtable = new DataTable();
                 myadp.Fill(mtable);
@@ -82,7 +81,7 @@ namespace OodHelper.net
                 //
                 // Events
                 //
-                p.Progress("Loading Calendar", 1);
+                p.SetProgress("Loading Calendar", 1);
                 ins.CommandText = "INSERT INTO [calendar] ([rid], [date], [day], [class], [event], [start], [gp], [course], [ood], [venue], [spec], [hc], [hc_ul], [hc_meth], [vis], [flag], [timelimit], [extension], [computer], [memo], [raced], [app], [p], [standard_corrected_time]) " +
                     "VALUES (@rid, @date, @dow, @class, @event, @start, @gp, @course, @ood, @venue, @spec, @hc, @hc_ul, @hc_meth, @vis, @flag, @timelimit, @extension, @computer, @memo, @r, @app, @p, @sct)";
 
@@ -104,7 +103,7 @@ namespace OodHelper.net
                 //
                 // People
                 //
-                p.Progress("Loading People", 2);
+                p.SetProgress("Loading People", 2);
                 ins.CommandText = "INSERT INTO [PEOPLE] ([id], [main_id], [firstname], [surname], [address1], [address2], [address3], [address4], [postcode], [hometel], [worktel], [mobile], [email], [club], [member], [cp], [s], [manmemo], [novice]) " +
                     "VALUES (@id, @sid, @firstname, @surname, @address1, @address2, @address3, @address4, @postcode, @hometel, @worktel, @mobile, @email, @club, @member, @cp, @s, @manmemo, @novice)";
 
@@ -126,7 +125,7 @@ namespace OodHelper.net
                 //
                 // Races
                 //
-                p.Progress("Loading Races", 3);
+                p.SetProgress("Loading Races", 3);
                 ins.CommandText = "INSERT INTO [races] ([rid], [bid], [date], [start], [fincode], [fintime], [findate], [laps], [elapsed], [corrected], [standard_corrected], [handicap_status], [open_handicap], [rolling_handicap], [achieved_handicap], [new_rolling_handicap], [place], [points], [override_points], [performance_index], [a], [c]) " +
                     "VALUES (@rid, @bid, @date, @bstart, @fincode, @fintime, @findate, @laps, @elapsed, @corrected, @stdcorr, @ohstat, @ohp, @hcap, @achhc, @newhc, @place, @pts, @ov_pts, @prfdx, @a, @c)";
                 myadp = new MySqlDataAdapter("SELECT * FROM races", mcon);
@@ -141,7 +140,7 @@ namespace OodHelper.net
                 //
                 // Series
                 //
-                p.Progress("Loading Series", 4);
+                p.SetProgress("Loading Series", 4);
                 ins.CommandText = "INSERT INTO [series] ([sid], [sname]) " +
                     "VALUES (@sid, @sname)";
                 myadp = new MySqlDataAdapter("SELECT * FROM series", mcon);
@@ -162,7 +161,7 @@ namespace OodHelper.net
                 //
                 // Calendar Series Link
                 //
-                p.Progress("Loading Series links", 5);
+                p.SetProgress("Loading Series links", 5);
                 ins.CommandText = "INSERT INTO [calendar_series_join] ([sid], [rid]) " +
                     "VALUES (@sid, @rid)";
                 myadp = new MySqlDataAdapter("SELECT * FROM calendar_series_join", mcon);
@@ -178,10 +177,9 @@ namespace OodHelper.net
                 mcon.Close();
 
                 Db.Compact();
-                p.Progress("All done", 6);
-
+                p.SetProgress("All done", 6);
+                p.CloseWindow();
             });
-            p.ShowDialog();
         }
 
         private static void copyData(DataTable rset, SqlCeCommand ins)

@@ -230,8 +230,15 @@ CREATE TABLE [series] (
             }
             mAdapt = new SqlCeDataAdapter(mCmd);
             mCon.Open();
-            mAdapt.Fill(d);
-            mCon.Close();
+            try
+            {
+                mAdapt.Fill(d);
+            }
+            finally
+            {
+                mCon.Close();
+            }
+
             if (d.Rows.Count > 0)
                 return d.Rows[0][0];
             else
@@ -251,8 +258,15 @@ CREATE TABLE [series] (
             }
             mAdapt = new SqlCeDataAdapter(mCmd);
             mCon.Open();
-            mAdapt.Fill(d);
-            mCon.Close();
+            try
+            {
+                mAdapt.Fill(d);
+            }
+            finally
+            {
+                mCon.Close();
+            }
+
             Hashtable h = new Hashtable();
             if (d.Rows.Count > 0)
             {
@@ -274,8 +288,14 @@ CREATE TABLE [series] (
             }
             mAdapt = new SqlCeDataAdapter(mCmd);
             mCon.Open();
-            mAdapt.Fill(d);
-            mCon.Close();
+            try
+            {
+                mAdapt.Fill(d);
+            }
+            finally
+            {
+                mCon.Close();
+            }
         }
 
         public DataTable GetData(Hashtable p)
@@ -325,11 +345,21 @@ CREATE TABLE [series] (
 
         public int Commit(DataTable d)
         {
-            SqlCeCommandBuilder cmb = new SqlCeCommandBuilder(mAdapt);
-            mAdapt.DeleteCommand = cmb.GetDeleteCommand();
-            mAdapt.InsertCommand = cmb.GetInsertCommand();
-            mAdapt.UpdateCommand = cmb.GetUpdateCommand();
-            return mAdapt.Update(d);
+            int rowsdone = 0;
+            mCon.Open();
+            try
+            {
+                SqlCeCommandBuilder cmb = new SqlCeCommandBuilder(mAdapt);
+                mAdapt.DeleteCommand = cmb.GetDeleteCommand();
+                mAdapt.InsertCommand = cmb.GetInsertCommand();
+                mAdapt.UpdateCommand = cmb.GetUpdateCommand();
+                rowsdone = mAdapt.Update(d);
+            }
+            finally
+            {
+                mCon.Close();
+            }
+            return rowsdone;
         }
 
         public void Dispose()

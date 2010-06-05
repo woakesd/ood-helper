@@ -9,6 +9,6 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <TextBlock Name="Message" Margin="5">Working...</TextBlock>
-        <ProgressBar Grid.Row="1" Margin="5" Height="15" MinWidth="200" IsIndeterminate="True" Name="Progress" />
+        <ProgressBar Grid.Row="1" Margin="5" Height="15" MinWidth="200" Name="Progress" />
     </Grid>
 </Window>
