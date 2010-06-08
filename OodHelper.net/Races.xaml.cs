@@ -18,7 +18,7 @@ namespace OodHelper.net
     /// <summary>
     /// Interaction logic for Races.xaml
     /// </summary>
-    [Svn("$Id:  $")]
+    [Svn("$Id$")]
     public partial class Races : Window
     {
         public Races()
