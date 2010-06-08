@@ -87,7 +87,7 @@ namespace OodHelper.net
 
         public void LoadGrid()
         {
-            Db c = new Db("SELECT start, timelimit, extension, day, date, event, class, spec, hc, standard_corrected_time " +
+            Db c = new Db("SELECT start, timelimit, extension, date, event, class, timegate, handicapping, standard_corrected_time " +
                     "FROM calendar " +
                     "WHERE rid = @rid");
             Hashtable p = new Hashtable();
@@ -97,15 +97,16 @@ namespace OodHelper.net
             start.Text = caldata["start"].ToString();
             timeLimit.Text = caldata["timelimit"].ToString();
             extension.Text = caldata["extension"].ToString();
-            raceName.Content = caldata["day"].ToString() + " " +
-                ((DateTime)caldata["date"]).ToString("dd MMM yyyy") +
-                " (" + ((caldata["hc"].ToString() == "r") ? "Rolling " : "Open ") + "handicap)";
+            DateTime raceDate = (DateTime)caldata["date"];
+            raceName.Content = raceDate.ToString("ddd") + " " +
+                raceDate.ToString("dd MMM yyyy") +
+                " (" + ((caldata["handicapping"].ToString() == "r") ? "Rolling " : "Open ") + "handicap)";
             eventname = caldata["event"].ToString().Trim();
             racename = eventname + " - " + caldata["class"].ToString().Trim();
             raceclass = caldata["class"].ToString().Trim();
             mRaceDate = (DateTime)caldata["date"];
             //mOod = caldata["ood"].ToString();
-            mHandicap = (string)caldata["hc"];
+            mHandicap = (string)caldata["handicapping"];
             sct.Text = Common.HMS((double)caldata["standard_corrected_time"]);
 
             if (scorer == null)
@@ -138,7 +139,7 @@ namespace OodHelper.net
             {
                 col.ReadOnly = true;
             }
-            if (caldata["spec"].ToString() == "t")
+            if ((bool)caldata["timegate"])
                 rd.Columns["bstart"].ReadOnly = false;
             rd.Columns["fincode"].ReadOnly = false;
             rd.Columns["fintime"].ReadOnly = false;

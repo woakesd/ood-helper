@@ -24,6 +24,11 @@
                         <Image Width="16" Height="16" Margin="1" Source="/OodHelper.net;component/Images/Man.png" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="_Calendar" Name="Calendar" Click="Calendar_Click" >
+                    <MenuItem.Icon>
+                        <Image Width="16" Height="16" Margin="1" Source="/OodHelper.net;component/Images/Calendar-16.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="_Admin">
                 <MenuItem Header="_Web Database Settings" Name="MySqlConfig" Click="MySqlConfig_Click" />

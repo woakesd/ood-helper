@@ -76,27 +76,23 @@ CREATE TABLE [boats] (
 CREATE TABLE [calendar] (
   [rid] int NOT NULL IDENTITY (1,1)
 , [date] datetime NULL
-, [day] nvarchar(3) NULL
 , [class] nvarchar(20) NULL
 , [event] nvarchar(34) NULL
 , [start] nvarchar(5) NULL
-, [gp] nvarchar(1) NULL
+, [price_code] nvarchar(1) NULL
 , [course] nvarchar(9) NULL
 , [ood] nvarchar(30) NULL
 , [venue] nvarchar(11) NULL
-, [spec] nvarchar(1) NULL
-, [hc] nvarchar(1) NULL
-, [hc_ul] int NULL
-, [hc_meth] nvarchar(1) NULL
-, [vis] int NULL
+, [average_lap] bit NULL
+, [timegate] bit NULL
+, [handicapping] nvarchar(1) NULL
+, [visitors] int NULL
 , [flag] nvarchar(10) NULL
 , [timelimit] nvarchar(5) NULL
 , [extension] nvarchar(5) NULL
-, [computer] int NULL
 , [memo] ntext NULL
 , [raced] bit NULL
-, [app] bit NULL
-, [p] bit NULL
+, [approved] bit NULL
 , [standard_corrected_time] float NULL
 )";
                 cmd.ExecuteNonQuery();

@@ -16,7 +16,7 @@ namespace OodHelper.net
         private double slowLim;
         private double fastLim;
         private DateTime rdate;
-        private string racetype;
+        private bool averageLap;
         private int rid;
 
         public double StandardCorrectedTime
@@ -39,12 +39,12 @@ namespace OodHelper.net
             rid = r;
             Hashtable p = new Hashtable();
             p["rid"] = rid;
-            Db c = new Db(@"SELECT spec, date
+            Db c = new Db(@"SELECT average_lap, date
                         FROM calendar
                         WHERE rid = @rid");
             Hashtable res = c.GetHashtable(p);
             rdate = (DateTime)res["date"];
-            racetype = res["spec"].ToString();
+            averageLap = (bool)res["average_lap"];
             CorrectedTime();
             CalculateSct();
             Score();
@@ -109,7 +109,7 @@ namespace OodHelper.net
                         // if spec is 'a' then this is average lap so corrected times are per lap,
                         // otherwise assume everyone did same number of laps.
                         //
-                        if (racetype == "a")
+                        if (averageLap)
                         {
                             dr["corrected"] = Math.Round(e.TotalSeconds * 1000 / hcap / l);
                             dr["standard_corrected"] = Math.Round(e.TotalSeconds * 1000 / ohp / l);

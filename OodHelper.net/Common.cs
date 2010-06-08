@@ -82,10 +82,12 @@ namespace OodHelper.net
                 // Events
                 //
                 p.SetProgress("Loading Calendar", 1);
-                ins.CommandText = "INSERT INTO [calendar] ([rid], [date], [day], [class], [event], [start], [gp], [course], [ood], [venue], [spec], [hc], [hc_ul], [hc_meth], [vis], [flag], [timelimit], [extension], [computer], [memo], [raced], [app], [p], [standard_corrected_time]) " +
-                    "VALUES (@rid, @date, @dow, @class, @event, @start, @gp, @course, @ood, @venue, @spec, @hc, @hc_ul, @hc_meth, @vis, @flag, @timelimit, @extension, @computer, @memo, @r, @app, @p, @sct)";
+                ins.CommandText = "INSERT INTO [calendar] ([rid], [date], [class], [event], [start], [price_code], [course], [ood], [venue], [average_lap], [timegate], [handicapping], [visitors], [flag], [timelimit], [extension], [memo], [raced], [approved], [standard_corrected_time]) " +
+                    "VALUES (@rid, @date, @class, @event, @start, @gp, @course, @ood, @venue, @avg, @tgate, @hc, @vis, @flag, @timelimit, @extension, @memo, @r, @app, @sct)";
 
-                myadp = new MySqlDataAdapter("SELECT * FROM calendar", mcon);
+                myadp = new MySqlDataAdapter("SELECT rid, date, class, event, start, gp, course, ood, venue, " +
+                    "case when spec = 'a' then 1 else 0 end as avg, case when spec = 't' then 1 else 0 end as tgate, " +
+                    "hc, vis, flag, timelimit, extension, memo, r, app, sct FROM calendar", mcon);
                 mtable = new DataTable();
                 myadp.Fill(mtable);
 

@@ -63,16 +63,23 @@ namespace OodHelper.net
 
         private void Boats_Click(object sender, RoutedEventArgs e)
         {
-            XmlWriterSettings settings = new XmlWriterSettings();
+            /*XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
             settings.IndentChars = new string(' ', 4);
             settings.NewLineOnAttributes = true;
             StringBuilder strbuild = new StringBuilder();
             XmlWriter xmlwrite = XmlWriter.Create(strbuild, settings);
             ControlTemplate ct = Download.Template;
-            XamlWriter.Save(Download.Template, xmlwrite);
-
+            XamlWriter.Save(Download.Template, xmlwrite);*/
             Boats b = new Boats();
+            b.ShowDialog();
+            b.HorizontalAlignment = HorizontalAlignment.Stretch;
+            b.VerticalAlignment = VerticalAlignment.Stretch;
+        }
+
+        private void Calendar_Click(object sender, RoutedEventArgs e)
+        {
+            Races b = new Races();
             b.ShowDialog();
             b.HorizontalAlignment = HorizontalAlignment.Stretch;
             b.VerticalAlignment = VerticalAlignment.Stretch;

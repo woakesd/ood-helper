@@ -118,6 +118,12 @@
     <Compile Include="About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Race.xaml.cs">
+      <DependentUpon>Race.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Races.xaml.cs">
+      <DependentUpon>Races.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SelectClass.xaml.cs">
       <DependentUpon>SelectClass.xaml</DependentUpon>
     </Compile>
@@ -129,9 +135,6 @@
     </Compile>
     <Compile Include="RollingHandicapResultsPage.xaml.cs">
       <DependentUpon>RollingHandicapResultsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="WebProgress.xaml.cs">
-      <DependentUpon>WebProgress.xaml</DependentUpon>
     </Compile>
     <Compile Include="Working.xaml.cs">
       <DependentUpon>Working.xaml</DependentUpon>
@@ -151,6 +154,14 @@
     <Page Include="Buttons.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Race.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Races.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="SelectClass.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -248,10 +259,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="RollingHandicapResultsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="WebProgress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -396,6 +403,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Database-16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Calendar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Calendar-16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

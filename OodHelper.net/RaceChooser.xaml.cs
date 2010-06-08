@@ -43,7 +43,7 @@ namespace OodHelper.net
             System.Threading.Tasks.Task.Factory.StartNew(() =>
                 {
                     Db d = new Db("SELECT rid, date, start, event, class, timelimit, extension " +
-                        "FROM calendar WHERE computer IN (1,2) " +
+                        "FROM calendar " +
                         "ORDER BY date, start");
                     cal = d.GetData(null);
                     Dispatcher.Invoke(dSetGridSource = SetGridSource, null);
@@ -56,8 +56,7 @@ namespace OodHelper.net
 
             Db v = new Db("SELECT MAX(date) " +
                 "FROM calendar " +
-                "WHERE computer IN (1,2) " +
-                "AND date <= @today");
+                "WHERE date <= @today");
             Hashtable p = new Hashtable();
             p["today"] = DateTime.Today;
             Object o;
