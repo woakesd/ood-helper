@@ -21,6 +21,8 @@ namespace OodHelper.net
     [Svn("$Id$")]
     public partial class Races : Window
     {
+        int redit = 0;
+
         public Races()
         {
             InitializeComponent();
@@ -44,7 +46,7 @@ namespace OodHelper.net
             {
                 Db c = new Db("SELECT * " +
                     "FROM calendar " +
-                    "ORDER BY date, start");
+                    "ORDER BY start_date");
                 DataTable rcs = c.GetData(null);
                 c.Dispose();
                 Dispatcher.Invoke(dSetGridSource, rcs);
@@ -55,6 +57,19 @@ namespace OodHelper.net
         {
             RaceData.ItemsSource = rcs.DefaultView;
             if (Eventname.Text != "") FilterRaces();
+            if (redit != 0)
+            {
+                foreach (DataRowView vr in RaceData.Items)
+                {
+                    DataRow r = vr.Row;
+                    if ((int)r["rid"] == redit)
+                    {
+                        RaceData.ScrollIntoView(vr);
+                        RaceData.SelectedItem = vr;
+                        break;
+                    }
+                }
+            }
             w.Close();
         }
 
@@ -68,6 +83,7 @@ namespace OodHelper.net
             Race b = new Race(0);
             if (b.ShowDialog().Value)
             {
+                redit = b.Rid;
                 LoadGrid();
             }
         }
@@ -80,6 +96,7 @@ namespace OodHelper.net
                 Race b = new Race((int)i.Row["rid"]);
                 if (b.ShowDialog().Value)
                 {
+                    redit = b.Rid;
                     LoadGrid();
                 }
             }

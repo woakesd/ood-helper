@@ -75,10 +75,13 @@ CREATE TABLE [boats] (
                 cmd.CommandText = @"
 CREATE TABLE [calendar] (
   [rid] int NOT NULL IDENTITY (1,1)
-, [date] datetime NULL
+, [start_date] datetime NULL
+, [time_limit_type] nvarchar(1) NULL
+, [time_limit_fixed] datetime NULL
+, [time_limit_delta] int NULL
+, [extension] int NULL
 , [class] nvarchar(20) NULL
 , [event] nvarchar(34) NULL
-, [start] nvarchar(5) NULL
 , [price_code] nvarchar(1) NULL
 , [course] nvarchar(9) NULL
 , [ood] nvarchar(30) NULL
@@ -88,8 +91,6 @@ CREATE TABLE [calendar] (
 , [handicapping] nvarchar(1) NULL
 , [visitors] int NULL
 , [flag] nvarchar(10) NULL
-, [timelimit] nvarchar(5) NULL
-, [extension] nvarchar(5) NULL
 , [memo] ntext NULL
 , [raced] bit NULL
 , [approved] bit NULL
@@ -174,7 +175,7 @@ CREATE TABLE [series] (
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = @"ALTER TABLE [series] ADD CONSTRAINT [PK_series] PRIMARY KEY ([sid])";
                 cmd.ExecuteNonQuery();
-                cmd.CommandText = @"CREATE INDEX [IX_date] ON [calendar] ([date] ASC)";
+                cmd.CommandText = @"CREATE INDEX [IX_date] ON [calendar] ([start_date] ASC)";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = @"CREATE INDEX [IX_bid] ON [races] ([bid] ASC)";
                 cmd.ExecuteNonQuery();

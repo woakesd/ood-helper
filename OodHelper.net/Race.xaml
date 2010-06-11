@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      ShowInTaskbar="False" mc:Ignorable="d" Title="Race" d:DesignHeight="490" d:DesignWidth="480" SizeToContent="WidthAndHeight">
+      ShowInTaskbar="False" mc:Ignorable="d" Title="Race" d:DesignHeight="525" d:DesignWidth="501" SizeToContent="WidthAndHeight">
     <Window.Resources>
         <ResourceDictionary Source="Buttons.xaml" />
     </Window.Resources>
@@ -41,26 +41,53 @@
             <ColumnDefinition Width="95*" />
         </Grid.ColumnDefinitions>
         <Label Content="Date" Grid.Row="0" Grid.Column="0" />
-        <Label Content="Class" Grid.Row="1" Grid.Column="0" />
-        <Label Content="Event" Grid.Row="2" Grid.Column="0" />
-        <Label Content="Start" Grid.Row="3" Grid.Column="0" />
-        <Label Content="Course" Grid.Row="4" Grid.Column="0" />
-        <Label Content="OOD" Grid.Row="5" Grid.Column="0" />
-        <Label Content="Venue" Grid.Row="6" Grid.Column="0" />
-        <Label Content="Flag" Grid.Row="7" Grid.Column="0" />
-        <Label Content="Time Limit" Grid.Row="8" Grid.Column="0" />
-        <Label Content="Extension" Grid.Row="9" Grid.Column="0" />
-        <Label Content="Memo" Grid.Row="10" Grid.Column="0" />
-        <Label Content="Standard Corrected Time" Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2"/>
-        <Label Content="GP" Grid.Row="1" Grid.Column="2" />
+        <Label Content="Start" Grid.Row="1" Grid.Column="0" />
+        <Label Content="Class" Grid.Row="5" Grid.Column="0" />
+        <Label Content="Event" Grid.Row="6" Grid.Column="0" />
+        <Label Content="Course" Grid.Row="7" Grid.Column="0" />
+        <Label Content="OOD" Grid.Row="8" Grid.Column="0" />
+        <Label Content="Venue" Grid.Row="9" Grid.Column="0" />
+        <Label Content="Flag" Grid.Row="10" Grid.Column="0" />
+        <Label Content="Time Limit" Grid.Row="2" Grid.Column="0" />
+        <Label Content="Extension" Grid.Row="3" Grid.Column="0" />
+        <Label Content="Memo" Grid.Row="11" Grid.Column="0" />
+        <Label Content="Standard Corrected Time" Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="2"/>
+        <Label Content="Price Code" Grid.Row="1" Grid.Column="2" />
         <Label Content="Handicapping" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" Width="84" />
         <Label Content="Average Lap" Grid.Row="3" Grid.Column="2" />
         <Label Content="Timegate" Grid.Row="4" Grid.Column="2" />
-        <Label Content="Visitors" Grid.Row="6" Grid.Column="2" />
-        <Label Content="Raced" Grid.Row="7" Grid.Column="2" />
-        <Label Content="Approved" Grid.Row="8" Grid.Column="2" />
-        <DatePicker Grid.Column="1" HorizontalAlignment="Left" Margin="2" Name="date" VerticalAlignment="Top" Width="115" />
-        <Grid Grid.Row="1" Grid.Column="1">
+        <Label Content="Visitors" Grid.Row="5" Grid.Column="2" />
+        <Label Content="Raced" Grid.Row="6" Grid.Column="2" />
+        <Label Content="Approved" Grid.Row="7" Grid.Column="2" />
+        <Grid Grid.Row="0" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <DatePicker Grid.Column="0" HorizontalAlignment="Left" Margin="2" Name="startDate" VerticalAlignment="Top" Width="115" />
+            <TextBox Grid.Column="1" Name="startTime" HorizontalAlignment="Left" Width="50" MaxLength="5" Margin="2"/>
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="1" Margin="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <RadioButton Grid.Row="0" Margin="0,2" GroupName="timeLimitType" Content="Time difference" Name="timeDeltaRadio" Checked="timeDeltaRadio_Checked"/>
+            <RadioButton Grid.Row="1" Margin="0,2" GroupName="timeLimitType" Content="Fixed time" Name="timeFixedRadio" Checked="timeFixedRadio_Checked"/>
+            <TextBox Grid.Row="2" HorizontalAlignment="Left" MaxLength="5" Name="timeLimitDelta" Width="50" Margin="2" />
+            <Grid Grid.Row="3" Name="timeLimitFixed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <DatePicker Grid.Column="0" HorizontalAlignment="Left" Margin="2" Name="timeLimitFixedDate" VerticalAlignment="Top" Width="115" />
+                <TextBox Grid.Column="1" HorizontalAlignment="Left" MaxLength="5" Name="timeLimitFixedTime" Width="50" Margin="2" />
+            </Grid>
+        </Grid>
+        <TextBox Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" MaxLength="5" Name="extension" Width="50" Margin="2" />
+        <Grid Grid.Row="5" Grid.Column="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
@@ -68,16 +95,13 @@
             <TextBox Grid.Column="0" Name="raceClass" Width="140" MaxLength="20" Margin="2" />
             <Button Grid.Column="1" Content="Select Class" Name="SelectClass" Margin="2" Padding="14,0,15,0" />
         </Grid>
-        <TextBox Grid.Row="2" Grid.Column="1" Name="eventName" Width="240" MaxLength="34" Margin="2" HorizontalAlignment="Left"/>
-        <TextBox Grid.Row="3" Grid.Column="1" Name="start" HorizontalAlignment="Left" Width="50" MaxLength="5" Margin="2" />
-        <TextBox Grid.Row="4" Grid.Column="1" Name="course" HorizontalAlignment="Left" Width="100" MaxLength="9" Margin="2" />
-        <TextBox Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" MaxLength="30" Name="ood" Width="240" Margin="2" />
-        <TextBox Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" MaxLength="11" Name="venue" Width="90" Margin="2" />
-        <TextBox Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" MaxLength="10" Name="flag" Width="100" Margin="2" />
-        <TextBox Grid.Row="8" Grid.Column="1" HorizontalAlignment="Left" MaxLength="5" Name="timeLimit" Width="50" Margin="2" />
-        <TextBox Grid.Row="9" Grid.Column="1" HorizontalAlignment="Left" MaxLength="5" Name="extension" Width="50" Margin="2" />
-        <TextBox Grid.Row="10" Grid.Column="1" HorizontalAlignment="Left" Name="memo" Width="240" Height="107" Margin="2" />
-        <TextBox Grid.Row="11" Grid.Column="2" Grid.ColumnSpan="2" HorizontalAlignment="Left" MaxLength="8" Name="standardCorrectedTime" Width="80" Margin="2,3,0,1" IsReadOnly="True" />
+        <TextBox Grid.Row="6" Grid.Column="1" Name="eventName" Width="240" MaxLength="34" Margin="2" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="7" Grid.Column="1" Name="course" HorizontalAlignment="Left" Width="100" MaxLength="9" Margin="2" />
+        <TextBox Grid.Row="8" Grid.Column="1" HorizontalAlignment="Left" MaxLength="30" Name="ood" Width="240" Margin="2" />
+        <TextBox Grid.Row="9" Grid.Column="1" HorizontalAlignment="Left" MaxLength="11" Name="venue" Width="90" Margin="2" />
+        <TextBox Grid.Row="10" Grid.Column="1" HorizontalAlignment="Left" MaxLength="10" Name="flag" Width="100" Margin="2" />
+        <TextBox Grid.Row="11" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Left" Name="memo" Width="400" Height="107" Margin="2" />
+        <TextBox Grid.Row="12" Grid.Column="2" Grid.ColumnSpan="2" HorizontalAlignment="Left" MaxLength="8" Name="standardCorrectedTime" Width="80" Margin="2,3,0,1" IsReadOnly="True" />
         <ComboBox Grid.Column="3" Grid.Row="1" Margin="2" Name="priceCode">
             <ComboBoxItem Name="PC_None" Content="" />
             <ComboBoxItem Name="PC_A" Tag="a" Content="a" />
@@ -87,7 +111,7 @@
             <ComboBoxItem Name="PC_Y" Tag="y" Content="y" />
             <ComboBoxItem Name="PC_Z" Tag="z" Content="z" />
         </ComboBox>
-        <ComboBox Grid.Column="3" Grid.Row="2" Margin="2" Name="hc">
+        <ComboBox Grid.Column="3" Grid.Row="2" Margin="2" Name="hc" Height="auto">
             <ComboBoxItem Name="HC_None" Content="" />
             <ComboBoxItem Name="HC_Open" Tag="o">Open</ComboBoxItem>
             <ComboBoxItem Name="HC_Rolling" Tag="r">Rolling</ComboBoxItem>
@@ -95,16 +119,16 @@
         </ComboBox>
         <CheckBox Grid.Row="3" Grid.Column="3" Margin="2" Name="averageLap" VerticalAlignment="Center" />
         <CheckBox Grid.Row="4" Grid.Column="3" Margin="2" Name="timegate" VerticalAlignment="Center" />
-        <TextBox Grid.Row="6" Grid.Column="3" HorizontalAlignment="Left" MaxLength="5" Name="visitors" Width="60" Margin="2" />
-        <CheckBox Grid.Row="7" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Name="raced" Margin="2" IsEnabled="False" />
-        <CheckBox Grid.Row="8" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Name="approved" Margin="2" />
-        <Grid Grid.Row="21" Grid.ColumnSpan="4" Margin="2" >
+        <TextBox Grid.Row="5" Grid.Column="3" HorizontalAlignment="Left" MaxLength="5" Name="visitors" Width="60" Margin="2" />
+        <CheckBox Grid.Row="6" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Name="raced" Margin="2" />
+        <CheckBox Grid.Row="7" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Name="approved" Margin="2" />
+        <Grid Grid.Row="13" Grid.ColumnSpan="4" Margin="200,2,0,2" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Margin="20,2" Template="{StaticResource ResourceKey=CancelButton}" Click="cancel_Click" IsCancel="True" Name="cancel" />
-            <Button Grid.Column="1" Margin="20,2" Template="{StaticResource ResourceKey=OkButton}" Click="ok_Click" IsDefault="True" Name="ok" />
+            <Button Grid.Column="0" Margin="0,2,10,2" Template="{StaticResource ResourceKey=CancelButton}" Click="cancel_Click" IsCancel="True" Name="cancel" />
+            <Button Grid.Column="1" Margin="10,2,0,2" Template="{StaticResource ResourceKey=OkButton}" Click="ok_Click" IsDefault="True" Name="ok" />
         </Grid>
     </Grid>
 </Window>

@@ -39,11 +39,11 @@ namespace OodHelper.net
             rid = r;
             Hashtable p = new Hashtable();
             p["rid"] = rid;
-            Db c = new Db(@"SELECT average_lap, date
+            Db c = new Db(@"SELECT average_lap, start_date
                         FROM calendar
                         WHERE rid = @rid");
             Hashtable res = c.GetHashtable(p);
-            rdate = (DateTime)res["date"];
+            rdate = (DateTime)res["start_date"];
             averageLap = (bool)res["average_lap"];
             CorrectedTime();
             CalculateSct();
@@ -381,7 +381,7 @@ namespace OodHelper.net
                         param["bid"] = dr["bid"];
                         param["rid"] = rid;
                         TimeSpan bstart = Common.tspan(dr["start"].ToString()).Value;
-                        DateTime bdate = rdate + bstart;
+                        DateTime bdate = rdate.Date + bstart;
                         param["bstart"] = bdate;
                         Db sl = new Db(@"SELECT TOP(1) CONVERT(FLOAT,(achieved_handicap - open_handicap))/open_handicap * 100
                             FROM races

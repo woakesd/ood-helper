@@ -160,19 +160,19 @@ namespace OodHelper.net
                 DataGrid races = (DataGrid)parameter;
                 if (races.SelectedItems.Count > 0)
                 {
-                    Db s = new Db(@"SELECT start
+                    Db s = new Db(@"SELECT start_date
                             FROM calendar
                             WHERE rid = @torid");
                     Hashtable p = new Hashtable();
                     p["torid"] = toRid;
-                    p["start"] = s.GetScalar(p);
+                    DateTime rstart = (DateTime)s.GetScalar(p);
                     Db c = new Db(@"UPDATE races
                             SET rid = @torid
                             , start = @start
                             WHERE rid = @fromrid
                             AND bid = @bid");
                     p["fromrid"] = fromRid;
-                    p["start"] = p["start"] + ":00";
+                    p["start"] = rstart.TimeOfDay.ToString("hh\\:mm\\:ss");
                     foreach (DataRowView drv in races.SelectedItems)
                     {
                         p["bid"] = drv.Row["bid"];

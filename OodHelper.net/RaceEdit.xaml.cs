@@ -87,24 +87,24 @@ namespace OodHelper.net
 
         public void LoadGrid()
         {
-            Db c = new Db("SELECT start, timelimit, extension, date, event, class, timegate, handicapping, standard_corrected_time " +
+            Db c = new Db("SELECT start_date, time_limit_fixed, extension, event, class, timegate, handicapping, standard_corrected_time " +
                     "FROM calendar " +
                     "WHERE rid = @rid");
             Hashtable p = new Hashtable();
             p["rid"] = Rid;
             caldata = c.GetHashtable(p);
 
-            start.Text = caldata["start"].ToString();
-            timeLimit.Text = caldata["timelimit"].ToString();
+            start.Text = (caldata["start_date"] as DateTime?).Value.TimeOfDay.ToString("hh\\:mm");
+            timeLimit.Text = (caldata["time_limit_fixed"] as DateTime?).Value.TimeOfDay.ToString("hh\\:mm");
             extension.Text = caldata["extension"].ToString();
-            DateTime raceDate = (DateTime)caldata["date"];
+            DateTime raceDate = (DateTime)caldata["start_date"];
             raceName.Content = raceDate.ToString("ddd") + " " +
                 raceDate.ToString("dd MMM yyyy") +
                 " (" + ((caldata["handicapping"].ToString() == "r") ? "Rolling " : "Open ") + "handicap)";
             eventname = caldata["event"].ToString().Trim();
             racename = eventname + " - " + caldata["class"].ToString().Trim();
             raceclass = caldata["class"].ToString().Trim();
-            mRaceDate = (DateTime)caldata["date"];
+            mRaceDate = (DateTime)caldata["start_date"];
             //mOod = caldata["ood"].ToString();
             mHandicap = (string)caldata["handicapping"];
             sct.Text = Common.HMS((double)caldata["standard_corrected_time"]);
@@ -410,10 +410,10 @@ namespace OodHelper.net
                 u.ExecuteNonQuery(p);
 
                 u = new Db(@"UPDATE calendar
-                        SET start = @start
+                        SET start_date = @start
                         WHERE rid = @rid");
                 p.Clear();
-                p["start"] = start.Text;
+                p["start"] = mRaceDate.Date + TimeSpan.Parse(start.Text);
                 p["rid"] = Rid;
                 u.ExecuteNonQuery(p);
 

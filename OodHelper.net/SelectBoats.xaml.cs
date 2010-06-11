@@ -60,6 +60,9 @@ namespace OodHelper.net
                 bts.Columns.Add(new DataColumn("boatname"));
                 bts.Columns.Add(new DataColumn("boatclass"));
                 bts.Columns.Add(new DataColumn("sailno"));
+                bts.Columns.Add(new DataColumn("handicap_status"));
+                bts.Columns.Add(new DataColumn("open_handicap"));
+                bts.Columns.Add(new DataColumn("rolling_handicap"));
                 foreach (DataRow r in d.Table.Rows)
                 {
                     DataRow gr = bts.NewRow();
@@ -67,6 +70,9 @@ namespace OodHelper.net
                     gr["boatname"] = r["boatname"];
                     gr["boatclass"] = r["boatclass"];
                     gr["sailno"] = r["sailno"];
+                    gr["handicap_status"] = r["handicap_status"];
+                    gr["open_handicap"] = r["open_handicap"];
+                    gr["rolling_handicap"] = r["rolling_handicap"];
                     bts.Rows.Add(gr);
                 }
                 bts.AcceptChanges();
@@ -235,11 +241,8 @@ namespace OodHelper.net
         {
             Db delete = new Db("DELETE FROM races WHERE rid = @rid AND bid = @bid");
             Db add = new Db(@"INSERT INTO races
-                    (rid, date, bid, open_handicap, handicap_status, start, rolling_handicap)
-                    SELECT c.rid, c.date, b.bid, b.open_handicap, b.handicap_status, c.start + ':00', b.rolling_handicap
-                    FROM boats b, calendar c
-                    WHERE b.bid = @bid
-                    AND c.rid = @rid");
+                    (rid, bid, date, start, handicap_status, open_handicap, rolling_handicap)
+                    VALUES (@rid, @bid, @start_date, @start_time, @handicap_status, @open_handicap, @rolling_handicap)");
             Hashtable a = new Hashtable();
 
             this.DialogResult = true;
@@ -249,15 +252,28 @@ namespace OodHelper.net
                 a["rid"] = sbt[i].RaceId;
                 DataTable sb = ((DataView)sbt[i].Boats.ItemsSource).Table;
                 Hashtable selectedBids = new Hashtable();
+                //
+                // For each boat in selected boats check to see if it is in the race edit control,
+                // if not then add it.
+                //
                 foreach (DataRow r in sb.Rows)
                 {
-                    a["bid"] = r["bid"];
-                    if (rd.Select("bid = " + a["bid"] + " AND rid = " + a["rid"]).Length == 0)
+                    if (rd.Select("bid = " + r["bid"] + " AND rid = " + a["rid"]).Length == 0)
                     {
+                        a["bid"] = r["bid"];
+                        a["start_date"] = reds[i].RaceDate.Date;
+                        a["start_time"] = reds[i].RaceDate.TimeOfDay.ToString("hh\\:mm\\:ss");
+                        a["handicap_status"] = r["handicap_status"];
+                        a["open_handicap"] = r["open_handicap"];
+                        a["rolling_handicap"] = r["rolling_handicap"];
                         add.ExecuteNonQuery(a);
                     }
                     selectedBids[r["bid"].ToString()] = true;
                 }
+                //
+                // For each boat in the race edit control check to see if it is in selected boats,
+                // if not then delete it.
+                //
                 foreach (DataRow r in rd.Rows)
                 {
                     a["bid"] = r["bid"];
