@@ -128,7 +128,6 @@ namespace OodHelper.net
 
         void t_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            //dFilterBoats df = ;
             try
             {
                 Dispatcher.Invoke(new dFilterBoats(FilterBoats), null);
@@ -145,13 +144,11 @@ namespace OodHelper.net
         {
             try
             {
-                //((DataView)Boats.ItemsSource).Sort = "boatname";
                 ((DataView)Boats.ItemsSource).RowFilter =
                     "boatname LIKE '" + Boatname.Text + "%'" +
                     "or sailno LIKE '" + Boatname.Text + "%'" +
                     "or boatclass LIKE '" + Boatname.Text + "%'"
                     ;
-                //Boats
             }
             catch (Exception ex)
             {
@@ -233,6 +230,9 @@ namespace OodHelper.net
             dr["boatname"] = rv["boatname"];
             dr["boatclass"] = rv["boatclass"];
             dr["sailno"] = rv["sailno"];
+            dr["handicap_status"] = rv["handicap_status"];
+            dr["open_handicap"] = rv["open_handicap"];
+            dr["rolling_handicap"] = rv["rolling_handicap"];
             ((DataView)sbt.Boats.ItemsSource).Table.Rows.Add(dr);
             ((DataView)sbt.Boats.ItemsSource).Table.AcceptChanges();
         }

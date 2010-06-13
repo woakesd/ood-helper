@@ -364,9 +364,9 @@ namespace OodHelper.net
                     //
                     bool sperf = false;
                     bool sperfover = false;
-                    if ((double)dr["standard_corrected"] > SlowLimit || (double)dr["standard_corrected"] < FastLimit)
+                    if ((double)dr["standard_corrected"] >= SlowLimit || (double)dr["standard_corrected"] <= FastLimit)
                     {
-                        if ((double)dr["standard_corrected"] > SlowLimit)
+                        if ((double)dr["standard_corrected"] >= SlowLimit)
                         {
                             dr["c"] = "s";
                             sperf = true;

@@ -325,87 +325,73 @@ namespace OodHelper.net
             Regex rxc = new Regex("^[a-z]{3}$", RegexOptions.IgnoreCase);
             Regex rxt = new Regex("^[0-9]{2}([: ][0-9]{2}){2}$");
             Regex rxl = new Regex("^[0-9]+$");
-            switch (e.Column.Header.ToString())
+            if (((TextBox)e.EditingElement).Text != preEdit)
             {
-                case "finish_date":
-                    TextBox fintime = (TextBox)e.EditingElement;
-                    if (rxt.IsMatch(fintime.Text))
-                    {
-                        Db u = new Db(@"UPDATE races
+                switch (e.Column.Header.ToString())
+                {
+                    case "finish_date":
+                        TextBox fintime = (TextBox)e.EditingElement;
+                        if (rxt.IsMatch(fintime.Text) || fintime.Text == string.Empty)
+                        {
+                            Db u = new Db(@"UPDATE races
                                 SET finish_date = @fintime
                                 WHERE rid = @rid
                                 AND bid = @bid");
-                        Hashtable p = new Hashtable();
-                        fintime.Text = fintime.Text.Replace(" ", ":");
-                        p["fintime"] = mRaceDate + TimeSpan.Parse(fintime.Text);
-                        p["bid"] = ((DataRowView)e.Row.Item).Row["bid"];
-                        p["rid"] = Rid;
-                        u.ExecuteNonQuery(p);
-                    }
-                    else if (rxc.IsMatch(fintime.Text))
-                    {
-                        Db u = new Db(@"UPDATE races
-                                SET finish_code = @fintime
-                                WHERE rid = @rid
-                                AND bid = @bid");
-                        Hashtable p = new Hashtable();
-                        p["fintime"] = fintime.Text.ToUpper();
-                        fintime.Text = (string)p["fintime"];
-                        p["bid"] = ((DataRowView)e.Row.Item).Row["bid"];
-                        p["rid"] = Rid;
-                        u.ExecuteNonQuery(p);
-                    }
-                    else
-                    {
-                        fintime.Text = preEdit;
-                    }
-                    break;
-                case "finish_code":
-                    TextBox fincode = (TextBox)e.EditingElement;
-                    if (rxc.IsMatch(fincode.Text))
-                    {
-                        Db u = new Db(@"UPDATE races
+                            Hashtable p = new Hashtable();
+                            fintime.Text = fintime.Text.Replace(" ", ":");
+                            if (fintime.Text == string.Empty)
+                                p["fintime"] = DBNull.Value;
+                            else
+                                p["fintime"] = mRaceDate.Date + TimeSpan.Parse(fintime.Text);
+                            p["bid"] = ((DataRowView)e.Row.Item).Row["bid"];
+                            p["rid"] = Rid;
+                            u.ExecuteNonQuery(p);
+                        }
+                        break;
+                    case "finish_code":
+                        TextBox fincode = (TextBox)e.EditingElement;
+                        if (rxc.IsMatch(fincode.Text) || fincode.Text == string.Empty)
+                        {
+                            Db u = new Db(@"UPDATE races
                                 SET finish_code = @fincode
                                 WHERE rid = @rid
                                 AND bid = @bid");
-                        Hashtable p = new Hashtable();
-                        p["fincode"] = fincode.Text.ToUpper();
-                        fincode.Text = (string)p["fincode"];
-                        p["bid"] = ((DataRowView)e.Row.Item).Row["bid"];
-                        p["rid"] = Rid;
-                        u.ExecuteNonQuery(p);
-                    }
-                    else
-                    {
-                        fincode.Text = preEdit;
-                    }
-                    break;
-                case "laps":
-                    TextBox laps = (TextBox)e.EditingElement;
-                    if (rxl.IsMatch(laps.Text) && Int32.Parse(laps.Text) > 0)
-                    {
-                        Db u = new Db(@"UPDATE races
+                            Hashtable p = new Hashtable();
+                            if (fincode.Text == string.Empty)
+                                p["fintime"] = DBNull.Value;
+                            else
+                                p["fincode"] = fincode.Text.ToUpper();
+                            p["bid"] = ((DataRowView)e.Row.Item).Row["bid"];
+                            p["rid"] = Rid;
+                            u.ExecuteNonQuery(p);
+                        }
+                        break;
+                    case "laps":
+                        TextBox laps = (TextBox)e.EditingElement;
+                        if (laps.Text == string.Empty || rxl.IsMatch(laps.Text) && Int32.Parse(laps.Text) > 0)
+                        {
+                            Db u = new Db(@"UPDATE races
                                 SET laps = @laps
                                 WHERE rid = @rid
                                 AND bid = @bid");
-                        Hashtable p = new Hashtable();
-                        p["laps"] = laps.Text;
-                        p["bid"] = ((DataRowView)e.Row.Item).Row["bid"];
-                        p["rid"] = Rid;
-                        u.ExecuteNonQuery(p);
-                    }
-                    else if (laps.Text != preEdit)
-                    {
-                        laps.Text = preEdit;
-                    }
-                    break;
+                            Hashtable p = new Hashtable();
+                            if (laps.Text == string.Empty)
+                                p["laps"] = DBNull.Value;
+                            else
+                                p["laps"] = laps.Text;
+                            p["bid"] = ((DataRowView)e.Row.Item).Row["bid"];
+                            p["rid"] = Rid;
+                            u.ExecuteNonQuery(p);
+                        }
+                        break;
+                }
             }
         }
 
         void start_LostFocus(object sender, RoutedEventArgs e)
         {
             Regex rx = new Regex("^[0-9][0-9][: ][0-9][0-9]$");
-            if (rx.IsMatch(start.Text))
+            if (pcStart != start.Text && rx.IsMatch(start.Text))
             {
                 Db u = new Db(@"UPDATE races
                         SET start_date = @start_date
@@ -429,10 +415,6 @@ namespace OodHelper.net
 
         private string pcStart;
 
-        void start_TextChanged(object sender, TextChangedEventArgs e)
-        {
-        }
-
         void start_GotFocus(object sender, RoutedEventArgs e)
         {
             pcStart = start.Text;
@@ -447,6 +429,11 @@ namespace OodHelper.net
         {
             if (scorer != null) scorer.Calculate(Rid);
             LoadGrid();
+        }
+
+        private void Races_CurrentCellChanged(object sender, EventArgs e)
+        {
+            int i = 0;
         }
     }
 }

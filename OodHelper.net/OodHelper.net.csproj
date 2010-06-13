@@ -118,6 +118,7 @@
     <Compile Include="About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HMSValidationRule.cs" />
     <Compile Include="Race.xaml.cs">
       <DependentUpon>Race.xaml</DependentUpon>
     </Compile>

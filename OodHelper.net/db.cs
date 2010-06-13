@@ -96,6 +96,7 @@ CREATE TABLE [calendar] (
 , [raced] bit NULL
 , [approved] bit NULL
 , [standard_corrected_time] float NULL
+, [result_calculated] datetime NULL
 )";
                 cmd.ExecuteNonQuery();
 
@@ -137,6 +138,7 @@ CREATE TABLE [races] (
 , [start_date] datetime NULL
 , [finish_code] nvarchar(5) NULL
 , [finish_date] datetime NULL
+, [last_edit] datetime NULL
 , [laps] int NULL
 , [place] int NULL
 , [points] float NULL
