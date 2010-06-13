@@ -241,8 +241,8 @@ namespace OodHelper.net
         {
             Db delete = new Db("DELETE FROM races WHERE rid = @rid AND bid = @bid");
             Db add = new Db(@"INSERT INTO races
-                    (rid, bid, date, start, handicap_status, open_handicap, rolling_handicap)
-                    VALUES (@rid, @bid, @start_date, @start_time, @handicap_status, @open_handicap, @rolling_handicap)");
+                    (rid, bid, start_date, handicap_status, open_handicap, rolling_handicap)
+                    VALUES (@rid, @bid, @start_date, @handicap_status, @open_handicap, @rolling_handicap)");
             Hashtable a = new Hashtable();
 
             this.DialogResult = true;
@@ -261,8 +261,7 @@ namespace OodHelper.net
                     if (rd.Select("bid = " + r["bid"] + " AND rid = " + a["rid"]).Length == 0)
                     {
                         a["bid"] = r["bid"];
-                        a["start_date"] = reds[i].RaceDate.Date;
-                        a["start_time"] = reds[i].RaceDate.TimeOfDay.ToString("hh\\:mm\\:ss");
+                        a["start_date"] = reds[i].RaceDate;
                         a["handicap_status"] = r["handicap_status"];
                         a["open_handicap"] = r["open_handicap"];
                         a["rolling_handicap"] = r["rolling_handicap"];

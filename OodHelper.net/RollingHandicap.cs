@@ -65,6 +65,8 @@ namespace OodHelper.net
                 ,place = 999
                 ,points = NULL
                 ,performance_index = NULL
+                ,c = NULL
+                ,a = NULL
                 WHERE rid = @rid";
             Db c = new Db(sql);
             c.ExecuteNonQuery(p);
@@ -72,7 +74,7 @@ namespace OodHelper.net
             //
             // Next select all boats and work out elapsed, corrected and stdcorr
             //
-            sql = @"SELECT bid, rid, start, fintime, rolling_handicap, open_handicap, laps, 
+            sql = @"SELECT bid, rid, start_date, finish_date, rolling_handicap, open_handicap, laps, 
                 elapsed, corrected, standard_corrected, place, performance_index
                 FROM races
                 WHERE rid = @rid";
@@ -81,24 +83,24 @@ namespace OodHelper.net
 
             foreach (DataRow dr in dt.Rows)
             {
-                if (dr["start"] != DBNull.Value && dr["fintime"] != DBNull.Value && dr["laps"] != DBNull.Value)
+                if (dr["start_date"] != DBNull.Value && dr["finish_date"] != DBNull.Value && dr["laps"] != DBNull.Value)
                 {
-                    string start = dr["start"].ToString();
-                    string ftime = dr["fintime"].ToString();
+                    //string start = dr["start_date"].ToString();
+                    //string ftime = dr["fintime"].ToString();
 
-                    Regex r1 = new Regex("[0-9][0-9].[0-9][0-9].[0-9][0-9]");
-                    if (r1.Match(start).Success && r1.Match(ftime).Success)
-                    {
+                    //Regex r1 = new Regex("[0-9][0-9].[0-9][0-9].[0-9][0-9]");
+                    //if (r1.Match(start).Success && r1.Match(ftime).Success)
+                    //{
                         
                         //
                         // So take start and finish as timespans and we can subtract one
                         // from the other to get the elapsed time.
                         //
-                        TimeSpan s = Common.tspan(start).Value;
-                        TimeSpan f = Common.tspan(ftime).Value;
+                        DateTime? s = dr["start_date"] as DateTime?;
+                        DateTime? f = dr["finish_date"] as DateTime?;
                         
-                        TimeSpan e = f - s;
-                        dr["elapsed"] = e.TotalSeconds;
+                        TimeSpan? e = f - s;
+                        dr["elapsed"] = e.Value.TotalSeconds;
 
                         int l = (int) dr["laps"];
                         
@@ -111,16 +113,16 @@ namespace OodHelper.net
                         //
                         if (averageLap)
                         {
-                            dr["corrected"] = Math.Round(e.TotalSeconds * 1000 / hcap / l);
-                            dr["standard_corrected"] = Math.Round(e.TotalSeconds * 1000 / ohp / l);
+                            dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap / l);
+                            dr["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp / l);
                         }
                         else
                         {
-                            dr["corrected"] = Math.Round(e.TotalSeconds * 1000 / hcap);
-                            dr["standard_corrected"] = Math.Round(e.TotalSeconds * 1000 / ohp);
+                            dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap);
+                            dr["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp);
                         }
                         dr["place"] = 0;
-                    }
+                    //}
                 }
             }
             //
@@ -323,7 +325,7 @@ namespace OodHelper.net
             // This routine sets the places column and the pts column.
             //
 
-            Db c = new Db(@"SELECT bid, rid, start, standard_corrected, rolling_handicap, open_handicap, 
+            Db c = new Db(@"SELECT bid, rid, start_date, standard_corrected, rolling_handicap, open_handicap, 
                     achieved_handicap, new_rolling_handicap, c, performance_index
                     FROM races
                     WHERE rid = @rid
@@ -380,17 +382,16 @@ namespace OodHelper.net
                         Hashtable param = new Hashtable();
                         param["bid"] = dr["bid"];
                         param["rid"] = rid;
-                        TimeSpan bstart = Common.tspan(dr["start"].ToString()).Value;
-                        DateTime bdate = rdate.Date + bstart;
-                        param["bstart"] = bdate;
+                        //TimeSpan bstart = Common.tspan(dr["start"].ToString()).Value;
+                        //DateTime bdate = rdate.Date + bstart;
+                        param["bstart"] = dr["start_date"];
                         Db sl = new Db(@"SELECT TOP(1) CONVERT(FLOAT,(achieved_handicap - open_handicap))/open_handicap * 100
                             FROM races
                             WHERE bid = @bid
                             AND rid != @rid
                             AND place != 999
-                            AND CONVERT(DATETIME,SUBSTRING(CONVERT(NCHAR(19),date),1,11) + ' ' + replace(start,' ',':'))
-                                <= @bstart
-                            ORDER BY date DESC, start DESC");
+                            AND start_date <= @bstart
+                            ORDER BY start_date DESC");
                         DataTable slow = sl.GetData(param);
 
                         if (slow.Rows.Count >= 1)

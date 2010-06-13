@@ -44,6 +44,7 @@ namespace OodHelper.net
                 {
                     Db d = new Db("SELECT rid, start_date, event, class " +
                         "FROM calendar " +
+                        "WHERE is_race = 1 " +
                         "ORDER BY start_date");
                     cal = d.GetData(null);
                     Dispatcher.Invoke(dSetGridSource = SetGridSource, null);
@@ -56,7 +57,8 @@ namespace OodHelper.net
 
             Db v = new Db("SELECT MAX(start_date) " +
                 "FROM calendar " +
-                "WHERE start_date <= @today");
+                "WHERE is_race = 1 " +
+                "AND start_date <= @today");
             Hashtable p = new Hashtable();
             p["today"] = DateTime.Today;
             Object o;
@@ -109,7 +111,7 @@ namespace OodHelper.net
                 {
                     //TimeSpan? t = Common.tspan(((DataRowView)CalGrid.Items[i]).Row["start"].ToString());
                     DateTime d = (DateTime)((DataRowView)CalGrid.Items[i]).Row["start_date"];
-                    if (d != rd || (rd - d).TotalMinutes > 15)
+                    if ((rd - d).TotalMinutes > 15)
                         break;
                     res.Add(((DataRowView)CalGrid.Items[i]).Row["rid"]);
                 }
@@ -117,7 +119,7 @@ namespace OodHelper.net
                 {
                     //TimeSpan? t = Common.tspan(((DataRowView)CalGrid.Items[i]).Row["start"].ToString());
                     DateTime d = (DateTime)((DataRowView)CalGrid.Items[i]).Row["start_date"];
-                    if (d != rd || (d - rd).TotalMinutes > 15)
+                    if ((d - rd).TotalMinutes > 15)
                         break;
                     res.Add(((DataRowView)CalGrid.Items[i]).Row["rid"]);
                 }

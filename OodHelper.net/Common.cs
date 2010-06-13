@@ -82,15 +82,17 @@ namespace OodHelper.net
                 // Events
                 //
                 p.SetProgress("Loading Calendar", 1);
-                ins.CommandText = "INSERT INTO [calendar] ([rid], [start_date], [class], [event], [price_code], [course], [ood], [venue], [average_lap], [timegate], [handicapping], [visitors], [flag], [time_limit_type], [time_limit_fixed], [extension], [memo], [raced], [approved], [standard_corrected_time]) " +
-                    "VALUES (@rid, @start_date, @class, @event, @gp, @course, @ood, @venue, @avg, @tgate, @hc, @vis, @flag, 'F', @time_limit_fixed, @extension, @memo, @r, @app, @sct)";
+                ins.CommandText = "INSERT INTO [calendar] ([rid], [start_date], [class], [event], [price_code], [course], [ood], [venue], [average_lap], [timegate], [handicapping], [visitors], [flag], [time_limit_type], [time_limit_fixed], [extension], [memo], [is_race], [raced], [approved], [standard_corrected_time]) " +
+                    "VALUES (@rid, @start_date, @class, @event, @gp, @course, @ood, @venue, @avg, @tgate, @hc, @vis, @flag, 'F', @time_limit_fixed, @extension, @memo, @is_race, @r, @app, @sct)";
 
                 myadp = new MySqlDataAdapter("SELECT rid, " +
                     "str_to_date(concat(date_format(date,'%Y-%m-%d '), case when start = ':' then '00:00' else start end),'%Y-%m-%d %H:%i') start_date, " +
                     "case when timelimit is not null then str_to_date(concat(date_format(date,'%Y-%m-%d '), timelimit),'%Y-%m-%d %H:%i') else null end time_limit_fixed, " +
                     "class, event, gp, course, ood, venue, " +
                     "case when spec = 'a' then 1 else 0 end as avg, case when spec = 't' then 1 else 0 end as tgate, " +
-                    "hc, vis, flag, time_to_sec(str_to_date(extension, '%H:%i')) extension, memo, r, app, sct FROM calendar", mcon);
+                    "hc, vis, flag, time_to_sec(str_to_date(extension, '%H:%i')) extension, memo, " +
+                    "CASE WHEN computer IN (1,2) THEN 1 ELSE 0 END is_race, " +
+                    "r, app, sct FROM calendar", mcon);
                 mtable = new DataTable();
                 myadp.Fill(mtable);
 
@@ -131,9 +133,14 @@ namespace OodHelper.net
                 // Races
                 //
                 p.SetProgress("Loading Races", 3);
-                ins.CommandText = "INSERT INTO [races] ([rid], [bid], [date], [start], [fincode], [fintime], [findate], [laps], [elapsed], [corrected], [standard_corrected], [handicap_status], [open_handicap], [rolling_handicap], [achieved_handicap], [new_rolling_handicap], [place], [points], [override_points], [performance_index], [a], [c]) " +
-                    "VALUES (@rid, @bid, @date, @bstart, @fincode, @fintime, @findate, @laps, @elapsed, @corrected, @stdcorr, @ohstat, @ohp, @hcap, @achhc, @newhc, @place, @pts, @ov_pts, @prfdx, @a, @c)";
-                myadp = new MySqlDataAdapter("SELECT * FROM races", mcon);
+                ins.CommandText = "INSERT INTO [races] ([rid], [bid], [start_date], [finish_date], [finish_code], [laps], [elapsed], [corrected], [standard_corrected], [handicap_status], [open_handicap], [rolling_handicap], [achieved_handicap], [new_rolling_handicap], [place], [points], [override_points], [performance_index], [a], [c]) " +
+                    "VALUES (@rid, @bid, @start_date, @finish_date, @finish_code, @laps, @elapsed, @corrected, @stdcorr, @ohstat, @ohp, @hcap, @achhc, @newhc, @place, @pts, @ov_pts, @prfdx, @a, @c)";
+                myadp = new MySqlDataAdapter("SELECT rid, bid, " +
+                    "str_to_date(concat(date_format(date,'%Y-%m-%d '), bstart),'%Y-%m-%d %H:%i:%s') start_date, " +
+                    "CASE WHEN length(fintime) = 8 THEN str_to_date(concat(date_format(findate,'%Y-%m-%d '), fintime),'%Y-%m-%d %H:%i:%s') END finish_date, " +
+                    "CASE WHEN length(fintime) < 8 THEN UPPER(fintime) END finish_code, " +
+                    "laps, elapsed, corrected, stdcorr, ohstat, ohp, hcap, achhc, newhc, place, pts, ov_pts, prfdx, a, c " +
+                    "FROM races", mcon);
                 mtable = new DataTable();
                 myadp.Fill(mtable);
 

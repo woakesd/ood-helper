@@ -92,6 +92,7 @@ CREATE TABLE [calendar] (
 , [visitors] int NULL
 , [flag] nvarchar(10) NULL
 , [memo] ntext NULL
+, [is_race] bit NULL
 , [raced] bit NULL
 , [approved] bit NULL
 , [standard_corrected_time] float NULL
@@ -133,12 +134,13 @@ CREATE TABLE [people] (
 CREATE TABLE [races] (
   [rid] int NOT NULL
 , [bid] int NOT NULL
-, [date] datetime NULL
-, [start] nvarchar(8) NULL
-, [fincode] nvarchar(5) NULL
-, [fintime] nvarchar(8) NULL
-, [findate] datetime NULL
+, [start_date] datetime NULL
+, [finish_code] nvarchar(5) NULL
+, [finish_date] datetime NULL
 , [laps] int NULL
+, [place] int NULL
+, [points] float NULL
+, [override_points] float NULL
 , [elapsed] int NULL
 , [corrected] float NULL
 , [standard_corrected] float NULL
@@ -147,9 +149,6 @@ CREATE TABLE [races] (
 , [rolling_handicap] int NULL
 , [achieved_handicap] int NULL
 , [new_rolling_handicap] int NULL
-, [place] int NULL
-, [points] float NULL
-, [override_points] float NULL
 , [performance_index] int NULL
 , [a] nvarchar(1) NULL
 , [c] nvarchar(1) NULL
