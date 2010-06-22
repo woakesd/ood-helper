@@ -63,6 +63,16 @@
                         <Label Grid.Column="1">Results</Label>
                     </Grid>
                 </Button>
+                <Button Name="SeriesResults" Click="SeriesResults_Click">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Results.png"/>
+                        <Label Grid.Column="1">Series Results</Label>
+                    </Grid>
+                </Button>
                 <Button Name="Download" Click="Download_Click">
                     <Grid>
                         <Grid.ColumnDefinitions>

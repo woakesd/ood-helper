@@ -125,6 +125,7 @@
     <Compile Include="Races.xaml.cs">
       <DependentUpon>Races.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RaceSeriesResult.cs" />
     <Compile Include="SelectClass.xaml.cs">
       <DependentUpon>SelectClass.xaml</DependentUpon>
     </Compile>
@@ -137,6 +138,8 @@
     <Compile Include="RollingHandicapResultsPage.xaml.cs">
       <DependentUpon>RollingHandicapResultsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SeriesEvent.cs" />
+    <Compile Include="SeriesResult.cs" />
     <Compile Include="Working.xaml.cs">
       <DependentUpon>Working.xaml</DependentUpon>
     </Compile>

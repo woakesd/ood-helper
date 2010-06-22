@@ -433,7 +433,6 @@ namespace OodHelper.net
 
         private void Races_CurrentCellChanged(object sender, EventArgs e)
         {
-            int i = 0;
         }
     }
 }

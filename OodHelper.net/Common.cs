@@ -88,7 +88,8 @@ namespace OodHelper.net
                 myadp = new MySqlDataAdapter("SELECT rid, " +
                     "str_to_date(concat(date_format(date,'%Y-%m-%d '), case when start = ':' then '00:00' else start end),'%Y-%m-%d %H:%i') start_date, " +
                     "case when timelimit is not null then str_to_date(concat(date_format(date,'%Y-%m-%d '), timelimit),'%Y-%m-%d %H:%i') else null end time_limit_fixed, " +
-                    "class, event, gp, course, ood, venue, " +
+                    "REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(class,' LATER START',''),' EARLY FINISH',''),' EARLY FINIS',''),'F Yacht','Division 1'),'S Yacht', 'Division 2') class, " +
+                    "event, gp, course, ood, venue, " +
                     "case when spec = 'a' then 1 else 0 end as avg, case when spec = 't' then 1 else 0 end as tgate, " +
                     "hc, vis, flag, time_to_sec(str_to_date(extension, '%H:%i')) extension, memo, " +
                     "CASE WHEN computer IN (1,2) THEN 1 ELSE 0 END is_race, " +

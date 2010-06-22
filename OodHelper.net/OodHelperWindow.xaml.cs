@@ -131,5 +131,10 @@ namespace OodHelper.net
         {
             HandicapDb.CreateDb();
         }
+
+        private void SeriesResults_Click(object sender, RoutedEventArgs e)
+        {
+            RaceSeriesResult rs = new RaceSeriesResult(7);
+        }
     }
 }

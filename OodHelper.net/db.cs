@@ -160,7 +160,7 @@ CREATE TABLE [races] (
                 cmd.CommandText = @"
 CREATE TABLE [series] (
   [sid] int NOT NULL IDENTITY (1,1)
-, [sname] nvarchar(34) NULL
+, [sname] nvarchar(255) NULL
 )";
                 cmd.ExecuteNonQuery();
 
