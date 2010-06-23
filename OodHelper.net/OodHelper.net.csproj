@@ -138,6 +138,9 @@
     <Compile Include="RollingHandicapResultsPage.xaml.cs">
       <DependentUpon>RollingHandicapResultsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SeriesChooser.xaml.cs">
+      <DependentUpon>SeriesChooser.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SeriesEvent.cs" />
     <Compile Include="SeriesResult.cs" />
     <Compile Include="Working.xaml.cs">
@@ -263,6 +266,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="RollingHandicapResultsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SeriesChooser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

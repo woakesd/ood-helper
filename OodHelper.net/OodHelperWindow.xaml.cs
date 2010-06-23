@@ -134,7 +134,11 @@ namespace OodHelper.net
 
         private void SeriesResults_Click(object sender, RoutedEventArgs e)
         {
-            RaceSeriesResult rs = new RaceSeriesResult(7);
+            SeriesChooser chooser = new SeriesChooser();
+            if (chooser.ShowDialog().Value)
+            {
+                RaceSeriesResult rs = new RaceSeriesResult(chooser.Sid);
+            }
         }
     }
 }
