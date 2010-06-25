@@ -291,8 +291,8 @@ namespace OodHelper.net
         public void DoAutoPopulate()
         {
             Db add = new Db(@"INSERT INTO races
-                    (rid, start_date, bid, rolling_handicap, handicap_status, open_handicap)
-                    SELECT c.rid, c.start_date, b.bid, b.rolling_handicap, b.handicap_status, b.open_handicap
+                    (rid, start_date, bid, rolling_handicap, handicap_status, open_handicap, last_edit)
+                    SELECT c.rid, c.start_date, b.bid, b.rolling_handicap, b.handicap_status, b.open_handicap, GETDATE()
                     FROM boats b, calendar c
                     WHERE b.bid = @bid
                     AND c.rid = @rid");
@@ -335,6 +335,7 @@ namespace OodHelper.net
                         {
                             Db u = new Db(@"UPDATE races
                                 SET finish_date = @fintime
+                                , last_edit = GETDATE()
                                 WHERE rid = @rid
                                 AND bid = @bid");
                             Hashtable p = new Hashtable();
@@ -354,6 +355,7 @@ namespace OodHelper.net
                         {
                             Db u = new Db(@"UPDATE races
                                 SET finish_code = @fincode
+                                , last_edit = GETDATE()
                                 WHERE rid = @rid
                                 AND bid = @bid");
                             Hashtable p = new Hashtable();
@@ -372,6 +374,7 @@ namespace OodHelper.net
                         {
                             Db u = new Db(@"UPDATE races
                                 SET laps = @laps
+                                , last_edit = GETDATE()
                                 WHERE rid = @rid
                                 AND bid = @bid");
                             Hashtable p = new Hashtable();
@@ -395,6 +398,7 @@ namespace OodHelper.net
             {
                 Db u = new Db(@"UPDATE races
                         SET start_date = @start_date
+                        , last_edit = GETDATE()
                         WHERE rid = @rid");
                 Hashtable p = new Hashtable();
                 start.Text = start.Text.Replace(' ', ':');

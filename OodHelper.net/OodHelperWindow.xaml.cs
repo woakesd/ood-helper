@@ -90,24 +90,12 @@ namespace OodHelper.net
             Db.Compact();
         }
 
-        private void MySqlConfig_Click(object sender, RoutedEventArgs e)
-        {
-            MySqlForm f = new MySqlForm();
-            f.ShowDialog();
-        }
-
         private void People_Click(object sender, RoutedEventArgs e)
         {
             People p = new People();
             p.ShowDialog();
             p.HorizontalAlignment = HorizontalAlignment.Stretch;
             p.VerticalAlignment = VerticalAlignment.Stretch;
-        }
-
-        private void Seed_Click(object sender, RoutedEventArgs e)
-        {
-            Seed s = new Seed();
-            s.ShowDialog();
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -138,7 +126,17 @@ namespace OodHelper.net
             if (chooser.ShowDialog().Value)
             {
                 RaceSeriesResult rs = new RaceSeriesResult(chooser.Sid);
+                SeriesDisplayByClass sd = new SeriesDisplayByClass(rs);
+                dock.Children.Add(sd);
+                sd.HorizontalAlignment = HorizontalAlignment.Stretch;
+                sd.VerticalAlignment = VerticalAlignment.Stretch;
             }
+        }
+
+        private void Configuration_Click(object sender, RoutedEventArgs e)
+        {
+            Configuration f = new Configuration();
+            f.ShowDialog();
         }
     }
 }

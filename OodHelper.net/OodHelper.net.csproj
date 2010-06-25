@@ -118,6 +118,12 @@
     <Compile Include="About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Configuration.xaml.cs">
+      <DependentUpon>Configuration.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SeriesDisplay.xaml.cs">
+      <DependentUpon>SeriesDisplay.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HMSValidationRule.cs" />
     <Compile Include="Race.xaml.cs">
       <DependentUpon>Race.xaml</DependentUpon>
@@ -141,8 +147,14 @@
     <Compile Include="SeriesChooser.xaml.cs">
       <DependentUpon>SeriesChooser.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SeriesDisplayByClass.xaml.cs">
+      <DependentUpon>SeriesDisplayByClass.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SeriesEvent.cs" />
     <Compile Include="SeriesResult.cs" />
+    <Compile Include="SeriesResultDisplay.xaml.cs">
+      <DependentUpon>SeriesResultDisplay.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Working.xaml.cs">
       <DependentUpon>Working.xaml</DependentUpon>
     </Compile>
@@ -161,6 +173,14 @@
     <Page Include="Buttons.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Configuration.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SeriesDisplay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Race.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -185,10 +205,6 @@
     <Page Include="Person.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="MySqlForm.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PNImport.xaml">
       <SubType>Designer</SubType>
@@ -222,10 +238,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Seed.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="SelectBoats.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -258,9 +270,6 @@
       <DependentUpon>Person.xaml</DependentUpon>
     </Compile>
     <Compile Include="DbSettings.cs" />
-    <Compile Include="MySqlForm.xaml.cs">
-      <DependentUpon>MySqlForm.xaml</DependentUpon>
-    </Compile>
     <Compile Include="OodHelperWindow.xaml.cs">
       <DependentUpon>OodHelperWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -270,6 +279,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SeriesChooser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SeriesDisplayByClass.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SeriesResultDisplay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -307,9 +324,6 @@
     <Compile Include="RaceScore.cs" />
     <Compile Include="RollingHandicap.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Seed.xaml.cs">
-      <DependentUpon>Seed.xaml</DependentUpon>
     </Compile>
     <Compile Include="SelectBoats.xaml.cs">
       <DependentUpon>SelectBoats.xaml</DependentUpon>

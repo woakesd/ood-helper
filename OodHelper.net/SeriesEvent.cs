@@ -6,7 +6,7 @@ using System.Text;
 namespace OodHelper.net
 {
     [Svn("$Id$")]
-    class SeriesEvent
+    public class SeriesEvent
     {
         public Dictionary<int, SeriesEntry> Entrants;
         private int mNumberOfRacingEntries;
@@ -17,17 +17,24 @@ namespace OodHelper.net
         }
 
         private int mRid;
+        private DateTime mDate;
 
         public int Rid
         {
             get { return mRid; }
         }
 
-        public SeriesEvent(int rid)
+        public DateTime Date
+        {
+            get { return mDate; }
+        }
+
+        public SeriesEvent(int rid, DateTime date)
         {
             Entrants = new Dictionary<int, SeriesEntry>();
             mNumberOfRacingEntries = 0;
             mRid = rid;
+            mDate = date;
         }
 
         public void AddEntry(SeriesEntry entrant)

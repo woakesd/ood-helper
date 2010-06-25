@@ -32,7 +32,6 @@ namespace OodHelper.net
             bool askAutoPopulate = true, doAutoPopulate = false;
             for (int i = 0; i < rids.Length; i++)
             {
-                TabItem t = new TabItem();
                 RaceEdit r = new RaceEdit(rids[i]);
                 if (!r.Races.HasItems && r.CountAutoPopulateData() > 0)
                 {
@@ -52,6 +51,7 @@ namespace OodHelper.net
                     }
                 }
                 reds[i] = r;
+                TabItem t = new TabItem();
                 t.Header = r.RaceName;
                 t.Content = r;
                 raceTabControl.Items.Add(t);

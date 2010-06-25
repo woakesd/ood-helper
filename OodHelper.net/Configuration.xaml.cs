@@ -16,14 +16,31 @@ using MySql.Data.MySqlClient.Properties;
 namespace OodHelper.net
 {
     /// <summary>
-    /// Interaction logic for MySqlForm.xaml
+    /// Interaction logic for Configuration.xaml
     /// </summary>
     [Svn("$Id$")]
-    public partial class MySqlForm : Window
+    public partial class Configuration : Window
     {
-        public MySqlForm()
+        public Configuration()
         {
             InitializeComponent();
+
+            //
+            // init seed values
+            //
+            Object o;
+            if ((o = DbSettings.GetSetting("bottomseed")) != null)
+                BottomSeed.Text = o.ToString();
+            else
+                BottomSeed.Text = "1";
+            if ((o = DbSettings.GetSetting("topseed")) != null)
+                TopSeed.Text = o.ToString();
+            else
+                TopSeed.Text = "1999";
+
+            //
+            // init mysql connection values
+            //
             string myconstring = (string)DbSettings.GetSetting("mysql");
             MySqlConnectionStringBuilder mcsb = new MySqlConnectionStringBuilder(myconstring);
             Server.Text = mcsb.Server;
@@ -40,6 +57,13 @@ namespace OodHelper.net
                 SSL.SelectedValue = SslVerifyCA;
             else if (mcsb.SslMode.HasFlag(MySqlSslMode.VerifyFull))
                 SSL.SelectedValue = SslVerifyFull;
+
+        }
+
+        private void clear_Click(object sender, RoutedEventArgs e)
+        {
+            BottomSeed.Text = "";
+            TopSeed.Text = "";
         }
 
         private void OK_Click(object sender, RoutedEventArgs e)
@@ -62,6 +86,21 @@ namespace OodHelper.net
             if (SSL.SelectedValue == SslVerifyFull)
                 mcsb.SslMode = MySqlSslMode.VerifyFull;
             DbSettings.AddSetting("mysql", mcsb.ConnectionString);
+
+            int b = 0, t = 0;
+
+            if (Int32.TryParse(BottomSeed.Text, out b) && b != 0)
+                DbSettings.AddSetting("bottomseed", b);
+            else
+                DbSettings.DeleteSetting("bottomseed");
+
+            if (Int32.TryParse(TopSeed.Text, out t) && t != 0)
+                DbSettings.AddSetting("topseed", t);
+            else
+                DbSettings.DeleteSetting("topseed");
+
+            Db.ReseedDatabase();
+
             DialogResult = true;
         }
     }

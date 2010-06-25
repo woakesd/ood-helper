@@ -49,6 +49,10 @@ namespace OodHelper.net
             CalculateSct();
             Score();
             UpdateHandicaps();
+            c = new Db(@"UPDATE calendar
+                        SET result_calculated = GETDATE()
+                        WHERE rid = @rid");
+            c.ExecuteNonQuery(p);
         }
 
         private void CorrectedTime()

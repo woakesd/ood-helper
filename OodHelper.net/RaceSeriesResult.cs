@@ -7,16 +7,23 @@ using System.Text;
 namespace OodHelper.net
 {
     [Svn("$Id$")]
-    class RaceSeriesResult
+    public class RaceSeriesResult
     {
+        //
+        // Series date indexed by class
+        //
+        public Dictionary<string, SeriesResult> SeriesResults;
         public RaceSeriesResult(int SeriesId)
         {
-            Db c = new Db("SELECT c.handicapping, c.rid " +
-                "FROM calendar c " +
-                "INNER JOIN calendar_series_join j ON c.rid = j.rid " +
-                "WHERE j.sid = @sid " +
-                "AND c.raced = 1 " + 
-                "ORDER BY c.start_date");
+            Db c = new Db(@"SELECT c.handicapping, c.rid, c.start_date, c.result_calculated
+                    FROM calendar c 
+                    INNER JOIN calendar_series_join j ON c.rid = j.rid
+                    INNER JOIN races r on r.rid = c.rid
+                    WHERE j.sid = @sid
+                    AND c.raced = 1 
+                    GROUP BY c.handicapping, c.rid, c.start_date, c.result_calculated
+                    HAVING c.result_calculated < MAX(r.last_edit)
+                    ORDER BY c.start_date");
 
             Hashtable p = new Hashtable();
             p["sid"] = SeriesId;
@@ -37,7 +44,7 @@ namespace OodHelper.net
                 scorer.Calculate((int)race["rid"]);
             }
 
-            c = new Db("SELECT c.class, r.rid, r.start_date, bid, points, override_points, finish_code " +
+            c = new Db("SELECT c.class, r.rid, c.start_date, bid, points, override_points, finish_code " +
                 "FROM races r " +
                 "LEFT JOIN calendar_series_join j ON r.rid = j.rid " +
                 "LEFT JOIN calendar c ON c.rid = j.rid " +
@@ -46,15 +53,7 @@ namespace OodHelper.net
 
             DataTable rd = c.GetData(p);
 
-            //
-            // This is a list of boat entries in a series' events.
-            //
-            SeriesEvent Event;
-
-            //
-            // And this is the list of all the series' events.
-            //
-            Dictionary<string, Dictionary<int, SeriesEvent>> SeriesData = new Dictionary<string,Dictionary<int,SeriesEvent>>();
+            Dictionary<string, Dictionary<int, SeriesEvent>> SeriesData = new Dictionary<string, Dictionary<int, SeriesEvent>>();
 
             foreach (DataRow re in rd.Rows)
             {
@@ -64,8 +63,8 @@ namespace OodHelper.net
                 }
                 Dictionary<int, SeriesEvent> sData = SeriesData[re["class"].ToString()];
                 if (!sData.ContainsKey((int)re["rid"]))
-                    sData[(int)re["rid"]] = new SeriesEvent((int)re["rid"]);
-                Event = sData[(int)re["rid"]];
+                    sData[(int)re["rid"]] = new SeriesEvent((int)re["rid"], (DateTime)re["start_date"]);
+                SeriesEvent Event = sData[(int)re["rid"]];
                 SeriesEntry se = new SeriesEntry();
                 se.bid = (int)re["bid"];
                 se.rid = Event.Rid;
@@ -78,7 +77,7 @@ namespace OodHelper.net
                 Event.AddEntry(se);
             }
 
-            Dictionary<string, SeriesResult> SeriesResults = new Dictionary<string,SeriesResult>();
+            SeriesResults = new Dictionary<string,SeriesResult>();
             foreach (string className in SeriesData.Keys)
             {
                 SeriesResult sr = new SeriesResult(SeriesData[className]);

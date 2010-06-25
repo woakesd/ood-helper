@@ -31,8 +31,7 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Admin">
-                <MenuItem Header="_Web Database Settings" Name="MySqlConfig" Click="MySqlConfig_Click" />
-                <MenuItem Header="_Seed for Boat/People" Name="Seed" Click="Seed_Click"/>
+                <MenuItem Header="_Configuration" Name="Configuration" Click="Configuration_Click"></MenuItem>
                 <Separator/>
                 <MenuItem Header="_Create Results DB" Name="CreateResultsDB" Click="SqlCe_Click">
                     <MenuItem.Icon>

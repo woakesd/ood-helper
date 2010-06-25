@@ -241,8 +241,8 @@ namespace OodHelper.net
         {
             Db delete = new Db("DELETE FROM races WHERE rid = @rid AND bid = @bid");
             Db add = new Db(@"INSERT INTO races
-                    (rid, bid, start_date, handicap_status, open_handicap, rolling_handicap)
-                    VALUES (@rid, @bid, @start_date, @handicap_status, @open_handicap, @rolling_handicap)");
+                    (rid, bid, start_date, handicap_status, open_handicap, rolling_handicap, last_edit)
+                    VALUES (@rid, @bid, @start_date, @handicap_status, @open_handicap, @rolling_handicap, GETDATE())");
             Hashtable a = new Hashtable();
 
             this.DialogResult = true;

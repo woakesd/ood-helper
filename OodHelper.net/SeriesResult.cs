@@ -8,12 +8,12 @@ using System.Text.RegularExpressions;
 namespace OodHelper.net
 {
     [Svn("$Id$")]
-    class SeriesResult
+    public class SeriesResult
     {
         private readonly int NoRaces;
 
         private int[] _DiscardProfile;
-        private Dictionary<int, SeriesEvent> _SeriesData;
+        public Dictionary<int, SeriesEvent> _SeriesData;
         private int[] _Bids;
         private int[] _Rids;
         public List<BoatSeriesResult> _Results = new List<BoatSeriesResult>();
@@ -119,7 +119,7 @@ namespace OodHelper.net
                             case "OOD":
                             case "AVG":
                             case "RSC":
-                                if (_Results[bid].count > 0)
+                                if (_ResultsLookUp[bid].count > 0)
                                 {
                                     BoatSeriesResult bsr = _ResultsLookUp[bid];
                                     se.points = bsr.total / bsr.count;
@@ -146,6 +146,7 @@ namespace OodHelper.net
                     if (!e.Entrants.ContainsKey(bid))
                     {
                         SeriesEntry se = new SeriesEntry();
+                        se.date = e.Date;
                         se.code = "DNC";
                         se.rid = e.Rid;
                         se.bid = bid;
@@ -194,7 +195,7 @@ namespace OodHelper.net
         }
     }
 
-    class SeriesEntry
+    public class SeriesEntry
     {
         public int rid;
         public int bid;
@@ -216,7 +217,7 @@ namespace OodHelper.net
         }
     }
 
-    class BoatSeriesResult
+    public class BoatSeriesResult
     {
         public BoatSeriesResult(int b)
         {
@@ -258,9 +259,9 @@ namespace OodHelper.net
             for (int i = 0; i < x.dateSortedPoints.Count && i < y.dateSortedPoints.Count; i++)
             {
                 if (x.dateSortedPoints[i].Points > y.dateSortedPoints[i].Points)
-                    return 1;
-                else if (x.dateSortedPoints[i].Points < y.dateSortedPoints[i].Points)
                     return -1;
+                else if (x.dateSortedPoints[i].Points < y.dateSortedPoints[i].Points)
+                    return 1;
             }
             
             return 0;
