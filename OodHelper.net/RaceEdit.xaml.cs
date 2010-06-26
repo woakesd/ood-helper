@@ -188,7 +188,6 @@ namespace OodHelper.net
                     //c.CellStyle.BasedOn = App.Current.Resources.FindName("DataGridCellFont") as Style;
                     c.CellStyle.Setters.Add(new Setter(DataGridCell.BackgroundProperty, vlg));
                     c.CellStyle.Setters.Add(new Setter(DataGridCell.ForegroundProperty, Brushes.Black));
-                    c.CellStyle.Setters.Add(new Setter(TextOptions.TextFormattingModeProperty, TextFormattingMode.Display));
                     //c.CellStyle.Setters.Add(new Setter(DataGridCell.FontSizeProperty, 14.0));
                 }
             }

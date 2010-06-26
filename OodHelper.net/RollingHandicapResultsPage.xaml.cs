@@ -34,7 +34,7 @@ namespace OodHelper.net
             Sct.Text = "SCT: " + Common.HMS(red.scorer.StandardCorrectedTime);
 
             Db c = new Db("SELECT b.boatname Boat, b.boatclass [Class], b.sailno [Sail No], r.rolling_handicap as Hcap, " +
-                "r.fintime Finish, r.elapsed Elapsed, r.laps Laps, r.corrected Corrected, r.place Pos, " +
+                "r.finish_date Finish, r.elapsed Elapsed, r.laps Laps, r.corrected Corrected, r.place Pos, " +
                 "CASE WHEN override_points = 0 THEN points ELSE override_points END Pts, " +
                 "r.achieved_handicap Achp, r.new_rolling_handicap [nhcp], r.performance_index PI, r.c C, r.a A, " +
                 "r.handicap_status PY " +

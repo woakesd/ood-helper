@@ -9,14 +9,12 @@
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="Padding" Value="0,6"/>
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
         </Style>
         <Style x:Key="RightAlignCell" TargetType="{x:Type DataGridCell}">
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="FontSize" Value="10" />
             <Setter Property="Padding" Value="4" />
             <Setter Property="Margin" Value="0" />
-            <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
         </Style>
         <Style x:Key="RightAlignHeader" TargetType="{x:Type DataGridColumnHeader}">
             <Setter Property="HorizontalAlignment" Value="Right" />
@@ -25,7 +23,6 @@
             <Setter Property="Background" Value="#eeeeee" />
             <Setter Property="Padding" Value="4" />
             <Setter Property="Margin" Value="0" />
-            <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
         </Style>
         <Style TargetType="{x:Type DataGridColumnHeader}" x:Key="ColumnHeader">
             <Setter Property="FontSize" Value="10" />
@@ -33,7 +30,6 @@
             <Setter Property="Background" Value="#eeeeee" />
             <Setter Property="Padding" Value="4" />
             <Setter Property="Margin" Value="0" />
-            <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
         </Style>
     </Page.Resources>
     <Grid HorizontalAlignment="Stretch" Margin="24,48" Name="PageMainGrid">
@@ -67,7 +63,6 @@
                     <Setter Property="FontSize" Value="10" />
                     <Setter Property="Padding" Value="4" />
                     <Setter Property="Margin" Value="0" />
-                    <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
                 </Style>
             </DataGrid.Resources>
         </DataGrid>
