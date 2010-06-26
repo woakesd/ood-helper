@@ -40,7 +40,7 @@ namespace OodHelper.net
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
-
+            ((DockPanel)Parent).Children.Remove(this);
         }
     }
 }

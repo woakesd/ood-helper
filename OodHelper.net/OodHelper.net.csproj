@@ -152,9 +152,6 @@
     </Compile>
     <Compile Include="SeriesEvent.cs" />
     <Compile Include="SeriesResult.cs" />
-    <Compile Include="SeriesResultDisplay.xaml.cs">
-      <DependentUpon>SeriesResultDisplay.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Working.xaml.cs">
       <DependentUpon>Working.xaml</DependentUpon>
     </Compile>
@@ -283,10 +280,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SeriesDisplayByClass.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="SeriesResultDisplay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

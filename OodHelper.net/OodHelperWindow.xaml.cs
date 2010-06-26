@@ -120,16 +120,22 @@ namespace OodHelper.net
             HandicapDb.CreateDb();
         }
 
+        private delegate void myDelegate();
+        
         private void SeriesResults_Click(object sender, RoutedEventArgs e)
         {
             SeriesChooser chooser = new SeriesChooser();
             if (chooser.ShowDialog().Value)
             {
-                RaceSeriesResult rs = new RaceSeriesResult(chooser.Sid);
-                SeriesDisplayByClass sd = new SeriesDisplayByClass(rs);
-                dock.Children.Add(sd);
-                sd.HorizontalAlignment = HorizontalAlignment.Stretch;
-                sd.VerticalAlignment = VerticalAlignment.Stretch;
+                RaceSeriesResult rs = null;
+                myDelegate d = delegate()
+                {
+                    SeriesDisplayByClass sd = new SeriesDisplayByClass(rs);
+                    dock.Children.Add(sd);
+                    sd.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    sd.VerticalAlignment = VerticalAlignment.Stretch;
+                };
+                rs = new RaceSeriesResult(chooser.Sid, d);
             }
         }
 
