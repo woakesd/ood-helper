@@ -394,7 +394,8 @@ namespace OodHelper.net
         void start_LostFocus(object sender, RoutedEventArgs e)
         {
             Regex rx = new Regex("^[0-9][0-9][: ][0-9][0-9]$");
-            if (pcStart != start.Text && rx.IsMatch(start.Text))
+            TimeSpan startTime;
+            if (pcStart != start.Text && rx.IsMatch(start.Text) && TimeSpan.TryParse(start.Text, out startTime))
             {
                 Db u = new Db(@"UPDATE races
                         SET start_date = @start_date
@@ -402,7 +403,7 @@ namespace OodHelper.net
                         WHERE rid = @rid");
                 Hashtable p = new Hashtable();
                 start.Text = start.Text.Replace(' ', ':');
-                p["start_date"] = mRaceDate.Date + TimeSpan.Parse(start.Text);
+                p["start_date"] = mRaceDate.Date + startTime;
                 p["rid"] = Rid;
                 u.ExecuteNonQuery(p);
 

@@ -242,7 +242,7 @@ namespace OodHelper.net
                 TimeSpan tlDelta = TimeSpan.Parse(timeLimitDelta.Text);
                 DateTime start = startDate.SelectedDate.Value + TimeSpan.Parse(startTime.Text);
                 DateTime tlFixed = start + tlDelta;
-                timeLimitFixedDate.SelectedDate = tlFixed;
+                timeLimitFixedDate.SelectedDate = tlFixed.Date;
                 timeLimitFixedTime.Text = tlFixed.ToString("HH:mm");
                 timeLimitFixed.Visibility = System.Windows.Visibility.Visible;
                 timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
