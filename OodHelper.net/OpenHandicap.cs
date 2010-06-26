@@ -16,7 +16,7 @@ namespace OodHelper.net
         private double slowLim;
         private double fastLim;
         private DateTime rdate;
-        private string racetype;
+        private bool averageLap;
         private int rid;
 
         public double StandardCorrectedTime
@@ -39,13 +39,12 @@ namespace OodHelper.net
             rid = r;
             Hashtable p = new Hashtable();
             p["rid"] = rid;
-            Db c = new Db(@"SELECT spec, start_date
+            Db c = new Db(@"SELECT average_lap, start_date
                         FROM calendar
                         WHERE rid = @rid");
             Hashtable res = c.GetHashtable(p);
             rdate = (DateTime)res["start_date"];
-            racetype = res["spec"].ToString();
-            //handicap = res["hc"].ToString();
+            averageLap = (bool)res["average_lap"];
             CorrectedTime();
             CalculateSct();
             Score();
@@ -76,7 +75,7 @@ namespace OodHelper.net
             //
             // Next select all boats and work out elapsed, corrected and stdcorr
             //
-            sql = @"SELECT bid, rid, start, fintime, rolling_handicap, open_handicap, laps, 
+            sql = @"SELECT bid, rid, start_date, finish_date, rolling_handicap, open_handicap, laps, 
                 elapsed, corrected, standard_corrected, place
                 FROM races
                 WHERE rid = @rid";
@@ -85,44 +84,32 @@ namespace OodHelper.net
 
             foreach (DataRow dr in dt.Rows)
             {
-                if (dr["start"] != DBNull.Value && dr["fintime"] != DBNull.Value && dr["laps"] != DBNull.Value)
+                if (dr["start_date"] != DBNull.Value && dr["finish_date"] != DBNull.Value && dr["laps"] != DBNull.Value)
                 {
-                    string start = dr["start"].ToString();
-                    string ftime = dr["fintime"].ToString();
+                    DateTime? s = dr["start_date"] as DateTime?;
+                    DateTime? f = dr["finish_date"] as DateTime?;
 
-                    Regex r1 = new Regex("[0-9][0-9].[0-9][0-9].[0-9][0-9]");
-                    if (r1.Match(start).Success && r1.Match(ftime).Success)
+                    TimeSpan? e = f - s;
+                    dr["elapsed"] = e.Value.TotalSeconds;
+
+                    int l = (int)dr["laps"];
+
+                    int hcap = (int)dr["open_handicap"];
+
+                    //
+                    // if spec is 'a' then this is average lap so corrected times are per lap,
+                    // otherwise assume everyone did same number of laps.
+                    //
+                    if (averageLap)
                     {
-                        
-                        //
-                        // So take start and finish as timespans and we can subtract one
-                        // from the other to get the elapsed time.
-                        //
-                        TimeSpan s = Common.tspan(start).Value;
-                        TimeSpan f = Common.tspan(ftime).Value;
-                        
-                        TimeSpan e = f - s;
-                        dr["elapsed"] = e.TotalSeconds;
-
-                        int l = (int) dr["laps"];
-                        
-                        int hcap = (int) dr["open_handicap"];
-
-                        //
-                        // if spec is 'a' then this is average lap so corrected times are per lap,
-                        // otherwise assume everyone did same number of laps.
-                        //
-                        if (racetype == "a")
-                        {
-                            dr["corrected"] = Math.Round(e.TotalSeconds * 1000 / hcap / l);
-                        }
-                        else
-                        {
-                            dr["corrected"] = Math.Round(e.TotalSeconds * 1000 / hcap);
-                        }
-                        dr["standard_corrected"] = dr["corrected"];
-                        dr["place"] = 0;
+                        dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap / l);
                     }
+                    else
+                    {
+                        dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap);
+                    }
+                    dr["standard_corrected"] = dr["corrected"];
+                    dr["place"] = 0;
                 }
             }
             //
@@ -316,16 +303,16 @@ namespace OodHelper.net
             // This routine sets the places column and the pts column.
             //
 
-            Db c = new Db(@"SELECT bid, rid, start, standard_corrected, rolling_handicap, open_handicap, 
-                    achieved_handicap, new_rolling_handicap, c
+            Db c = new Db(@"SELECT bid, rid, start_date, standard_corrected, rolling_handicap, open_handicap, 
+                    achieved_handicap, new_rolling_handicap, c, performance_index
                     FROM races
                     WHERE rid = @rid
-                    AND place <> 999
+                    AND place != 999
                     ORDER BY corrected");
             Hashtable p = new Hashtable();
             p["rid"] = rid;
             DataTable d = c.GetData(p);
-           
+
             foreach (DataRow dr in d.Rows)
             {
                 //
@@ -346,7 +333,7 @@ namespace OodHelper.net
                     // open handicap and the overall corrected time for the race multiplied by
                     // the open handicap.
                     //
-                    int achhc = (int) Math.Round((double)dr["standard_corrected"] / standardCorrectedTime * (int) dr["open_handicap"]);
+                    int achhc = (int)Math.Round((double)dr["standard_corrected"] / standardCorrectedTime * (int)dr["open_handicap"]);
                     dr["achieved_handicap"] = achhc;
 
                     //
@@ -355,9 +342,9 @@ namespace OodHelper.net
                     //
                     bool sperf = false;
                     bool sperfover = false;
-                    if ((double)dr["standard_corrected"] > SlowLimit || (double)dr["standard_corrected"] < FastLimit)
+                    if ((double)dr["standard_corrected"] >= SlowLimit || (double)dr["standard_corrected"] <= FastLimit)
                     {
-                        if ((double)dr["standard_corrected"] > SlowLimit)
+                        if ((double)dr["standard_corrected"] >= SlowLimit)
                         {
                             dr["c"] = "s";
                             sperf = true;
@@ -373,17 +360,16 @@ namespace OodHelper.net
                         Hashtable param = new Hashtable();
                         param["bid"] = dr["bid"];
                         param["rid"] = rid;
-                        TimeSpan bstart = Common.tspan(dr["start"].ToString()).Value;
-                        DateTime bdate = rdate.Date + bstart;
-                        param["bstart"] = bdate;
+                        //TimeSpan bstart = Common.tspan(dr["start"].ToString()).Value;
+                        //DateTime bdate = rdate.Date + bstart;
+                        param["bstart"] = dr["start_date"];
                         Db sl = new Db(@"SELECT TOP(1) CONVERT(FLOAT,(achieved_handicap - open_handicap))/open_handicap * 100
                             FROM races
                             WHERE bid = @bid
                             AND rid != @rid
                             AND place != 999
-                            AND CONVERT(DATETIME,SUBSTRING(CONVERT(NCHAR(19),date),1,11) + ' ' + replace(start,' ',':'))
-                                <= @bstart
-                            ORDER BY date DESC, start DESC");
+                            AND start_date <= @bstart
+                            ORDER BY start_date DESC");
                         DataTable slow = sl.GetData(param);
 
                         if (slow.Rows.Count >= 1)
@@ -391,7 +377,7 @@ namespace OodHelper.net
                             //
                             // Found the last result prior to this one
                             //
-                            double p1 = (double) slow.Rows[0][0];
+                            double p1 = (double)slow.Rows[0][0];
                             if (p1 > 5)
                             {
                                 //
@@ -403,6 +389,8 @@ namespace OodHelper.net
                             }
                         }
                     }
+
+                    dr["performance_index"] = (int)dr["achieved_handicap"] - (int)dr["open_handicap"];
 
                     //
                     // if this doesn't count as a slow race then adjust the handicap if the new value
@@ -417,7 +405,7 @@ namespace OodHelper.net
                         // go outside the 5% band.
                         //
                         int working = achhc;
-                        if (achhc > (int) dr["open_handicap"] * 1.05)
+                        if (achhc > (int)dr["open_handicap"] * 1.05)
                             working = (int)Math.Round(1.05 * (int)dr["open_handicap"], 0);
                         if (achhc < (int)dr["open_handicap"] * 0.95)
                             working = (int)Math.Round(0.95 * (int)dr["open_handicap"], 0);
@@ -464,5 +452,6 @@ namespace OodHelper.net
             c.Commit(d);
             d.Dispose();
         }
+
     }
 }
