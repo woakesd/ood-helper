@@ -10,10 +10,16 @@ namespace OodHelper.net
     {
         public Dictionary<int, SeriesEntry> Entrants;
         private int mNumberOfRacingEntries;
+        private int mNumberFinishers;
 
         public int NumberOfRacingEntries
         {
             get { return mNumberOfRacingEntries; }
+        }
+
+        public int NumberOfFinishers
+        {
+            get { return mNumberFinishers; }
         }
 
         private int mRid;
@@ -33,6 +39,7 @@ namespace OodHelper.net
         {
             Entrants = new Dictionary<int, SeriesEntry>();
             mNumberOfRacingEntries = 0;
+            mNumberFinishers = 0;
             mRid = rid;
             mDate = date;
         }
@@ -50,6 +57,8 @@ namespace OodHelper.net
                     mNumberOfRacingEntries++;
                     break;
             }
+            if (entrant.code == null || entrant.code == string.Empty)
+                mNumberFinishers++;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace OodHelper.net
         public int bid;
         public double? points = null;
         public double? override_points = null;
-        public bool discard;
+        public bool discard = false;
         public string code;
         public DateTime date;
 

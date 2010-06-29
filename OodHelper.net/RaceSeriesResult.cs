@@ -90,6 +90,15 @@ namespace OodHelper.net
                 SeriesResults = new Dictionary<string, SeriesResult>();
                 foreach (string className in SeriesData.Keys)
                 {
+                    ArrayList rem = new ArrayList();
+                    foreach (int k in SeriesData[className].Keys)
+                    {
+                        if (SeriesData[className][k].NumberOfFinishers == 0)
+                            rem.Add(k);
+                    }
+                    foreach (int k in rem)
+                        SeriesData[className].Remove(k);
+
                     SeriesResult sr = new SeriesResult(SeriesData[className]);
                     sr.Score();
                     SeriesResults.Add(className, sr);

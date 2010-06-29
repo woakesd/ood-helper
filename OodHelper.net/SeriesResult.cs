@@ -189,6 +189,8 @@ namespace OodHelper.net
                 bsr.dateSortedPoints.Sort(new DateComparer());
                 for (int i = 0; i < bsr.performanceSortedPoints.Count - discardCount; i++)
                     bsr.nett += bsr.performanceSortedPoints[i].Points;
+                for (int i = bsr.performanceSortedPoints.Count - discardCount; i < bsr.performanceSortedPoints.Count; i++)
+                    bsr.performanceSortedPoints[i].discard = true;
             }
 
             _Results.Sort(new NettComparer());
