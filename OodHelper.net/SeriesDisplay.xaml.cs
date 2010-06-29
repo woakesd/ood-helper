@@ -24,8 +24,16 @@ namespace OodHelper.net
     [Svn("$Id$")]
     public partial class SeriesDisplay : UserControl
     {
-        private DataTable rd;
-        private Hashtable caldata;
+        public DataTable rd;
+        public List<SeriesEvent> events;
+
+        public DataTable data
+        {
+            get
+            {
+                return rd;
+            }
+        }
 
         public SeriesDisplay(SeriesResult r)
         {
@@ -57,7 +65,7 @@ namespace OodHelper.net
             rd.Columns.Add("entered", typeof(double));
             rd.Columns.Add("score", typeof(double));
 
-            List<SeriesEvent> events = new List<SeriesEvent>(_result._SeriesData.Values);
+            events = new List<SeriesEvent>(_result._SeriesData.Values);
             events.Sort(CompareByDate);
             int i = 1;
             foreach (SeriesEvent se in events)
@@ -129,29 +137,5 @@ namespace OodHelper.net
         {
         }
 
-    }
-
-    class SeriesEntryDisplay : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            if (value != DBNull.Value)
-            {
-                SeriesEntry sent = (SeriesEntry)value;
-                if (sent.code == null || sent.code == string.Empty)
-                    return sent.Points.ToString("#.#");
-                else
-                    return sent.Points.ToString("#.#") + "(" + sent.code + ")";
-            }
-            else
-            {
-                return "";
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            return DependencyProperty.UnsetValue;
-        }
     }
 }

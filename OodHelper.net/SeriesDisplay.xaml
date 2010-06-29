@@ -79,6 +79,7 @@
                     <DataGridTextColumn Header="Boat class" Binding="{Binding boatclass}"/>
                     <DataGridTextColumn Header="Entered" Binding="{Binding entered}"/>
                     <DataGridTextColumn Header="Sail no" Binding="{Binding sailno}"/>
+                    <DataGridTextColumn Header="Pos" Binding="{Binding position}"/>
                     <DataGridTextColumn Header="Score" Binding="{Binding score, StringFormat=#.#}"/>
                     <!--<DataGridTemplateColumn Header="R1">
                         <DataGridTemplateColumn.CellTemplate>
@@ -89,40 +90,6 @@
                                 </StackPanel>
                                 <DataTemplate.Triggers>
                                     <DataTrigger Binding="{Binding r1.Discard}" Value="True">
-                                        <DataTrigger.Setters>
-                                            <Setter Property="Background" Value="DodgerBlue" TargetName="panel"/>
-                                        </DataTrigger.Setters>
-                                    </DataTrigger>
-                                </DataTemplate.Triggers>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="R2">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Name="panel" >
-                                    <TextBlock Text="{Binding r2.Points, StringFormat=#.#}" />
-                                    <TextBlock Text="{Binding r2.CodeDisplay}" FontSize="9"/>
-                                </StackPanel>
-                                <DataTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding r2.Discard}" Value="True">
-                                        <DataTrigger.Setters>
-                                            <Setter Property="Background" Value="DodgerBlue" TargetName="panel"/>
-                                        </DataTrigger.Setters>
-                                    </DataTrigger>
-                                </DataTemplate.Triggers>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="R3">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Name="panel" >
-                                    <TextBlock Text="{Binding r3.Points, StringFormat=#.#}" />
-                                    <TextBlock Text="{Binding r3.CodeDisplay}" FontSize="9"/>
-                                </StackPanel>
-                                <DataTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding r3.Discard}" Value="True">
                                         <DataTrigger.Setters>
                                             <Setter Property="Background" Value="DodgerBlue" TargetName="panel"/>
                                         </DataTrigger.Setters>

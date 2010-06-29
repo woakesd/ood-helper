@@ -1,0 +1,90 @@
+﻿<Page x:Class="OodHelper.net.SeriesDisplayPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+	Title="RollingHandicapResultsPage" d:DesignHeight="300" d:DesignWidth="788">
+    <Page.Resources>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="Padding" Value="0,6"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <Style x:Key="RightAlignCell" TargetType="{x:Type DataGridCell}">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style x:Key="RightAlignHeader" TargetType="{x:Type DataGridColumnHeader}">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Background" Value="#eeeeee" />
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style TargetType="{x:Type DataGridColumnHeader}" x:Key="ColumnHeader">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Background" Value="#eeeeee" />
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+    </Page.Resources>
+    <Grid HorizontalAlignment="Stretch" Margin="24,48" Name="PageMainGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.ColumnSpan="3" HorizontalAlignment="Center">Port Edgar Yacht Club Race Results</TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Name="EventDescription">Wed A Series - Division 1</TextBlock>
+        <DataGrid Margin="0,12,0,0" Grid.ColumnSpan="3" Grid.Row="2" GridLinesVisibility="None" Name="Results" 
+                  ColumnHeaderStyle="{StaticResource ResourceKey=ColumnHeader}"
+                  CanUserReorderColumns="False" CanUserSortColumns="False" 
+                  CanUserResizeColumns="False" CanUserResizeRows="False" AutoGenerateColumns="False" IsReadOnly="True" 
+                  IsManipulationEnabled="False" HeadersVisibility="Column" 
+                  BorderThickness="0" 
+                  AlternatingRowBackground="#eeeeee">
+            <DataGrid.Resources>
+                <Style TargetType="{x:Type DataGridCell}">
+                    <Setter Property="FontSize" Value="10" />
+                    <Setter Property="Padding" Value="4" />
+                    <Setter Property="Margin" Value="0" />
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Boat name" Binding="{Binding boatname}"/>
+                <DataGridTextColumn Header="Boat class" Binding="{Binding boatclass}"/>
+                <DataGridTextColumn Header="Entered" Binding="{Binding entered}"/>
+                <DataGridTextColumn Header="Sail no" Binding="{Binding sailno}"/>
+                <DataGridTextColumn Header="Pos" Binding="{Binding position}"/>
+                <DataGridTextColumn Header="Score" Binding="{Binding score, StringFormat=#.#}"/>
+                <!--<DataGridTemplateColumn Header="R1">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Name="panel" >
+                                    <TextBlock Text="{Binding r1.Points, StringFormat=#.#}" />
+                                    <TextBlock Text="{Binding r1.CodeDisplay}" FontSize="9"/>
+                                </StackPanel>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding r1.Discard}" Value="True">
+                                        <DataTrigger.Setters>
+                                            <Setter Property="Background" Value="DodgerBlue" TargetName="panel"/>
+                                        </DataTrigger.Setters>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>-->
+            </DataGrid.Columns>
+            <!--<DataGridCell Style="{x:Reference RightAlignCell}" />-->
+        </DataGrid>
+    </Grid>
+</Page>
