@@ -33,7 +33,7 @@ namespace OodHelper.net
             Start.Text = "Start: " + red.start.Text;
             Sct.Text = "SCT: " + Common.HMS(red.scorer.StandardCorrectedTime);
 
-            Db c = new Db(@"SELECT b.boatname Boat, b.boatclass [Class], b.sailno [Sail No], r.rolling_handicap as Hcap,
+            Db c = new Db(@"SELECT b.boatname Boat, b.boatclass [Class], b.sailno [Sail No], r.open_handicap as Hcap,
                 r.finish_date Finish, r.elapsed Elapsed, r.laps Laps, r.corrected Corrected, r.place Pos,
                 CASE WHEN override_points = 0 THEN points ELSE override_points END Pts,
                 r.achieved_handicap Achp, r.new_rolling_handicap [nhcp],
@@ -88,7 +88,7 @@ namespace OodHelper.net
 
             col = (DataGridTextColumn)Results.Columns[rd.Columns["PI"].Ordinal];
             b = (Binding)col.Binding;
-            b.StringFormat = "0.#";
+            b.StringFormat = "0.0";
             col.Binding = b;
 
             SetRightAlignment(Results.Columns[rd.Columns["hcap"].Ordinal]);

@@ -190,28 +190,43 @@ namespace OodHelper.net
         private void Print_Click(object sender, RoutedEventArgs e)
         {
             PrintDialog pd = new PrintDialog();
+            PrintPreview pv = new PrintPreview();
             
             FixedDocument fd = new FixedDocument();
             fd.DocumentPaginator.PageSize = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
-            FixedPage p1 = new FixedPage();
-            p1.Width = fd.DocumentPaginator.PageSize.Width;
-            p1.Height = fd.DocumentPaginator.PageSize.Height;
+            foreach (RaceEdit red in reds)
+            {
+                FixedPage p1 = new FixedPage();
+                p1.Width = fd.DocumentPaginator.PageSize.Width;
+                p1.Height = fd.DocumentPaginator.PageSize.Height;
 
-            RollingHandicapResultsPage p = new RollingHandicapResultsPage(reds[0]);
-            p.Width = p1.Width;
-            
-            Frame f = new Frame();
-            f.Navigate(p);
-            f.Width = p1.Width;
-            //f.HorizontalAlignment = HorizontalAlignment.Stretch;
-            p1.Children.Add(f);
+                Frame f = new Frame();
+                f.Width = p1.Width;
+                f.HorizontalAlignment = HorizontalAlignment.Stretch;
+                Page p = null;
 
-            PageContent pc = new PageContent();
-            IAddChild ac = pc as IAddChild;
-            ac.AddChild(p1);
+                switch (red.Handicap)
+                {
+                    case "o":
+                        p = (Page)new OpenHandicapResultsPage(red);
+                        p.Width = p1.Width;
+                        break;
+                    case "r":
+                        p = (Page)new RollingHandicapResultsPage(red);
+                        p.Width = p1.Width;
+                        break;
+                }
 
-            PrintPreview pv = new PrintPreview();
-            fd.Pages.Add(pc);
+                f.Navigate(p);
+
+                p1.Children.Add(f);
+
+                PageContent pc = new PageContent();
+                IAddChild ac = pc as IAddChild;
+                ac.AddChild(p1);
+
+                fd.Pages.Add(pc);
+            }
             pv.Viewer.Document = fd;
             pv.Viewer.FitToWidth();
             pv.ShowDialog();
