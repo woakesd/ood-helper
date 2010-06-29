@@ -150,6 +150,7 @@
     <Compile Include="SeriesDisplayByClass.xaml.cs">
       <DependentUpon>SeriesDisplayByClass.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SeriesEntry.cs" />
     <Compile Include="SeriesEvent.cs" />
     <Compile Include="SeriesResult.cs" />
     <Compile Include="Working.xaml.cs">

@@ -195,28 +195,6 @@ namespace OodHelper.net
         }
     }
 
-    public class SeriesEntry
-    {
-        public int rid;
-        public int bid;
-        public double? points = null;
-        public double? override_points = null;
-        public bool discard;
-        public string code;
-        public DateTime date;
-
-        public double Points
-        {
-            get
-            {
-                if (override_points != null && override_points != 0.0) 
-                    return override_points.Value; 
-                else 
-                    return points.Value;
-            }
-        }
-    }
-
     public class BoatSeriesResult
     {
         public BoatSeriesResult(int b)
