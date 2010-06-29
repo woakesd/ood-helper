@@ -18,11 +18,11 @@ namespace OodHelper.net
     /// Interaction logic for TestPage.xaml
     /// </summary>
     [Svn("$Id$")]
-    public partial class RollingHandicapResultsPage : Page
+    public partial class OpenHandicapResultsPage : Page
     {
         DataTable rd;
 
-        public RollingHandicapResultsPage(RaceEdit red)
+        public OpenHandicapResultsPage(RaceEdit red)
         {
             InitializeComponent();
 
