@@ -16,6 +16,14 @@ namespace OodHelper.net
         public string code;
         public DateTime date;
 
+        public bool Discard
+        {
+            get
+            {
+                return discard;
+            }
+        }
+
         public string CodeDisplay
         {
             get

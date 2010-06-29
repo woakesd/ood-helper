@@ -70,13 +70,21 @@ namespace OodHelper.net
                 UTF8Encoding ue = new UTF8Encoding();
 
                 x.Header = "R" + i;
-                x.CellTemplate = (DataTemplate)System.Windows.Markup.XamlReader.Load(new System.IO.MemoryStream(ue.GetBytes(@"<?xml version=""1.0"" encoding=""utf-8""?>
+                string dataTemplate = @"<?xml version=""1.0"" encoding=""utf-8""?>
                         <DataTemplate xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"">
-                            <StackPanel Orientation=""Horizontal"">
+                            <StackPanel Orientation=""Horizontal"" Name=""panel"">
                                 <TextBlock Text=""{Binding r" + i + @".Points, StringFormat=#.#}"" />
                                 <TextBlock Text=""{Binding r" + i + @".CodeDisplay}"" FontSize=""9""/>
                             </StackPanel>
-                        </DataTemplate>")));
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding=""{Binding r" + i + @".Discard}"" Value=""True"">
+                                    <DataTrigger.Setters>
+                                        <Setter Property=""Background"" Value=""LightGray"" TargetName=""panel""/>
+                                    </DataTrigger.Setters>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>";
+                x.CellTemplate = (DataTemplate)System.Windows.Markup.XamlReader.Load(new System.IO.MemoryStream(ue.GetBytes(dataTemplate)));
                 Races.Columns.Add(x);
 
                 i++;

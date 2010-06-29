@@ -256,6 +256,10 @@ namespace OodHelper.net
                 return 1;
             else if (x.Points < y.Points)
                 return -1;
+            if (x.date < y.date)
+                return 1;
+            else if (x.date > y.date)
+                return -1;
             return 0;
         }
     }
