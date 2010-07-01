@@ -29,11 +29,11 @@ namespace OodHelper.net
             // init seed values
             //
             Object o;
-            if ((o = DbSettings.GetSetting("bottomseed")) != null)
+            if ((o = DbSettings.GetSetting(DbSettings.settBottomSeed)) != null)
                 BottomSeed.Text = o.ToString();
             else
                 BottomSeed.Text = "1";
-            if ((o = DbSettings.GetSetting("topseed")) != null)
+            if ((o = DbSettings.GetSetting(DbSettings.settTopSeed)) != null)
                 TopSeed.Text = o.ToString();
             else
                 TopSeed.Text = "1999";
@@ -41,7 +41,7 @@ namespace OodHelper.net
             //
             // init mysql connection values
             //
-            string myconstring = (string)DbSettings.GetSetting("mysql");
+            string myconstring = (string)DbSettings.GetSetting(DbSettings.settMysql);
             MySqlConnectionStringBuilder mcsb = new MySqlConnectionStringBuilder(myconstring);
             Server.Text = mcsb.Server;
             Username.Text = mcsb.UserID;
@@ -57,7 +57,13 @@ namespace OodHelper.net
                 SSL.SelectedValue = SslVerifyCA;
             else if (mcsb.SslMode.HasFlag(MySqlSslMode.VerifyFull))
                 SSL.SelectedValue = SslVerifyFull;
-
+            
+            //
+            // init default discard profile
+            //
+            DefaultDiscardProfile.Text = (string)DbSettings.GetSetting(DbSettings.settDefaultDiscardProfile);
+            if (DefaultDiscardProfile.Text == string.Empty)
+                DefaultDiscardProfile.Text = "0,1";
         }
 
         private void clear_Click(object sender, RoutedEventArgs e)
@@ -85,21 +91,23 @@ namespace OodHelper.net
                 mcsb.SslMode = MySqlSslMode.VerifyCA;
             if (SSL.SelectedValue == SslVerifyFull)
                 mcsb.SslMode = MySqlSslMode.VerifyFull;
-            DbSettings.AddSetting("mysql", mcsb.ConnectionString);
+            DbSettings.AddSetting(DbSettings.settMysql, mcsb.ConnectionString);
 
             int b = 0, t = 0;
 
             if (Int32.TryParse(BottomSeed.Text, out b) && b != 0)
-                DbSettings.AddSetting("bottomseed", b);
+                DbSettings.AddSetting(DbSettings.settBottomSeed, b);
             else
-                DbSettings.DeleteSetting("bottomseed");
+                DbSettings.DeleteSetting(DbSettings.settBottomSeed);
 
             if (Int32.TryParse(TopSeed.Text, out t) && t != 0)
-                DbSettings.AddSetting("topseed", t);
+                DbSettings.AddSetting(DbSettings.settTopSeed, t);
             else
-                DbSettings.DeleteSetting("topseed");
+                DbSettings.DeleteSetting(DbSettings.settTopSeed);
 
             Db.ReseedDatabase();
+
+            DbSettings.AddSetting(DbSettings.settDefaultDiscardProfile, DefaultDiscardProfile.Text);
 
             DialogResult = true;
         }

@@ -10,8 +10,13 @@ using System.Runtime.Serialization.Formatters;
 namespace OodHelper.net
 {
     [Svn("$Id$")]
-    class DbSettings
+    static public class DbSettings
     {
+        public const string settDefaultDiscardProfile = "DefaultDiscardProfile";
+        public const string settMysql = "mysql";
+        public const string settBottomSeed = "bottomseed";
+        public const string settTopSeed = "topseed";
+
         private static void CreateSettingsDb()
         {
             string constr = Properties.Settings.Default.SettingsConnectionString;

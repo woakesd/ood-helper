@@ -177,7 +177,7 @@ namespace OodHelper.net
             if (_DiscardProfile.Length < _Rids.Length)
                 discardCount = _DiscardProfile[_DiscardProfile.Length-1];
             else
-                discardCount = _DiscardProfile[_Rids.Length];
+                discardCount = _DiscardProfile[_Rids.Length-1];
 
             foreach (int bid in _Bids)
             {

@@ -99,7 +99,23 @@ namespace OodHelper.net
                     foreach (int k in rem)
                         SeriesData[className].Remove(k);
 
-                    SeriesResult sr = new SeriesResult(SeriesData[className]);
+                    string defaultDiscards = (string)DbSettings.GetSetting(DbSettings.settDefaultDiscardProfile);
+                    if (defaultDiscards == string.Empty)
+                        defaultDiscards = "0,1";
+
+                    string[] DiscardParts = defaultDiscards.Split(new char[] { ',' });
+                    int[] discardProfile = new int[DiscardParts.Length];
+                    try
+                    {
+                        for (int s = 0; s < DiscardParts.Length; s++)
+                            discardProfile[s] = Int32.Parse(DiscardParts[s]);
+                    }
+                    catch
+                    {
+                        discardProfile = new int[] { 0, 1 };
+                    }
+
+                    SeriesResult sr = new SeriesResult(SeriesData[className], discardProfile);
                     sr.Score();
                     SeriesResults.Add(className, sr);
                 }

@@ -186,6 +186,37 @@ namespace OodHelper.net
 
                 copyData(mtable, ins);
 
+                scmd.CommandText = @"SELECT r1.rid rid, r1.bid bid, 
+                        CASE WHEN r2.new_rolling_handicap IS NOT NULL THEN r2.new_rolling_handicap ELSE b.rolling_handicap END rolling_handicap
+                        FROM races r1
+                        INNER JOIN calendar c ON r1.rid = c.rid
+                        INNER JOIN boats b ON r1.bid = b.bid
+                        LEFT JOIN races r2 ON r2.rid <> r1.rid
+                        AND r2.bid = r1.bid
+                        AND r2.start_date < r1.start_date
+                        AND r2.start_date IN (SELECT MAX(r3.start_date)
+                        FROM races r3
+                        WHERE r3.start_date < r1.start_date
+                        AND r3.bid = r1.bid
+                        AND r3.rid <> r1.rid)
+                        WHERE c.handicapping = 'o'";
+
+                SqlCeDataAdapter sda = new SqlCeDataAdapter(scmd);
+                DataTable d = new DataTable();
+                sda.Fill(d);
+                foreach (DataRow dr in d.Rows)
+                {
+                    scmd.CommandText = @"UPDATE races
+                            SET rolling_handicap = @rolling_handicap
+                            WHERE rid = @rid
+                            AND bid = @bid";
+                    scmd.Parameters.Clear();
+                    scmd.Parameters.Add("rid", dr["rid"]);
+                    scmd.Parameters.Add("bid", dr["bid"]);
+                    scmd.Parameters.Add("rolling_handicap", dr["rolling_handicap"]);
+                    scmd.ExecuteNonQuery();
+                }
+
                 scon.Close();
                 mcon.Close();
 
