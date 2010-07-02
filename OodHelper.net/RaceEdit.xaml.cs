@@ -87,9 +87,11 @@ namespace OodHelper.net
 
         public void LoadGrid()
         {
-            Db c = new Db("SELECT start_date, time_limit_fixed, extension, event, class, timegate, handicapping, standard_corrected_time " +
-                    "FROM calendar " +
-                    "WHERE rid = @rid");
+            Db c = new Db(@"SELECT start_date, time_limit_fixed, extension, 
+                    event, class, timegate, handicapping,
+                    standard_corrected_time, ood
+                    FROM calendar
+                    WHERE rid = @rid");
             Hashtable p = new Hashtable();
             p["rid"] = Rid;
             caldata = c.GetHashtable(p);
@@ -106,7 +108,7 @@ namespace OodHelper.net
             racename = eventname + " - " + caldata["class"].ToString().Trim();
             raceclass = caldata["class"].ToString().Trim();
             mRaceDate = (DateTime)caldata["start_date"];
-            //mOod = caldata["ood"].ToString();
+            mOod = caldata["ood"].ToString();
             if (caldata["handicapping"] != DBNull.Value)
                 mHandicap = (string)caldata["handicapping"];
             sct.Text = Common.HMS((double)caldata["standard_corrected_time"]);

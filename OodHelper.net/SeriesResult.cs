@@ -10,8 +10,6 @@ namespace OodHelper.net
     [Svn("$Id$")]
     public class SeriesResult
     {
-        private readonly int NoRaces;
-
         private int[] _DiscardProfile;
         public Dictionary<int, SeriesEvent> _SeriesData;
         private int[] _Bids;

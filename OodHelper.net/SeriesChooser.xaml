@@ -23,7 +23,7 @@
                         <Label Grid.Column="1">Series Result</Label>
                     </Grid>
                 </Button>
-                <Button Name="Close" Click="Close_Click">
+                <Button Name="CloseButton" Click="Close_Click">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>
