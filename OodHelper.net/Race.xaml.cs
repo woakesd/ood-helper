@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Markup;
+using System.Xml;
 
 namespace OodHelper.net
 {
@@ -27,6 +29,8 @@ namespace OodHelper.net
             get { return rid; }
         }
 
+        private Hashtable data;
+
         public Race(int r)
         {
             rid = r;
@@ -38,7 +42,7 @@ namespace OodHelper.net
                     "WHERE rid = @rid");
                 Hashtable p = new Hashtable();
                 p["rid"] = Rid;
-                Hashtable data = get.GetHashtable(p);
+                data = get.GetHashtable(p);
 
                 startDate.SelectedDate = data["start_date"] as DateTime?;
                 startDate.DisplayDate = startDate.SelectedDate.Value;
@@ -259,6 +263,33 @@ namespace OodHelper.net
                 timeLimitDelta.Text = Math.Truncate(x.TotalHours).ToString("0#") + ":" + x.Minutes.ToString("0#");
                 timeLimitFixed.Visibility = System.Windows.Visibility.Collapsed;
                 timeLimitDelta.Visibility = System.Windows.Visibility.Visible;
+            }
+        }
+
+        private void startDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (timeFixedRadio.IsChecked.Value)
+            {
+                DateTime? oldStart = data["start_date"] as DateTime?;
+                if (oldStart != null && startDate.SelectedDate != null && timeLimitFixedDate != null)
+                    timeLimitFixedDate.SelectedDate += startDate.SelectedDate.Value - oldStart.Value.Date;
+                else
+                    timeLimitFixedDate = startDate;
+            }
+        }
+
+        private void timeLimitFixedDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (timeLimitFixedDate.SelectedDate != null)
+            {
+                if (startDate.SelectedDate == null)
+                    startDate.SelectedDate = timeLimitFixedDate.SelectedDate;
+                if (timeLimitFixedDate.SelectedDate.Value < startDate.SelectedDate.Value)
+                {
+                    timeLimitFixedDate.SelectedDate = startDate.SelectedDate;
+                    MessageBox.Show("Time limit date must be same or later than start date",
+                        "Time Limit validation failure", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
     }

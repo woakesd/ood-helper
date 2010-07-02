@@ -23,6 +23,16 @@
                         <Label Grid.Column="1">Series Result</Label>
                     </Grid>
                 </Button>
+                <Button Name="Close" Click="Close_Click">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper.net;component/Images/Cancel.png"/>
+                        <Label Grid.Column="1">Close</Label>
+                    </Grid>
+                </Button>
             </ToolBar>
         </ToolBarTray>
         <DockPanel Grid.Row="1" Name="calDockPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">

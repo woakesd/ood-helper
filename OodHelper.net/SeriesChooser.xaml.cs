@@ -76,6 +76,13 @@ namespace OodHelper.net
             int rowIndex = CalGrid.SelectedIndex;
             sid = (int)cal.Rows[rowIndex]["sid"];
             this.DialogResult = true;
+            Close();
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+            Close();
         }
     }
 }

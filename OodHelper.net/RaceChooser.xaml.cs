@@ -98,6 +98,7 @@ namespace OodHelper.net
 
         private void setChosenRaces()
         {
+            DialogResult = true;
             int rowIndex = CalGrid.SelectedIndex;
             int r = (int) ((DataRowView)CalGrid.SelectedItem).Row["rid"];
             DateTime rd = (DateTime) ((DataRowView) CalGrid.SelectedItem).Row["start_date"];
@@ -127,6 +128,12 @@ namespace OodHelper.net
             res.Sort();
             rids = (int[]) res.ToArray(Type.GetType("System.Int32"));
             this.Close();
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+            Close();
         }
     }
 }

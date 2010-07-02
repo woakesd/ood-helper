@@ -31,14 +31,16 @@ namespace OodHelper.net
         private void Results_Click(object sender, RoutedEventArgs e)
         {
             RaceChooser rc = new RaceChooser();
-            rc.ShowDialog();
-            int[] rids = rc.Rids;
-            if (rids != null)
+            if (rc.ShowDialog().Value)
             {
-                RaceResults r = new RaceResults(rids);
-                dock.Children.Add(r);
-                r.HorizontalAlignment = HorizontalAlignment.Stretch;
-                r.VerticalAlignment = VerticalAlignment.Stretch;
+                int[] rids = rc.Rids;
+                if (rids != null)
+                {
+                    RaceResults r = new RaceResults(rids);
+                    dock.Children.Add(r);
+                    r.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    r.VerticalAlignment = VerticalAlignment.Stretch;
+                }
             }
         }
 
