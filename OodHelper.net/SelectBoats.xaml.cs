@@ -183,7 +183,7 @@ namespace OodHelper.net
                 {
                     bool dngy = (bool)rv["dinghy"];
                     int ohp = (int)rv["open_handicap"];
-                    string h = "";
+                    string h = string.Empty;
                     if (rv["hulltype"] != DBNull.Value) h = (string)rv["hulltype"];
                     if (dngy)
                     {

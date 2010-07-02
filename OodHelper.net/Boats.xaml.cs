@@ -54,7 +54,7 @@ namespace OodHelper.net
         private void SetGridSource(DataTable bts)
         {
             BoatData.ItemsSource = bts.DefaultView;
-            if (Boatname.Text != "") FilterBoats();
+            if (Boatname.Text != string.Empty) FilterBoats();
             w.Close();
         }
 

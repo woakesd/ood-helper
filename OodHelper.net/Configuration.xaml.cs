@@ -68,8 +68,8 @@ namespace OodHelper.net
 
         private void clear_Click(object sender, RoutedEventArgs e)
         {
-            BottomSeed.Text = "";
-            TopSeed.Text = "";
+            BottomSeed.Text = string.Empty;
+            TopSeed.Text = string.Empty;
         }
 
         private void OK_Click(object sender, RoutedEventArgs e)

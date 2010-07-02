@@ -28,13 +28,13 @@ namespace OodHelper.net
 
         public IRaceScore scorer;
 
-        private string raceclass = "";
+        private string raceclass = string.Empty;
         public string RaceClass
         {
             get { return raceclass; }
         }
 
-        private string racename = "";
+        private string racename = string.Empty;
         public string RaceName
         {
             get { return racename; }

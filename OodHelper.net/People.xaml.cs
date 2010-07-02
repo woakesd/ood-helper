@@ -64,7 +64,7 @@ namespace OodHelper.net
         private void SetGridSource(DataTable ppl)
         {
             PeopleData.ItemsSource = ppl.DefaultView;
-            if (Peoplename.Text != "") FilterPeople();
+            if (Peoplename.Text != string.Empty) FilterPeople();
             if (id != null)
             {
                 foreach (DataRowView vr in PeopleData.Items)
@@ -178,7 +178,7 @@ namespace OodHelper.net
         {
             try
             {
-                if (Peoplename.Text != "")
+                if (Peoplename.Text != string.Empty)
                 {
                     ((DataView)PeopleData.ItemsSource).RowFilter =
                         "firstname LIKE '%" + Peoplename.Text + "%'" +

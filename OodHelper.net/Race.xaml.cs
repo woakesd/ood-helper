@@ -132,7 +132,7 @@ namespace OodHelper.net
 
         private void ok_Click(object sender, RoutedEventArgs e)
         {
-            /*if (boatName.Text.Trim() == "")
+            /*if (boatName.Text.Trim() == string.Empty)
             {
                 MessageBox.Show("Boat name required", "Input Required", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -146,7 +146,7 @@ namespace OodHelper.net
             {
                 p["time_limit_type"] = "F";
                 p["time_limit_delta"] = DBNull.Value;
-                if (timeLimitFixedDate.SelectedDate != null && timeLimitFixedTime.Text != "")
+                if (timeLimitFixedDate.SelectedDate != null && timeLimitFixedTime.Text != string.Empty)
                     p["time_limit_fixed"] = timeLimitFixedDate.SelectedDate.Value + TimeSpan.Parse(timeLimitFixedTime.Text);
                 else
                     p["time_limit_fixed"] = DBNull.Value;
@@ -154,7 +154,7 @@ namespace OodHelper.net
             else if (timeDeltaRadio.IsChecked.Value)
             {
                 p["time_limit_type"] = "D";
-                if (timeLimitDelta.Text != "")
+                if (timeLimitDelta.Text != string.Empty)
                     p["time_limit_delta"] = Math.Round(TimeSpan.Parse(timeLimitDelta.Text).TotalSeconds);
                 else
                     p["time_limit_delta"] = DBNull.Value;
@@ -178,7 +178,7 @@ namespace OodHelper.net
                 p["handicapping"] = DBNull.Value;
             p["visitors"] = visitors.Text;
             p["flag"] = flag.Text;
-            if (extension.Text != "")
+            if (extension.Text != string.Empty)
                 p["extension"] = Math.Round(TimeSpan.Parse(extension.Text).TotalSeconds);
             else
                 p["extension"] = DBNull.Value;
@@ -237,7 +237,7 @@ namespace OodHelper.net
 
         private void timeFixedRadio_Checked(object sender, RoutedEventArgs e)
         {
-            if (timeLimitDelta.Text != "")
+            if (timeLimitDelta.Text != string.Empty)
             {
                 TimeSpan tlDelta = TimeSpan.Parse(timeLimitDelta.Text);
                 DateTime start = startDate.SelectedDate.Value + TimeSpan.Parse(startTime.Text);

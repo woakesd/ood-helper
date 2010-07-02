@@ -16,14 +16,14 @@ namespace OodHelper.net
                 {
                     TimeSpan s = new TimeSpan(0, 0, 0, (int)Math.Truncate(seconds),
                         (int)Math.Round((seconds - Math.Truncate(seconds)) * 1000));
-                    return s.ToString().Replace("00000", "");
+                    return s.ToString().Replace("00000", string.Empty);
                 }
                 else
                     return seconds.ToString();
             }
             else
             {
-                return "";
+                return string.Empty;
             }
         }
 

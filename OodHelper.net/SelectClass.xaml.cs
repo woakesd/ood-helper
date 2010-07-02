@@ -59,7 +59,7 @@ namespace OodHelper.net
         private void SetGridSource(DataTable cls)
         {
             ClassData.ItemsSource = cls.DefaultView;
-            if (Classname.Text != "") FilterPeople();
+            if (Classname.Text != string.Empty) FilterPeople();
             if (id != null)
             {
                 foreach (DataRowView vr in ClassData.Items)
@@ -127,7 +127,7 @@ namespace OodHelper.net
         {
             try
             {
-                if (Classname.Text != "")
+                if (Classname.Text != string.Empty)
                 {
                     ((DataView)ClassData.ItemsSource).RowFilter =
                         "class_name LIKE '%" + Classname.Text + "%'";

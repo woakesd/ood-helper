@@ -56,7 +56,7 @@ namespace OodHelper.net
         private void SetGridSource(DataTable rcs)
         {
             RaceData.ItemsSource = rcs.DefaultView;
-            if (Eventname.Text != "") FilterRaces();
+            if (Eventname.Text != string.Empty) FilterRaces();
             if (redit != 0)
             {
                 foreach (DataRowView vr in RaceData.Items)

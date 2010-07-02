@@ -253,7 +253,7 @@ namespace OodHelper.net
                     s.ToString().PadLeft(2, '0');
             }
             else
-                return "";
+                return string.Empty;
         }
     }
 }

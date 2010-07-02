@@ -130,7 +130,7 @@ namespace OodHelper.net
                     int topseed, nextval;
                     topseed = (int)o;
 
-                    Db seed = new Db("");
+                    Db seed = new Db(string.Empty);
                     nextval = seed.GetNextIdentity("people", "id");
 
                     if (nextval > topseed)

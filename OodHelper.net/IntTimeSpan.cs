@@ -21,7 +21,7 @@ namespace OodHelper.net
             }
             else
             {
-                return "";
+                return string.Empty;
             }
         }
 

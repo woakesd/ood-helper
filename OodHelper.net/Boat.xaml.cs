@@ -136,7 +136,7 @@ namespace OodHelper.net
 
         private void ok_Click(object sender, RoutedEventArgs e)
         {
-            if (boatName.Text.Trim() == "")
+            if (boatName.Text.Trim() == string.Empty)
             {
                 MessageBox.Show("Boat name required", "Input Required", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -169,7 +169,7 @@ namespace OodHelper.net
             }
 
             int hcap;
-            if (openHandicap.Text != "")
+            if (openHandicap.Text != string.Empty)
             {
                 if (Int32.TryParse(openHandicap.Text, out hcap))
                 {
@@ -187,7 +187,7 @@ namespace OodHelper.net
                 p["ohp"] = DBNull.Value;
             }
 
-            if (rollingHandicap.Text != "")
+            if (rollingHandicap.Text != string.Empty)
             {
                 if (Int32.TryParse(rollingHandicap.Text, out hcap))
                 {
@@ -228,7 +228,7 @@ namespace OodHelper.net
             }
 
             Double schr;
-            if (smallCatHandicap.Text != "")
+            if (smallCatHandicap.Text != string.Empty)
             {
                 if (Double.TryParse(smallCatHandicap.Text, out schr))
                 {
@@ -326,7 +326,7 @@ namespace OodHelper.net
                     int topseed, nextval;
                     topseed = (int)o;
 
-                    Db seed = new Db("");
+                    Db seed = new Db(string.Empty);
                     nextval = seed.GetNextIdentity("boats", "bid");
 
                     if (nextval > topseed)
@@ -363,7 +363,7 @@ namespace OodHelper.net
 
                 boatClass.Text = data["class_name"].ToString();
                 openHandicap.Text = data["number"].ToString();
-                if (rollingHandicap.Text == "")
+                if (rollingHandicap.Text == string.Empty)
                     rollingHandicap.Text = data["number"].ToString();
                 switch (data["status"].ToString())
                 {
