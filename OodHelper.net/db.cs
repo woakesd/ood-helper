@@ -418,7 +418,7 @@ CREATE TABLE [series] (
                 p["t"] = t;
                 object o;
                 int seedvalue;
-                if ((o = s.GetScalar(p)) != null)
+                if ((o = s.GetScalar(p)) != DBNull.Value)
                 {
                     seedvalue = ((int)o) + 1;
                 }
