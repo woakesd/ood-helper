@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      ShowInTaskbar="False" mc:Ignorable="d" Title="Race" d:DesignHeight="524" d:DesignWidth="483" SizeToContent="WidthAndHeight">
+      ShowInTaskbar="False" Title="Race" SizeToContent="WidthAndHeight">
     <Window.Resources>
         <ResourceDictionary Source="Buttons.xaml" />
     </Window.Resources>
@@ -62,32 +62,59 @@
             <Label Content="Course" Grid.Row="3" />
             <TextBox Grid.Row="3" Grid.Column="1" Name="course" HorizontalAlignment="Left" Width="100" MaxLength="9" Margin="2" />
             <Label Content="Date" Grid.Row="4" />
-            <Grid Grid.Row="4" Grid.Column="1">
+            <Grid Grid.Row="4" Grid.Column="1" Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
-                <DatePicker Grid.Column="0" Template="{StaticResource ResourceKey=MyDatePicker}" SelectedDateChanged="startDate_SelectedDateChanged" HorizontalAlignment="Left" Margin="2" Name="startDate" VerticalAlignment="Top" Width="115" />
-                <TextBox Grid.Column="1" Name="startTime" HorizontalAlignment="Left" Width="50" MaxLength="5" Margin="2"/>
+                <DatePicker Template="{StaticResource ResourceKey=MyDatePicker}" 
+                            SelectedDateChanged="startDate_SelectedDateChanged" 
+                            Margin="2" Name="startDate">
+                    <DatePicker.SelectedDate>
+                        <Binding Path="StartDateDate">
+                            <Binding.ValidationRules>
+                                <ExceptionValidationRule/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </DatePicker.SelectedDate>
+                </DatePicker>
+                <TextBox Grid.Column="1" Name="startTime" HorizontalAlignment="Left" Width="50" MaxLength="5" Margin="2">
+                    <TextBox.Text>
+                        <Binding Path="StartDateTime">
+                            <Binding.ValidationRules>
+                                <ExceptionValidationRule/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
             </Grid>
             <Label Content="Time Limit" Grid.Row="5" />
-            <Grid Grid.Row="5" Grid.Column="1" Margin="2">
+            <Grid Grid.Row="5" Grid.Column="1" Margin="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <RadioButton Grid.Row="0" Margin="0,2" GroupName="timeLimitType" Content="Time difference" Name="timeDeltaRadio" Checked="timeDeltaRadio_Checked"/>
-                <RadioButton Grid.Row="1" Margin="0,2" GroupName="timeLimitType" Content="Fixed time" Name="timeFixedRadio" Checked="timeFixedRadio_Checked"/>
-                <TextBox Grid.Row="2" HorizontalAlignment="Left" MaxLength="5" Name="timeLimitDelta" Width="50" Margin="2" />
-                <Grid Grid.Row="3" Name="timeLimitFixed">
+                <RadioButton Grid.Row="0" Margin="2" GroupName="timeLimitType" Content="Time difference" Name="timeDeltaRadio" Checked="timeDeltaRadio_Checked"/>
+                <RadioButton Grid.Row="1" Margin="2" GroupName="timeLimitType" Content="Fixed time" Name="timeFixedRadio" Checked="timeFixedRadio_Checked"/>
+                <TextBox Grid.Row="2" HorizontalAlignment="Left" MaxLength="5" Name="timeLimitDelta" Width="50" Margin="2">
+                </TextBox>
+                <Grid Grid.Row="3" Name="timeLimitFixed" Margin="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
-                    <DatePicker Template="{StaticResource ResourceKey=MyDatePicker}" SelectedDateChanged="timeLimitFixedDate_SelectedDateChanged" Grid.Column="0" HorizontalAlignment="Left" Margin="2" Name="timeLimitFixedDate" VerticalAlignment="Top" Width="115" />
-                    <TextBox Grid.Column="1" HorizontalAlignment="Left" MaxLength="5" Name="timeLimitFixedTime" Width="50" Margin="2" />
+                    <DatePicker Template="{StaticResource ResourceKey=MyDatePicker}" SelectedDateChanged="timeLimitFixedDate_SelectedDateChanged" Margin="2" Name="timeLimitFixedDate" />
+                    <TextBox Grid.Column="1" HorizontalAlignment="Left" MaxLength="5" Name="timeLimitFixedTime" Width="50" Margin="2">
+                        <TextBox.Text>
+                            <Binding Path="TimeLimitFixedTime">
+                                <Binding.ValidationRules>
+                                    <ExceptionValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                 </Grid>
             </Grid>
             <Label Content="Extension" Grid.Row="6" />

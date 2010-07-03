@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
+using System.Globalization;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -29,7 +31,8 @@ namespace OodHelper.net
             get { return rid; }
         }
 
-        private Hashtable data;
+        public RaceData raceData;
+        Hashtable data;
 
         public Race(int r)
         {
@@ -43,10 +46,11 @@ namespace OodHelper.net
                 Hashtable p = new Hashtable();
                 p["rid"] = Rid;
                 data = get.GetHashtable(p);
+                raceData = new RaceData(data);
+                this.DataContext = raceData;
 
-                startDate.SelectedDate = data["start_date"] as DateTime?;
-                startDate.DisplayDate = startDate.SelectedDate.Value;
-                startTime.Text = (data["start_date"] as DateTime?).Value.ToString("HH:mm");
+                //startDate.SelectedDate = data["start_date"] as DateTime?;
+                //startDate.DisplayDate = startDate.SelectedDate.Value;
                 eventName.Text = data["event"] as string;
                 raceClass.Text = data["class"] as string;
                 eventName.Text = data["event"] as string;
@@ -59,8 +63,6 @@ namespace OodHelper.net
                     case "F":
                         timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
                         timeLimitFixedDate.SelectedDate = data["time_limit_fixed"] as DateTime?;
-                        if (timeLimitFixedDate.SelectedDate != null)
-                            timeLimitFixedTime.Text = (data["time_limit_fixed"] as DateTime?).Value.ToString("HH:mm");
                         timeFixedRadio.IsChecked = true;
                         break;
                     case "D":
@@ -136,12 +138,25 @@ namespace OodHelper.net
 
         private void ok_Click(object sender, RoutedEventArgs e)
         {
-            /*if (boatName.Text.Trim() == string.Empty)
-            {
-                MessageBox.Show("Boat name required", "Input Required", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }*/
+            string msg = string.Empty;
 
+            if (Validation.GetErrors(timeLimitFixedTime).Count > 0)
+                msg += Validation.GetErrors(timeLimitFixedTime)[0].ErrorContent.ToString() + "\n";
+            if (Validation.GetErrors(startTime).Count > 0)
+                msg += Validation.GetErrors(timeLimitFixedTime)[0].ErrorContent.ToString() + "\n";
+            if (startDate.SelectedDate == null || startTime.Text == string.Empty)
+                msg += "Start date and time required\n";
+            if (timeFixedRadio.IsChecked.Value && (timeLimitFixedDate.SelectedDate == null || timeLimitFixedTime.Text == string.Empty))
+                msg += "Time limit date and time required if fixed time limit is selected\n";
+            if (timeDeltaRadio.IsChecked.Value && timeLimitDelta.Text == string.Empty)
+                msg += "Race length must be specified if time difference is specified\n";
+
+            if (msg != string.Empty)
+            {
+                MessageBox.Show(msg, "Input not valid", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            
             this.DialogResult = true;
             Hashtable p = new Hashtable();
 
@@ -243,7 +258,11 @@ namespace OodHelper.net
         {
             if (timeLimitDelta.Text != string.Empty)
             {
-                TimeSpan tlDelta = TimeSpan.Parse(timeLimitDelta.Text);
+                TimeSpan tlDelta;
+                if (timeLimitDelta.Text.Length > 5)
+                    tlDelta = TimeSpan.ParseExact(timeLimitDelta.Text, "d\\.hh\\:mm", null);
+                else
+                    tlDelta = TimeSpan.ParseExact(timeLimitDelta.Text, "hh\\:mm", null);
                 DateTime start = startDate.SelectedDate.Value + TimeSpan.Parse(startTime.Text);
                 DateTime tlFixed = start + tlDelta;
                 timeLimitFixedDate.SelectedDate = tlFixed.Date;
@@ -260,7 +279,10 @@ namespace OodHelper.net
                 DateTime start = startDate.SelectedDate.Value + TimeSpan.Parse(startTime.Text);
                 DateTime tlFixed = timeLimitFixedDate.SelectedDate.Value + TimeSpan.Parse(timeLimitFixedTime.Text);
                 TimeSpan x = tlFixed - start;
-                timeLimitDelta.Text = Math.Truncate(x.TotalHours).ToString("0#") + ":" + x.Minutes.ToString("0#");
+                if (x > new TimeSpan(1, 0, 0, 0))
+                    timeLimitDelta.Text = x.ToString("d\\.hh\\:mm");
+                else
+                    timeLimitDelta.Text = x.ToString("hh\\:mm");
                 timeLimitFixed.Visibility = System.Windows.Visibility.Collapsed;
                 timeLimitDelta.Visibility = System.Windows.Visibility.Visible;
             }
@@ -290,6 +312,97 @@ namespace OodHelper.net
                     MessageBox.Show("Time limit date must be same or later than start date",
                         "Time Limit validation failure", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+            }
+        }
+    }
+
+    public class RaceData: INotifyPropertyChanged
+    {
+        public Hashtable data;
+
+        public RaceData(Hashtable d)
+        {
+            data = d;
+        }
+
+        public DateTime? StartDateDate
+        {
+            get
+            {
+                if (data["start_date"] != DBNull.Value)
+                    return (data["start_date"] as DateTime?).Value.Date;
+                return null;
+            }
+
+            set
+            {
+                if (value.HasValue)
+                    data["start_date"] = value.Value;
+                else
+                    data["start_date"] = DBNull.Value;
+                OnPropertyChanged("StartDateDate");
+            }
+        }
+        public string TimeLimitFixedTime
+        {
+            get
+            {
+                if (data["time_limit_fixed"] != DBNull.Value)
+                    return (data["time_limit_fixed"] as DateTime?).Value.ToString("HH:mm");
+                return string.Empty;
+            }
+
+            set
+            {
+                if (data["time_limit_fixed"] != DBNull.Value)
+                    try
+                    {
+                        (data["time_limit_fixed"] as DateTime?).Value.Date.Add(TimeSpan.ParseExact(value, "h\\:mm", null));
+                        OnPropertyChanged("TimeLimitFixedTime");
+                    }
+                    catch (Exception e)
+                    {
+                        throw new ArgumentException("Time limit time format must be like 12:50");
+                    }
+                else
+                    throw new ArgumentException("Time limit date must be selected first");
+            }
+        }
+
+        public string StartDateTime
+        {
+            get
+            {
+                if (data["start_date"] != DBNull.Value)
+                    return (data["start_date"] as DateTime?).Value.ToString("HH:mm");
+                return string.Empty;
+            }
+
+            set
+            {
+                if (data["start_date"] != DBNull.Value)
+                    try
+                    {
+                        (data["start_date"] as DateTime?).Value.Date.Add(TimeSpan.ParseExact(value, "h\\:mm", null));
+                        OnPropertyChanged("StartDateTime");
+                    }
+                    catch (Exception)
+                    {
+                        throw new ArgumentException("Start time format must be like 12:50");
+                    }
+                else
+                    throw new ArgumentException("Start date must be selected first");
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
             }
         }
     }
