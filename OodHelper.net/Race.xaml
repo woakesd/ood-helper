@@ -19,18 +19,6 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -43,24 +31,24 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <Label Content="Event"/>
-            <TextBox Grid.Column="1" Name="eventName" Width="240" MaxLength="34" HorizontalAlignment="Left" />
+            <TextBox Grid.Column="1" Margin="2" Text="{Binding Path=CalendarEvent}" Name="eventName" Width="240" MaxLength="34" HorizontalAlignment="Left" />
             <Label Content="Class" Grid.Row="1" />
-            <Grid Grid.Row="1" Grid.Column="1">
+            <Grid Grid.Row="1" Grid.Column="1" Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
-                <TextBox Grid.Column="0" Name="raceClass" Width="140" MaxLength="20" Margin="2" />
+                <TextBox Grid.Column="0" Text="{Binding Path=CalendarClass}" Name="raceClass" Width="140" MaxLength="20" Margin="2" />
                 <Button Grid.Column="1" Content="Select Class" Name="SelectClass" Margin="2" Padding="14,0,15,0" />
             </Grid>
             <Label Content="Flag" Grid.Row="2" />
-            <TextBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" MaxLength="10" Name="flag" Width="100" Margin="2" />
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Flag}" HorizontalAlignment="Left" MaxLength="10" Name="flag" Width="100" Margin="2" />
             <Label Content="Course" Grid.Row="3" />
-            <TextBox Grid.Row="3" Grid.Column="1" Name="course" HorizontalAlignment="Left" Width="100" MaxLength="9" Margin="2" />
+            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=Course}" Name="course" HorizontalAlignment="Left" Width="100" MaxLength="9" Margin="2" />
             <Label Content="Date" Grid.Row="4" />
             <Grid Grid.Row="4" Grid.Column="1" Margin="0">
                 <Grid.ColumnDefinitions>
@@ -95,17 +83,34 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <RadioButton Grid.Row="0" Margin="2" GroupName="timeLimitType" Content="Time difference" Name="timeDeltaRadio" Checked="timeDeltaRadio_Checked"/>
-                <RadioButton Grid.Row="1" Margin="2" GroupName="timeLimitType" Content="Fixed time" Name="timeFixedRadio" Checked="timeFixedRadio_Checked"/>
-                <TextBox Grid.Row="2" HorizontalAlignment="Left" MaxLength="5" Name="timeLimitDelta" Width="50" Margin="2">
+                <RadioButton Grid.Row="0" Margin="2" GroupName="timeLimitType" Tag="D" IsChecked="{Binding Path=TimeLimitType}" Content="Time difference" Name="timeDeltaRadio" Checked="timeDeltaRadio_Checked"/>
+                <RadioButton Grid.Row="1" Margin="2" GroupName="timeLimitType" Tag="F" IsChecked="{Binding Path=TimeLimitType}" Content="Fixed time" Name="timeFixedRadio" Checked="timeFixedRadio_Checked"/>
+                <RadioButton Grid.Row="2" Margin="2" GroupName="timeLimitType" Content="No time limit" Name="timeNoLimit" Checked="timeNoLimitRadio_Checked"/>
+                <TextBox Grid.Row="3" HorizontalAlignment="Left" MaxLength="10" Name="timeLimitDelta" Width="80" Margin="2">
+                    <TextBox.Text>
+                        <Binding Path="TimeLimitDelta">
+                            <Binding.ValidationRules>
+                                <ExceptionValidationRule/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
                 </TextBox>
-                <Grid Grid.Row="3" Name="timeLimitFixed" Margin="0">
+                <Grid Grid.Row="4" Name="timeLimitFixed" Margin="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
-                    <DatePicker Template="{StaticResource ResourceKey=MyDatePicker}" SelectedDateChanged="timeLimitFixedDate_SelectedDateChanged" Margin="2" Name="timeLimitFixedDate" />
+                    <DatePicker Template="{StaticResource ResourceKey=MyDatePicker}" SelectedDateChanged="timeLimitFixedDate_SelectedDateChanged" Margin="2" Name="timeLimitFixedDate">
+                        <DatePicker.SelectedDate>
+                            <Binding Path="TimeLimitFixedDate">
+                                <Binding.ValidationRules>
+                                    <ExceptionValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </DatePicker.SelectedDate>
+                    </DatePicker>
                     <TextBox Grid.Column="1" HorizontalAlignment="Left" MaxLength="5" Name="timeLimitFixedTime" Width="50" Margin="2">
                         <TextBox.Text>
                             <Binding Path="TimeLimitFixedTime">
@@ -118,30 +123,24 @@
                 </Grid>
             </Grid>
             <Label Content="Extension" Grid.Row="6" />
-            <TextBox Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" MaxLength="5" Name="extension" Width="50" Margin="2" />
+            <TextBox Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" MaxLength="10" Name="extension" Width="80" Margin="2">
+                <TextBox.Text>
+                    <Binding Path="Extension">
+                        <Binding.ValidationRules>
+                            <ExceptionValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
             <Label Content="OOD" Grid.Row="7" />
-            <TextBox Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" MaxLength="30" Name="ood" Width="240" Margin="2" />
+            <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Path=Ood}" MaxLength="30" Name="ood" Width="240" Margin="2" />
             <Label Content="Venue" Grid.Row="8" />
-            <TextBox Grid.Row="8" Grid.Column="1" HorizontalAlignment="Left" MaxLength="11" Name="venue" Width="90" Margin="2" />
+            <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Path=Venue}" MaxLength="11" Name="venue" Width="90" Margin="2" HorizontalAlignment="Left" />
             <Label Content="SCT" Grid.Row="9" Grid.ColumnSpan="2"/>
-            <TextBox Grid.Row="9" Grid.Column="2" HorizontalAlignment="Left" MaxLength="8" Name="standardCorrectedTime" Width="80" Margin="2" IsReadOnly="True" />
+            <TextBox Grid.Row="9" Grid.Column="2" Text="{Binding Path=SCT,Mode=OneWay}" MaxLength="8" Name="sct" Width="80" Margin="2" HorizontalAlignment="Left" IsReadOnly="True" />
         </Grid>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -152,7 +151,7 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <Label Content="Price Code" Grid.Row="1" Grid.Column="0" />
@@ -162,7 +161,7 @@
             <Label Content="Visitors" Grid.Row="5" Grid.Column="0" />
             <Label Content="Raced" Grid.Row="6" Grid.Column="0" />
             <Label Content="Approved" Grid.Row="7" Grid.Column="0" />
-            <ComboBox Grid.Column="1" Grid.Row="1" Margin="2" Name="priceCode">
+            <ComboBox Grid.Column="1" Grid.Row="1" SelectedValuePath="Tag" SelectedValue="{Binding Path=PriceCode}" Margin="2" Name="priceCode">
                 <ComboBoxItem Name="PC_None" Content="" />
                 <ComboBoxItem Name="PC_A" Tag="a" Content="a" />
                 <ComboBoxItem Name="PC_B" Tag="b" Content="b" />
@@ -171,17 +170,17 @@
                 <ComboBoxItem Name="PC_Y" Tag="y" Content="y" />
                 <ComboBoxItem Name="PC_Z" Tag="z" Content="z" />
         </ComboBox>
-        <ComboBox Grid.Column="1" Grid.Row="2" Margin="2" Name="hc" Height="auto">
+        <ComboBox Grid.Column="1" Grid.Row="2" Margin="2" Name="hc" Height="auto" SelectedValuePath="Tag" SelectedValue="{Binding Path=Handicapping}">
             <ComboBoxItem Name="HC_None" Content="" />
             <ComboBoxItem Name="HC_Open" Tag="o">Open</ComboBoxItem>
             <ComboBoxItem Name="HC_Rolling" Tag="r">Rolling</ComboBoxItem>
             <ComboBoxItem Name="HC_SCHR" Tag="s">Small Cat</ComboBoxItem>
         </ComboBox>
-        <CheckBox Grid.Row="3" Grid.Column="1" Margin="2" Name="averageLap" VerticalAlignment="Center" />
-        <CheckBox Grid.Row="4" Grid.Column="1" Margin="2" Name="timegate" VerticalAlignment="Center" />
+        <CheckBox Grid.Row="3" Grid.Column="1" Margin="2" Name="averageLap" VerticalAlignment="Center" IsChecked="{Binding Path=AverageLap}" />
+        <CheckBox Grid.Row="4" Grid.Column="1" Margin="2" Name="timegate" VerticalAlignment="Center" IsChecked="{Binding Path=TimeGate}" />
         <TextBox Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" MaxLength="5" Name="visitors" Width="60" Margin="2" />
-        <CheckBox Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Name="raced" Margin="2" />
-        <CheckBox Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Name="approved" Margin="2" />
+        <CheckBox Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Name="raced" Margin="2" IsChecked="{Binding Path=Raced}" />
+        <CheckBox Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Name="approved" Margin="2" IsChecked="{Binding Path=Approved}" />
     </Grid>
         <Grid Grid.Row="1" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>

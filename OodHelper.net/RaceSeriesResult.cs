@@ -28,8 +28,6 @@ namespace OodHelper.net
                     WHERE j.sid = @sid
                     AND c.raced = 1 
                     GROUP BY c.event, c.class, c.handicapping, c.rid, c.start_date, c.result_calculated
-                    HAVING c.result_calculated < CASE WHEN MAX(r.last_edit) IS NULL THEN c.result_calculated ELSE MAX(r.last_edit) END
-                    OR c.result_calculated IS NULL
                     ORDER BY c.start_date");
 
                 Hashtable p = new Hashtable();

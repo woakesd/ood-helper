@@ -39,20 +39,25 @@ namespace OodHelper.net
             rid = r;
             Hashtable p = new Hashtable();
             p["rid"] = rid;
-            Db c = new Db(@"SELECT average_lap, start_date
-                        FROM calendar
-                        WHERE rid = @rid");
+            Db c = new Db(@"SELECT average_lap, c.start_date, result_calculated, MAX(last_edit) last_edit
+                        FROM calendar c INNER JOIN races r ON c.rid = r.rid
+                        WHERE c.rid = @rid
+                        GROUP BY average_lap, start_date, result_calculated");
             Hashtable res = c.GetHashtable(p);
             rdate = (DateTime)res["start_date"];
             averageLap = (bool)res["average_lap"];
-            CorrectedTime();
-            CalculateSct();
-            Score();
-            UpdateHandicaps();
-            c = new Db(@"UPDATE calendar
+            if (res["result_calculated"] == DBNull.Value || res["last_edit"] != DBNull.Value &&
+                (DateTime)res["result_calculated"] <= (DateTime)res["last_edit"])
+            {
+                CorrectedTime();
+                CalculateSct();
+                Score();
+                UpdateHandicaps();
+                c = new Db(@"UPDATE calendar
                         SET result_calculated = GETDATE()
                         WHERE rid = @rid");
-            c.ExecuteNonQuery(p);
+                c.ExecuteNonQuery(p);
+            }
         }
 
         private void CorrectedTime()

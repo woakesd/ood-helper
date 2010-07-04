@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Globalization;
+using System.Data.Linq;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,8 +31,7 @@ namespace OodHelper.net
             get { return rid; }
         }
 
-        public RaceData raceData;
-        Hashtable data;
+        public Calendar raceData;
 
         public Race(int r)
         {
@@ -43,32 +42,20 @@ namespace OodHelper.net
                 Db get = new Db("SELECT * " +
                     "FROM calendar " +
                     "WHERE rid = @rid");
-                Hashtable p = new Hashtable();
-                p["rid"] = Rid;
-                data = get.GetHashtable(p);
-                raceData = new RaceData(data);
+
+                System.Data.Linq.DataContext ld = new System.Data.Linq.DataContext(get.Connection);
+                System.Data.Linq.Table<Calendar> raceTable = ld.GetTable<Calendar>();
+                var raceData = raceTable.Single(c => c.rid == r);
                 this.DataContext = raceData;
 
-                //startDate.SelectedDate = data["start_date"] as DateTime?;
-                //startDate.DisplayDate = startDate.SelectedDate.Value;
-                eventName.Text = data["event"] as string;
-                raceClass.Text = data["class"] as string;
-                eventName.Text = data["event"] as string;
-                course.Text = data["course"] as string;
-                ood.Text = data["ood"] as string;
-                venue.Text = data["venue"] as string;
-                flag.Text = data["flag"] as string;
-                switch (data["time_limit_type"].ToString())
+                switch (raceData.time_limit_type)
                 {
                     case "F":
                         timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
-                        timeLimitFixedDate.SelectedDate = data["time_limit_fixed"] as DateTime?;
                         timeFixedRadio.IsChecked = true;
                         break;
                     case "D":
                         timeLimitFixed.Visibility = System.Windows.Visibility.Collapsed;
-                        TimeSpan t = new TimeSpan(0, 0, (int)data["time_limit_delta"]);
-                        timeLimitDelta.Text = t.ToString("hh\\:mm");
                         timeDeltaRadio.IsChecked = true;
                         break;
                     default:
@@ -76,54 +63,6 @@ namespace OodHelper.net
                         timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
                         break;
                 }
-                if (data["extension"] != DBNull.Value)
-                    extension.Text = (new TimeSpan(0, 0, (int)data["extension"])).ToString("hh\\:mm");
-                memo.Text = data["memo"] as string;
-                switch (data["price_code"] as string)
-                {
-                    case null:
-                        priceCode.SelectedItem = PC_None;
-                        break;
-                    case "a":
-                        priceCode.SelectedItem = PC_A;
-                        break;
-                    case "b":
-                        priceCode.SelectedItem = PC_B;
-                        break;
-                    case "e":
-                        priceCode.SelectedItem = PC_E;
-                        break;
-                    case "f":
-                        priceCode.SelectedItem = PC_F;
-                        break;
-                    case "y":
-                        priceCode.SelectedItem = PC_Y;
-                        break;
-                    case "z":
-                        priceCode.SelectedItem = PC_Z;
-                        break;
-                }
-                averageLap.IsChecked = (data["average_lap"] != DBNull.Value && (bool)data["average_lap"]) ? true : false;
-                timegate.IsChecked = (data["timegate"] != DBNull.Value && (bool)data["timegate"]) ? true : false;
-                switch (data["handicapping"] as string)
-                {
-                    case null:
-                        hc.SelectedItem = HC_None;
-                        break;
-                    case "o":
-                        hc.SelectedItem = HC_Open;
-                        break;
-                    case "r":
-                        hc.SelectedItem = HC_Rolling;
-                        break;
-                    case "s":
-                        hc.SelectedItem = HC_SCHR;
-                        break;
-                }
-                visitors.Text = data["visitors"].ToString();
-                raced.IsChecked = (data["raced"] != DBNull.Value && (bool)data["raced"]) ? true : false;
-                approved.IsChecked = (data["approved"] != DBNull.Value && (bool)data["approved"]) ? true : false;
-                standardCorrectedTime.Text = Common.HMS((double)data["standard_corrected_time"]);
             }
             else
             {
@@ -260,9 +199,9 @@ namespace OodHelper.net
             {
                 TimeSpan tlDelta;
                 if (timeLimitDelta.Text.Length > 5)
-                    tlDelta = TimeSpan.ParseExact(timeLimitDelta.Text, "d\\.hh\\:mm", null);
+                    tlDelta = TimeSpan.ParseExact(timeLimitDelta.Text, "d\\ hh\\:mm", null);
                 else
-                    tlDelta = TimeSpan.ParseExact(timeLimitDelta.Text, "hh\\:mm", null);
+                    tlDelta = TimeSpan.ParseExact(timeLimitDelta.Text, "h\\:mm", null);
                 DateTime start = startDate.SelectedDate.Value + TimeSpan.Parse(startTime.Text);
                 DateTime tlFixed = start + tlDelta;
                 timeLimitFixedDate.SelectedDate = tlFixed.Date;
@@ -270,6 +209,12 @@ namespace OodHelper.net
                 timeLimitFixed.Visibility = System.Windows.Visibility.Visible;
                 timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
             }
+        }
+
+        private void timeNoLimitRadio_Checked(object sender, RoutedEventArgs e)
+        {
+            timeLimitFixed.Visibility = System.Windows.Visibility.Collapsed;
+            timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
         }
 
         private void timeDeltaRadio_Checked(object sender, RoutedEventArgs e)
@@ -280,7 +225,7 @@ namespace OodHelper.net
                 DateTime tlFixed = timeLimitFixedDate.SelectedDate.Value + TimeSpan.Parse(timeLimitFixedTime.Text);
                 TimeSpan x = tlFixed - start;
                 if (x > new TimeSpan(1, 0, 0, 0))
-                    timeLimitDelta.Text = x.ToString("d\\.hh\\:mm");
+                    timeLimitDelta.Text = x.ToString("d\\ hh\\:mm");
                 else
                     timeLimitDelta.Text = x.ToString("hh\\:mm");
                 timeLimitFixed.Visibility = System.Windows.Visibility.Collapsed;
@@ -292,9 +237,8 @@ namespace OodHelper.net
         {
             if (timeFixedRadio.IsChecked.Value)
             {
-                DateTime? oldStart = data["start_date"] as DateTime?;
-                if (oldStart != null && startDate.SelectedDate != null && timeLimitFixedDate != null)
-                    timeLimitFixedDate.SelectedDate += startDate.SelectedDate.Value - oldStart.Value.Date;
+                if (raceData.start_date != null && startDate.SelectedDate != null && timeLimitFixedDate != null)
+                    timeLimitFixedDate.SelectedDate += startDate.SelectedDate.Value - raceData.start_date.Value.Date;
                 else
                     timeLimitFixedDate = startDate;
             }
@@ -316,94 +260,4 @@ namespace OodHelper.net
         }
     }
 
-    public class RaceData: INotifyPropertyChanged
-    {
-        public Hashtable data;
-
-        public RaceData(Hashtable d)
-        {
-            data = d;
-        }
-
-        public DateTime? StartDateDate
-        {
-            get
-            {
-                if (data["start_date"] != DBNull.Value)
-                    return (data["start_date"] as DateTime?).Value.Date;
-                return null;
-            }
-
-            set
-            {
-                if (value.HasValue)
-                    data["start_date"] = value.Value;
-                else
-                    data["start_date"] = DBNull.Value;
-                OnPropertyChanged("StartDateDate");
-            }
-        }
-        public string TimeLimitFixedTime
-        {
-            get
-            {
-                if (data["time_limit_fixed"] != DBNull.Value)
-                    return (data["time_limit_fixed"] as DateTime?).Value.ToString("HH:mm");
-                return string.Empty;
-            }
-
-            set
-            {
-                if (data["time_limit_fixed"] != DBNull.Value)
-                    try
-                    {
-                        (data["time_limit_fixed"] as DateTime?).Value.Date.Add(TimeSpan.ParseExact(value, "h\\:mm", null));
-                        OnPropertyChanged("TimeLimitFixedTime");
-                    }
-                    catch (Exception e)
-                    {
-                        throw new ArgumentException("Time limit time format must be like 12:50");
-                    }
-                else
-                    throw new ArgumentException("Time limit date must be selected first");
-            }
-        }
-
-        public string StartDateTime
-        {
-            get
-            {
-                if (data["start_date"] != DBNull.Value)
-                    return (data["start_date"] as DateTime?).Value.ToString("HH:mm");
-                return string.Empty;
-            }
-
-            set
-            {
-                if (data["start_date"] != DBNull.Value)
-                    try
-                    {
-                        (data["start_date"] as DateTime?).Value.Date.Add(TimeSpan.ParseExact(value, "h\\:mm", null));
-                        OnPropertyChanged("StartDateTime");
-                    }
-                    catch (Exception)
-                    {
-                        throw new ArgumentException("Start time format must be like 12:50");
-                    }
-                else
-                    throw new ArgumentException("Start date must be selected first");
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
-        }
-    }
 }

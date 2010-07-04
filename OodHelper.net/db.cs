@@ -215,6 +215,14 @@ CREATE TABLE [series] (
         private SqlCeConnection mCon;
         private SqlCeCommand mCmd;
 
+        public IDbConnection Connection
+        {
+            get
+            {
+                return mCon;
+            }
+        }
+
         public Object GetScalar(Hashtable p)
         {
             DataTable d = new DataTable();
