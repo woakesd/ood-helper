@@ -31,22 +31,17 @@ namespace OodHelper.net
             get { return rid; }
         }
 
-        public Calendar raceData;
-
         public Race(int r)
         {
             rid = r;
             InitializeComponent();
             if (rid != 0)
             {
-                Db get = new Db("SELECT * " +
-                    "FROM calendar " +
-                    "WHERE rid = @rid");
-
-                System.Data.Linq.DataContext ld = new System.Data.Linq.DataContext(get.Connection);
-                System.Data.Linq.Table<Calendar> raceTable = ld.GetTable<Calendar>();
-                var raceData = raceTable.Single(c => c.rid == r);
+                Results ld = new Results();
+                Calendar raceData = ld.Calendar.Single(c => c.rid == r);
                 this.DataContext = raceData;
+
+                timeLimitFixedDate.BlackoutDates.Add(new CalendarDateRange(DateTime.MinValue, raceData.start_date.Value.AddDays(-1)));
 
                 switch (raceData.time_limit_type)
                 {
@@ -78,6 +73,7 @@ namespace OodHelper.net
         private void ok_Click(object sender, RoutedEventArgs e)
         {
             string msg = string.Empty;
+            Calendar raceData = DataContext as Calendar;
 
             if (Validation.GetErrors(timeLimitFixedTime).Count > 0)
                 msg += Validation.GetErrors(timeLimitFixedTime)[0].ErrorContent.ToString() + "\n";
@@ -99,13 +95,13 @@ namespace OodHelper.net
             this.DialogResult = true;
             Hashtable p = new Hashtable();
 
-            p["start_date"] = startDate.SelectedDate.Value + TimeSpan.Parse(startTime.Text);
+            p["start_date"] = raceData.start_date;
             if (timeFixedRadio.IsChecked.Value)
             {
                 p["time_limit_type"] = "F";
                 p["time_limit_delta"] = DBNull.Value;
-                if (timeLimitFixedDate.SelectedDate != null && timeLimitFixedTime.Text != string.Empty)
-                    p["time_limit_fixed"] = timeLimitFixedDate.SelectedDate.Value + TimeSpan.Parse(timeLimitFixedTime.Text);
+                if (raceData.time_limit_fixed.HasValue)
+                    p["time_limit_fixed"] = raceData.time_limit_fixed;
                 else
                     p["time_limit_fixed"] = DBNull.Value;
             }
@@ -113,36 +109,26 @@ namespace OodHelper.net
             {
                 p["time_limit_type"] = "D";
                 if (timeLimitDelta.Text != string.Empty)
-                    p["time_limit_delta"] = Math.Round(TimeSpan.Parse(timeLimitDelta.Text).TotalSeconds);
+                    p["time_limit_delta"] = raceData.time_limit_delta;
                 else
                     p["time_limit_delta"] = DBNull.Value;
                 p["time_limit_fixed"] = DBNull.Value;
             }
-            p["class"] = raceClass.Text;
-            p["event"] = eventName.Text;
-            p["start"] = startTime.Text;
-            if (((ComboBoxItem)priceCode.SelectedItem).Tag != null)
-                p["price_code"] = ((ComboBoxItem)priceCode.SelectedItem).Tag.ToString();
-            else
-                p["price_code"] = DBNull.Value;
-            p["course"] = course.Text;
-            p["ood"] = ood.Text;
-            p["venue"] = venue.Text;
-            p["average_lap"] = averageLap.IsChecked;
-            p["timegate"] = timegate.IsChecked;
-            if (((ComboBoxItem)hc.SelectedItem).Tag != null)
-                p["handicapping"] = ((ComboBoxItem)hc.SelectedItem).Tag.ToString();
-            else
-                p["handicapping"] = DBNull.Value;
-            p["visitors"] = visitors.Text;
-            p["flag"] = flag.Text;
-            if (extension.Text != string.Empty)
-                p["extension"] = Math.Round(TimeSpan.Parse(extension.Text).TotalSeconds);
-            else
-                p["extension"] = DBNull.Value;
-            p["memo"] = memo.Text;
-            p["raced"] = raced.IsChecked;
-            p["approved"] = approved.IsChecked;
+            p["class"] = raceData.calendar_class;
+            p["event"] = raceData.calendar_event;
+            p["price_code"] = raceData.price_code;
+            p["course"] = raceData.course;
+            p["ood"] = raceData.ood;
+            p["venue"] = raceData.venue;
+            p["average_lap"] = raceData.average_lap;
+            p["timegate"] = raceData.timegate;
+            p["handicapping"] = raceData.handicapping;
+            p["visitors"] = raceData.visitors;
+            p["flag"] = raceData.flag;
+            p["extension"] = raceData.extension;
+            p["memo"] = raceData.memo;
+            p["raced"] = raceData.raced;
+            p["approved"] = raceData.approved;
             p["rid"] = Rid;
 
             Db save;
@@ -237,6 +223,7 @@ namespace OodHelper.net
         {
             if (timeFixedRadio.IsChecked.Value)
             {
+                Calendar raceData = DataContext as Calendar;
                 if (raceData.start_date != null && startDate.SelectedDate != null && timeLimitFixedDate != null)
                     timeLimitFixedDate.SelectedDate += startDate.SelectedDate.Value - raceData.start_date.Value.Date;
                 else

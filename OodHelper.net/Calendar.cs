@@ -12,11 +12,9 @@ namespace OodHelper.net
     [Table(Name = "calendar")]
     public class Calendar : INotifyPropertyChanged
     {
-        private DateTime? start_date_date;
-        private string start_date_time;
-
         [Column(IsPrimaryKey=true)]
-        public int rid;
+        public int rid { get; set; }
+
         [Column]
         public DateTime? start_date
         {
@@ -44,13 +42,36 @@ namespace OodHelper.net
                 return null;
             }
         }
-        [Column]
-        public string time_limit_type;
-        public string TimeLimitType
+        public DateTime? start_date_date { get; set; }
+
+        private string mStartDateTime;
+        public string start_date_time //{ get; set; }
         {
-            get { return time_limit_type; }
-            set { time_limit_type = value; OnPropertyChanged("TimeLimitType"); }
+            get
+            {
+                return mStartDateTime;
+            }
+
+            set
+            {
+                if (start_date_date.HasValue)
+                    try
+                    {
+                        mStartDateTime = TimeSpan.ParseExact(value, "h\\:mm", null).ToString("hh\\:mm");
+                        //OnPropertyChanged("TimeLimitFixedTime");
+                    }
+                    catch (Exception)
+                    {
+                        throw new ArgumentException("Time limit time format must be like 12:50");
+                    }
+                else
+                    throw new ArgumentException("Time limit date must be selected first");
+            }
         }
+
+        [Column]
+        public string time_limit_type { get; set; }
+
         [Column]
         public DateTime? time_limit_fixed
         {
@@ -78,8 +99,35 @@ namespace OodHelper.net
                 return null;
             }
         }
+
+        public DateTime? time_limit_fixed_date { get; set; }
+        private string mTimeLimitFixedTime;
+        public string time_limit_fixed_time
+        {
+            get
+            {
+                return mTimeLimitFixedTime;
+            }
+
+            set
+            {
+                if (time_limit_fixed_date.HasValue)
+                    try
+                    {
+                        mTimeLimitFixedTime = TimeSpan.ParseExact(value, "h\\:mm", null).ToString("hh\\:mm");
+                        //OnPropertyChanged("TimeLimitFixedTime");
+                    }
+                    catch (Exception)
+                    {
+                        throw new ArgumentException("Time limit time format must be like 12:50");
+                    }
+                else
+                    throw new ArgumentException("Time limit date must be selected first");
+            }
+        }
+
         [Column]
-        public int? time_limit_delta;
+        public int? time_limit_delta { get; set; }
         public string TimeLimitDelta
         {
             get
@@ -173,119 +221,35 @@ namespace OodHelper.net
             }
         }
         [Column(Name = "class")]
-        public string calendar_class;
-        public string CalendarClass
-        {
-            get { return calendar_class; }
-            set { calendar_class = value; OnPropertyChanged("CalendarClass"); }
-        }
+        public string calendar_class { get; set; }
         [Column(Name = "event")]
-        public string calendar_event;
-        public string CalendarEvent
-        {
-            get { return calendar_event; }
-            set { calendar_event = value; OnPropertyChanged("CalendarEvent"); }
-        }
+        public string calendar_event { get; set; }
         [Column]
-        public string price_code;
-        public string PriceCode
-        {
-            get
-            {
-                return price_code;
-            }
-            set
-            {
-                price_code = value;
-                OnPropertyChanged("PriceCode");
-            }
-        }
+        public string price_code { get; set; }
         [Column]
-        public string course;
-        public string Course
-        {
-            get { return course; }
-            set { course = value; OnPropertyChanged("Course"); }
-        }
+        public string course { get; set; }
         [Column]
-        public string ood;
-        public string Ood
-        {
-            get { return ood; }
-            set { ood = value; OnPropertyChanged("Ood"); }
-        }
+        public string ood { get; set; }
         [Column]
-        public string venue;
-        public string Venue
-        {
-            get { return venue; }
-            set { venue = value; OnPropertyChanged("Venue"); }
-        }
+        public string venue { get; set; }
         [Column]
-        public bool? average_lap;
-        public bool? AverageLap
-        {
-            get { return average_lap; }
-            set { average_lap = value; OnPropertyChanged("AverageLap"); }
-        }
+        public bool? average_lap { get; set; }
         [Column]
-        public bool? timegate;
-        public bool? TimeGate
-        {
-            get { return timegate; }
-            set { timegate = value; OnPropertyChanged("TimeGate"); }
-        }
+        public bool? timegate { get; set; }
         [Column]
-        public string handicapping;
-        public string Handicapping
-        {
-            get
-            {
-                return handicapping;
-            }
-            set
-            {
-                handicapping = value;
-                OnPropertyChanged("Handicapping");
-            }
-        }
+        public string handicapping { get; set; }
         [Column]
-        public int? visitors;
-        public int? Visitors
-        {
-            get { return visitors; }
-            set { visitors = value; OnPropertyChanged("Visitors"); }
-        }
+        public int? visitors { get; set; }
         [Column]
-        public string flag;
-        public string Flag
-        {
-            get { return flag; }
-            set { flag = value; OnPropertyChanged("Flag"); }
-        }
+        public string flag { get; set; }
         [Column]
-        public string memo;
-        public string Memo
-        {
-            get { return memo; }
-            set { memo = value; OnPropertyChanged("Memo"); }
-        }
+        public string memo { get; set; }
         [Column]
-        public bool? is_race;
+        public bool? is_race { get; set; }
         [Column]
-        public bool? raced;
-        public bool? Raced
-        {
-            get { return raced; }
-            set { raced = value; OnPropertyChanged("Raced"); }
-        }
+        public bool? raced { get; set; }
         [Column]
-        public bool? approved;
-        public bool? Approved
-        {
-            get { return approved; }
-            set { approved = value; OnPropertyChanged("Approved"); }
-        }
+        public bool? approved { get; set; }
         [Column]
         public double? standard_corrected_time;
         public string SCT
@@ -297,85 +261,7 @@ namespace OodHelper.net
             }
         }
         [Column]
-        public DateTime? result_calculated;
-
-        public DateTime? StartDateDate
-        {
-            get
-            {
-                return start_date_date;
-            }
-
-            set
-            {
-                start_date_date = value;
-                OnPropertyChanged("StartDateDate");
-            }
-        }
-
-        public DateTime? TimeLimitFixedDate
-        {
-            get
-            {
-                return time_limit_fixed_date;
-            }
-
-            set
-            {
-                time_limit_fixed_date = value;
-                OnPropertyChanged("TimeLimitFixedDate");
-            }
-        }
-
-        private DateTime? time_limit_fixed_date;
-        private string time_limit_fixed_time;
-        public string TimeLimitFixedTime
-        {
-            get
-            {
-                return time_limit_fixed_time;
-            }
-
-            set
-            {
-                if (time_limit_fixed_date.HasValue)
-                    try
-                    {
-                        time_limit_fixed_date.Value.Date.Add(TimeSpan.ParseExact(value, "h\\:mm", null));
-                        OnPropertyChanged("TimeLimitFixedTime");
-                    }
-                    catch (Exception)
-                    {
-                        throw new ArgumentException("Time limit time format must be like 12:50");
-                    }
-                else
-                    throw new ArgumentException("Time limit date must be selected first");
-            }
-        }
-
-        public string StartDateTime
-        {
-            get
-            {
-                return start_date_time;
-            }
-
-            set
-            {
-                if (start_date_date.HasValue)
-                    try
-                    {
-                        start_date_date.Value.Date.Add(TimeSpan.ParseExact(value, "h\\:mm", null));
-                        OnPropertyChanged("StartDateTime");
-                    }
-                    catch (Exception)
-                    {
-                        throw new ArgumentException("Start time format must be like 12:50");
-                    }
-                else
-                    throw new ArgumentException("Start date must be selected first");
-            }
-        }
+        public DateTime? result_calculated { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

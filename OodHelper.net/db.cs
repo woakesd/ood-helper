@@ -193,14 +193,7 @@ CREATE TABLE [series] (
         {
             try
             {
-                mCmd.Parameters.Clear();
-                if (p != null)
-                {
-                    foreach (string k in p.Keys)
-                    {
-                        mCmd.Parameters.Add(new SqlCeParameter(k, p[k]));
-                    }
-                }
+                addCommandParameters(p);
                 mCon.Open();
                 return mCmd.ExecuteNonQuery();
             }
@@ -226,14 +219,7 @@ CREATE TABLE [series] (
         public Object GetScalar(Hashtable p)
         {
             DataTable d = new DataTable();
-            mCmd.Parameters.Clear();
-            if (p != null)
-            {
-                foreach (string k in p.Keys)
-                {
-                    mCmd.Parameters.Add(new SqlCeParameter(k, p[k]));
-                }
-            }
+            addCommandParameters(p);
             mAdapt = new SqlCeDataAdapter(mCmd);
             mCon.Open();
             try
@@ -251,17 +237,25 @@ CREATE TABLE [series] (
                 return DBNull.Value;
         }
 
-        public Hashtable GetHashtable(Hashtable p)
+        private void addCommandParameters(Hashtable p)
         {
-            DataTable d = new DataTable();
             mCmd.Parameters.Clear();
             if (p != null)
             {
                 foreach (string k in p.Keys)
                 {
-                    mCmd.Parameters.Add(new SqlCeParameter(k, p[k]));
+                    if (p[k] != null)
+                        mCmd.Parameters.Add(new SqlCeParameter(k, p[k]));
+                    else
+                        mCmd.Parameters.Add(new SqlCeParameter(k, DBNull.Value));
                 }
             }
+        }
+
+        public Hashtable GetHashtable(Hashtable p)
+        {
+            DataTable d = new DataTable();
+            addCommandParameters(p);
             mAdapt = new SqlCeDataAdapter(mCmd);
             mCon.Open();
             try
@@ -284,14 +278,7 @@ CREATE TABLE [series] (
 
         public void Fill(DataTable d, Hashtable p)
         {
-            mCmd.Parameters.Clear();
-            if (p != null)
-            {
-                foreach (string k in p.Keys)
-                {
-                    mCmd.Parameters.Add(new SqlCeParameter(k, p[k]));
-                }
-            }
+            addCommandParameters(p);
             mAdapt = new SqlCeDataAdapter(mCmd);
             mCon.Open();
             try
@@ -307,14 +294,7 @@ CREATE TABLE [series] (
         public DataTable GetData(Hashtable p)
         {
             DataTable t = new DataTable();
-            mCmd.Parameters.Clear();
-            if (p != null)
-            {
-                foreach (string k in p.Keys)
-                {
-                    mCmd.Parameters.Add(new SqlCeParameter(k, p[k]));
-                }
-            }
+            addCommandParameters(p);
             mAdapt = new SqlCeDataAdapter(mCmd);
             mCon.Open();
             try
