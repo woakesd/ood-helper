@@ -149,18 +149,13 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <Label Content="Price Code" Grid.Row="1" Grid.Column="0" />
-            <Label Content="Handicapping" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Width="84" />
-            <Label Content="Average Lap" Grid.Row="3" Grid.Column="0" />
-            <Label Content="Timegate" Grid.Row="4" Grid.Column="0" />
-            <Label Content="Visitors" Grid.Row="5" Grid.Column="0" />
-            <Label Content="Raced" Grid.Row="6" Grid.Column="0" />
-            <Label Content="Approved" Grid.Row="7" Grid.Column="0" />
             <ComboBox Grid.Column="1" Grid.Row="1" SelectedValuePath="Tag" SelectedValue="{Binding Path=price_code}" Margin="2" Name="priceCode">
                 <ComboBoxItem Name="PC_None" Content="" />
                 <ComboBoxItem Name="PC_A" Tag="a" Content="a" />
@@ -169,25 +164,32 @@
                 <ComboBoxItem Name="PC_F" Tag="f" Content="f" />
                 <ComboBoxItem Name="PC_Y" Tag="y" Content="y" />
                 <ComboBoxItem Name="PC_Z" Tag="z" Content="z" />
-        </ComboBox>
-        <ComboBox Grid.Column="1" Grid.Row="2" Margin="2" Name="hc" Height="auto" SelectedValuePath="Tag" SelectedValue="{Binding Path=handicapping}">
-            <ComboBoxItem Name="HC_None" Content="" />
-            <ComboBoxItem Name="HC_Open" Tag="o">Open</ComboBoxItem>
-            <ComboBoxItem Name="HC_Rolling" Tag="r">Rolling</ComboBoxItem>
-            <ComboBoxItem Name="HC_SCHR" Tag="s">Small Cat</ComboBoxItem>
-        </ComboBox>
-        <CheckBox Grid.Row="3" Grid.Column="1" Margin="2" Name="averageLap" VerticalAlignment="Center" IsChecked="{Binding Path=average_lap}" />
-        <CheckBox Grid.Row="4" Grid.Column="1" Margin="2" Name="timegate" VerticalAlignment="Center" IsChecked="{Binding Path=timegate}" />
-        <!--<TextBox Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" MaxLength="5" Name="visitors" Width="60" Margin="2" />-->
-        <ComboBox Grid.Column="1" Grid.Row="5" Margin="2" Name="visitors" Height="auto" SelectedValuePath="Tag" SelectedValue="{Binding Path=visitors}">
-            <ComboBoxItem Content="" />
-            <ComboBoxItem Tag="0">Members only</ComboBoxItem>
-            <ComboBoxItem Tag="1">Local clubs</ComboBoxItem>
-            <ComboBoxItem Tag="2">Open</ComboBoxItem>
-        </ComboBox>
-        <CheckBox Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Name="raced" Margin="2" IsChecked="{Binding Path=raced}" />
-        <CheckBox Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Name="approved" Margin="2" IsChecked="{Binding Path=approved}" />
-    </Grid>
+            </ComboBox>
+            <Label Content="Handicapping" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Width="84" />
+            <ComboBox Grid.Column="1" Grid.Row="2" Margin="2" Name="hc" Height="auto" SelectedValuePath="Tag" SelectedValue="{Binding Path=handicapping}">
+                <ComboBoxItem Name="HC_None" Content="" />
+                <ComboBoxItem Name="HC_Open" Tag="o">Open</ComboBoxItem>
+                <ComboBoxItem Name="HC_Rolling" Tag="r">Rolling</ComboBoxItem>
+                <ComboBoxItem Name="HC_SCHR" Tag="s">Small Cat</ComboBoxItem>
+            </ComboBox>
+            <Label Content="Average Lap" Grid.Row="3" Grid.Column="0" />
+            <CheckBox Grid.Row="3" Grid.Column="1" Margin="2" Name="averageLap" VerticalAlignment="Center" IsChecked="{Binding Path=average_lap}" />
+            <Label Content="Timegate" Grid.Row="4" Grid.Column="0" />
+            <CheckBox Grid.Row="4" Grid.Column="1" Margin="2" Name="timegate" VerticalAlignment="Center" IsChecked="{Binding Path=timegate}" />
+            <Label Content="Visitors" Grid.Row="5" Grid.Column="0" />
+            <ComboBox Grid.Column="1" Grid.Row="5" Margin="2" Name="visitors" Height="auto" SelectedValuePath="Tag" SelectedValue="{Binding Path=visitors}">
+                <ComboBoxItem Content="" />
+                <ComboBoxItem Tag="0">Members only</ComboBoxItem>
+                <ComboBoxItem Tag="1">Local clubs</ComboBoxItem>
+                <ComboBoxItem Tag="2">Open</ComboBoxItem>
+            </ComboBox>
+            <Label Content="Raced" Grid.Row="6" Grid.Column="0" />
+            <CheckBox Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Name="raced" Margin="2" IsChecked="{Binding Path=raced}" />
+            <Label Content="Approved" Grid.Row="7" Grid.Column="0" />
+            <CheckBox Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Name="approved" Margin="2" IsChecked="{Binding Path=approved}" />
+            <Label Content="Is race" Grid.Row="8" Grid.Column="0" />
+            <CheckBox Grid.Row="8" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Name="is_race" Margin="2" IsChecked="{Binding Path=is_race}" />
+        </Grid>
         <Grid Grid.Row="1" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>

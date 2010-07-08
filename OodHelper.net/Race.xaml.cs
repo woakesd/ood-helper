@@ -129,14 +129,15 @@ namespace OodHelper.net
             p["memo"] = raceData.memo;
             p["raced"] = raceData.raced;
             p["approved"] = raceData.approved;
+            p["is_race"] = raceData.is_race;
             p["rid"] = Rid;
 
             Db save;
             if (Rid == 0)
             {
                 save = new Db("INSERT INTO calendar " +
-                        "([start_date], [time_limit_type], [time_limit_delta], [time_limit_fixed], [class], [event], [start], [price_code], [course], [ood], [venue], [average_lap], [timegate], [handicapping], [visitors], [flag], [extension], [memo], [raced], [approved]) " +
-                        "VALUES (@start_date, @time_limit_type, @time_limit_delta, @time_limit_fixed, @class, @event, @start, @price_code, @course, @ood, @venue, @average_lap, @timegate, @handicapping, @visitors, @flag, @extension, @memo, @raced, @approved)");
+                        "([start_date], [time_limit_type], [time_limit_delta], [time_limit_fixed], [class], [event], [start], [price_code], [course], [ood], [venue], [average_lap], [timegate], [handicapping], [visitors], [flag], [extension], [memo], [raced], [approved], [is_race]) " +
+                        "VALUES (@start_date, @time_limit_type, @time_limit_delta, @time_limit_fixed, @class, @event, @start, @price_code, @course, @ood, @venue, @average_lap, @timegate, @handicapping, @visitors, @flag, @extension, @memo, @raced, @approved, @is_race)");
                 rid = save.GetNextIdentity("calendar", "rid");
             }
             else
