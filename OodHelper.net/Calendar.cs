@@ -12,8 +12,13 @@ namespace OodHelper.net
     [Table(Name = "calendar")]
     public class Calendar : INotifyPropertyChanged
     {
-        [Column(IsPrimaryKey=true)]
-        public int rid { get; set; }
+        [Column(IsPrimaryKey = true)]
+        public int rid
+        {
+            get { return mRid; }
+            set { mRid = value; OnPropertyChanged("rid"); }
+        }
+        private int mRid;
 
         [Column]
         public DateTime? start_date
@@ -30,6 +35,8 @@ namespace OodHelper.net
                     start_date_date = null;
                     start_date_time = null;
                 }
+                OnPropertyChanged("start_date_date");
+                OnPropertyChanged("start_date_time");
             }
 
             get
@@ -42,10 +49,16 @@ namespace OodHelper.net
                 return null;
             }
         }
-        public DateTime? start_date_date { get; set; }
+
+        private DateTime? mStart_date_date;
+        public DateTime? start_date_date 
+        {
+            get { return mStart_date_date; }
+            set { mStart_date_date = value; OnPropertyChanged("start_date_date"); }
+        }
 
         private string mStartDateTime;
-        public string start_date_time //{ get; set; }
+        public string start_date_time
         {
             get
             {
@@ -54,18 +67,20 @@ namespace OodHelper.net
 
             set
             {
-                if (start_date_date.HasValue)
-                    try
-                    {
-                        mStartDateTime = TimeSpan.ParseExact(value, "h\\:mm", null).ToString("hh\\:mm");
-                        //OnPropertyChanged("TimeLimitFixedTime");
-                    }
-                    catch (Exception)
-                    {
-                        throw new ArgumentException("Time limit time format must be like 12:50");
-                    }
-                else
-                    throw new ArgumentException("Time limit date must be selected first");
+                if (!start_date_date.HasValue)
+                {
+                    start_date_date = DateTime.Today;
+                    OnPropertyChanged("start_date_date");
+                }
+                try
+                {
+                    mStartDateTime = TimeSpan.ParseExact(value, "h\\:mm", null).ToString("hh\\:mm");
+                    OnPropertyChanged("start_date_time");
+                }
+                catch (Exception)
+                {
+                    throw new ArgumentException("Start time format must be like 12:50");
+                }
             }
         }
 
@@ -111,23 +126,38 @@ namespace OodHelper.net
 
             set
             {
-                if (time_limit_fixed_date.HasValue)
-                    try
-                    {
-                        mTimeLimitFixedTime = TimeSpan.ParseExact(value, "h\\:mm", null).ToString("hh\\:mm");
-                        //OnPropertyChanged("TimeLimitFixedTime");
-                    }
-                    catch (Exception)
-                    {
-                        throw new ArgumentException("Time limit time format must be like 12:50");
-                    }
-                else
-                    throw new ArgumentException("Time limit date must be selected first");
+                if (!time_limit_fixed_date.HasValue)
+                {
+                    time_limit_fixed_date = DateTime.Today;
+                    OnPropertyChanged("time_limit_fixed_date");
+                }
+                try
+                {
+                    mTimeLimitFixedTime = TimeSpan.ParseExact(value, "h\\:mm", null).ToString("hh\\:mm");
+                    OnPropertyChanged("time_limit_fixed_time");
+                }
+                catch (Exception)
+                {
+                    throw new ArgumentException("Time limit time format must be like 12:50");
+                }
             }
         }
 
         [Column]
-        public int? time_limit_delta { get; set; }
+        public int? time_limit_delta
+        {
+            get
+            {
+                return mTimeLimitDelta;
+            }
+            set
+            {
+                mTimeLimitDelta = value;
+                OnPropertyChanged("time_limit_delta");
+                OnPropertyChanged("TimeLimitDelta");
+            }
+        }
+        private int? mTimeLimitDelta;
         public string TimeLimitDelta
         {
             get
@@ -141,7 +171,7 @@ namespace OodHelper.net
                         return d.ToString("d\\ hh\\:mm");
                 }
                 else
-                    return string.Empty;
+                    return null;
             }
 
             set
@@ -162,7 +192,7 @@ namespace OodHelper.net
                         }
                         catch (Exception)
                         {
-                            new ArgumentException("Time limit delta must be in format '1 02:50' or '2:30'");
+                            throw new ArgumentException("Time limit delta must be in format '1 02:50' or '2:30'");
                         }
                     }
                 }
@@ -209,7 +239,7 @@ namespace OodHelper.net
                         }
                         catch (Exception)
                         {
-                            new ArgumentException("Time limit delta must be in format '1 02:50' or '2:30'");
+                            throw new ArgumentException("Time limit delta must be in format '1 02:50' or '2:30'");
                         }
                     }
                 }
@@ -221,9 +251,11 @@ namespace OodHelper.net
             }
         }
         [Column(Name = "class")]
-        public string calendar_class { get; set; }
+        public string calendar_class { get { return mcalendar_class; } set { mcalendar_class = value; OnPropertyChanged("calendar_class"); } }
+        private string mcalendar_class;
         [Column(Name = "event")]
-        public string calendar_event { get; set; }
+        public string calendar_event { get { return mcalendar_event; } set { mcalendar_event = value; OnPropertyChanged("calendar_event"); } }
+        private string mcalendar_event;
         [Column]
         public string price_code { get; set; }
         [Column]
@@ -256,8 +288,12 @@ namespace OodHelper.net
         {
             get
             {
-                TimeSpan t = new TimeSpan((long)(standard_corrected_time * 10000000));
-                return t.ToString("hh\\:mm\\:ss\\.ff");
+                if (standard_corrected_time.HasValue)
+                {
+                    TimeSpan t = new TimeSpan((long)(standard_corrected_time * 10000000));
+                    return t.ToString("hh\\:mm\\:ss\\.ff");
+                }
+                return string.Empty;
             }
         }
         [Column]

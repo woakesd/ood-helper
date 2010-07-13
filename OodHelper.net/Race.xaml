@@ -56,7 +56,7 @@
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
                 <DatePicker Template="{StaticResource ResourceKey=MyDatePicker}" 
-                            SelectedDateChanged="startDate_SelectedDateChanged" 
+                            SelectedDateChanged="startDate_SelectedDateChanged"
                             Margin="2" Name="startDate">
                     <DatePicker.SelectedDate>
                         <Binding Path="start_date_date">
@@ -68,7 +68,7 @@
                 </DatePicker>
                 <TextBox Grid.Column="1" Name="startTime" HorizontalAlignment="Left" Width="50" MaxLength="5" Margin="2">
                     <TextBox.Text>
-                        <Binding Path="start_date_time">
+                        <Binding Path="start_date_time" Mode="TwoWay">
                             <Binding.ValidationRules>
                                 <ExceptionValidationRule/>
                             </Binding.ValidationRules>
@@ -87,7 +87,7 @@
                 </Grid.RowDefinitions>
                 <RadioButton Grid.Row="0" Margin="2" GroupName="timeLimitType" Tag="D" Content="Time difference" Name="timeDeltaRadio" Checked="timeDeltaRadio_Checked"/>
                 <RadioButton Grid.Row="1" Margin="2" GroupName="timeLimitType" Tag="F" Content="Fixed time" Name="timeFixedRadio" Checked="timeFixedRadio_Checked"/>
-                <RadioButton Grid.Row="2" Margin="2" GroupName="timeLimitType" Content="No time limit" Name="timeNoLimit" Checked="timeNoLimitRadio_Checked"/>
+                <RadioButton Grid.Row="2" Margin="2" GroupName="timeLimitType" Tag="" Content="No time limit" Name="timeNoLimit" Checked="timeNoLimitRadio_Checked"/>
                 <TextBox Grid.Row="3" HorizontalAlignment="Left" MaxLength="10" Name="timeLimitDelta" Width="80" Margin="2">
                     <TextBox.Text>
                         <Binding Path="TimeLimitDelta">
@@ -122,7 +122,7 @@
                     </TextBox>
                 </Grid>
             </Grid>
-            <Label Content="Extension" Grid.Row="6" />
+            <Label Name="ExtensionLabel" Content="Extension" Grid.Row="6" />
             <TextBox Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" MaxLength="10" Name="extension" Width="80" Margin="2">
                 <TextBox.Text>
                     <Binding Path="Extension">

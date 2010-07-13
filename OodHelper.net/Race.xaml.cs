@@ -31,6 +31,8 @@ namespace OodHelper.net
             get { return rid; }
         }
 
+        Calendar raceData;
+
         public Race(int r)
         {
             rid = r;
@@ -38,10 +40,7 @@ namespace OodHelper.net
             if (rid != 0)
             {
                 Results ld = new Results();
-                Calendar raceData = ld.Calendar.Single(c => c.rid == r);
-                this.DataContext = raceData;
-
-                timeLimitFixedDate.BlackoutDates.Add(new CalendarDateRange(DateTime.MinValue, raceData.start_date.Value.AddDays(-1)));
+                raceData = ld.Calendar.Single(c => c.rid == r);
 
                 switch (raceData.time_limit_type)
                 {
@@ -61,7 +60,17 @@ namespace OodHelper.net
             }
             else
             {
+                raceData = new Calendar();
+                timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
+                timeFixedRadio.IsChecked = true;
+                raceData.average_lap = false;
+                raceData.is_race = true;
+                raceData.timegate = false;
+                raceData.raced = false;
+                raceData.approved = false;
+                raceData.time_limit_type = "F";
             }
+            DataContext = raceData;
         }
 
         private void cancel_Click(object sender, RoutedEventArgs e)
@@ -73,18 +82,42 @@ namespace OodHelper.net
         private void ok_Click(object sender, RoutedEventArgs e)
         {
             string msg = string.Empty;
-            Calendar raceData = DataContext as Calendar;
 
             if (Validation.GetErrors(timeLimitFixedTime).Count > 0)
                 msg += Validation.GetErrors(timeLimitFixedTime)[0].ErrorContent.ToString() + "\n";
             if (Validation.GetErrors(startTime).Count > 0)
-                msg += Validation.GetErrors(timeLimitFixedTime)[0].ErrorContent.ToString() + "\n";
-            if (startDate.SelectedDate == null || startTime.Text == string.Empty)
-                msg += "Start date and time required\n";
-            if (timeFixedRadio.IsChecked.Value && (timeLimitFixedDate.SelectedDate == null || timeLimitFixedTime.Text == string.Empty))
-                msg += "Time limit date and time required if fixed time limit is selected\n";
-            if (timeDeltaRadio.IsChecked.Value && timeLimitDelta.Text == string.Empty)
-                msg += "Race length must be specified if time difference is specified\n";
+                msg += Validation.GetErrors(startTime)[0].ErrorContent.ToString() + "\n";
+            if (Validation.GetErrors(timeLimitDelta).Count > 0)
+                msg += Validation.GetErrors(timeLimitDelta)[0].ErrorContent.ToString() + "\n";
+            if (Validation.GetErrors(extension).Count > 0)
+                msg += Validation.GetErrors(extension)[0].ErrorContent.ToString() + "\n";
+
+            if (raceData.is_race.Value)
+            {
+                if (raceData.calendar_event == null || raceData.calendar_event == string.Empty)
+                    msg += "Event name must be provided\n";
+                if (raceData.calendar_class == null || raceData.calendar_class == string.Empty)
+                    msg += "Class must be provided\n";
+                if (!raceData.start_date.HasValue)
+                    msg += "Start date and time must be provided\n";
+                switch (raceData.time_limit_type)
+                {
+                    case "F":
+                        if (!raceData.time_limit_fixed.HasValue)
+                            msg += "Fixed time limit date and time must be provided\n";
+                        if (raceData.time_limit_fixed < raceData.start_date)
+                            msg += "Fixed time limit must be after start\n";
+                        if (!raceData.extension.HasValue)
+                            msg += "Extension must be provided\n";
+                        break;
+                    case "D":
+                        if (!raceData.time_limit_delta.HasValue)
+                            msg += "Time limit delta must be provided\n";
+                        if (!raceData.extension.HasValue)
+                            msg += "Extension must be provided\n";
+                        break;
+                }
+            }
 
             if (msg != string.Empty)
             {
@@ -182,68 +215,62 @@ namespace OodHelper.net
 
         private void timeFixedRadio_Checked(object sender, RoutedEventArgs e)
         {
+            raceData.time_limit_type = "F";
             if (timeLimitDelta.Text != string.Empty)
             {
-                TimeSpan tlDelta;
-                if (timeLimitDelta.Text.Length > 5)
-                    tlDelta = TimeSpan.ParseExact(timeLimitDelta.Text, "d\\ hh\\:mm", null);
-                else
-                    tlDelta = TimeSpan.ParseExact(timeLimitDelta.Text, "h\\:mm", null);
-                DateTime start = startDate.SelectedDate.Value + TimeSpan.Parse(startTime.Text);
+                TimeSpan tlDelta = new TimeSpan(0, 0, raceData.time_limit_delta.Value);
+                DateTime start = raceData.start_date.Value;
                 DateTime tlFixed = start + tlDelta;
                 timeLimitFixedDate.SelectedDate = tlFixed.Date;
                 timeLimitFixedTime.Text = tlFixed.ToString("HH:mm");
-                timeLimitFixed.Visibility = System.Windows.Visibility.Visible;
-                timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
             }
+            timeLimitFixed.Visibility = System.Windows.Visibility.Visible;
+            timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
+            extension.Visibility = System.Windows.Visibility.Visible;
+            ExtensionLabel.Visibility = System.Windows.Visibility.Visible;
         }
 
         private void timeNoLimitRadio_Checked(object sender, RoutedEventArgs e)
         {
+            raceData.time_limit_type = "";
             timeLimitFixed.Visibility = System.Windows.Visibility.Collapsed;
             timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
+            extension.Visibility = System.Windows.Visibility.Collapsed;
+            ExtensionLabel.Visibility = System.Windows.Visibility.Collapsed;
         }
 
         private void timeDeltaRadio_Checked(object sender, RoutedEventArgs e)
         {
-            if (timeLimitFixedDate.SelectedDate != null)
+            raceData.time_limit_type = "D";
+            if (raceData.time_limit_fixed.HasValue && raceData.start_date.HasValue)
             {
-                DateTime start = startDate.SelectedDate.Value + TimeSpan.Parse(startTime.Text);
-                DateTime tlFixed = timeLimitFixedDate.SelectedDate.Value + TimeSpan.Parse(timeLimitFixedTime.Text);
+                DateTime start = raceData.start_date.Value;
+                DateTime tlFixed = raceData.time_limit_fixed.Value;
                 TimeSpan x = tlFixed - start;
-                if (x > new TimeSpan(1, 0, 0, 0))
-                    timeLimitDelta.Text = x.ToString("d\\ hh\\:mm");
-                else
-                    timeLimitDelta.Text = x.ToString("hh\\:mm");
-                timeLimitFixed.Visibility = System.Windows.Visibility.Collapsed;
-                timeLimitDelta.Visibility = System.Windows.Visibility.Visible;
+                raceData.time_limit_delta = (int) x.TotalSeconds;
             }
+            timeLimitFixed.Visibility = System.Windows.Visibility.Collapsed;
+            timeLimitDelta.Visibility = System.Windows.Visibility.Visible;
+            extension.Visibility = System.Windows.Visibility.Visible;
+            ExtensionLabel.Visibility = System.Windows.Visibility.Visible;
         }
 
         private void startDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             if (timeFixedRadio.IsChecked.Value)
             {
-                Calendar raceData = DataContext as Calendar;
-                if (raceData.start_date != null && startDate.SelectedDate != null && timeLimitFixedDate != null)
-                    timeLimitFixedDate.SelectedDate += startDate.SelectedDate.Value - raceData.start_date.Value.Date;
-                else
-                    timeLimitFixedDate = startDate;
+                timeLimitFixedDate.BlackoutDates.Clear();
+                timeLimitFixedDate.SelectedDate = raceData.start_date_date;
+                timeLimitFixedDate.BlackoutDates.Add(new CalendarDateRange(DateTime.MinValue, raceData.start_date.Value.AddDays(-1)));
             }
         }
 
         private void timeLimitFixedDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (timeLimitFixedDate.SelectedDate != null)
+            if (raceData.time_limit_fixed_date.HasValue)
             {
-                if (startDate.SelectedDate == null)
-                    startDate.SelectedDate = timeLimitFixedDate.SelectedDate;
-                if (timeLimitFixedDate.SelectedDate.Value < startDate.SelectedDate.Value)
-                {
-                    timeLimitFixedDate.SelectedDate = startDate.SelectedDate;
-                    MessageBox.Show("Time limit date must be same or later than start date",
-                        "Time Limit validation failure", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                if (!raceData.start_date_date.HasValue)
+                    raceData.start_date_date = raceData.time_limit_fixed.Value;
             }
         }
     }
