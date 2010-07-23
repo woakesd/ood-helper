@@ -121,10 +121,12 @@
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
     <Compile Include="Calendar.cs" />
+    <Compile Include="CodeConverter.cs" />
     <Compile Include="Configuration.xaml.cs">
       <DependentUpon>Configuration.xaml</DependentUpon>
     </Compile>
     <Compile Include="DateTimeTimeConverter.cs" />
+    <Compile Include="IntConverter.cs" />
     <Compile Include="RaceEditDateEditSelector.cs" />
     <Compile Include="Results.cs" />
     <Compile Include="SeriesDisplayPage.xaml.cs">

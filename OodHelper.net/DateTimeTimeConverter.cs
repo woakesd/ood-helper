@@ -14,6 +14,11 @@ namespace OodHelper.net
             _date = d.Date;
         }
 
+        public DateTimeTimeConverter()
+        {
+            _date = DateTime.Today;
+        }
+
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (value != DBNull.Value && typeof(DateTime) == value.GetType())

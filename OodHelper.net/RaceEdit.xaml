@@ -4,6 +4,7 @@
              mc:Ignorable="d"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:OodHelper.net"
              d:DesignHeight="128" d:DesignWidth="675">
     <Grid>
         <Grid.RowDefinitions>
@@ -67,6 +68,10 @@
                         <EventSetter Event="PreviewKeyDown" Handler="DataGridCell_PreviewKeyDown" />
                         <EventSetter Event="KeyUp" Handler="DataGridCell_KeyUp" />
                     </Style>
+                    <local:IntTimeSpan x:Key="intTimeSpan" />
+                    <local:DoubleTimeSpan x:Key="doubleTimeSpan" />
+                    <local:IntConverter x:Key="intConverter" />
+                    <local:CodeConverter x:Key="codeConverter" />
                 </DataGrid.Resources>
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding rid}" Header="RID" IsReadOnly="True" ></DataGridTextColumn>
@@ -75,13 +80,13 @@
                     <DataGridTextColumn Binding="{Binding boatclass}" Header="Class"  IsReadOnly="True"/>
                     <DataGridTextColumn Binding="{Binding sailno}" Header="Sail No" IsReadOnly="True"/>
                     <DataGridTextColumn Binding="{Binding start_date}" Header="Start" IsReadOnly="True" />
-                    <DataGridTextColumn Binding="{Binding finish_code, Mode=TwoWay}" Header="Code"  />
-                    <DataGridTextColumn Binding="{Binding finish_date, Mode=TwoWay}" Header="Finish" />
-                    <DataGridTextColumn Binding="{Binding laps, Mode=TwoWay}" Header="Laps" />
-                    <DataGridTextColumn Binding="{Binding override_points, Mode=TwoWay}" Header="Override Points" />
-                    <DataGridTextColumn Binding="{Binding elapsed}" Header="Elapsed" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding standard_corrected}" Header="Std Corrected" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding corrected}" Header="Corrected" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding finish_code,Converter={StaticResource ResourceKey=codeConverter}}" Header="Code"  />
+                    <DataGridTextColumn Binding="{Binding finish_date}" Header="Finish" />
+                    <DataGridTextColumn Binding="{Binding laps,Converter={StaticResource ResourceKey=intConverter}}" Header="Laps" />
+                    <DataGridTextColumn Binding="{Binding override_points}" Header="Override Points" />
+                    <DataGridTextColumn Binding="{Binding elapsed,Converter={StaticResource ResourceKey=intTimeSpan}}" Header="Elapsed" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding standard_corrected,Converter={StaticResource ResourceKey=doubleTimeSpan}}" Header="Std Corrected" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding corrected,Converter={StaticResource ResourceKey=doubleTimeSpan}}" Header="Corrected" IsReadOnly="True"/>
                     <DataGridTextColumn Binding="{Binding place}" Header="Place" IsReadOnly="True"/>
                     <DataGridTextColumn Binding="{Binding points}" Header="Points" IsReadOnly="True"/>
                     <DataGridTextColumn Binding="{Binding open_handicap}" Header="Open Handicap" IsReadOnly="True"/>

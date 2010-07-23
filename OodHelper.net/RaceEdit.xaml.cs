@@ -159,18 +159,13 @@ namespace OodHelper.net
             Hashtable p = new Hashtable();
             p["rid"] = e.Row["rid"];
             p["bid"] = e.Row["bid"];
-            StringBuilder sql = new StringBuilder("UPDATE races SET ");
-            bool first = true;
+            StringBuilder sql = new StringBuilder("UPDATE races SET last_edit = GETDATE()");
             foreach (DataColumn c in e.Row.Table.Columns)
             {
                 if (!c.ReadOnly)
                 {
                     p[c.ColumnName] = e.Row[c.ColumnName];
-                    if (first)
-                        sql.AppendFormat("{0} = @{0}", c.ColumnName);
-                    else
                         sql.AppendFormat(",{0} = @{0}", c.ColumnName);
-                    first = false;
                 }
             }
             sql.Append(" WHERE rid = @rid AND bid = @bid");
@@ -183,20 +178,20 @@ namespace OodHelper.net
             Binding b;
             DataGridTextColumn col;
 
-            col = (DataGridTextColumn)Races.Columns[rd.Columns["elapsed"].Ordinal];
-            b = (Binding)col.Binding;
-            b.Converter = new IntTimeSpan();
-            col.Binding = b;
+            //col = (DataGridTextColumn)Races.Columns[rd.Columns["elapsed"].Ordinal];
+            //b = (Binding)col.Binding;
+            //b.Converter = new IntTimeSpan();
+            //col.Binding = b;
 
-            col = (DataGridTextColumn)Races.Columns[rd.Columns["standard_corrected"].Ordinal];
-            b = (Binding)col.Binding;
-            b.Converter = new DoubleTimeSpan();
-            col.Binding = b;
+            //col = (DataGridTextColumn)Races.Columns[rd.Columns["standard_corrected"].Ordinal];
+            //b = (Binding)col.Binding;
+            //b.Converter = new DoubleTimeSpan();
+            //col.Binding = b;
 
-            col = (DataGridTextColumn)Races.Columns[rd.Columns["corrected"].Ordinal];
-            b = (Binding)col.Binding;
-            b.Converter = new DoubleTimeSpan();
-            col.Binding = b;
+            //col = (DataGridTextColumn)Races.Columns[rd.Columns["corrected"].Ordinal];
+            //b = (Binding)col.Binding;
+            //b.Converter = new DoubleTimeSpan();
+            //col.Binding = b;
 
             col = (DataGridTextColumn)Races.Columns[rd.Columns["start_date"].Ordinal];
             b = (Binding)col.Binding;
