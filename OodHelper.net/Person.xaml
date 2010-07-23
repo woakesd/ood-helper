@@ -34,7 +34,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <Label Content="ID" Grid.Row="0" />
+        <Label Content="ID" Grid.Row="0" Visibility="Collapsed" />
         <Label Content="First name" Grid.Row="1" />
         <Label Content="Last name" Grid.Row="2" />
         <Label Content="Address" Grid.Row="3" />
@@ -46,7 +46,7 @@
         <Label Content="Club" Grid.Row="12" />
         <Label Content="Membership" Grid.Row="13" />
         <Label Content="Notes" Grid.Row="14" />
-        <TextBox Grid.Column="1" Grid.Row="0" Name="ID" Width="200" IsReadOnly="True" Margin="2"/>
+        <TextBox Grid.Column="1" Grid.Row="0" Name="ID" Width="200" IsReadOnly="True" Margin="2" Visibility="Collapsed"/>
         <TextBox Grid.Column="1" Grid.Row="1" Name="FirstName" Width="200" MaxLength="20" Margin="2"/>
         <TextBox Grid.Column="1" Grid.Row="2" Name="LastName" Width="200" MaxLength="20" Margin="2"/>
         <TextBox Grid.Column="1" Grid.Row="3" Name="Address1" Width="200" MaxLength="20" Margin="2"/>

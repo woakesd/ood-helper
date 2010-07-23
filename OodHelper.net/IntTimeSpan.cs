@@ -12,12 +12,10 @@ namespace OodHelper.net
             if (value != DBNull.Value)
             {
                 int seconds = (Int32)value;
-                if (seconds < 999999)
-                {
-                    TimeSpan s = new TimeSpan(0, 0, seconds);
-                    return s.ToString();
-                }
-                return seconds.ToString();
+                TimeSpan s = new TimeSpan(0, 0, seconds);
+                if (s.Days > 0)
+                    return s.ToString("d\\ hh\\:mm\\:ss");
+                return s.ToString("hh\\:mm\\:ss");
             }
             else
             {

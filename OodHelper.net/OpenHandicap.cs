@@ -108,7 +108,7 @@ namespace OodHelper.net
                     //
                     if (averageLap)
                     {
-                        dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap / l);
+                        dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap) / l;
                     }
                     else
                     {

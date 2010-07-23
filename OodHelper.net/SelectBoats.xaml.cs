@@ -89,6 +89,9 @@ namespace OodHelper.net
                 if (reds[i].RaceClass.IndexOf("Yacht") >= 0)
                     yachts = true;
 
+                if (reds[i].RaceClass.IndexOf("Division") >= 0)
+                    yachts = true;
+
                 if (reds[i].RaceClass.IndexOf("Dinghy") >= 0)
                     dinghies = true;
 
@@ -145,9 +148,9 @@ namespace OodHelper.net
             try
             {
                 ((DataView)Boats.ItemsSource).RowFilter =
-                    "boatname LIKE '" + Boatname.Text + "%'" +
-                    "or sailno LIKE '" + Boatname.Text + "%'" +
-                    "or boatclass LIKE '" + Boatname.Text + "%'"
+                    "boatname LIKE '%" + Boatname.Text.Replace("'","''") + "%'" +
+                    "or sailno LIKE '%" + Boatname.Text.Replace("'", "''") + "%'" +
+                    "or boatclass LIKE '%" + Boatname.Text.Replace("'", "''") + "%'"
                     ;
             }
             catch (Exception ex)
@@ -206,9 +209,17 @@ namespace OodHelper.net
                         {
                             AddBoat((SelectedBoats)boatClasses["F Yacht"], rv);
                         }
+                        else if (boatClasses.ContainsKey("Division 1") && ohp <= 974)
+                        {
+                            AddBoat((SelectedBoats)boatClasses["Division 1"], rv);
+                        }
                         else if (boatClasses.ContainsKey("S Yacht") && ohp > 974)
                         {
                             AddBoat((SelectedBoats)boatClasses["S Yacht"], rv);
+                        }
+                        else if (boatClasses.ContainsKey("Division 2") && ohp > 974)
+                        {
+                            AddBoat((SelectedBoats)boatClasses["Division 2"], rv);
                         }
                         else if (boatClasses.ContainsKey("Yacht"))
                         {
@@ -235,6 +246,7 @@ namespace OodHelper.net
             dr["rolling_handicap"] = rv["rolling_handicap"];
             ((DataView)sbt.Boats.ItemsSource).Table.Rows.Add(dr);
             ((DataView)sbt.Boats.ItemsSource).Table.AcceptChanges();
+            ((DataView)sbt.Boats.ItemsSource).Sort = "Boatname";
         }
 
         private void Ok_Click(object sender, RoutedEventArgs e)

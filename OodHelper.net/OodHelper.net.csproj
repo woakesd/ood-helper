@@ -124,6 +124,8 @@
     <Compile Include="Configuration.xaml.cs">
       <DependentUpon>Configuration.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DateTimeTimeConverter.cs" />
+    <Compile Include="RaceEditDateEditSelector.cs" />
     <Compile Include="Results.cs" />
     <Compile Include="SeriesDisplayPage.xaml.cs">
       <DependentUpon>SeriesDisplayPage.xaml</DependentUpon>

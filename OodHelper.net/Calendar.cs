@@ -54,7 +54,15 @@ namespace OodHelper.net
         public DateTime? start_date_date 
         {
             get { return mStart_date_date; }
-            set { mStart_date_date = value; OnPropertyChanged("start_date_date"); }
+            set 
+            {
+                mStart_date_date = value;
+                if (start_date_time == string.Empty || start_date_time == null)
+                {
+                    start_date_time = "00:00";
+                }
+                OnPropertyChanged("start_date_date");
+            }
         }
 
         private string mStartDateTime;

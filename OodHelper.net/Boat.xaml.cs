@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.ComponentModel;
+using System.Data.Linq.Mapping;
+using System.Linq;
 
 namespace OodHelper.net
 {
@@ -19,7 +22,7 @@ namespace OodHelper.net
     /// Interaction logic for Boat.xaml
     /// </summary>
     [Svn("$Id$")]
-    public partial class Boat : Window
+    public partial class Boat : Window, INotifyPropertyChanged
     {
         private int bid;
         public int Bid
@@ -31,6 +34,25 @@ namespace OodHelper.net
         public int? Id
         {
             get { return id; }
+        }
+
+        private string boatname = string.Empty;
+        public string BoatName
+        {
+            set
+            {
+                if (value != string.Empty && value != null)
+                {
+                    boatname = value;
+                    OnPropertyChanged("BoatName");
+                }
+                else
+                    throw new ArgumentException("Boatname must be entered");
+            }
+            get
+            {
+                return boatname;
+            }
         }
 
         public Boat(int b)
@@ -53,7 +75,7 @@ namespace OodHelper.net
                     id = (int)data["id"];
                     SetOwner();
                 }
-                boatName.Text = data["boatname"].ToString();
+                BoatName = data["boatname"].ToString();
                 boatClass.Text = data["boatclass"].ToString();
                 sailNumber.Text = data["sailno"].ToString();
                 dinghy.IsChecked = (bool)data["dinghy"];
@@ -114,6 +136,7 @@ namespace OodHelper.net
             else
             {
             }
+            DataContext = this;
         }
 
         private void SetOwner()
@@ -136,7 +159,7 @@ namespace OodHelper.net
 
         private void ok_Click(object sender, RoutedEventArgs e)
         {
-            if (boatName.Text.Trim() == string.Empty)
+            if (BoatName.Trim() == string.Empty)
             {
                 MessageBox.Show("Boat name required", "Input Required", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -150,7 +173,7 @@ namespace OodHelper.net
             else
                 p["id"] = DBNull.Value;
 
-            p["boatname"] = boatName.Text;
+            p["boatname"] = BoatName;
             p["boatclass"] = boatClass.Text;
             p["sailno"] = sailNumber.Text;
             p["dngy"] = dinghy.IsChecked.Value;
@@ -421,6 +444,23 @@ namespace OodHelper.net
                     }
                 }
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
+        private void boatName_LostFocus(object sender, RoutedEventArgs e)
+        {
+            BindingExpression be = boatName.GetBindingExpression(TextBox.TextProperty);
+            be.UpdateSource();
         }
     }
 }
