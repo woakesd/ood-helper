@@ -55,7 +55,8 @@ namespace OodHelper.net
                 Score();
                 UpdateHandicaps();
                 c = new Db(@"UPDATE calendar
-                        SET result_calculated = GETDATE()
+                        SET result_calculated = GETDATE(),
+                        raced = 1
                         WHERE rid = @rid");
                 c.ExecuteNonQuery(p);
             }

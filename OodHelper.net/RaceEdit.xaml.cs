@@ -132,9 +132,27 @@ namespace OodHelper.net
             set
             {
                 if (time_limit_fixed.HasValue)
+                {
                     time_limit_fixed = time_limit_fixed.Value.Date + value;
+                    Db u = new Db(@"UPDATE calendar
+                        SET time_limit_fixed = @time_limit_fixed
+                        WHERE rid = @rid");
+                    Hashtable p = new Hashtable();
+                    p["time_limit_fixed"] = time_limit_fixed;
+                    p["rid"] = Rid;
+                    u.ExecuteNonQuery(p);
+                }
                 else if (time_limit_delta.HasValue)
-                    time_limit_delta = (int) value.Value.TotalSeconds;
+                {
+                    time_limit_delta = (int)value.Value.TotalSeconds;
+                    Db u = new Db(@"UPDATE calendar
+                        SET time_limit_delta = @time_limit_delta
+                        WHERE rid = @rid");
+                    Hashtable p = new Hashtable();
+                    p["time_limit_delta"] = time_limit_delta;
+                    p["rid"] = Rid;
+                    u.ExecuteNonQuery(p);
+                }
             }
         }
 
@@ -143,7 +161,16 @@ namespace OodHelper.net
         public TimeSpan Extension
         {
             get { return new TimeSpan(0, 0, extension); }
-            set { extension = (int)value.TotalSeconds; }
+            set {
+                extension = (int)value.TotalSeconds;
+                Db u = new Db(@"UPDATE calendar
+                        SET extension = @extension
+                        WHERE rid = @rid");
+                Hashtable p = new Hashtable();
+                p["extension"] = extension;
+                p["rid"] = Rid;
+                u.ExecuteNonQuery(p);
+            }
         }
 
         public void LoadGrid()

@@ -98,7 +98,7 @@ namespace OodHelper.net
                         SeriesData[className].Remove(k);
 
                     string defaultDiscards = (string)DbSettings.GetSetting(DbSettings.settDefaultDiscardProfile);
-                    if (defaultDiscards == string.Empty)
+                    if (defaultDiscards == string.Empty || defaultDiscards == null)
                         defaultDiscards = "0,1";
 
                     string[] DiscardParts = defaultDiscards.Split(new char[] { ',' });
