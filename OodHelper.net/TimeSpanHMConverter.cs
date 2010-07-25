@@ -4,13 +4,14 @@ using System.Windows.Data;
 namespace OodHelper.net
 {
     [Svn("$Id$")]
-    class CodeConverter: IValueConverter
+    class TimeSpanHMConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (value != DBNull.Value && value != null)
+            if (value != DBNull.Value)
             {
-                return value.ToString();
+                TimeSpan x = (TimeSpan)value;
+                return x.ToString("hh\\:mm");
             }
             else
             {
@@ -21,11 +22,12 @@ namespace OodHelper.net
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             string strValue = value as string;
-            if (strValue != null && strValue != string.Empty)
+            TimeSpan resultTime;
+            if (TimeSpan.TryParse(strValue, out resultTime) || TimeSpan.TryParseExact(strValue, "hh\\ mm", null, out resultTime))
             {
-                return strValue.ToUpper();
+                return resultTime;
             }
-            return DBNull.Value;
+            return DBNull.Value; // DependencyProperty.UnsetValue;
         }
     }
 }

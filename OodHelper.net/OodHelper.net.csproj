@@ -125,6 +125,7 @@
     <Compile Include="Configuration.xaml.cs">
       <DependentUpon>Configuration.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DateTimeConverter.cs" />
     <Compile Include="DateTimeTimeConverter.cs" />
     <Compile Include="IntConverter.cs" />
     <Compile Include="RaceEditDateEditSelector.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="SeriesEntry.cs" />
     <Compile Include="SeriesEvent.cs" />
     <Compile Include="SeriesResult.cs" />
+    <Compile Include="TimeSpanHMConverter.cs" />
     <Compile Include="Working.xaml.cs">
       <DependentUpon>Working.xaml</DependentUpon>
     </Compile>

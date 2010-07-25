@@ -40,10 +40,9 @@ namespace OodHelper.net
             get { return racename; }
         }
 
-        private DateTime mRaceDate;
         public DateTime RaceDate
         {
-            get { return mRaceDate; }
+            get { return start_date; }
         }
 
         private string mOod;
@@ -85,10 +84,72 @@ namespace OodHelper.net
             return false;
         }
 
+        private DateTime start_date;
+        public TimeSpan StartTime
+        {
+            get
+            {
+                return start_date.TimeOfDay;
+            }
+            set
+            {
+                if (start_date.TimeOfDay != value)
+                {
+                    start_date = start_date.Date + value;
+                    Db u = new Db(@"UPDATE races
+                        SET start_date = @start_date
+                        , last_edit = GETDATE()
+                        WHERE rid = @rid");
+                    Hashtable p = new Hashtable();
+                    p["start_date"] = start_date;
+                    p["rid"] = Rid;
+                    u.ExecuteNonQuery(p);
+
+                    u = new Db(@"UPDATE calendar
+                        SET start_date = @start_date
+                        WHERE rid = @rid");
+                    u.ExecuteNonQuery(p);
+
+                    LoadGrid();
+                }
+            }
+        }
+
+        private DateTime? time_limit_fixed;
+        private int? time_limit_delta;
+        public TimeSpan? TimeLimit
+        {
+            get
+            {
+                if (time_limit_fixed.HasValue)
+                    return time_limit_fixed.Value.TimeOfDay;
+                else if (time_limit_delta.HasValue)
+                    return new TimeSpan(0, 0, time_limit_delta.Value);
+                else
+                    return null;
+            }
+
+            set
+            {
+                if (time_limit_fixed.HasValue)
+                    time_limit_fixed = time_limit_fixed.Value.Date + value;
+                else if (time_limit_delta.HasValue)
+                    time_limit_delta = (int) value.Value.TotalSeconds;
+            }
+        }
+
+        private int extension;
+
+        public TimeSpan Extension
+        {
+            get { return new TimeSpan(0, 0, extension); }
+            set { extension = (int)value.TotalSeconds; }
+        }
+
         public void LoadGrid()
         {
-            Db c = new Db(@"SELECT start_date, time_limit_fixed, extension, 
-                    event, class, timegate, handicapping,
+            Db c = new Db(@"SELECT start_date, time_limit_fixed, time_limit_delta, extension, 
+                    event, class, timegate, average_lap, handicapping,
                     standard_corrected_time, ood
                     FROM calendar
                     WHERE rid = @rid");
@@ -96,18 +157,19 @@ namespace OodHelper.net
             p["rid"] = Rid;
             caldata = c.GetHashtable(p);
 
-            start.Text = (caldata["start_date"] as DateTime?).Value.TimeOfDay.ToString("hh\\:mm");
-            if (caldata["time_limit_fixed"] != DBNull.Value)
-                timeLimit.Text = (caldata["time_limit_fixed"] as DateTime?).Value.TimeOfDay.ToString("hh\\:mm");
-            extension.Text = caldata["extension"].ToString();
-            DateTime raceDate = (DateTime)caldata["start_date"];
-            raceName.Content = raceDate.ToString("ddd") + " " +
-                raceDate.ToString("dd MMM yyyy") +
+            start_date = (caldata["start_date"] as DateTime?).Value;
+            
+            time_limit_fixed = caldata["time_limit_fixed"] as DateTime?;
+            time_limit_delta = caldata["time_limit_delta"] as int?;
+
+            if (caldata["extension"] != DBNull.Value)
+                extension = (int)caldata["extension"];
+            raceName.Content = start_date.ToString("ddd") + " " +
+                start_date.ToString("dd MMM yyyy") +
                 " (" + ((caldata["handicapping"].ToString() == "r") ? "Rolling " : "Open ") + "handicap)";
             eventname = caldata["event"].ToString().Trim();
             racename = eventname + " - " + caldata["class"].ToString().Trim();
             raceclass = caldata["class"].ToString().Trim();
-            mRaceDate = (DateTime)caldata["start_date"];
             mOod = caldata["ood"].ToString();
             if (caldata["handicapping"] != DBNull.Value)
                 mHandicap = (string)caldata["handicapping"];
@@ -148,10 +210,12 @@ namespace OodHelper.net
                 rd.Columns["start_date"].ReadOnly = false;
             rd.Columns["finish_code"].ReadOnly = false;
             rd.Columns["finish_date"].ReadOnly = false;
-            rd.Columns["laps"].ReadOnly = false;
+            if (!(bool)caldata["average_lap"])
+                rd.Columns["laps"].ReadOnly = false;
             rd.Columns["override_points"].ReadOnly = false;
 
             Races.ItemsSource = rd.DefaultView;
+            this.DataContext = this;
         }
 
         void rd_RowChanged(object sender, DataRowChangeEventArgs e)
@@ -178,30 +242,36 @@ namespace OodHelper.net
             Binding b;
             DataGridTextColumn col;
 
-            //col = (DataGridTextColumn)Races.Columns[rd.Columns["elapsed"].Ordinal];
-            //b = (Binding)col.Binding;
-            //b.Converter = new IntTimeSpan();
-            //col.Binding = b;
+            if (start_date.Date < time_limit_fixed.Value.Date || time_limit_delta.HasValue && start_date.Date < (start_date.AddSeconds((double)time_limit_delta) + Extension).Date)
+            {
+                DateTime defaultFinish;
+                if (time_limit_fixed.HasValue)
+                    defaultFinish = time_limit_fixed.Value;
+                else
+                    defaultFinish = RaceDate.AddSeconds((double)time_limit_delta) + Extension;
 
-            //col = (DataGridTextColumn)Races.Columns[rd.Columns["standard_corrected"].Ordinal];
-            //b = (Binding)col.Binding;
-            //b.Converter = new DoubleTimeSpan();
-            //col.Binding = b;
+                col = (DataGridTextColumn)Races.Columns[rd.Columns["start_date"].Ordinal];
+                b = (Binding)col.Binding;
+                b.Converter = new DateTimeConverter(RaceDate.Date);
+                col.Binding = b;
 
-            //col = (DataGridTextColumn)Races.Columns[rd.Columns["corrected"].Ordinal];
-            //b = (Binding)col.Binding;
-            //b.Converter = new DoubleTimeSpan();
-            //col.Binding = b;
+                col = (DataGridTextColumn)Races.Columns[rd.Columns["finish_date"].Ordinal];
+                b = (Binding)col.Binding;
+                b.Converter = new DateTimeConverter(defaultFinish.Date);
+                col.Binding = b;
+            }
+            else
+            {
+                col = (DataGridTextColumn)Races.Columns[rd.Columns["start_date"].Ordinal];
+                b = (Binding)col.Binding;
+                b.Converter = new DateTimeTimeConverter();
+                col.Binding = b;
 
-            col = (DataGridTextColumn)Races.Columns[rd.Columns["start_date"].Ordinal];
-            b = (Binding)col.Binding;
-            b.Converter = new DateTimeTimeConverter(RaceDate);
-            col.Binding = b;
-
-            col = (DataGridTextColumn)Races.Columns[rd.Columns["finish_date"].Ordinal];
-            b = (Binding)col.Binding;
-            b.Converter = new DateTimeTimeConverter(RaceDate);
-            col.Binding = b;
+                col = (DataGridTextColumn)Races.Columns[rd.Columns["finish_date"].Ordinal];
+                b = (Binding)col.Binding;
+                b.Converter = new DateTimeTimeConverter();
+                col.Binding = b;
+            }
 
             Color x = new Color();
             x.A = 255;
@@ -218,9 +288,6 @@ namespace OodHelper.net
                     c.CellStyle.Setters.Add(new Setter(DataGridCell.ForegroundProperty, Brushes.Black));
                 }
             }
-
-            Races.Columns[rd.Columns["rid"].Ordinal].Visibility = Visibility.Hidden;
-            //Races.Columns[rd.Columns["bid"].Ordinal].Visibility = Visibility.Hidden;
         }
 
         private void DataGridCell_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -336,40 +403,6 @@ namespace OodHelper.net
                 add.ExecuteNonQuery(a);
             }
             LoadGrid();
-        }
-
-        void start_LostFocus(object sender, RoutedEventArgs e)
-        {
-            Regex rx = new Regex("^[0-9][0-9][: ][0-9][0-9]$");
-            TimeSpan startTime;
-            if (pcStart != start.Text && rx.IsMatch(start.Text) && TimeSpan.TryParse(start.Text, out startTime))
-            {
-                Db u = new Db(@"UPDATE races
-                        SET start_date = @start_date
-                        , last_edit = GETDATE()
-                        WHERE rid = @rid");
-                Hashtable p = new Hashtable();
-                start.Text = start.Text.Replace(' ', ':');
-                p["start_date"] = mRaceDate.Date + startTime;
-                p["rid"] = Rid;
-                u.ExecuteNonQuery(p);
-
-                u = new Db(@"UPDATE calendar
-                        SET start_date = @start_date
-                        WHERE rid = @rid");
-                u.ExecuteNonQuery(p);
-
-                LoadGrid();
-            }
-            else
-                start.Text = pcStart;
-        }
-
-        private string pcStart;
-
-        void start_GotFocus(object sender, RoutedEventArgs e)
-        {
-            pcStart = start.Text;
         }
 
         private void buttonCalculate_Click(object sender, RoutedEventArgs e)

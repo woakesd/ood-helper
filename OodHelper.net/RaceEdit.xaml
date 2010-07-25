@@ -5,7 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:OodHelper.net"
-             d:DesignHeight="128" d:DesignWidth="675">
+             d:DesignHeight="128" d:DesignWidth="1293">
+    <UserControl.Resources>
+        <local:TimeSpanHMConverter x:Key="TimeSpanHMConverter" />
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -33,11 +36,11 @@
             </Grid.RowDefinitions>
             <Label Name="raceName" Grid.ColumnSpan="6">Label</Label>
             <Label Name="startLabel" Grid.Row="1">Start</Label>
-            <TextBox Margin="2" Name="start" Grid.Row="1" Grid.Column="1" Width="40" MaxLength="5" GotFocus="start_GotFocus" LostFocus="start_LostFocus"/>
+            <TextBox Margin="2" Name="start" Grid.Row="1" Grid.Column="1" Width="40" MaxLength="5" Text="{Binding Path=StartTime,Converter={StaticResource ResourceKey=TimeSpanHMConverter}}"/>
             <Label Grid.Row="1" Grid.Column="2" Margin="20,0,0,0" Name="timeLimitLabel">Time Limit</Label>
-            <TextBox Margin="2" Grid.Row="1" Grid.Column="3" Name="timeLimit" Width="40" MaxLength="5" />
+            <TextBox Margin="2" Grid.Row="1" Grid.Column="3" Name="timeLimit" Width="40" MaxLength="5" Text="{Binding Path=TimeLimit,Converter={StaticResource ResourceKey=TimeSpanHMConverter}}"/>
             <Label Grid.Row="1" Grid.Column="4" Margin="20,0,0,0" Name="extensionLabel" >Extension</Label>
-            <TextBox Margin="2" Grid.Row="1" Grid.Column="5" Name="extension" Width="40" MaxLength="5" />
+            <TextBox Margin="2" Grid.Row="1" Grid.Column="5" Name="extensionTB" Text="{Binding Path=Extension,Converter={StaticResource ResourceKey=TimeSpanHMConverter}}" Width="40" MaxLength="5" />
             <Label Grid.Row="1" Grid.Column="6" Margin="20,0,0,0" >SCT</Label>
             <TextBox Margin="2" Grid.Row="1" Grid.Column="7" Name="sct" Width="60" IsReadOnly="True" MaxLength="11" />
             <Grid VerticalAlignment="Center" Margin="20,0,5,0" Grid.RowSpan="2" Grid.Row="0" Grid.Column="8">
@@ -74,7 +77,7 @@
                     <local:CodeConverter x:Key="codeConverter" />
                 </DataGrid.Resources>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding rid}" Header="RID" IsReadOnly="True" ></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding rid}" Header="RID" IsReadOnly="True" Visibility="Collapsed" />
                     <DataGridTextColumn Binding="{Binding bid}" Header="BID" IsReadOnly="True"/>
                     <DataGridTextColumn Binding="{Binding boatname}" Header="Boat" IsReadOnly="True"/>
                     <DataGridTextColumn Binding="{Binding boatclass}" Header="Class"  IsReadOnly="True"/>
