@@ -210,7 +210,7 @@ namespace OodHelper.net
                 rd.Columns["start_date"].ReadOnly = false;
             rd.Columns["finish_code"].ReadOnly = false;
             rd.Columns["finish_date"].ReadOnly = false;
-            if (!(bool)caldata["average_lap"])
+            if ((bool)caldata["average_lap"])
                 rd.Columns["laps"].ReadOnly = false;
             rd.Columns["override_points"].ReadOnly = false;
 
@@ -273,11 +273,14 @@ namespace OodHelper.net
                 col.Binding = b;
             }
 
+            foreach (DataGridColumn gc in Races.Columns)
+                gc.IsReadOnly = rd.Columns[gc.SortMemberPath].ReadOnly;
+
             Color x = new Color();
             x.A = 255;
-            x.R = 240;
-            x.B = 240;
-            x.G = 240;
+            x.R = 224;
+            x.B = 224;
+            x.G = 224;
             SolidColorBrush vlg = new SolidColorBrush(x);
             foreach (DataGridColumn c in Races.Columns)
             {
