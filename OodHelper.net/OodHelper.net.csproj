@@ -127,6 +127,14 @@
     </Compile>
     <Compile Include="DateTimeConverter.cs" />
     <Compile Include="DateTimeTimeConverter.cs" />
+    <Compile Include="Handicap.xaml.cs">
+      <DependentUpon>Handicap.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HandicapLinq.cs" />
+    <Compile Include="HandicapRecord.cs" />
+    <Compile Include="Handicaps.xaml.cs">
+      <DependentUpon>Handicaps.xaml</DependentUpon>
+    </Compile>
     <Compile Include="IntConverter.cs" />
     <Compile Include="RaceEditDateEditSelector.cs" />
     <Compile Include="Results.cs" />
@@ -169,6 +177,7 @@
     <Compile Include="SeriesEntry.cs" />
     <Compile Include="SeriesEvent.cs" />
     <Compile Include="SeriesResult.cs" />
+    <Compile Include="StringConverter.cs" />
     <Compile Include="TimeSpanHMConverter.cs" />
     <Compile Include="Working.xaml.cs">
       <DependentUpon>Working.xaml</DependentUpon>
@@ -190,6 +199,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Configuration.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Handicap.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Handicaps.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

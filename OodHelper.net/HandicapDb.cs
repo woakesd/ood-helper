@@ -11,10 +11,11 @@ namespace OodHelper.net
     [Svn("$Id$")]
     class HandicapDb : Db
     {
-        private static string name = @"data\handicaps.sdf";
-        private static string constr = "Data Source=" + name;
+        public static string DatabaseName = @"data\handicaps.sdf";
+        public static string DatabaseConstr = "Data Source=" + DatabaseName;
 
-        public HandicapDb(string sql) : base(constr, sql)
+        public HandicapDb(string sql)
+            : base(DatabaseConstr, sql)
         {
         }
 
@@ -25,11 +26,11 @@ namespace OodHelper.net
                 File.Move(".\\data\\handicaps.sdf", ".\\data\\handicaps-" + DateTime.Now.Ticks.ToString() + ".sdf");
             }
 
-            SqlCeEngine ce = new SqlCeEngine(constr);
+            SqlCeEngine ce = new SqlCeEngine(DatabaseConstr);
             ce.CreateDatabase();
             ce.Dispose();
 
-            SqlCeConnection con = new SqlCeConnection(constr);
+            SqlCeConnection con = new SqlCeConnection(DatabaseConstr);
             try
             {
                 con.Open();

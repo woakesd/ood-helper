@@ -146,5 +146,11 @@ namespace OodHelper.net
             Configuration f = new Configuration();
             f.ShowDialog();
         }
+
+        private void Handicaps_Click(object sender, RoutedEventArgs e)
+        {
+            Handicaps h = new Handicaps();
+            h.ShowDialog();
+        }
     }
 }
