@@ -134,19 +134,22 @@ namespace OodHelper.net
 
             set
             {
-                if (!time_limit_fixed_date.HasValue)
+                if (value != null)
                 {
-                    time_limit_fixed_date = DateTime.Today;
-                    OnPropertyChanged("time_limit_fixed_date");
-                }
-                try
-                {
-                    mTimeLimitFixedTime = TimeSpan.ParseExact(value, "h\\:mm", null).ToString("hh\\:mm");
-                    OnPropertyChanged("time_limit_fixed_time");
-                }
-                catch (Exception)
-                {
-                    throw new ArgumentException("Time limit time format must be like 12:50");
+                    if (!time_limit_fixed_date.HasValue)
+                    {
+                        time_limit_fixed_date = DateTime.Today;
+                        OnPropertyChanged("time_limit_fixed_date");
+                    }
+                    try
+                    {
+                        mTimeLimitFixedTime = TimeSpan.ParseExact(value, "h\\:mm", null).ToString("hh\\:mm");
+                        OnPropertyChanged("time_limit_fixed_time");
+                    }
+                    catch (Exception)
+                    {
+                        throw new ArgumentException("Time limit time format must be like 12:50");
+                    }
                 }
             }
         }

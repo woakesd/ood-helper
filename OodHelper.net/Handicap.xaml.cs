@@ -45,18 +45,19 @@ namespace OodHelper.net
 
         private void ok_Click(object sender, RoutedEventArgs e)
         {
-            if (Id == 0)
-                hl.portsmouth_numbers.InsertOnSubmit(hcap);
-            hl.SubmitChanges();
-            Id = hcap.id;
-            this.DialogResult = true;
-            this.Close();
-        }
-
-        private void class_name_LostFocus(object sender, RoutedEventArgs e)
-        {
-            BindingExpression be = class_name.GetBindingExpression(TextBox.TextProperty);
-            be.UpdateSource();
+            try
+            {
+                if (Id == 0)
+                    hl.portsmouth_numbers.InsertOnSubmit(hcap);
+                hl.SubmitChanges();
+                Id = hcap.id;
+                this.DialogResult = true;
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

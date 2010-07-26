@@ -93,7 +93,7 @@ namespace OodHelper.net
 
             foreach (DataRow dr in dt.Rows)
             {
-                if (dr["start_date"] != DBNull.Value && dr["finish_date"] != DBNull.Value && dr["laps"] != DBNull.Value)
+                if (dr["start_date"] != DBNull.Value && dr["finish_date"] != DBNull.Value && (!averageLap || dr["laps"] != DBNull.Value))
                 {
                     DateTime? s = dr["start_date"] as DateTime?;
                     DateTime? f = dr["finish_date"] as DateTime?;
@@ -101,7 +101,7 @@ namespace OodHelper.net
                     TimeSpan? e = f - s;
                     dr["elapsed"] = e.Value.TotalSeconds;
 
-                    int l = (int)dr["laps"];
+                    int? l = dr["laps"] as int?;
 
                     int hcap = (int)dr["rolling_handicap"];
                     int ohp = (int)dr["open_handicap"];
@@ -112,8 +112,8 @@ namespace OodHelper.net
                     //
                     if (averageLap)
                     {
-                        dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap)/l;
-                        dr["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp)/l;
+                        dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap) / l.Value;
+                        dr["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp) / l.Value;
                     }
                     else
                     {
