@@ -35,42 +35,49 @@ namespace OodHelper.net
 
         public Race(int r)
         {
-            rid = r;
-            InitializeComponent();
-            if (rid != 0)
+            try
             {
-                Results ld = new Results();
-                raceData = ld.Calendar.Single(c => c.rid == r);
-
-                switch (raceData.time_limit_type)
+                rid = r;
+                InitializeComponent();
+                if (rid != 0)
                 {
-                    case "F":
-                        timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
-                        timeFixedRadio.IsChecked = true;
-                        break;
-                    case "D":
-                        timeLimitFixed.Visibility = System.Windows.Visibility.Collapsed;
-                        timeDeltaRadio.IsChecked = true;
-                        break;
-                    default:
-                        timeLimitFixed.Visibility = System.Windows.Visibility.Collapsed;
-                        timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
-                        break;
+                    Results ld = new Results();
+                    raceData = ld.Calendar.Single(c => c.rid == r);
+
+                    switch (raceData.time_limit_type)
+                    {
+                        case "F":
+                            timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
+                            timeFixedRadio.IsChecked = true;
+                            break;
+                        case "D":
+                            timeLimitFixed.Visibility = System.Windows.Visibility.Collapsed;
+                            timeDeltaRadio.IsChecked = true;
+                            break;
+                        default:
+                            timeLimitFixed.Visibility = System.Windows.Visibility.Collapsed;
+                            timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
+                            break;
+                    }
                 }
+                else
+                {
+                    raceData = new Calendar();
+                    timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
+                    timeFixedRadio.IsChecked = true;
+                    raceData.average_lap = false;
+                    raceData.is_race = true;
+                    raceData.timegate = false;
+                    raceData.raced = false;
+                    raceData.approved = false;
+                    raceData.time_limit_type = "F";
+                }
+                DataContext = raceData;
             }
-            else
+            catch (Exception ex)
             {
-                raceData = new Calendar();
-                timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
-                timeFixedRadio.IsChecked = true;
-                raceData.average_lap = false;
-                raceData.is_race = true;
-                raceData.timegate = false;
-                raceData.raced = false;
-                raceData.approved = false;
-                raceData.time_limit_type = "F";
+                MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
             }
-            DataContext = raceData;
         }
 
         private void cancel_Click(object sender, RoutedEventArgs e)
