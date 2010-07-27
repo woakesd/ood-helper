@@ -3,6 +3,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="OodHelper.net" WindowState="Maximized" Closing="Window_Closing" BorderThickness="0" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="595">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -24,32 +27,35 @@
                         <Image Width="16" Height="16" Margin="1" Source="/OodHelper.net;component/Images/Man.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Calendar" Name="Calendar" Click="Calendar_Click" >
+                <MenuItem Header="_Calendar" Name="Calendar" Click="Calendar_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                     <MenuItem.Icon>
                         <Image Width="16" Height="16" Margin="1" Source="/OodHelper.net;component/Images/Calendar-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Handicaps" Click="Handicaps_Click" >
+                <MenuItem Header="_Handicaps" Click="Handicaps_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                     <!--<MenuItem.Icon>
                         <Image Width="16" Height="16" Margin="1" Source="/OodHelper.net;component/Images/Calendar-16.png" />
                     </MenuItem.Icon>-->
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Admin">
-                <MenuItem Header="_Configuration" Name="Configuration" Click="Configuration_Click"></MenuItem>
+                <MenuItem Header="_Configuration" Name="Configuration" Click="Configuration_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"/>
                 <Separator/>
-                <MenuItem Header="_Create Results DB" Name="CreateResultsDB" Click="SqlCe_Click">
+                <MenuItem Header="_Create Results DB" Name="CreateResultsDB" Click="SqlCe_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                     <MenuItem.Icon>
                         <Image Source="/OodHelper.net;component/Images/Database-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Create Handicap DB" Name="CreateHandicapDB" Click="CreateHandicapDB_Click">
+                <MenuItem Header="_Create Handicap DB" Name="CreateHandicapDB" Click="CreateHandicapDB_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                     <MenuItem.Icon>
                         <Image Source="/OodHelper.net;component/Images/Database-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="Import _PY" Name="importPY" Click="importPY_Click" />
+                <MenuItem Header="Import _PY" Name="importPY" Click="importPY_Click"  Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"/>
+                <Separator/>
+                <MenuItem Header="Logout" Name="Logout" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" Click="Logout_Click"/>
+                <MenuItem Header="Login" Name="Login" Visibility="{Binding Path=HideNonPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" Click="Login_Click"/>
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_About" Click="About_Click" />

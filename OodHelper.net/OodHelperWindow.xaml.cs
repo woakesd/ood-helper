@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -21,11 +22,35 @@ namespace OodHelper.net
     /// Interaction logic for Window1.xaml
     /// </summary>
     [Svn("$Id$")]
-    public partial class OodHelperWindow : Window
+    public partial class OodHelperWindow : Window, INotifyPropertyChanged
     {
         public OodHelperWindow()
         {
             InitializeComponent();
+            DataContext = this;
+        }
+
+        bool _ShowPrivilegedItems = false;
+        public bool ShowPrivilegedItems
+        {
+            get
+            {
+                return _ShowPrivilegedItems;
+            }
+            set
+            {
+                _ShowPrivilegedItems = value;
+                OnPropertyChanged("ShowPrivilegedItems");
+                OnPropertyChanged("HideNonPrivilegedItems");
+            }
+        }
+
+        public bool HideNonPrivilegedItems
+        {
+            get
+            {
+                return !_ShowPrivilegedItems;
+            }
         }
 
         private void Results_Click(object sender, RoutedEventArgs e)
@@ -151,6 +176,27 @@ namespace OodHelper.net
         {
             Handicaps h = new Handicaps();
             h.ShowDialog();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
+        
+        private void Login_Click(object sender, RoutedEventArgs e)
+        {
+            ShowPrivilegedItems = true; // Visibility.Visible;
+        }
+
+        private void Logout_Click(object sender, RoutedEventArgs e)
+        {
+            ShowPrivilegedItems = false; // Visibility.Collapsed;
         }
     }
 }
