@@ -33,14 +33,17 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="_Handicaps" Click="Handicaps_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
-                    <!--<MenuItem.Icon>
-                        <Image Width="16" Height="16" Margin="1" Source="/OodHelper.net;component/Images/Calendar-16.png" />
-                    </MenuItem.Icon>-->
+                    <MenuItem.Icon>
+                        <Image Width="16" Height="16" Margin="1" Source="/OodHelper.net;component/Images/Hand-16.png" />
+                    </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Admin">
-                <MenuItem Header="_Configuration" Name="Configuration" Click="Configuration_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"/>
-                <Separator/>
+                <MenuItem Header="_Configuration" Name="Configuration" Click="Configuration_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
+                    <MenuItem.Icon>
+                        <Image Width="16" Height="16" Margin="1" Source="/OodHelper.net;component/Images/Spanner-16.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="_Create Results DB" Name="CreateResultsDB" Click="SqlCe_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                     <MenuItem.Icon>
                         <Image Source="/OodHelper.net;component/Images/Database-16.png" />
@@ -51,14 +54,24 @@
                         <Image Source="/OodHelper.net;component/Images/Database-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <Separator/>
                 <MenuItem Header="Import _PY" Name="importPY" Click="importPY_Click"  Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"/>
-                <Separator/>
-                <MenuItem Header="Logout" Name="Logout" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" Click="Logout_Click"/>
-                <MenuItem Header="Login" Name="Login" Visibility="{Binding Path=HideNonPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" Click="Login_Click"/>
+                <MenuItem Header="Logout" Name="Logout" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" Click="Logout_Click">
+                    <MenuItem.Icon>
+                        <Image Source="/OodHelper.net;component/Images/Lock-Open-16.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Login" Name="Login" Visibility="{Binding Path=HideNonPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" Click="Login_Click">
+                    <MenuItem.Icon>
+                        <Image Source="/OodHelper.net;component/Images/Lock-16.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="_About" Click="About_Click" />
+                <MenuItem Header="_About" Click="About_Click" >
+                    <MenuItem.Icon>
+                        <Image Source="/OodHelper.net;component/Images/Info-16.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
         </Menu>
         <ToolBarTray Name="mainToolbarTray" VerticalAlignment="Top" Grid.Row="1">
