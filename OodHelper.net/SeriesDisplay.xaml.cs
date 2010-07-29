@@ -27,6 +27,8 @@ namespace OodHelper.net
         public DataTable rd;
         public List<SeriesEvent> events;
 
+        public SeriesResult Result { get { return _result; } }
+
         public DataTable data
         {
             get
@@ -40,6 +42,8 @@ namespace OodHelper.net
             InitializeComponent();
 
             _result = r;
+            seriesName.Content = Result.SeriesName;
+            entries.Text = Result._Results.Count.ToString();
 
             LoadGrid();
         }

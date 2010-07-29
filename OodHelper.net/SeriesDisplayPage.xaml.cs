@@ -28,6 +28,8 @@ namespace OodHelper.net
 
             rd = sd.data;
 
+            EventDescription.Text = sd.Result.SeriesName;
+
             int i = 1;
             foreach (SeriesEvent se in sd.events)
             {
