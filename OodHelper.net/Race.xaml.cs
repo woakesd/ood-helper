@@ -176,8 +176,8 @@ namespace OodHelper.net
             if (Rid == 0)
             {
                 save = new Db("INSERT INTO calendar " +
-                        "([start_date], [time_limit_type], [time_limit_delta], [time_limit_fixed], [class], [event], [start], [price_code], [course], [ood], [venue], [average_lap], [timegate], [handicapping], [visitors], [flag], [extension], [memo], [raced], [approved], [is_race]) " +
-                        "VALUES (@start_date, @time_limit_type, @time_limit_delta, @time_limit_fixed, @class, @event, @start, @price_code, @course, @ood, @venue, @average_lap, @timegate, @handicapping, @visitors, @flag, @extension, @memo, @raced, @approved, @is_race)");
+                        "([start_date], [time_limit_type], [time_limit_delta], [time_limit_fixed], [class], [event], [price_code], [course], [ood], [venue], [average_lap], [timegate], [handicapping], [visitors], [flag], [extension], [memo], [raced], [approved], [is_race]) " +
+                        "VALUES (@start_date, @time_limit_type, @time_limit_delta, @time_limit_fixed, @class, @event, @price_code, @course, @ood, @venue, @average_lap, @timegate, @handicapping, @visitors, @flag, @extension, @memo, @raced, @approved, @is_race)");
                 rid = save.GetNextIdentity("calendar", "rid");
             }
             else

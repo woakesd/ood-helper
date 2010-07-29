@@ -16,6 +16,7 @@ namespace OodHelper.net
         private int[] _Rids;
         public List<BoatSeriesResult> _Results = new List<BoatSeriesResult>();
         private Dictionary<int, BoatSeriesResult> _ResultsLookUp = new Dictionary<int, BoatSeriesResult>();
+        public string SeriesName { get; set; }
 
         /// <summary>
         /// Create series result object, pass in rows of data each row contain column bid, with points

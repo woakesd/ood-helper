@@ -21,7 +21,13 @@ namespace OodHelper.net
 
             Task t = Task.Factory.StartNew(() =>
             {
-                Db c = new Db(@"SELECT c.event, c.class, c.handicapping, c.rid, c.start_date, c.result_calculated
+                Hashtable p = new Hashtable();
+                p["sid"] = SeriesId;
+                Db c = new Db(@"SELECT sname FROM series WHERE sid = @sid");
+
+                string SeriesName = c.GetScalar(p) as string;
+
+                c = new Db(@"SELECT c.event, c.class, c.handicapping, c.rid, c.start_date, c.result_calculated
                     FROM calendar c 
                     INNER JOIN calendar_series_join j ON c.rid = j.rid
                     INNER JOIN races r on r.rid = c.rid
@@ -30,8 +36,6 @@ namespace OodHelper.net
                     GROUP BY c.event, c.class, c.handicapping, c.rid, c.start_date, c.result_calculated
                     ORDER BY c.start_date");
 
-                Hashtable p = new Hashtable();
-                p["sid"] = SeriesId;
                 DataTable races = c.GetData(p);
 
                 w.SetRange(0, races.Rows.Count);
@@ -115,6 +119,7 @@ namespace OodHelper.net
 
                     SeriesResult sr = new SeriesResult(SeriesData[className], discardProfile);
                     sr.Score();
+                    sr.SeriesName = SeriesName + " - " + className;
                     SeriesResults.Add(className, sr);
                 }
                 w.CloseWindow();
