@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections;
 using System.ComponentModel;
 using System.Linq;
+using System.Printing;
+using System.Printing.IndexedProperties;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,6 +17,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml;
 using System.Windows.Markup;
+using System.Windows.Xps;
+using System.Windows.Xps.Packaging;
 
 namespace OodHelper.net
 {
@@ -197,6 +201,29 @@ namespace OodHelper.net
         private void Logout_Click(object sender, RoutedEventArgs e)
         {
             ShowPrivilegedItems = false; // Visibility.Collapsed;
+        }
+
+        private void EntrySheets_Click(object sender, RoutedEventArgs e)
+        {
+            EntrySheetSelector sel = new EntrySheetSelector();
+            if (sel.ShowDialog() == true)
+            {
+                PrintDialog pd = new PrintDialog();
+                pd.PrintTicket.PageOrientation = PageOrientation.Landscape;
+
+                if (pd.ShowDialog() == true)
+                {
+                    EntrySheets es = new EntrySheets();
+                    Size ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
+                    es.Measure(ps);
+                    es.Arrange(new Rect(new Point(0, 0), ps));
+                    es.BeginInit();
+                    es.EndInit();
+
+                    XpsDocumentWriter xpwriter = PrintQueue.CreateXpsDocumentWriter(pd.PrintQueue);
+                    xpwriter.Write(es, pd.PrintTicket);
+                }
+            }
         }
     }
 }

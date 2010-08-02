@@ -279,12 +279,12 @@ namespace OodHelper.net
 
                 col = (DataGridTextColumn)Races.Columns[rd.Columns["start_date"].Ordinal];
                 b = (Binding)col.Binding;
-                b.Converter = new DateTimeConverter(RaceDate.Date);
+                b.Converter = new MyDateTimeConverter(RaceDate.Date);
                 col.Binding = b;
 
                 col = (DataGridTextColumn)Races.Columns[rd.Columns["finish_date"].Ordinal];
                 b = (Binding)col.Binding;
-                b.Converter = new DateTimeConverter(defaultFinish.Date);
+                b.Converter = new MyDateTimeConverter(defaultFinish.Date);
                 col.Binding = b;
             }
             else

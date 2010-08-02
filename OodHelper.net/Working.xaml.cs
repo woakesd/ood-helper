@@ -22,9 +22,9 @@ namespace OodHelper.net
         public Working(Window c)
         {
             InitializeComponent();
-            Show();
             Left = c.Left + c.ActualWidth / 2 - Width / 2;
             Top = c.Top + c.ActualHeight / 2 - Height / 2;
+            Show();
             Progress.IsIndeterminate = true;
         }
 

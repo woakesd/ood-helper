@@ -3,16 +3,16 @@ using System.Windows.Data;
 
 namespace OodHelper.net
 {
-    class DateTimeConverter : IValueConverter
+    class MyDateTimeConverter : IValueConverter
     {
         DateTime? _date;
 
-        public DateTimeConverter(DateTime d)
+        public MyDateTimeConverter(DateTime d)
         {
             _date = d.Date;
         }
 
-        public DateTimeConverter()
+        public MyDateTimeConverter()
         {
         }
 
@@ -32,16 +32,19 @@ namespace OodHelper.net
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             string strValue = value as string;
-            TimeSpan resultTime;
-            DateTime resultDate;
-            if (TimeSpan.TryParseExact(strValue, "hh\\:mm\\:ss", null, out resultTime) || TimeSpan.TryParseExact(strValue, "hh\\ mm\\ ss", null, out resultTime))
+            if (strValue != null)
             {
-                return _date + resultTime;
-            }
-            if (DateTime.TryParseExact(strValue, "dd MMM yyyy HH mm ss", null, System.Globalization.DateTimeStyles.None, out resultDate)
-                || DateTime.TryParseExact(strValue, "dd MMM yyyy HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out resultDate))
-            {
-                return resultDate;
+                TimeSpan resultTime;
+                DateTime resultDate;
+                if (TimeSpan.TryParseExact(strValue, "hh\\:mm\\:ss", null, out resultTime) || TimeSpan.TryParseExact(strValue, "hh\\ mm\\ ss", null, out resultTime))
+                {
+                    return _date + resultTime;
+                }
+                if (DateTime.TryParseExact(strValue, "dd MMM yyyy HH mm ss", null, System.Globalization.DateTimeStyles.None, out resultDate)
+                    || DateTime.TryParseExact(strValue, "dd MMM yyyy HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out resultDate))
+                {
+                    return resultDate;
+                }
             }
             return DBNull.Value;
         }

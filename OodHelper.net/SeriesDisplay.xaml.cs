@@ -24,10 +24,10 @@ namespace OodHelper.net
     [Svn("$Id$")]
     public partial class SeriesDisplay : UserControl
     {
-        public DataTable rd;
-        public List<SeriesEvent> events;
+        public DataTable rd { get; set; }
+        public List<SeriesEvent> events { get; set; }
 
-        public SeriesResult Result { get { return _result; } }
+        public SeriesResult Result { get; set; }
 
         public DataTable data
         {
@@ -41,14 +41,12 @@ namespace OodHelper.net
         {
             InitializeComponent();
 
-            _result = r;
+            Result = r;
             seriesName.Content = Result.SeriesName;
             entries.Text = Result._Results.Count.ToString();
 
             LoadGrid();
         }
-
-        SeriesResult _result;
 
         private int CompareByDate(SeriesEvent x, SeriesEvent y)
         {
@@ -69,7 +67,7 @@ namespace OodHelper.net
             rd.Columns.Add("entered", typeof(double));
             rd.Columns.Add("score", typeof(double));
 
-            events = new List<SeriesEvent>(_result._SeriesData.Values);
+            events = new List<SeriesEvent>(Result._SeriesData.Values);
             events.Sort(CompareByDate);
             int i = 1;
             foreach (SeriesEvent se in events)
@@ -106,7 +104,7 @@ namespace OodHelper.net
                 "FROM boats " +
                 "WHERE bid = @bid");
             Hashtable p = new Hashtable();
-            foreach (BoatSeriesResult bsr in _result._Results)
+            foreach (BoatSeriesResult bsr in Result._Results)
             {
                 DataRow r = rd.NewRow();
                 r["bid"] = bsr.bid;
@@ -136,10 +134,5 @@ namespace OodHelper.net
 
             Races.ItemsSource = rd.DefaultView;
         }
-
-        private void buttonCalculate_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
     }
 }

@@ -1,0 +1,60 @@
+﻿<Window x:Class="OodHelper.net.EntrySheetSelector"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:OodHelper.net"
+        Title="EntrySheetSelector" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" d:DesignHeight="300" d:DesignWidth="300" SizeToContent="WidthAndHeight">
+    <Window.Resources>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ToolBarTray>
+            <ToolBar>
+                <Button Click="Print_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Printer.png" />
+                        <Label Grid.Column="1">Print</Label>
+                    </StackPanel>
+                </Button>
+                <Button Name="CloseButton" Click="Close_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Cancel.png" />
+                        <Label Grid.Column="1">Close</Label>
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+        <!--<DataGrid Grid.Row="1" Name="Races" AutoGenerateColumns="false" SelectionUnit="Cell" >
+            <DataGrid.Resources>
+                <Style TargetType="{x:Type DataGridCell}">
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridCell_PreviewMouseLeftButtonDown" />
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn Header="" Binding="{Binding Path=print}"/>
+                <DataGridTextColumn Header="Start" IsReadOnly="True" Binding="{Binding Path=start_date}"/>
+                <DataGridTextColumn Header="Event" IsReadOnly="True" Binding="{Binding Path=event}"/>
+                <DataGridTextColumn Header="Class" IsReadOnly="True" Binding="{Binding Path=class}"/>
+            </DataGrid.Columns>
+        </DataGrid>-->
+        <ListBox Grid.Row="1" Name="Races">
+            <ListBox.Resources>
+                <local:MyBooleanToVisibilityConverter x:Key="MyBooleanToVisibilityConverter"/>
+                <local:MyDateTimeConverter x:Key="MyDateTimeConverter"/>
+            </ListBox.Resources>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="2">
+                        <CheckBox Click="Include_All_Click" Visibility="{Binding Path=print_all_visible,Converter={StaticResource ResourceKey=MyBooleanToVisibilityConverter}}" IsChecked="{Binding Path=print_all}" Margin="4,0"/>
+                        <CheckBox Click="Include_Click" IsChecked="{Binding Path=print}" Margin="4,0"/>
+                        <TextBlock Text="{Binding Path=start_date,Converter={StaticResource ResourceKey=MyDateTimeConverter}}" Margin="4,0"/>
+                        <TextBlock Text="{Binding Path=event}" Margin="4,0"/>
+                        <TextBlock Text="{Binding Path=class}" Margin="4,0"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Window>
