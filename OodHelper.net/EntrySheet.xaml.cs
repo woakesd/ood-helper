@@ -26,5 +26,10 @@ namespace OodHelper.net
             for (int i = 0; i < 15; i++)
                 Entries.Items.Add(row);
         }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
