@@ -215,22 +215,13 @@ namespace OodHelper.net
                 {
                     Size ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
 
+                    EntrySheet p = new EntrySheet();
+
                     Frame f = new Frame();
                     f.Width = pd.PrintableAreaWidth;
                     f.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    EntrySheet p = new EntrySheet();
-
-                    p.Measure(ps);
-                    p.Arrange(new Rect(new Point(0, 0), ps));
-                    p.UpdateLayout();
-                    p.BeginInit();
-                    p.EndInit();
-                    pd.PrintVisual(p, "Entry sheet");
-
-                    /*f.Navigate(p);
-                    f.Measure(ps);
-                    f.Arrange(new Rect(new Point(0, 0), ps));
-
+                    f.Navigate(p);
+                    
                     FixedPage fp = new FixedPage();
                     fp.Width = pd.PrintableAreaWidth;
                     fp.Height = pd.PrintableAreaHeight;
@@ -248,14 +239,14 @@ namespace OodHelper.net
 
                     FixedDocument fd = new FixedDocument();
                     fd.DocumentPaginator.PageSize = ps;
-                    fd.Pages.Add(pc);*/
+                    fd.Pages.Add(pc);
 
-                    //PrintPreview pv = new PrintPreview();
-                    //pv.Viewer.Document = fd;
-                    //pv.Viewer.FitToWidth();
-                    //pv.ShowDialog();
+                    PrintPreview pv = new PrintPreview();
+                    pv.Viewer.Document = fd;
+                    pv.Viewer.FitToWidth();
+                    pv.ShowDialog();
 
-                    //pd.PrintDocument(fd.DocumentPaginator, "Entry Sheet");
+                    pd.PrintDocument(fd.DocumentPaginator, "Entry sheet");
                     //XpsDocumentWriter xpwriter = PrintQueue.CreateXpsDocumentWriter(pd.PrintQueue);
                     //xpwriter.Write(p1, pd.PrintTicket);
                 }
