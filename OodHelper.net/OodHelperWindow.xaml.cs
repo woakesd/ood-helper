@@ -213,15 +213,51 @@ namespace OodHelper.net
 
                 if (pd.ShowDialog() == true)
                 {
-                    EntrySheets es = new EntrySheets();
                     Size ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
-                    es.Measure(ps);
-                    es.Arrange(new Rect(new Point(0, 0), ps));
-                    es.BeginInit();
-                    es.EndInit();
 
-                    XpsDocumentWriter xpwriter = PrintQueue.CreateXpsDocumentWriter(pd.PrintQueue);
-                    xpwriter.Write(es, pd.PrintTicket);
+                    Frame f = new Frame();
+                    f.Width = pd.PrintableAreaWidth;
+                    f.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    EntrySheet p = new EntrySheet();
+
+                    p.Measure(ps);
+                    p.Arrange(new Rect(new Point(0, 0), ps));
+                    p.UpdateLayout();
+                    p.BeginInit();
+                    p.EndInit();
+                    pd.PrintVisual(p, "Entry sheet");
+
+                    /*f.Navigate(p);
+                    f.Measure(ps);
+                    f.Arrange(new Rect(new Point(0, 0), ps));
+
+                    FixedPage fp = new FixedPage();
+                    fp.Width = pd.PrintableAreaWidth;
+                    fp.Height = pd.PrintableAreaHeight;
+                    fp.Children.Add(f);
+
+                    PageContent pc = new PageContent();
+                    IAddChild ac = pc as IAddChild;
+                    ac.AddChild(fp);
+
+                    pc.Measure(ps);
+                    pc.Arrange(new Rect(new Point(0, 0), ps));
+                    pc.UpdateLayout();
+                    pc.BeginInit();
+                    pc.EndInit();
+
+                    FixedDocument fd = new FixedDocument();
+                    fd.DocumentPaginator.PageSize = ps;
+                    fd.Pages.Add(pc);*/
+
+                    //PrintPreview pv = new PrintPreview();
+                    //pv.Viewer.Document = fd;
+                    //pv.Viewer.FitToWidth();
+                    //pv.ShowDialog();
+
+                    //pd.PrintDocument(fd.DocumentPaginator, "Entry Sheet");
+                    //XpsDocumentWriter xpwriter = PrintQueue.CreateXpsDocumentWriter(pd.PrintQueue);
+                    //xpwriter.Write(p1, pd.PrintTicket);
                 }
             }
         }

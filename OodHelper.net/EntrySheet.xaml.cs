@@ -17,9 +17,9 @@ namespace OodHelper.net
     /// <summary>
     /// Interaction logic for EntrySheets.xaml
     /// </summary>
-    public partial class EntrySheets : UserControl
+    public partial class EntrySheet : Page
     {
-        public EntrySheets()
+        public EntrySheet()
         {
             InitializeComponent();
             string[] row = new string[] { "", "", "", "", "", "", "", "", "", "" };

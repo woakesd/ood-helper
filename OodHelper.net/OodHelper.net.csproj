@@ -141,8 +141,8 @@
     </Compile>
     <Compile Include="DateTimeConverter.cs" />
     <Compile Include="DateTimeTimeConverter.cs" />
-    <Compile Include="EntrySheets.xaml.cs">
-      <DependentUpon>EntrySheets.xaml</DependentUpon>
+    <Compile Include="EntrySheet.xaml.cs">
+      <DependentUpon>EntrySheet.xaml</DependentUpon>
     </Compile>
     <Compile Include="EntrySheetSelector.xaml.cs">
       <DependentUpon>EntrySheetSelector.xaml</DependentUpon>
@@ -223,7 +223,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="EntrySheets.xaml">
+    <Page Include="EntrySheet.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
