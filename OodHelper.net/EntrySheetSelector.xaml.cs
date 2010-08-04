@@ -16,6 +16,7 @@ namespace OodHelper.net
     /// <summary>
     /// Interaction logic for EntrySheetSelector.xaml
     /// </summary>
+    [Svn("$Id$")]
     public partial class EntrySheetSelector : Window
     {
         public EntrySheetSelector()

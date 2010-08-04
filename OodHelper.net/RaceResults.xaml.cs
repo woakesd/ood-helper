@@ -12,6 +12,7 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Printing;
 
 namespace OodHelper.net
 {
@@ -190,46 +191,30 @@ namespace OodHelper.net
         private void Print_Click(object sender, RoutedEventArgs e)
         {
             PrintDialog pd = new PrintDialog();
-            PrintPreview pv = new PrintPreview();
-            
-            FixedDocument fd = new FixedDocument();
-            fd.DocumentPaginator.PageSize = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
-            foreach (RaceEdit red in reds)
+            if (pd.ShowDialog() == true)
             {
-                FixedPage p1 = new FixedPage();
-                p1.Width = fd.DocumentPaginator.PageSize.Width;
-                p1.Height = fd.DocumentPaginator.PageSize.Height;
-
-                Frame f = new Frame();
-                f.Width = p1.Width;
-                f.HorizontalAlignment = HorizontalAlignment.Stretch;
-                Page p = null;
-
-                switch (red.Handicap)
+                Size ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
+                foreach (RaceEdit red in reds)
                 {
-                    case "o":
-                        p = (Page)new OpenHandicapResultsPage(red);
-                        p.Width = p1.Width;
-                        break;
-                    case "r":
-                        p = (Page)new RollingHandicapResultsPage(red);
-                        p.Width = p1.Width;
-                        break;
+                    Page p = null;
+
+                    switch (red.Handicap)
+                    {
+                        case "o":
+                            p = (Page)new OpenHandicapResultsPage(red);
+                            p.Width = pd.PrintableAreaWidth;
+                            break;
+                        case "r":
+                            p = (Page)new RollingHandicapResultsPage(red);
+                            p.Width = pd.PrintableAreaWidth;
+                            break;
+                    }
+                    p.Measure(ps);
+                    p.Arrange(new Rect(new Point(0, 0), ps));
+                    p.UpdateLayout();
+                    pd.PrintVisual(p, "Race results");
                 }
-
-                f.Navigate(p);
-
-                p1.Children.Add(f);
-
-                PageContent pc = new PageContent();
-                IAddChild ac = pc as IAddChild;
-                ac.AddChild(p1);
-
-                fd.Pages.Add(pc);
             }
-            pv.Viewer.Document = fd;
-            pv.Viewer.FitToWidth();
-            pv.ShowDialog();
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)

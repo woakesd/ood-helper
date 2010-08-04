@@ -41,7 +41,7 @@ namespace OodHelper.net
             p["rid"] = rid;
 
             Db c = new Db(@"SELECT average_lap, c.start_date, result_calculated, MAX(last_edit) last_edit
-                        FROM calendar c INNER JOIN races r ON c.rid = r.rid
+                        FROM calendar c LEFT JOIN races r ON c.rid = r.rid
                         WHERE c.rid = @rid
                         GROUP BY average_lap, start_date, result_calculated");
             Hashtable res = c.GetHashtable(p);
