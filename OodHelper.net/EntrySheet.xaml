@@ -4,34 +4,14 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" Loaded="Page_Loaded"
-      d:DesignHeight="424" d:DesignWidth="1108">
+      d:DesignHeight="424" d:DesignWidth="1108" Title="Entry sheet">
     <Page.Resources>
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="Padding" Value="0,6"/>
             <Setter Property="FontWeight" Value="Bold"/>
         </Style>
-        <Style TargetType="{x:Type DataGridColumnHeader}">
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Background" Value="#eeeeee" />
-            <Setter Property="Padding" Value="4" />
-            <Setter Property="Margin" Value="0" />
-            <Setter Property="BorderThickness">
-                <Setter.Value>
-                    <Thickness Bottom="0" Left="1" Right="0" Top="1"/>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="BorderBrush" Value="Black"/>
-        </Style>
-        <Style TargetType="{x:Type DataGridCell}">
-            <Setter Property="BorderThickness">
-                <Setter.Value>
-                    <Thickness Bottom="0" Left="1" Right="0" Top="1"/>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="BorderBrush" Value="Black"/>
-        </Style>
     </Page.Resources>
-    <Grid Margin="24,24">
+    <Grid Margin="24">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -41,7 +21,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" HorizontalAlignment="Center">
             <TextBlock Text="Entry sheet for " />
@@ -73,7 +53,7 @@
             <TextBlock Text="Weather: " />
             <Line Margin="5" VerticalAlignment="Bottom" X1="0" Y1="0" X2="200" Y2="0"  Stroke="Black" StrokeThickness="1"/>
         </StackPanel>
-        <DataGrid Grid.Row="3" Grid.ColumnSpan="3" Name="Entries"
+        <!--<DataGrid Grid.Row="3" Grid.ColumnSpan="3" Name="Entries"
                   CanUserReorderColumns="False" CanUserSortColumns="False" 
                   BorderBrush="Black" GridLinesVisibility="None"
                   AutoGenerateColumns="False" IsReadOnly="True" RowHeight="40"
@@ -93,6 +73,81 @@
                 <DataGridTextColumn Header="Lap 6" Width="*"/>
                 <DataGridTextColumn Header="Lap 7" Width="*"/>
             </DataGrid.Columns>
-        </DataGrid>
+        </DataGrid>-->
+        <Grid Grid.Row="3" Grid.ColumnSpan="3" Name="EntriesTable">
+            <Grid.Resources>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="Margin" Value="5,0,0,0"/>
+                </Style>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Border Grid.RowSpan="16" BorderThickness="1,1,0,0" BorderBrush="Black"/>
+            <Border Grid.RowSpan="16" BorderThickness="1,1,0,0" BorderBrush="Black" Grid.Column="1"/>
+            <Border Grid.RowSpan="16" BorderThickness="1,1,0,0" BorderBrush="Black" Grid.Column="2"/>
+            <Border Grid.RowSpan="16" BorderThickness="1,1,0,0" BorderBrush="Black" Grid.Column="3"/>
+            <Border Grid.RowSpan="16" BorderThickness="1,1,0,0" BorderBrush="Black" Grid.Column="4"/>
+            <Border Grid.RowSpan="16" BorderThickness="1,1,0,0" BorderBrush="Black" Grid.Column="5"/>
+            <Border Grid.RowSpan="16" BorderThickness="1,1,0,0" BorderBrush="Black" Grid.Column="6"/>
+            <Border Grid.RowSpan="16" BorderThickness="1,1,0,0" BorderBrush="Black" Grid.Column="7"/>
+            <Border Grid.RowSpan="16" BorderThickness="1,1,0,0" BorderBrush="Black" Grid.Column="8"/>
+            <Border Grid.RowSpan="16" BorderThickness="1,1,0,0" BorderBrush="Black" Grid.Column="9"/>
+            <Border Grid.ColumnSpan="10" BorderThickness="0,0,1,1" BorderBrush="Black"/>
+            <Border Grid.ColumnSpan="10" BorderThickness="0,0,1,1" BorderBrush="Black" Grid.Row="1"/>
+            <Border Grid.ColumnSpan="10" BorderThickness="0,0,1,1" BorderBrush="Black" Grid.Row="2"/>
+            <Border Grid.ColumnSpan="10" BorderThickness="0,0,1,1" BorderBrush="Black" Grid.Row="3"/>
+            <Border Grid.ColumnSpan="10" BorderThickness="0,0,1,1" BorderBrush="Black" Grid.Row="4"/>
+            <Border Grid.ColumnSpan="10" BorderThickness="0,0,1,1" BorderBrush="Black" Grid.Row="5"/>
+            <Border Grid.ColumnSpan="10" BorderThickness="0,0,1,1" BorderBrush="Black" Grid.Row="6"/>
+            <Border Grid.ColumnSpan="10" BorderThickness="0,0,1,1" BorderBrush="Black" Grid.Row="7"/>
+            <Border Grid.ColumnSpan="10" BorderThickness="0,0,1,1" BorderBrush="Black" Grid.Row="8"/>
+            <Border Grid.ColumnSpan="10" BorderThickness="0,0,1,1" BorderBrush="Black" Grid.Row="9"/>
+            <Border Grid.ColumnSpan="10" BorderThickness="0,0,1,1" BorderBrush="Black" Grid.Row="10"/>
+            <Border Grid.ColumnSpan="10" BorderThickness="0,0,1,1" BorderBrush="Black" Grid.Row="11"/>
+            <Border Grid.ColumnSpan="10" BorderThickness="0,0,1,1" BorderBrush="Black" Grid.Row="12"/>
+            <Border Grid.ColumnSpan="10" BorderThickness="0,0,1,1" BorderBrush="Black" Grid.Row="13"/>
+            <Border Grid.ColumnSpan="10" BorderThickness="0,0,1,1" BorderBrush="Black" Grid.Row="14"/>
+            <Border Grid.ColumnSpan="10" BorderThickness="0,0,1,1" BorderBrush="Black" Grid.Row="15"/>
+            <Border Grid.ColumnSpan="10" BorderThickness="0,0,1,1" BorderBrush="Black" Grid.Row="16"/>
+            <TextBlock>Boat name</TextBlock>
+            <TextBlock Grid.Column="1">Class</TextBlock>
+            <TextBlock Grid.Column="2">Sail No</TextBlock>
+            <TextBlock Grid.Column="3">Lap 1</TextBlock>
+            <TextBlock Grid.Column="4">Lap 2</TextBlock>
+            <TextBlock Grid.Column="5">Lap 3</TextBlock>
+            <TextBlock Grid.Column="6">Lap 4</TextBlock>
+            <TextBlock Grid.Column="7">Lap 5</TextBlock>
+            <TextBlock Grid.Column="8">Lap 6</TextBlock>
+            <TextBlock Grid.Column="9">Lap 7</TextBlock>
+        </Grid>
     </Grid>
 </Page>
