@@ -17,7 +17,7 @@ namespace OodHelper.net
     /// <summary>
     /// Interaction logic for EntrySheets.xaml
     /// </summary>
-    [Svn("$Id: OodHelperWindow.xaml.cs 95 2010-08-04 08:40:44Z woakesdavid $")]
+    [Svn("$Id$")]
     public partial class EntrySheet : Page
     {
         public EntrySheet(int rid)
@@ -47,7 +47,7 @@ namespace OodHelper.net
                     Fixed.Visibility = Visibility.Collapsed;
                     Delta.Visibility = Visibility.Visible;
                     if (d["time_limit_delta"] != DBNull.Value)
-                        TimeLimit.Text = (new TimeSpan(0, 0, (int)d["time_limit_delta"])).ToString("d hh\\:mm");
+                        TimeLimit.Text = (new TimeSpan(0, 0, (int)d["time_limit_delta"])).ToString("hh\\:mm");
                     break;
                 default:
                     Fixed.Visibility = Visibility.Collapsed;
