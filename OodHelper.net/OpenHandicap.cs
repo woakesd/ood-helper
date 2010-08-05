@@ -40,13 +40,14 @@ namespace OodHelper.net
             Hashtable p = new Hashtable();
             p["rid"] = rid;
 
-            Db c = new Db(@"SELECT average_lap, c.start_date, result_calculated, MAX(last_edit) last_edit
+            Db c = new Db(@"SELECT average_lap, c.start_date, result_calculated, MAX(last_edit) last_edit, standard_corrected_time
                         FROM calendar c LEFT JOIN races r ON c.rid = r.rid
                         WHERE c.rid = @rid
-                        GROUP BY average_lap, start_date, result_calculated");
+                        GROUP BY average_lap, start_date, result_calculated, standard_corrected_time");
             Hashtable res = c.GetHashtable(p);
             rdate = (DateTime)res["start_date"];
             averageLap = (bool)res["average_lap"];
+            standardCorrectedTime = (double)res["standard_corrected_time"];
             if (res["result_calculated"] == DBNull.Value || res["last_edit"] != DBNull.Value &&
                 (DateTime)res["result_calculated"] <= (DateTime)res["last_edit"])
             {

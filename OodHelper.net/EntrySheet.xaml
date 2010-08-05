@@ -26,10 +26,9 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center">
-            <TextBlock Text="Entry sheet for " />
-            <TextBlock Name="EventName">Wed A Series</TextBlock>
-            <TextBlock Name="EventDescription" Text=" - "/>
-            <TextBlock Name="ClassName">Division 1</TextBlock>
+            <TextBlock Name="EventName" FontSize="15">Wed A Series</TextBlock>
+            <TextBlock Name="EventDescription" Text=" - " FontSize="15"/>
+            <TextBlock Name="ClassName" FontSize="15">Division 1</TextBlock>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <TextBlock Text="Date: " />
@@ -72,10 +71,9 @@
                 </Style>
             </Grid.Resources>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="1.4*"/>
+                <ColumnDefinition Width="1.4*"/>
+                <ColumnDefinition Width="1.4*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -137,7 +135,6 @@
             <TextBlock Grid.Column="6">Lap 4</TextBlock>
             <TextBlock Grid.Column="7">Lap 5</TextBlock>
             <TextBlock Grid.Column="8">Lap 6</TextBlock>
-            <TextBlock Grid.Column="9">Lap 7</TextBlock>
         </Grid>
     </Grid>
 </Page>

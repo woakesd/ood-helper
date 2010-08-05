@@ -59,6 +59,7 @@ namespace OodHelper.net
                 Extension.Text = (new TimeSpan(0, 0, (int)d["extension"])).ToString("hh\\:mm");
             else
                 Extension.Text = "No Extension";
+            OOD.Text = d["ood"] as string;
         }
     }
 }
