@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections;
+using System.Data;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,14 +20,45 @@ namespace OodHelper.net
     [Svn("$Id: OodHelperWindow.xaml.cs 95 2010-08-04 08:40:44Z woakesdavid $")]
     public partial class EntrySheet : Page
     {
-        public EntrySheet()
+        public EntrySheet(int rid)
         {
             InitializeComponent();
-        }
-
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-
+            Db c = new Db(@"SELECT event, class, start_date, ood, 
+                time_limit_type, time_limit_fixed, time_limit_delta, extension
+                FROM calendar
+                WHERE rid = @rid");
+            Hashtable p = new Hashtable();
+            p["rid"] = rid;
+            Hashtable d = c.GetHashtable(p);
+            EventName.Text = d["event"] as string;
+            ClassName.Text = d["class"] as string;
+            DateTime? dt = d["start_date"] as DateTime?;
+            StartDate.Text = dt.Value.ToString("dd MMM yyyy");
+            StartTime.Text = dt.Value.ToString("HH:mm");
+            switch (d["time_limit_type"] as string)
+            {
+                case "F":
+                    Fixed.Visibility = Visibility.Visible;
+                    Delta.Visibility = Visibility.Collapsed;
+                    if (d["time_limit_fixed"] != DBNull.Value)
+                        TimeLimit.Text = ((DateTime)d["time_limit_fixed"]).ToString("HH:mm");
+                    break;
+                case "D":
+                    Fixed.Visibility = Visibility.Collapsed;
+                    Delta.Visibility = Visibility.Visible;
+                    if (d["time_limit_delta"] != DBNull.Value)
+                        TimeLimit.Text = (new TimeSpan(0, 0, (int)d["time_limit_delta"])).ToString("d hh\\:mm");
+                    break;
+                default:
+                    Fixed.Visibility = Visibility.Collapsed;
+                    Delta.Visibility = Visibility.Collapsed;
+                    TimeLimit.Text = "No Time Limit";
+                    break;
+            }
+            if (d["extension"] != DBNull.Value)
+                Extension.Text = (new TimeSpan(0, 0, (int)d["extension"])).ToString("hh\\:mm");
+            else
+                Extension.Text = "No Extension";
         }
     }
 }

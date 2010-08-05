@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      mc:Ignorable="d" Loaded="Page_Loaded"
+      mc:Ignorable="d"
       d:DesignHeight="424" d:DesignWidth="1108" Title="Entry sheet">
     <Page.Resources>
         <Style TargetType="{x:Type TextBlock}">
@@ -11,8 +11,10 @@
             <Setter Property="FontWeight" Value="Bold"/>
         </Style>
     </Page.Resources>
-    <Grid Margin="24">
+    <Grid Margin="36">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -23,7 +25,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" HorizontalAlignment="Center">
+        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="5" HorizontalAlignment="Center">
             <TextBlock Text="Entry sheet for " />
             <TextBlock Name="EventName">Wed A Series</TextBlock>
             <TextBlock Name="EventDescription" Text=" - "/>
@@ -38,43 +40,31 @@
             <TextBlock Name="StartTime">13.00</TextBlock>
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal">
+            <TextBlock Text="Time Limit: " Name="Fixed" Visibility="Hidden" />
+            <TextBlock Text="Time Limit (Delta): " Name="Delta"/>
+            <TextBlock Name="TimeLimit">14.00</TextBlock>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="3" Orientation="Horizontal">
+            <TextBlock Text="Extension: " />
+            <TextBlock Name="Extension">0.40</TextBlock>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="4" Orientation="Horizontal">
             <TextBlock Text="OOD: " />
             <TextBlock Name="OOD">Rothi</TextBlock>
         </StackPanel>
-        <StackPanel Grid.Row="2" Orientation="Horizontal">
-            <TextBlock Text="Course: " />
-            <Line Margin="5" VerticalAlignment="Bottom" X1="0" Y1="0" X2="200" Y2="0"  Stroke="Black" StrokeThickness="1"/>
-        </StackPanel>
         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+            <TextBlock Text="Course: " />
+            <Line Margin="5" VerticalAlignment="Bottom" X1="0" Y1="0" X2="100" Y2="0"  Stroke="Black" StrokeThickness="1"/>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
             <TextBlock Text="Actual Start: " />
             <Line Margin="5" VerticalAlignment="Bottom" X1="0" Y1="0" X2="80" Y2="0"  Stroke="Black" StrokeThickness="1"/>
         </StackPanel>
-        <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal">
+        <StackPanel Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="3" Orientation="Horizontal">
             <TextBlock Text="Weather: " />
-            <Line Margin="5" VerticalAlignment="Bottom" X1="0" Y1="0" X2="200" Y2="0"  Stroke="Black" StrokeThickness="1"/>
+            <Line Margin="5" VerticalAlignment="Bottom" X1="0" Y1="0" X2="300" Y2="0"  Stroke="Black" StrokeThickness="1"/>
         </StackPanel>
-        <!--<DataGrid Grid.Row="3" Grid.ColumnSpan="3" Name="Entries"
-                  CanUserReorderColumns="False" CanUserSortColumns="False" 
-                  BorderBrush="Black" GridLinesVisibility="None"
-                  AutoGenerateColumns="False" IsReadOnly="True" RowHeight="40"
-                  IsManipulationEnabled="False" HeadersVisibility="Column" >
-            <DataGrid.BorderThickness>
-                <Thickness Bottom="1" Left="0" Right="1" Top="0"/>
-            </DataGrid.BorderThickness>
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Boat name" Width="*"/>
-                <DataGridTextColumn Header="Class" Width="*"/>
-                <DataGridTextColumn Header="Sail No" Width="*"/>
-                <DataGridTextColumn Header="Lap 1" Width="*"/>
-                <DataGridTextColumn Header="Lap 2" Width="*"/>
-                <DataGridTextColumn Header="Lap 3" Width="*"/>
-                <DataGridTextColumn Header="Lap 4" Width="*"/>
-                <DataGridTextColumn Header="Lap 5" Width="*"/>
-                <DataGridTextColumn Header="Lap 6" Width="*"/>
-                <DataGridTextColumn Header="Lap 7" Width="*"/>
-            </DataGrid.Columns>
-        </DataGrid>-->
-        <Grid Grid.Row="3" Grid.ColumnSpan="3" Name="EntriesTable">
+        <Grid Grid.Row="3" Grid.ColumnSpan="5" Name="EntriesTable">
             <Grid.Resources>
                 <Style TargetType="{x:Type TextBlock}">
                     <Setter Property="VerticalAlignment" Value="Center"/>

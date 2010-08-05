@@ -22,7 +22,7 @@ namespace OodHelper.net
         public EntrySheetSelector()
         {
             InitializeComponent();
-            Db c = new Db(@"SELECT 0 print_all_visible, 0 print_all, 0 [print], start_date, event, class
+            Db c = new Db(@"SELECT 0 print_all_visible, 0 print_all, 0 [print], rid, start_date, event, class
                 FROM calendar
                 WHERE is_race = 1
                 AND raced = 0

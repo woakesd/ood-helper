@@ -26,19 +26,6 @@
                 </Button>
             </ToolBar>
         </ToolBarTray>
-        <!--<DataGrid Grid.Row="1" Name="Races" AutoGenerateColumns="false" SelectionUnit="Cell" >
-            <DataGrid.Resources>
-                <Style TargetType="{x:Type DataGridCell}">
-                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridCell_PreviewMouseLeftButtonDown" />
-                </Style>
-            </DataGrid.Resources>
-            <DataGrid.Columns>
-                <DataGridCheckBoxColumn Header="" Binding="{Binding Path=print}"/>
-                <DataGridTextColumn Header="Start" IsReadOnly="True" Binding="{Binding Path=start_date}"/>
-                <DataGridTextColumn Header="Event" IsReadOnly="True" Binding="{Binding Path=event}"/>
-                <DataGridTextColumn Header="Class" IsReadOnly="True" Binding="{Binding Path=class}"/>
-            </DataGrid.Columns>
-        </DataGrid>-->
         <ListBox Grid.Row="1" Name="Races">
             <ListBox.Resources>
                 <local:MyBooleanToVisibilityConverter x:Key="MyBooleanToVisibilityConverter"/>

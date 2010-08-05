@@ -19,6 +19,7 @@ using System.Xml;
 using System.Windows.Markup;
 using System.Windows.Xps;
 using System.Windows.Xps.Packaging;
+using System.Data;
 
 namespace OodHelper.net
 {
@@ -208,26 +209,30 @@ namespace OodHelper.net
             EntrySheetSelector sel = new EntrySheetSelector();
             if (sel.ShowDialog() == true)
             {
-                PrintDialog pd = new PrintDialog();
-                pd.PrintTicket.PageOrientation = PageOrientation.Landscape;
+                DataView v = sel.Races.ItemsSource as DataView;
+                if (v != null)
+                {
+                    DataRow[] rows = v.Table.Select("print = 1");
+                    PrintDialog pd = new PrintDialog();
+                    pd.PrintTicket.PageOrientation = PageOrientation.Landscape;
 
-                if (pd.ShowDialog() == true)
-                {   
-                    Size ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
+                    if (pd.ShowDialog() == true)
+                    {
+                        Size ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
 
-                    EntrySheet p = new EntrySheet();
-                    p.Width = ps.Width;
-                    p.Height = ps.Height;
+                        foreach (DataRow r in rows)
+                        {
+                            EntrySheet p = new EntrySheet((int) r["rid"]);
+                            p.Width = ps.Width;
+                            p.Height = ps.Height;
 
-                    p.Measure(ps);
-                    p.Arrange(new Rect(new Point(0, 0), ps));
-                    p.UpdateLayout();
-                    p.BeginInit();
-                    p.EndInit();
-                    
-                    XpsDocumentWriter xpwriter = PrintQueue.CreateXpsDocumentWriter(pd.PrintQueue);
-                    xpwriter.Write(p, pd.PrintTicket);
-                    return;
+                            p.Measure(ps);
+                            p.Arrange(new Rect(new Point(0, 0), ps));
+                            p.UpdateLayout();
+
+                            pd.PrintVisual(p, "Entry sheet");
+                        }
+                    }
                 }
             }
         }
