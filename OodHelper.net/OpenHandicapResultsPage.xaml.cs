@@ -34,7 +34,7 @@ namespace OodHelper.net
             Sct.Text = "SCT: " + Common.HMS(red.scorer.StandardCorrectedTime);
 
             Db c = new Db(@"SELECT b.boatname Boat, b.boatclass [Class], b.sailno [Sail No], r.open_handicap as Hcap,
-                r.finish_date Finish, r.elapsed Elapsed, r.laps Laps, r.corrected Corrected, r.place Pos,
+                r.finish_code, r.finish_date, '' AS Finish, r.elapsed Elapsed, r.laps Laps, r.corrected Corrected, r.place Pos,
                 CASE WHEN override_points = 0 THEN points ELSE override_points END Pts,
                 r.achieved_handicap Achp, r.new_rolling_handicap [nhcp],
                 ROUND((r.achieved_handicap - r.open_handicap) * 100.0 / r.open_handicap, 1) PI, r.c C, r.a A,
@@ -62,6 +62,16 @@ namespace OodHelper.net
                     r["a"] = DBNull.Value;
                     r["py"] = DBNull.Value;
                 }
+                if (r["finish_code"] != DBNull.Value && r["finish_code"].ToString() != string.Empty)
+                {
+                    r["Finish"] = r["finish_code"];
+                }
+                else
+                {
+                    DateTime? fd = r["finish_date"] as DateTime?;
+                    if (fd.HasValue)
+                        r["Finish"] = fd.Value.ToString("HH:mm:ss");
+                }
             }
             Results.ItemsSource = rd.DefaultView;
         }
@@ -82,15 +92,19 @@ namespace OodHelper.net
             b.Converter = new DoubleTimeSpan();
             col.Binding = b;
 
-            col = (DataGridTextColumn)Results.Columns[rd.Columns["Finish"].Ordinal];
-            b = (Binding)col.Binding;
-            b.StringFormat = "HH:mm:ss";
+            //col = (DataGridTextColumn)Results.Columns[rd.Columns["Finish"].Ordinal];
+            //b = (Binding)col.Binding;
+            //b.StringFormat = "HH:mm:ss";
 
             col = (DataGridTextColumn)Results.Columns[rd.Columns["PI"].Ordinal];
             b = (Binding)col.Binding;
             b.StringFormat = "0.0";
             col.Binding = b;
 
+            Results.Columns[rd.Columns["finish_date"].Ordinal].Visibility = Visibility.Collapsed;
+            Results.Columns[rd.Columns["finish_code"].Ordinal].Visibility = Visibility.Collapsed;
+
+            SetRightAlignment(Results.Columns[rd.Columns["Laps"].Ordinal]);
             SetRightAlignment(Results.Columns[rd.Columns["hcap"].Ordinal]);
             SetRightAlignment(Results.Columns[rd.Columns["Pos"].Ordinal]);
             SetRightAlignment(Results.Columns[rd.Columns["Pts"].Ordinal]);
@@ -103,9 +117,9 @@ namespace OodHelper.net
             widths["Class"] = 18.0;
             widths["Sail No"] = 10.0;
             widths["Hcap"] = 6.0;
-            widths["Finish"] = 10.5;
-            widths["Elapsed"] = 10.5;
-            widths["Laps"] = 4.5;
+            widths["Finish"] = 9.5;
+            widths["Elapsed"] = 9.5;
+            widths["Laps"] = 5.5;
             widths["Corrected"] = 10.5;
             widths["Pos"] = 5.0;
             widths["Pts"] = 5.0;
