@@ -12,6 +12,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Markup;
+using System.Windows.Xps;
+using System.Printing;
 
 namespace OodHelper.net
 {
@@ -42,17 +44,41 @@ namespace OodHelper.net
             PrintDialog pd = new PrintDialog();
             if (pd.ShowDialog() == true)
             {
-                foreach (SeriesDisplay sd in sds)
-                {
-                    Size ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
-                    SeriesDisplayPage p = new SeriesDisplayPage(sd);
+                Working w = new Working(App.Current.MainWindow);
+                XpsDocumentWriter write = PrintQueue.CreateXpsDocumentWriter(pd.PrintQueue);
+                VisualsToXpsDocument collator = write.CreateVisualsCollator() as VisualsToXpsDocument;
+                Size ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
+                collator.BeginBatchWrite();
+                System.Threading.Tasks.Task t = System.Threading.Tasks.Task.Factory.StartNew(() =>
+                    {
+                        w.SetRange(0, sds.Count);
+                        for (int i = 0; i < sds.Count; i++)
+                        {
+                            SeriesDisplay sd = sds[i];
+                            string msg = null;
+                            Dispatcher.Invoke(new Action(delegate()
+                            {
+                                msg = string.Format("Printing {0}", sd.seriesName.Content);
+                            }));
+                            w.SetProgress(msg, i + 1);
+                            System.Threading.Thread.Sleep(50);
+                            Dispatcher.Invoke(new Action(delegate()
+                            {
+                                SeriesDisplayPage p = new SeriesDisplayPage(sd);
 
-                    p.Measure(ps);
-                    p.Arrange(new Rect(new Point(0, 0), ps));
-                    p.UpdateLayout();
+                                p.Measure(ps);
+                                p.Arrange(new Rect(new Point(0, 0), ps));
+                                p.UpdateLayout();
 
-                    pd.PrintVisual(p, "Series result");
-                }
+                                collator.Write(p);
+                            }));
+                        }
+                        Dispatcher.Invoke(new Action(delegate()
+                        {
+                            collator.EndBatchWrite();
+                        }));
+                        w.CloseWindow();
+                    });
             }
         }
 

@@ -4,7 +4,6 @@ using System.Collections;
 using System.ComponentModel;
 using System.Linq;
 using System.Printing;
-using System.Printing.IndexedProperties;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,7 +17,6 @@ using System.Windows.Shapes;
 using System.Xml;
 using System.Windows.Markup;
 using System.Windows.Xps;
-using System.Windows.Xps.Packaging;
 using System.Data;
 
 namespace OodHelper.net
@@ -213,25 +211,50 @@ namespace OodHelper.net
                 if (v != null)
                 {
                     DataRow[] rows = v.Table.Select("print = 1");
+
                     PrintDialog pd = new PrintDialog();
                     pd.PrintTicket.PageOrientation = PageOrientation.Landscape;
 
                     if (pd.ShowDialog() == true)
                     {
+                        Working w = new Working(App.Current.MainWindow);
                         Size ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
+                        XpsDocumentWriter write = PrintQueue.CreateXpsDocumentWriter(pd.PrintQueue);
+                        VisualsToXpsDocument collator = write.CreateVisualsCollator() as VisualsToXpsDocument;
 
-                        foreach (DataRow r in rows)
+                        System.Threading.Tasks.Task t = System.Threading.Tasks.Task.Factory.StartNew(() =>
                         {
-                            EntrySheet p = new EntrySheet((int) r["rid"]);
-                            p.Width = ps.Width;
-                            p.Height = ps.Height;
+                            w.SetRange(0, rows.Length);
 
-                            p.Measure(ps);
-                            p.Arrange(new Rect(new Point(0, 0), ps));
-                            p.UpdateLayout();
+                            Dispatcher.Invoke(new Action(delegate()
+                            {
+                                collator.BeginBatchWrite();
+                            }));
 
-                            pd.PrintVisual(p, "Entry sheet");
-                        }
+                            for (int i = 0; i < rows.Length; i++)
+                            {
+                                DataRow r = rows[i];
+                                w.SetProgress("Printing " + r["event"] + " - " + r["class"], i+1);
+                                System.Threading.Thread.Sleep(50);
+                                Dispatcher.Invoke(new Action(delegate()
+                                {
+                                    EntrySheet p = new EntrySheet((int)r["rid"]);
+                                    p.Width = ps.Width;
+                                    p.Height = ps.Height;
+
+                                    p.Measure(ps);
+                                    p.Arrange(new Rect(new Point(0, 0), ps));
+                                    p.UpdateLayout();
+
+                                    collator.Write(p, pd.PrintTicket);
+                                }));
+                            }
+                            Dispatcher.Invoke(new Action(delegate()
+                            {
+                                collator.EndBatchWrite();
+                            }));
+                            w.CloseWindow();
+                        });
                     }
                 }
             }

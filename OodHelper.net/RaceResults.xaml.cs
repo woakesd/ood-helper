@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Printing;
+using System.Windows.Xps;
 
 namespace OodHelper.net
 {
@@ -193,27 +194,51 @@ namespace OodHelper.net
             PrintDialog pd = new PrintDialog();
             if (pd.ShowDialog() == true)
             {
+                Working w = new Working(App.Current.MainWindow);
+                XpsDocumentWriter write = PrintQueue.CreateXpsDocumentWriter(pd.PrintQueue);
+                VisualsToXpsDocument collator = write.CreateVisualsCollator() as VisualsToXpsDocument;
                 Size ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
-                foreach (RaceEdit red in reds)
-                {
-                    Page p = null;
-
-                    switch (red.Handicap)
+                collator.BeginBatchWrite();
+                System.Threading.Tasks.Task t = System.Threading.Tasks.Task.Factory.StartNew(() =>
                     {
-                        case "o":
-                            p = (Page)new OpenHandicapResultsPage(red);
-                            p.Width = pd.PrintableAreaWidth;
-                            break;
-                        case "r":
-                            p = (Page)new RollingHandicapResultsPage(red);
-                            p.Width = pd.PrintableAreaWidth;
-                            break;
-                    }
-                    p.Measure(ps);
-                    p.Arrange(new Rect(new Point(0, 0), ps));
-                    p.UpdateLayout();
-                    pd.PrintVisual(p, "Race results");
-                }
+                        w.SetRange(0, reds.Length);
+                        for (int i = 0; i < reds.Length; i++)
+                        {
+                            RaceEdit red = reds[i];
+                            string msg = null;
+                            Dispatcher.Invoke(new Action(delegate()
+                            {
+                                msg = string.Format("Printing {0} - {1}", new object[] { red.Name, red.RaceClass });
+                            }));
+                            w.SetProgress(msg, i + 1);
+                            System.Threading.Thread.Sleep(50);
+                            Dispatcher.Invoke(new Action(delegate()
+                            {
+                                Page p = null;
+
+                                switch (red.Handicap)
+                                {
+                                    case "o":
+                                        p = (Page)new OpenHandicapResultsPage(red);
+                                        p.Width = pd.PrintableAreaWidth;
+                                        break;
+                                    case "r":
+                                        p = (Page)new RollingHandicapResultsPage(red);
+                                        p.Width = pd.PrintableAreaWidth;
+                                        break;
+                                }
+                                p.Measure(ps);
+                                p.Arrange(new Rect(new Point(0, 0), ps));
+                                p.UpdateLayout();
+                                collator.Write(p);
+                            }));
+                        }
+                        Dispatcher.Invoke(new Action(delegate()
+                        {
+                            collator.EndBatchWrite();
+                        }));
+                        w.CloseWindow();
+                    });
             }
         }
 
