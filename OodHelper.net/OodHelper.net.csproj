@@ -199,6 +199,7 @@
     <Compile Include="SeriesEvent.cs" />
     <Compile Include="SeriesResult.cs" />
     <Compile Include="StringConverter.cs" />
+    <Compile Include="Sun.cs" />
     <Compile Include="TimeSpanHMConverter.cs" />
     <Compile Include="Working.xaml.cs">
       <DependentUpon>Working.xaml</DependentUpon>

@@ -259,5 +259,10 @@ namespace OodHelper.net
                 }
             }
         }
+
+        private void JulianDate_Click(object sender, RoutedEventArgs e)
+        {
+            TimeSpan set = Sun.SunSet(DateTime.Today);
+        }
     }
 }
