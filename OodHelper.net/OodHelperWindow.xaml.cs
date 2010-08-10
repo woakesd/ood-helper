@@ -262,7 +262,12 @@ namespace OodHelper.net
 
         private void JulianDate_Click(object sender, RoutedEventArgs e)
         {
-            TimeSpan set = Sun.SunSet(DateTime.Today);
+            TimeZoneInfo tz = TimeZoneInfo.Local;
+            DateTime now = DateTime.Now;
+            DateTime unow = TimeZoneInfo.ConvertTimeToUtc(now, tz);
+            double Longitude = -3.40904;
+            double Lattitude = -85.99266;
+            Sun s = new Sun(unow, Lattitude, Longitude);
         }
     }
 }
