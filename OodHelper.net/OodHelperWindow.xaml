@@ -97,11 +97,6 @@
                         <Label Grid.Column="1">Entry Sheets</Label>
                     </StackPanel>
                 </Button>
-                <Button Name="JulianDate" Click="JulianDate_Click">
-                    <StackPanel Orientation="Horizontal">
-                        <Label Grid.Column="1">Julian Date</Label>
-                    </StackPanel>
-                </Button>
                 <Button Name="Download" Click="Download_Click">
                     <Grid>
                         <Grid.ColumnDefinitions>
