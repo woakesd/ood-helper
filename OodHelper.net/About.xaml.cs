@@ -22,7 +22,11 @@ namespace OodHelper.net
         public About()
         {
             InitializeComponent();
-            aboutBlock.Text = "Revision " + Svn.Revision().ToString() + "\n" +
+            aboutBlock.Text = "Revision: " + SvnRevision.Rev + "\n" +
+                "Revision Range: " + SvnRevision.Range + "\n" +
+                "Commit Date: " + SvnRevision.Date + "\n" +
+                "Build Date: " + SvnRevision.BuildDate + "\n" +
+                "Commit Status: " + SvnRevision.LocalMods + "\n" +
                 "OOD Helper by David Woakes";
         }
     }
