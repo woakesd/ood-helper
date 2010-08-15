@@ -308,5 +308,17 @@ namespace OodHelper.net
             Boat b = new Boat(0);
             b.ShowDialog();
         }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.F3)
+                Boatname.Focus();
+            else if (e.Key == Key.F4)
+            {
+                if (Boats.Items.Count == 1)
+                    Boats.SelectAll();
+                AddBoats();
+            }
+        }
     }
 }
