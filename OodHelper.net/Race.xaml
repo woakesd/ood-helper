@@ -198,7 +198,7 @@
             <Label Content="Memo"/>
             <TextBox Grid.Column="1" HorizontalAlignment="Left" Name="memo" Width="400" Height="100" Margin="2" Text="{Binding Path=memo}" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"/>
         </Grid>
-        <Grid Grid.Row="2" Grid.ColumnSpan="2" Margin="200,2,0,2" >
+        <Grid Grid.Row="2" Grid.ColumnSpan="2" Margin="0,2" Width="300" HorizontalAlignment="Right" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>

@@ -103,6 +103,7 @@ CREATE TABLE [calendar] (
 , [raced] bit NULL
 , [approved] bit NULL
 , [course_choice] nvarchar(10) NULL
+, [laps_completed] int NULL
 , [wind_speed] nvarchar(10) NULL
 , [wind_direction] nvarchar(10) NULL
 , [standard_corrected_time] float NULL

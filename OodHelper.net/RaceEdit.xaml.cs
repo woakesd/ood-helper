@@ -88,6 +88,27 @@ namespace OodHelper.net
             }
         }
 
+        private int? mLaps;
+        public int? Laps
+        {
+            get
+            {
+                return mLaps;
+            }
+
+            set
+            {
+                //if (value != DBNull.Value)
+                mLaps = value;
+                Db c = new Db(@"UPDATE calendar SET laps_completed = @laps WHERE rid = @rid");
+                Hashtable p = new Hashtable();
+                p["rid"] = Rid;
+                p["laps"] = mLaps;
+                c.ExecuteNonQuery(p);
+                c.Dispose();
+            }
+        }
+
         private string raceclass = string.Empty;
         public string RaceClass
         {
@@ -236,7 +257,7 @@ namespace OodHelper.net
         public void LoadGrid()
         {
             Db c = new Db(@"SELECT start_date, time_limit_fixed, time_limit_delta, extension, 
-                    event, class, timegate, average_lap, handicapping,
+                    event, class, timegate, average_lap, handicapping, laps_completed,
                     standard_corrected_time, ood, course_choice, wind_speed, wind_direction
                     FROM calendar
                     WHERE rid = @rid");
@@ -265,6 +286,7 @@ namespace OodHelper.net
             mCourse = caldata["course_choice"] as string;
             mWindSpeed = caldata["wind_speed"] as string;
             mWindDirection = caldata["wind_direction"] as string;
+            mLaps = caldata["laps_completed"] as int?;
 
             if (scorer == null)
             {
