@@ -141,6 +141,7 @@
     </Compile>
     <Compile Include="DateTimeConverter.cs" />
     <Compile Include="DateTimeTimeConverter.cs" />
+    <Compile Include="DoubleConverter.cs" />
     <Compile Include="EntrySheet.xaml.cs">
       <DependentUpon>EntrySheet.xaml</DependentUpon>
     </Compile>
@@ -518,6 +519,10 @@
   <ItemGroup>
     <Resource Include="Images\Spanner-16.png" />
     <Resource Include="Images\Spanner.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Arrow2 Left.png" />
+    <Resource Include="Images\Arrow2 Right.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
