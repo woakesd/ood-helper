@@ -4,14 +4,14 @@ using System.Windows.Data;
 namespace OodHelper.net
 {
     [Svn("$Id$")]
-    class IntConverter : IValueConverter
+    class DoubleConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (value != DBNull.Value && value != null)
             {
-                int i = (int)value;
-                return i.ToString();
+                double i = (double)value;
+                return i.ToString("0.#");
             }
             else
             {
@@ -22,8 +22,8 @@ namespace OodHelper.net
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             string strValue = value as string;
-            int i;
-            if (Int32.TryParse(strValue, out i))
+            double i;
+            if (Double.TryParse(strValue, out i))
             {
                 return i;
             }
