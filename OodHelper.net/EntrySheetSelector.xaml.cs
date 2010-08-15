@@ -10,6 +10,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Printing;
+using System.Xml;
+using System.Windows.Markup;
+using System.Windows.Xps;
 
 namespace OodHelper.net
 {
@@ -22,7 +26,7 @@ namespace OodHelper.net
         public EntrySheetSelector()
         {
             InitializeComponent();
-            Db c = new Db(@"SELECT 0 print_all_visible, 0 print_all, 0 [print], rid, start_date, event, class
+            Db c = new Db(@"SELECT 0 print_all_visible, 0 print_all, 0 [print], 1 [copies], rid, start_date, event, class
                 FROM calendar
                 WHERE is_race = 1
                 AND raced = 0
@@ -45,6 +49,8 @@ namespace OodHelper.net
                 DataRow p = null;
                 if (i > 0) p = d.Rows[i-1];
                 DataRow r = d.Rows[i];
+                if (r["class"] as string == "Division 1")
+                    r["copies"] = 2;
                 DateTime? start = r["start_date"] as DateTime?;
                 if (start.HasValue)
                 {
@@ -64,6 +70,58 @@ namespace OodHelper.net
         private void Print_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
+
+            DataView v = Races.ItemsSource as DataView;
+            if (v != null)
+            {
+                DataRow[] rows = v.Table.Select("print = 1");
+
+                PrintDialog pd = new PrintDialog();
+                pd.PrintTicket.PageOrientation = PageOrientation.Landscape;
+
+                if (pd.ShowDialog() == true)
+                {
+                    Working w = new Working(App.Current.MainWindow);
+                    Size ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
+                    XpsDocumentWriter write = PrintQueue.CreateXpsDocumentWriter(pd.PrintQueue);
+                    VisualsToXpsDocument collator = write.CreateVisualsCollator() as VisualsToXpsDocument;
+
+                    System.Threading.Tasks.Task t = System.Threading.Tasks.Task.Factory.StartNew(() =>
+                    {
+                        w.SetRange(0, rows.Length);
+
+                        Dispatcher.Invoke(new Action(delegate()
+                        {
+                            collator.BeginBatchWrite();
+                        }));
+
+                        for (int i = 0; i < rows.Length; i++)
+                        {
+                            DataRow r = rows[i];
+                            w.SetProgress("Printing " + r["event"] + " - " + r["class"], i + 1);
+                            System.Threading.Thread.Sleep(50);
+                            Dispatcher.Invoke(new Action(delegate()
+                            {
+                                EntrySheet p = new EntrySheet((int)r["rid"]);
+                                p.Width = ps.Width;
+                                p.Height = ps.Height;
+
+                                p.Measure(ps);
+                                p.Arrange(new Rect(new Point(0, 0), ps));
+                                p.UpdateLayout();
+
+                                collator.Write(p, pd.PrintTicket);
+                            }));
+                        }
+                        Dispatcher.Invoke(new Action(delegate()
+                        {
+                            collator.EndBatchWrite();
+                        }));
+                        w.CloseWindow();
+                    });
+                }
+            }
+
             Close();
         }
 

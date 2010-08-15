@@ -18,7 +18,7 @@
                         <Label Grid.Column="1">Print</Label>
                     </StackPanel>
                 </Button>
-                <Button Name="CloseButton" Click="Close_Click">
+                <Button Name="CloseButton" Click="Close_Click" Margin="4,0,0,0">
                     <StackPanel Orientation="Horizontal">
                         <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Cancel.png" />
                         <Label Grid.Column="1">Close</Label>
@@ -28,17 +28,20 @@
         </ToolBarTray>
         <ListBox Grid.Row="1" Name="Races">
             <ListBox.Resources>
+                <local:IntConverter x:Key="IntConverter"/>
                 <local:MyBooleanToVisibilityConverter x:Key="MyBooleanToVisibilityConverter"/>
                 <local:MyDateTimeConverter x:Key="MyDateTimeConverter"/>
             </ListBox.Resources>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Margin="2">
-                        <CheckBox Click="Include_All_Click" Visibility="{Binding Path=print_all_visible,Converter={StaticResource ResourceKey=MyBooleanToVisibilityConverter}}" IsChecked="{Binding Path=print_all}" Margin="4,0"/>
-                        <CheckBox Click="Include_Click" IsChecked="{Binding Path=print}" Margin="4,0"/>
-                        <TextBlock Text="{Binding Path=start_date,Converter={StaticResource ResourceKey=MyDateTimeConverter}}" Margin="4,0"/>
-                        <TextBlock Text="{Binding Path=event}" Margin="4,0"/>
-                        <TextBlock Text="{Binding Path=class}" Margin="4,0"/>
+                        <CheckBox VerticalAlignment="Center" Click="Include_All_Click" Visibility="{Binding Path=print_all_visible,Converter={StaticResource ResourceKey=MyBooleanToVisibilityConverter}}" IsChecked="{Binding Path=print_all}" Margin="4,0"/>
+                        <CheckBox VerticalAlignment="Center" Click="Include_Click" IsChecked="{Binding Path=print}" Margin="4,0"/>
+                        <TextBlock VerticalAlignment="Center" Text="Copies" Margin="4,0,0,0"/>
+                        <TextBox VerticalAlignment="Center" Text="{Binding Path=copies,Converter={StaticResource ResourceKey=IntConverter}}" Margin="2,0,4,0"/>
+                        <TextBlock VerticalAlignment="Center" Text="{Binding Path=start_date,Converter={StaticResource ResourceKey=MyDateTimeConverter}}" Margin="4,0"/>
+                        <TextBlock VerticalAlignment="Center" Text="{Binding Path=event}" Margin="4,0"/>
+                        <TextBlock VerticalAlignment="Center" Text="{Binding Path=class}" Margin="4,0"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>

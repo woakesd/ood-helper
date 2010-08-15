@@ -21,7 +21,10 @@ namespace OodHelper.net
         {
             string constr = Properties.Settings.Default.SettingsConnectionString;
 
-            if (!File.Exists(".\\data\\settings.sdf"))
+            if (!Directory.Exists(@".\data"))
+                Directory.CreateDirectory(@".\data");
+
+            if (!File.Exists(@".\data\settings.sdf"))
             {
                 SqlCeEngine ce = new SqlCeEngine(constr);
                 ce.CreateDatabase();

@@ -291,12 +291,12 @@ namespace OodHelper.net
             {
                 col = (DataGridTextColumn)Races.Columns[rd.Columns["start_date"].Ordinal];
                 b = (Binding)col.Binding;
-                b.Converter = new DateTimeTimeConverter();
+                b.Converter = new DateTimeTimeConverter(start_date.Date);
                 col.Binding = b;
 
                 col = (DataGridTextColumn)Races.Columns[rd.Columns["finish_date"].Ordinal];
                 b = (Binding)col.Binding;
-                b.Converter = new DateTimeTimeConverter();
+                b.Converter = new DateTimeTimeConverter(start_date.Date);
                 col.Binding = b;
             }
 

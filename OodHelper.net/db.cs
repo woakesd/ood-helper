@@ -22,6 +22,10 @@ namespace OodHelper.net
         {
             mCon = new SqlCeConnection();
             mCon.ConnectionString = Properties.Settings.Default.OodHelperConnectionString;
+            if (!File.Exists(@".\data\oodhelper.sdf"))
+            {
+                Db.CreateDb();
+            }
             mCmd = new SqlCeCommand(sql, mCon);
         }
 
@@ -29,9 +33,12 @@ namespace OodHelper.net
         {
             string constr = Properties.Settings.Default.OodHelperConnectionString;
 
-            if (File.Exists(".\\data\\oodhelper.sdf"))
+            if (!Directory.Exists(@".\data"))
+                Directory.CreateDirectory(@".\data");
+
+            if (File.Exists(@".\data\oodhelper.sdf"))
             {
-                File.Move(".\\data\\oodhelper.sdf", ".\\data\\oodhelper-" + DateTime.Now.Ticks.ToString() + ".sdf");
+                File.Move(@".\data\oodhelper.sdf", ".\\data\\oodhelper-" + DateTime.Now.Ticks.ToString() + ".sdf");
             }
 
             SqlCeEngine ce = new SqlCeEngine(constr);
