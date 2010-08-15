@@ -33,34 +33,37 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Label Name="raceName" Grid.ColumnSpan="6">Label</Label>
             <Label Name="startLabel" Grid.Row="1">Start</Label>
-            <TextBox Margin="2" Name="start" Grid.Row="1" Grid.Column="1" Width="40" MaxLength="5" Text="{Binding Path=StartTime,Converter={StaticResource ResourceKey=TimeSpanHMConverter}}"/>
+            <TextBox HorizontalAlignment="Left" Margin="2" Grid.Row="1" Grid.Column="1" Width="40" MaxLength="5" Text="{Binding Path=StartTime,Converter={StaticResource ResourceKey=TimeSpanHMConverter}}"/>
             <Label Grid.Row="1" Grid.Column="2" Margin="20,0,0,0" Name="timeLimitLabel">Time Limit</Label>
-            <TextBox Margin="2" Grid.Row="1" Grid.Column="3" Name="timeLimit" Width="40" MaxLength="5" Text="{Binding Path=TimeLimit,Converter={StaticResource ResourceKey=TimeSpanHMConverter}}"/>
+            <TextBox HorizontalAlignment="left" Grid.Row="1" Grid.Column="3" Name="timeLimit" Width="40" MaxLength="5" Text="{Binding Path=TimeLimit,Converter={StaticResource ResourceKey=TimeSpanHMConverter}}"/>
             <Label Grid.Row="1" Grid.Column="4" Margin="20,0,0,0" Name="extensionLabel" >Extension</Label>
-            <TextBox Margin="2" Grid.Row="1" Grid.Column="5" Name="extensionTB" Text="{Binding Path=Extension,Converter={StaticResource ResourceKey=TimeSpanHMConverter}}" Width="40" MaxLength="5" />
+            <TextBox HorizontalAlignment="left" Margin="2" Grid.Row="1" Grid.Column="5" Name="extensionTB" Text="{Binding Path=Extension,Converter={StaticResource ResourceKey=TimeSpanHMConverter}}" Width="40" MaxLength="5" />
             <Label Grid.Row="1" Grid.Column="6" Margin="20,0,0,0" >SCT</Label>
             <TextBox Margin="2" Grid.Row="1" Grid.Column="7" Name="sct" Width="60" IsReadOnly="True" MaxLength="11" />
-            <Grid VerticalAlignment="Center" Margin="20,0,5,0" Grid.RowSpan="2" Grid.Row="0" Grid.Column="8">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <Button Name="buttonCalculate" Click="buttonCalculate_Click">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                        </Grid.RowDefinitions>
+            <Label Grid.Row="2">Course</Label>
+            <TextBox Margin="2" Grid.Row="2" Grid.Column="1" Width="80" MaxLength="10" Text="{Binding Path=Course}"/>
+            <Label Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right">Wind Direction</Label>
+            <TextBox Margin="2" Grid.Row="2" Grid.Column="3" Width="80" MaxLength="10" Text="{Binding Path=WindDirection}"/>
+            <Label Grid.Row="2" Grid.Column="4" HorizontalAlignment="Right">Wind Speed</Label>
+            <TextBox Margin="2" Grid.Row="2" Grid.Column="5" Width="80" MaxLength="10" Text="{Binding Path=WindSpeed}"/>
+            <StackPanel Grid.RowSpan="3" Grid.Row="0" Grid.Column="8" VerticalAlignment="Center" Margin="20,0,5,0">
+                <Button Name="Notes"  Margin="0,2">
+                    <StackPanel Orientation="Horizontal">
+                        <!--<Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper.net;component/Images/Calc.png"/>-->
+                        <Label Grid.Column="1">Notes</Label>
+                    </StackPanel>
+                </Button>
+                <Button Name="buttonCalculate" Click="buttonCalculate_Click" VerticalAlignment="Center" Margin="0,2">
+                    <StackPanel Orientation="Horizontal">
                         <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper.net;component/Images/Calc.png"/>
                         <Label Grid.Column="1">Calculate</Label>
-                    </Grid>
+                    </StackPanel>
                 </Button>
-            </Grid>
+            </StackPanel>
         </Grid>
         <DockPanel Grid.Row="1" Grid.ColumnSpan="2" Name="racesDockPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <DataGrid SelectionMode="Single" Name="Races" CanUserDeleteRows="False" AutoGenerateColumns="False" SelectionUnit="Cell" 

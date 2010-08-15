@@ -30,7 +30,7 @@ namespace OodHelper.net
             RaceDate.Text = "Date of Race: " + red.RaceDate.ToShortDateString();
             EventDescription.Text = red.RaceName;
             OodName.Text = "OOD: " + red.Ood;
-            Start.Text = "Start: " + red.start.Text;
+            Start.Text = "Start: " + red.StartTime.ToString("hh\\:mm");
             Sct.Text = "SCT: " + Common.HMS(red.scorer.StandardCorrectedTime);
 
             Db c = new Db(@"SELECT b.boatname Boat, b.boatclass [Class], b.sailno [Sail No], r.open_handicap as Hcap,

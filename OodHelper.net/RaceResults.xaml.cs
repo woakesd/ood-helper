@@ -106,26 +106,30 @@ namespace OodHelper.net
             {
                 bool reload = false;
                 RaceEdit rr = (RaceEdit)parameter;
-                foreach (DataRowView drv in rr.Races.SelectedItems)
+                IList<DataGridCellInfo> cc = rr.Races.SelectedCells;
+
+                foreach (DataGridCellInfo inf in rr.Races.SelectedCells)
                 {
-                    int bid = (int)drv.Row["bid"];
+                    DataRowView rv = inf.Item as DataRowView;
+                    int bid = (int)rv.Row["bid"];
                     Boat edit = new Boat(bid);
                     if (edit.ShowDialog().Value)
                     {
-                        Db c = new Db("SELECT bid, rolling_handicap, handicap_status, open_handicap " +
-                            "FROM boats WHERE bid = @bid");
+                        Db c = new Db(@"SELECT bid, rolling_handicap, handicap_status, open_handicap
+                                FROM boats WHERE bid = @bid");
                         Hashtable p = new Hashtable();
                         p["bid"] = bid;
                         Hashtable d = c.GetHashtable(p);
                         foreach (object o in d.Keys)
                             p[o] = d[o];
                         p["rid"] = rr.Rid;
-                        c = new Db("UPDATE races " +
-                                "SET rolling_handicap = @rolling_handicap, " +
-                                "handicap_status = @handicap_status, " +
-                                "open_handicap = @open_handicap " +
-                                "WHERE rid = @rid " +
-                                "AND bid = @bid");
+                        c = new Db(@"UPDATE races
+                                SET rolling_handicap = @rolling_handicap,
+                                handicap_status = @handicap_status,
+                                open_handicap = @open_handicap,
+                                last_edit = GETDATE()
+                                WHERE rid = @rid
+                                AND bid = @bid");
                         c.ExecuteNonQuery(p);
                         reload = true;
                     }

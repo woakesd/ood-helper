@@ -28,6 +28,66 @@ namespace OodHelper.net
 
         public IRaceScore scorer;
 
+        private string mCourse;
+        public string Course
+        {
+            get
+            {
+                return mCourse;
+            }
+
+            set
+            {
+                mCourse = value;
+                Db c = new Db(@"UPDATE calendar SET course_choice = @course WHERE rid = @rid");
+                Hashtable p = new Hashtable();
+                p["rid"] = Rid;
+                p["course"] = mCourse;
+                c.ExecuteNonQuery(p);
+                c.Dispose();
+            }
+        }
+
+        private string mWindSpeed;
+        public string WindSpeed
+        {
+            get
+            {
+                return mWindSpeed;
+            }
+
+            set
+            {
+                mWindSpeed = value;
+                Db c = new Db(@"UPDATE calendar SET wind_speed = @wind_speed WHERE rid = @rid");
+                Hashtable p = new Hashtable();
+                p["rid"] = Rid;
+                p["wind_speed"] = mWindSpeed;
+                c.ExecuteNonQuery(p);
+                c.Dispose();
+            }
+        }
+
+        private string mWindDirection;
+        public string WindDirection
+        {
+            get
+            {
+                return mWindDirection;
+            }
+
+            set
+            {
+                mWindDirection = value;
+                Db c = new Db(@"UPDATE calendar SET wind_direction = @wind_direction WHERE rid = @rid");
+                Hashtable p = new Hashtable();
+                p["rid"] = Rid;
+                p["wind_direction"] = mWindDirection;
+                c.ExecuteNonQuery(p);
+                c.Dispose();
+            }
+        }
+
         private string raceclass = string.Empty;
         public string RaceClass
         {
@@ -53,7 +113,7 @@ namespace OodHelper.net
 
         public string RaceStart
         {
-            get { return start.Text; }
+            get { return StartTime.ToString("hh\\:mm"); }
         }
 
         private int rid;
@@ -177,7 +237,7 @@ namespace OodHelper.net
         {
             Db c = new Db(@"SELECT start_date, time_limit_fixed, time_limit_delta, extension, 
                     event, class, timegate, average_lap, handicapping,
-                    standard_corrected_time, ood
+                    standard_corrected_time, ood, course_choice, wind_speed, wind_direction
                     FROM calendar
                     WHERE rid = @rid");
             Hashtable p = new Hashtable();
@@ -201,6 +261,10 @@ namespace OodHelper.net
             if (caldata["handicapping"] != DBNull.Value)
                 mHandicap = (string)caldata["handicapping"];
             sct.Text = Common.HMS((double)caldata["standard_corrected_time"]);
+
+            mCourse = caldata["course_choice"] as string;
+            mWindSpeed = caldata["wind_speed"] as string;
+            mWindDirection = caldata["wind_direction"] as string;
 
             if (scorer == null)
             {
