@@ -94,6 +94,7 @@
                 </Button>
                 <Button Name="EntrySheets" Click="EntrySheets_Click">
                     <StackPanel Orientation="Horizontal">
+                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Applications.png"/>
                         <Label Grid.Column="1">Entry Sheets</Label>
                     </StackPanel>
                 </Button>

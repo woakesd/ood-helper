@@ -524,6 +524,10 @@
     <Resource Include="Images\Arrow2 Left.png" />
     <Resource Include="Images\Arrow2 Right.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Applications.png" />
+    <Resource Include="Images\Document.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>"c:\Program Files\TortoiseSVN\bin\SubWCRev.exe" "$(ProjectDir)." "$(ProjectDir)SvnRevisionTemplate.cs" "$(ProjectDir)SvnRevision.cs"</PreBuildEvent>

@@ -53,7 +53,7 @@
             <StackPanel Grid.RowSpan="3" Grid.Row="0" Grid.Column="8" VerticalAlignment="Center" Margin="20,0,5,0">
                 <Button Name="Notes"  Margin="0,2">
                     <StackPanel Orientation="Horizontal">
-                        <!--<Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper.net;component/Images/Calc.png"/>-->
+                        <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper.net;component/Images/Document.png"/>
                         <Label Grid.Column="1">Notes</Label>
                     </StackPanel>
                 </Button>
