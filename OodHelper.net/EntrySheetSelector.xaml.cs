@@ -110,7 +110,9 @@ namespace OodHelper.net
                                 p.Arrange(new Rect(new Point(0, 0), ps));
                                 p.UpdateLayout();
 
-                                collator.Write(p, pd.PrintTicket);
+                                int? copies = r["copies"] as int?;
+                                for (int c = 0; copies.HasValue && c < copies || c < 1; c++)
+                                    collator.Write(p, pd.PrintTicket);
                             }));
                         }
                         Dispatcher.Invoke(new Action(delegate()
