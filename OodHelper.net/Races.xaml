@@ -52,14 +52,10 @@
                 </Button>
             </ToolBar>
         </ToolBarTray>
-        <Grid Grid.Row="1" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-            </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,2" >
             <Label Margin="0" Grid.Column="0" Name="findtext">Find</Label>
-            <TextBox Name="Eventname" Grid.Column="1" Margin="2" Width="250" TextChanged="Eventname_TextChanged" />
-        </Grid>
+            <TextBox Name="Eventname" Grid.Column="1" Margin="4,0" Width="250" TextChanged="Eventname_TextChanged" />
+        </StackPanel>
         <DockPanel Grid.Row="2" >
             <DataGrid Name="RaceData" IsReadOnly="True">
                 <DataGrid.ContextMenu>
