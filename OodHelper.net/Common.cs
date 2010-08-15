@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
@@ -33,6 +34,229 @@ namespace OodHelper.net
                 return null;
             }
             return t;
+        }
+
+        public static void copyToMySql(Working w)
+        {
+            System.Threading.Tasks.Task.Factory.StartNew(() =>
+            {
+                w.SetProgress("Uploading boats", 0);
+                string mysql = (string)DbSettings.GetSetting("mysql");
+                MySqlConnectionStringBuilder mcsb = new MySqlConnectionStringBuilder(mysql);
+                mysql = mcsb.ConnectionString;
+                MySqlConnection mcon = new MySqlConnection(mysql);
+                mcon.Open();
+
+                MySqlCommand mcom = new MySqlCommand("DELETE FROM boats");
+                mcom.Connection = mcon;
+                mcom.ExecuteNonQuery();
+
+                mcom.CommandText = "ALTER TABLE `boats` DISABLE KEYS";
+                mcom.ExecuteNonQuery();
+
+                StringBuilder msql = new StringBuilder("INSERT INTO `boats` (`boatname`,`boatclass`,`sailno`,`dngy`,`h`,`bid`,");
+                msql.Append("`distance`,`crewname`,`ohp`,`ohstat`,`chp`,`rhp`,`ihp`,`csf`,`eng`,`kl`,`deviations`,`subscriptn`,`p`,`s`,");
+                msql.Append("`boatmemo`,`id`,`beaten`,`berth`,`hired`) VALUES ");
+
+                Db c = new Db(@"SELECT boatname, boatclass, sailno, dinghy dngy, hulltype h, bid,
+                    distance, crewname, open_handicap ohp, handicap_status ohstat, null chp, rolling_handicap rhp, null ihp, crew_skill_factor csf, engine_propeller eng, keel kl,
+                    deviations, subscription subscriptn, p, s, boatmemo, id, beaten, berth, hired
+                    FROM boats");
+                DataTable d = c.GetData(null);
+                c.Dispose();
+
+                BuildInsertData(d, msql);
+
+                mcom.CommandText = msql.ToString();
+                mcom.ExecuteNonQuery();
+
+                mcom.CommandText = "ALTER TABLE `boats` ENABLE KEYS";
+                mcom.ExecuteNonQuery();
+
+                w.SetProgress("Uploading calendar", 1);
+
+                mcom.CommandText = "DELETE FROM calendar_new";
+                mcom.Connection = mcon;
+                mcom.ExecuteNonQuery();
+
+                mcom.CommandText = "ALTER TABLE `calendar_new` DISABLE KEYS";
+                mcom.ExecuteNonQuery();
+
+                msql.Clear();
+                msql.Append("INSERT INTO `calendar_new` (`rid`,`start_date`,`time_limit_type`,`time_limit_fixed`,");
+                msql.Append("`time_limit_delta`,`extension`,`class`,`event`,`price_code`,`course`,`ood`,`venue`,`average_lap`,");
+                msql.Append("`timegate`,`handicapping`,`visitors`,`flag`,`memo`,`is_race`,`raced`,`approved`,`course_choice`,");
+                msql.Append("`laps_completed`,`wind_speed`,`wind_direction`,`standard_corrected_time`,`result_calculated`) VALUES ");
+
+                c = new Db(@"SELECT rid, start_date, time_limit_type, time_limit_fixed,
+                        time_limit_delta, extension, class, event, price_code, course, ood, venue, average_lap,
+                        timegate, handicapping, visitors, flag, memo, is_race, raced, approved, course_choice,
+                        laps_completed, wind_speed, wind_direction, standard_corrected_time, result_calculated
+                        FROM calendar");
+                d = c.GetData(null);
+                c.Dispose();
+
+                BuildInsertData(d, msql);
+
+                mcom.CommandText = msql.ToString();
+                mcom.ExecuteNonQuery();
+
+                mcom.CommandText = "ALTER TABLE `calendar_new` ENABLE KEYS";
+                mcom.ExecuteNonQuery();
+
+                w.SetProgress("Uploading people", 2);
+
+                mcom.CommandText = "DELETE FROM `people`";
+                mcom.ExecuteNonQuery();
+
+                mcom.CommandText = "ALTER TABLE `people` DISABLE KEYS";
+                mcom.ExecuteNonQuery();
+
+                msql.Clear();
+                msql.Append("INSERT INTO `people` (`firstname`,`surname`,`address1`,`address2`,`address3`,`address4`,`postcode`,");
+                msql.Append("`hometel`,`worktel`,`mobile`,`email`,`club`,`member`,`cp`,`s`,`id`,`manmemo`,`novice`) VALUES ");
+
+                c = new Db(@"SELECT firstname,surname,address1,address2,address3,address4,postcode,hometel,worktel,mobile,email,
+                        club,member,cp,s,id,manmemo,novice
+                        FROM people");
+                d = c.GetData(null);
+
+                BuildInsertData(d, msql);
+
+                mcom.CommandText = msql.ToString();
+                mcom.ExecuteNonQuery();
+
+                mcom.CommandText = "ALTER TABLE `people` ENABLE KEYS";
+                mcom.ExecuteNonQuery();
+
+                w.SetProgress("Uploading races", 3);
+
+                mcom.CommandText = "DELETE FROM `races_new`";
+                mcom.ExecuteNonQuery();
+
+                mcom.CommandText = "ALTER TABLE `races_new` DISABLE KEYS";
+                mcom.ExecuteNonQuery();
+
+                msql.Clear();
+                msql.Append("INSERT INTO `races_new` (rid,bid,start_date,finish_code,finish_date,last_edit,laps,place,points,override_points,");
+                msql.Append("elapsed,corrected,standard_corrected,handicap_status,open_handicap,rolling_handicap,achieved_handicap,");
+                msql.Append("new_rolling_handicap,performance_index,a,c) VALUES ");
+
+                c = new Db(@"SELECT rid,bid,start_date,finish_code,finish_date,last_edit,laps,place,points,override_points,
+                        elapsed,corrected,standard_corrected,handicap_status,open_handicap,rolling_handicap,achieved_handicap,
+                        new_rolling_handicap,performance_index,a,c
+                        FROM races");
+                d = c.GetData(null);
+
+                BuildInsertData(d, msql);
+
+                mcom.CommandText = msql.ToString();
+                mcom.ExecuteNonQuery();
+
+                mcom.CommandText = "ALTER TABLE `races_new` ENABLE KEYS";
+                mcom.ExecuteNonQuery();
+
+                w.SetProgress("Uploading series", 4);
+
+                mcom.CommandText = "DELETE FROM `series`";
+                mcom.ExecuteNonQuery();
+
+                mcom.CommandText = "ALTER TABLE `series` DISABLE KEYS";
+                mcom.ExecuteNonQuery();
+
+                msql.Clear();
+                msql.Append("INSERT INTO `series` (sid,sname) VALUES ");
+
+                c = new Db(@"SELECT sid,sname FROM series");
+                d = c.GetData(null);
+
+                BuildInsertData(d, msql);
+
+                mcom.CommandText = msql.ToString();
+                mcom.ExecuteNonQuery();
+
+                mcom.CommandText = "ALTER TABLE `series` ENABLE KEYS";
+                mcom.ExecuteNonQuery();
+
+                w.SetProgress("Uploading calendar series join", 5);
+
+                mcom.CommandText = "DELETE FROM `calendar_series_join`";
+                mcom.ExecuteNonQuery();
+
+                mcom.CommandText = "ALTER TABLE `calendar_series_join` DISABLE KEYS";
+                mcom.ExecuteNonQuery();
+
+                msql.Clear();
+                msql.Append("INSERT INTO `calendar_series_join` (sid,rid) VALUES ");
+
+                c = new Db(@"SELECT sid,rid FROM calendar_series_join");
+                d = c.GetData(null);
+
+                BuildInsertData(d, msql);
+
+                mcom.CommandText = msql.ToString();
+                mcom.ExecuteNonQuery();
+
+                mcom.CommandText = "ALTER TABLE `calendar_series_join` ENABLE KEYS";
+                mcom.ExecuteNonQuery();
+
+                w.SetProgress("All done", 6);
+                w.CloseWindow();
+            });
+        }
+
+        public static void BuildInsertData(DataTable d, StringBuilder msql)
+        {
+            for (int i = 0; i < d.Rows.Count; i++)
+            {
+                DataRow dr = d.Rows[i];
+
+                msql.Append("(");
+                for (int j = 0; j < d.Columns.Count; j++)
+                {
+                    switch (d.Columns[j].DataType.ToString())
+                    {
+                        case "System.String":
+                            if (dr[j] != DBNull.Value)
+                                msql.AppendFormat("'{0}'", dr[j].ToString().Replace("'", "''"));
+                            else
+                                msql.Append("NULL");
+                            break;
+                        case "System.Int32":
+                            if (dr[j] != DBNull.Value)
+                                msql.AppendFormat("{0}", dr[j]);
+                            else
+                                msql.Append("NULL");
+                            break;
+                        case "System.Double":
+                            if (dr[j] != DBNull.Value)
+                                msql.AppendFormat("{0}", dr[j]);
+                            else
+                                msql.Append("NULL");
+                            break;
+                        case "System.DateTime":
+                            if (dr[j] != DBNull.Value)
+                                msql.AppendFormat("'{0:yyyy-MM-dd HH:mm:ss}'", dr[j]);
+                            else
+                                msql.Append("NULL");
+                            break;
+                        case "System.Boolean":
+                            if (dr[j] == DBNull.Value)
+                                msql.Append("NULL");
+                            else if ((bool)dr[j])
+                                msql.Append("'\\1'");
+                            else
+                                msql.Append("'\\0'");
+                            break;
+                        default:
+                            int x = 1;
+                            break;
+                    }
+                    if (j < d.Columns.Count - 1) msql.Append(",");
+                }
+                msql.Append(")");
+                if (i < d.Rows.Count - 1) msql.Append(",");
+            }
         }
 
         public static void copyMySqlData(Working p)

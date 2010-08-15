@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using System.ComponentModel;
-using System.Linq;
+using System.Data;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MySql.Data.MySqlClient;
+using MySql.Data.Types;
 
 namespace OodHelper.net
 {
@@ -73,12 +75,14 @@ namespace OodHelper.net
 
         private void Download_Click(object sender, RoutedEventArgs e)
         {
-            Working p = new Working(this, "Loading Boats", false, 0, 6);
+            Working p = new Working(this, "Downloading Boats", false, 0, 6);
             Common.copyMySqlData(p);
         }
 
         private void Upload_Click(object sender, RoutedEventArgs e)
         {
+            Working p = new Working(this, "Uploading Boats", false, 0, 6);
+            Common.copyToMySql(p);
         }
 
         private void SqlCe_Click(object sender, RoutedEventArgs e)
