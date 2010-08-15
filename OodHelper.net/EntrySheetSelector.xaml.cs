@@ -76,6 +76,12 @@ namespace OodHelper.net
             {
                 DataRow[] rows = v.Table.Select("print = 1");
 
+                if (rows.Length == 0)
+                {
+                    Close();
+                    return;
+                }
+
                 PrintDialog pd = new PrintDialog();
                 pd.PrintTicket.PageOrientation = PageOrientation.Landscape;
 
