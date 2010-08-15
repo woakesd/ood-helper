@@ -159,6 +159,9 @@
     <Compile Include="IntConverter.cs" />
     <Compile Include="MyBooleanToVisibilityConverter.cs" />
     <Compile Include="RaceEditDateEditSelector.cs" />
+    <Compile Include="RaceNotes.xaml.cs">
+      <DependentUpon>RaceNotes.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Results.cs" />
     <Compile Include="SeriesDisplayPage.xaml.cs">
       <DependentUpon>SeriesDisplayPage.xaml</DependentUpon>
@@ -239,6 +242,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Handicaps.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RaceNotes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

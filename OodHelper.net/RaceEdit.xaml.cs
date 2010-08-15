@@ -509,5 +509,11 @@ namespace OodHelper.net
             if (scorer != null) scorer.Calculate(Rid);
             LoadGrid();
         }
+
+        private void Notes_Click(object sender, RoutedEventArgs e)
+        {
+            RaceNotes rn = new RaceNotes(Rid);
+            rn.ShowDialog();
+        }
     }
 }
