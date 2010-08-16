@@ -163,8 +163,10 @@ namespace OodHelper.net
 
             public void Execute(object parameter)
             {
+                bool reload = false;
+
                 DataGrid races = (DataGrid)parameter;
-                if (races.SelectedItems.Count > 0)
+                if (races.SelectedCells.Count > 0)
                 {
                     Db s = new Db(@"SELECT start_date
                             FROM calendar
@@ -174,13 +176,14 @@ namespace OodHelper.net
                     DateTime rstart = (DateTime)s.GetScalar(p);
                     Db c = new Db(@"UPDATE races
                             SET rid = @torid
-                            , start = @start
+                            , start_date = @start_date
                             WHERE rid = @fromrid
                             AND bid = @bid");
                     p["fromrid"] = fromRid;
-                    p["start"] = rstart.TimeOfDay.ToString("hh\\:mm\\:ss");
-                    foreach (DataRowView drv in races.SelectedItems)
+                    p["start_date"] = rstart;
+                    foreach (DataGridCellInfo inf in races.SelectedCells)
                     {
+                        DataRowView drv = inf.Item as DataRowView;
                         p["bid"] = drv.Row["bid"];
                         c.ExecuteNonQuery(p);
                     }

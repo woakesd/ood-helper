@@ -205,7 +205,7 @@ CREATE TABLE [series] (
             try
             {
                 addCommandParameters(p);
-                mCon.Open();
+                mCon.Open();    
                 return mCmd.ExecuteNonQuery();
             }
             finally
