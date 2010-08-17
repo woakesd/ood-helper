@@ -248,9 +248,6 @@ namespace OodHelper.net
                             else
                                 msql.Append("false");
                             break;
-                        default:
-                            int x = 1;
-                            break;
                     }
                     if (j < d.Columns.Count - 1) msql.Append(",");
                 }

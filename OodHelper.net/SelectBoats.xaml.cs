@@ -76,8 +76,24 @@ namespace OodHelper.net
                     bts.Rows.Add(gr);
                 }
                 bts.AcceptChanges();
+                ItemCollection ic = sbt[i].Boats.Items;
                 sbt[i].Boats.ItemsSource = bts.DefaultView;
                 sbt[i].Boats.IsReadOnly = true;
+                sbt[i].Boats.ContextMenu = new ContextMenu();
+            }
+
+            for (int i = 0; i < sbt.Length; i++)
+            {
+                for (int j = 0; j < reds.Length; j++)
+                {
+                    if (j != i)
+                    {
+                        MenuItem m = new MenuItem();
+                        m.Header = "Move to " + reds[j].RaceClass;
+                        m.Command = new FleetChanger(sbt[i].Boats, sbt[j].Boats);
+                        sbt[i].Boats.ContextMenu.Items.Add(m);
+                    }
+                }
             }
 
             string sql = @"SELECT * FROM boats ";
@@ -114,6 +130,50 @@ namespace OodHelper.net
 
             Boats.ItemsSource = dt.DefaultView;
             Boats.IsReadOnly = true;
+        }
+
+        class FleetChanger : ICommand
+        {
+            private DataGrid toGrid;
+            private DataGrid fromGrid;
+
+            public FleetChanger(DataGrid from, DataGrid to)
+            {
+                fromGrid = from;
+                toGrid = to;
+            }
+
+            #region ICommand Members
+
+            public bool CanExecute(object parameter)
+            {
+                return true;
+            }
+
+            public event EventHandler CanExecuteChanged;
+
+            public void Execute(object parameter)
+            {
+                for (int r = 0; r < fromGrid.SelectedItems.Count; r++)
+                {
+                    DataRowView drv = fromGrid.SelectedItems[r] as DataRowView;
+                    DataTable toTable = ((DataView)toGrid.ItemsSource).Table;
+                    DataRow n = toTable.NewRow();
+                    for (int i = 0; i < drv.Row.ItemArray.Length; i++)
+                        n[i] = drv.Row[i];
+                    drv.DataView.Table.Rows.Remove(drv.Row);
+                    drv.DataView.Table.AcceptChanges();
+                    toTable.Rows.Add(n);
+                    toTable.AcceptChanges();
+                }
+            }
+
+            #endregion
+        }
+
+        void m_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         System.Timers.Timer t = null;
