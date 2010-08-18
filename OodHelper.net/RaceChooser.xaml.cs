@@ -42,7 +42,7 @@ namespace OodHelper.net
             w = new Working(this);
             System.Threading.Tasks.Task.Factory.StartNew(() =>
                 {
-                    Db d = new Db("SELECT rid, start_date, event, class " +
+                    Db d = new Db("SELECT rid, start_date, event, class, raced " +
                         "FROM calendar " +
                         "WHERE is_race = 1 " +
                         "ORDER BY start_date");
@@ -60,14 +60,14 @@ namespace OodHelper.net
                 "WHERE is_race = 1 " +
                 "AND start_date <= @today");
             Hashtable p = new Hashtable();
-            p["today"] = DateTime.Today;
+            p["today"] = DateTime.Today.AddDays(1.0);
             Object o;
-            DateTime lr = (o = v.GetScalar(p)) == DBNull.Value ? DateTime.Today : (DateTime)o;
+            DateTime lr = (o = v.GetScalar(p)) == DBNull.Value ? DateTime.Today : ((DateTime)o).Date;
 
             foreach (DataRowView vr in CalGrid.Items)
             {
                 DataRow r = vr.Row;
-                if ((DateTime)r["start_date"] == lr)
+                if (((DateTime)r["start_date"]).Date == lr)
                 {
                     CalGrid.ScrollIntoView(vr);
                     CalGrid.SelectedItem = vr;

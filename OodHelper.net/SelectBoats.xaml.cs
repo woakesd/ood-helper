@@ -262,6 +262,17 @@ namespace OodHelper.net
                         {
                             AddBoat((SelectedBoats)boatClasses["All"], rv);
                         }
+                        else
+                        {
+                            //
+                            // Otherwise just add to the first class
+                            //
+                            foreach (SelectedBoats sb in boatClasses.Values)
+                            {
+                                AddBoat(sb, rv);
+                                break;
+                            }
+                        }
                     }
                     else
                     {
@@ -288,6 +299,17 @@ namespace OodHelper.net
                         else if (boatClasses.ContainsKey("All"))
                         {
                             AddBoat((SelectedBoats)boatClasses["All"], rv);
+                        }
+                        else
+                        {
+                            //
+                            // Otherwise just add to the first class
+                            //
+                            foreach (SelectedBoats sb in boatClasses.Values)
+                            {
+                                AddBoat(sb, rv);
+                                break;
+                            }
                         }
                     }
                 }
