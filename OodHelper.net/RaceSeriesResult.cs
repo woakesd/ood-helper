@@ -118,6 +118,7 @@ namespace OodHelper.net
                     }
 
                     SeriesResult sr = new SeriesResult(SeriesData[className], discardProfile);
+                    w.SetProgress("Calculating series " + className, races.Rows.Count);
                     sr.Score();
                     sr.SeriesName = SeriesName + " - " + className;
                     SeriesResults.Add(className, sr);

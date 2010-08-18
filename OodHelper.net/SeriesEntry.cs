@@ -40,8 +40,10 @@ namespace OodHelper.net
             {
                 if (override_points != null && override_points != 0.0)
                     return override_points.Value;
-                else
+                else if (points.HasValue)
                     return points.Value;
+                else
+                    return Double.NaN;
             }
         }
     }

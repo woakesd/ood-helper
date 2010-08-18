@@ -77,6 +77,9 @@ namespace OodHelper.net
                             case "RAF":
                                 se.points = e.NumberOfRacingEntries + 1;
                                 break;
+                            case "DNC":
+                                se.points = _Bids.Length + 1;
+                                break;
                         }
                     }
                 }
