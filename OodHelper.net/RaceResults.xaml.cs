@@ -163,8 +163,6 @@ namespace OodHelper.net
 
             public void Execute(object parameter)
             {
-                bool reload = false;
-
                 DataGrid races = (DataGrid)parameter;
                 if (races.SelectedCells.Count > 0)
                 {

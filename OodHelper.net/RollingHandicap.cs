@@ -455,11 +455,17 @@ namespace OodHelper.net
                     FROM races
                     WHERE rid = @rid");
             d = c.GetData(p);
-            p.Clear();
 
             Db u = new Db(@"UPDATE boats
                     SET rolling_handicap = @new_rolling_handicap
-                    WHERE boats.bid = @bid");
+                    WHERE bid = @bid
+                    AND NOT EXISTS (SELECT 1
+                    FROM races r1, races r2
+                    WHERE r1.rid = @rid
+                    AND r2.rid <> r1.rid
+                    AND r2.bid = r1.bid
+                    AND r1.bid = @bid
+                    AND r2.start_date > r1.start_date)");
 
             foreach (DataRow dr in d.Rows)
             {
