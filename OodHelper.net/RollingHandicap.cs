@@ -449,28 +449,25 @@ namespace OodHelper.net
             d.Dispose();
 
             p = new Hashtable();
-            p["rid"] = rid;
 
+            p["rid"] = rid;
             c = new Db(@"SELECT bid, new_rolling_handicap
                     FROM races
                     WHERE rid = @rid");
             d = c.GetData(p);
+            p.Clear();
 
-            Db u = new Db(@"SELECT bid, rolling_handicap
-                    FROM boats
-                    WHERE boats.bid IN (SELECT races.bid
-                    FROM races
-                    WHERE races.rid = @rid)");
-            DataTable ut = u.GetData(p);
+            Db u = new Db(@"UPDATE boats
+                    SET rolling_handicap = @new_rolling_handicap
+                    WHERE boats.bid = @bid");
 
-            foreach (DataRow dr in ut.Rows)
+            foreach (DataRow dr in d.Rows)
             {
-                DataRow[] rows = d.Select("bid = " + dr["bid"].ToString());
-                dr["rolling_handicap"] = rows[0]["new_rolling_handicap"];
+                p["new_rolling_handicap"] = dr["new_rolling_handicap"];
+                p["bid"] = dr["bid"];
+                u.ExecuteNonQuery(p);
             }
-            ut.Dispose();
-
-            c.Commit(d);
+            u.Dispose();
             d.Dispose();
         }
     }
