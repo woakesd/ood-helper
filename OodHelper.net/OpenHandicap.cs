@@ -448,7 +448,7 @@ namespace OodHelper.net
                     WHERE bid = @bid
                     AND NOT EXISTS (SELECT 1
                     FROM races r1, races r2
-                    WHERE r1 = @rid
+                    WHERE r1.rid = @rid
                     AND r2.rid <> r1.rid
                     AND r2.bid = r1.bid
                     AND r1.bid = @bid

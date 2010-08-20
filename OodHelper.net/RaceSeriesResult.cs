@@ -56,12 +56,13 @@ namespace OodHelper.net
                     scorer.Calculate((int)race["rid"]);
                 }
 
-                c = new Db("SELECT c.class, r.rid, c.start_date, bid, points, override_points, finish_code " +
-                    "FROM races r " +
-                    "LEFT JOIN calendar_series_join j ON r.rid = j.rid " +
-                    "LEFT JOIN calendar c ON c.rid = j.rid " +
-                    "WHERE j.sid = @sid " +
-                    "ORDER BY c.class");
+                c = new Db(@"SELECT c.class, r.rid, c.start_date, bid, points, override_points, finish_code
+                    FROM races r
+                    LEFT JOIN calendar_series_join j ON r.rid = j.rid
+                    LEFT JOIN calendar c ON c.rid = j.rid
+                    WHERE j.sid = @sid
+                    AND raced = 1
+                    ORDER BY c.class");
 
                 DataTable rd = c.GetData(p);
 
