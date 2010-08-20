@@ -206,5 +206,11 @@ namespace OodHelper.net
             EntrySheetSelector sel = new EntrySheetSelector();
             sel.ShowDialog();
         }
+
+        private void Foxpro_Click(object sender, RoutedEventArgs e)
+        {
+            FoxproImport fx = new FoxproImport();
+
+        }
     }
 }

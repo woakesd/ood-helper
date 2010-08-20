@@ -39,6 +39,7 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Admin">
+                <!--<MenuItem Header="_Foxpro Import" Click="Foxpro_Click" />-->
                 <MenuItem Header="_Configuration" Name="Configuration" Click="Configuration_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                     <MenuItem.Icon>
                         <Image Width="16" Height="16" Margin="1" Source="/OodHelper.net;component/Images/Spanner-16.png" />

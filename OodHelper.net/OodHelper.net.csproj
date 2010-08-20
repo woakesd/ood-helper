@@ -148,6 +148,7 @@
     <Compile Include="EntrySheetSelector.xaml.cs">
       <DependentUpon>EntrySheetSelector.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FoxproImport.cs" />
     <Compile Include="Handicap.xaml.cs">
       <DependentUpon>Handicap.xaml</DependentUpon>
     </Compile>
