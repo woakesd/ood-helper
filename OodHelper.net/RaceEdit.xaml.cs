@@ -20,7 +20,7 @@ namespace OodHelper.net
     /// Interaction logic for RaceEdit.xaml
     /// </summary>
     [Svn("$Id$")]
-    public partial class RaceEdit : UserControl
+    public partial class RaceEdit : UserControl, IPrintSelectItem
     {
         private Db rddb;
         private DataTable rd;
@@ -109,27 +109,38 @@ namespace OodHelper.net
             }
         }
 
-        private string raceclass = string.Empty;
-        public string RaceClass
-        {
-            get { return raceclass; }
-        }
+        public string RaceClass { get; set; }
 
-        private string racename = string.Empty;
-        public string RaceName
-        {
-            get { return racename; }
-        }
+        public string RaceName { get; set; }
 
-        public DateTime RaceDate
-        {
-            get { return start_date; }
-        }
+        public DateTime? StartDate { get; set; }
 
-        private string mOod;
-        public string Ood
+        public string Ood { get; set; }
+
+        public bool PrintIncludeAllVisible { get; set; }
+        public bool PrintIncludeAll { get; set; }
+        public bool PrintInclude { get; set; }
+        public int PrintIncludeCopies { get; set; }
+        public string PrintIncludeDescription
         {
-            get { return mOod; }
+            get
+            {
+                return RaceName;
+            }
+
+            set
+            {
+            }
+        }
+        public int PrintIncludeGroup { get; set; }
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged(string name)
+        {
+            System.ComponentModel.PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(name));
+            }
         }
 
         public string RaceStart
@@ -146,6 +157,8 @@ namespace OodHelper.net
         {
             InitializeComponent();
 
+            PrintIncludeCopies = 1;
+            PrintIncludeGroup = 0;
             rid = r;
             LoadGrid();
             SetColumnAttributes();
@@ -165,24 +178,23 @@ namespace OodHelper.net
             return false;
         }
 
-        private DateTime start_date;
         public TimeSpan StartTime
         {
             get
             {
-                return start_date.TimeOfDay;
+                return StartDate.Value.TimeOfDay;
             }
             set
             {
-                if (start_date.TimeOfDay != value)
+                if (StartDate.Value.TimeOfDay != value)
                 {
-                    start_date = start_date.Date + value;
+                    StartDate = StartDate.Value.Date + value;
                     Db u = new Db(@"UPDATE races
                         SET start_date = @start_date
                         , last_edit = GETDATE()
                         WHERE rid = @rid");
                     Hashtable p = new Hashtable();
-                    p["start_date"] = start_date;
+                    p["start_date"] = StartDate;
                     p["rid"] = Rid;
                     u.ExecuteNonQuery(p);
 
@@ -265,20 +277,19 @@ namespace OodHelper.net
             p["rid"] = Rid;
             caldata = c.GetHashtable(p);
 
-            start_date = (caldata["start_date"] as DateTime?).Value;
+            StartDate = (caldata["start_date"] as DateTime?).Value;
             
             time_limit_fixed = caldata["time_limit_fixed"] as DateTime?;
             time_limit_delta = caldata["time_limit_delta"] as int?;
 
             if (caldata["extension"] != DBNull.Value)
                 extension = (int)caldata["extension"];
-            raceName.Content = start_date.ToString("ddd") + " " +
-                start_date.ToString("dd MMM yyyy") +
+            raceName.Content = StartDate.Value.ToString("ddd dd MMM yyyy") +
                 " (" + ((caldata["handicapping"].ToString() == "r") ? "Rolling " : "Open ") + "handicap)";
             eventname = caldata["event"].ToString().Trim();
-            racename = eventname + " - " + caldata["class"].ToString().Trim();
-            raceclass = caldata["class"].ToString().Trim();
-            mOod = caldata["ood"].ToString();
+            RaceName = eventname + " - " + caldata["class"].ToString().Trim();
+            RaceClass = caldata["class"].ToString().Trim();
+            Ood = caldata["ood"].ToString();
             if (caldata["handicapping"] != DBNull.Value)
                 mHandicap = (string)caldata["handicapping"];
             sct.Text = Common.HMS((double)caldata["standard_corrected_time"]);
@@ -355,18 +366,18 @@ namespace OodHelper.net
             Binding b;
             DataGridTextColumn col;
 
-            if (time_limit_fixed.HasValue && start_date.Date < time_limit_fixed.Value.Date 
-                || time_limit_delta.HasValue && start_date.Date < (start_date.AddSeconds((double)time_limit_delta) + Extension).Date)
+            if (time_limit_fixed.HasValue && StartDate.Value.Date < time_limit_fixed.Value.Date
+                || time_limit_delta.HasValue && StartDate.Value.Date < (StartDate.Value.AddSeconds((double)time_limit_delta) + Extension).Date)
             {
                 DateTime defaultFinish;
                 if (time_limit_fixed.HasValue)
                     defaultFinish = time_limit_fixed.Value;
                 else
-                    defaultFinish = RaceDate.AddSeconds((double)time_limit_delta) + Extension;
+                    defaultFinish = StartDate.Value.AddSeconds((double)time_limit_delta) + Extension;
 
                 col = (DataGridTextColumn)Races.Columns[rd.Columns["start_date"].Ordinal];
                 b = (Binding)col.Binding;
-                b.Converter = new MyDateTimeConverter(RaceDate.Date);
+                b.Converter = new MyDateTimeConverter(StartDate.Value.Date);
                 col.Binding = b;
 
                 col = (DataGridTextColumn)Races.Columns[rd.Columns["finish_date"].Ordinal];
@@ -378,12 +389,12 @@ namespace OodHelper.net
             {
                 col = (DataGridTextColumn)Races.Columns[rd.Columns["start_date"].Ordinal];
                 b = (Binding)col.Binding;
-                b.Converter = new DateTimeTimeConverter(start_date.Date);
+                b.Converter = new DateTimeTimeConverter(StartDate.Value.Date);
                 col.Binding = b;
 
                 col = (DataGridTextColumn)Races.Columns[rd.Columns["finish_date"].Ordinal];
                 b = (Binding)col.Binding;
-                b.Converter = new DateTimeTimeConverter(start_date.Date);
+                b.Converter = new DateTimeTimeConverter(StartDate.Value.Date);
                 col.Binding = b;
             }
 

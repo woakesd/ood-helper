@@ -1,0 +1,48 @@
+﻿<Window x:Class="OodHelper.net.ResultsPrintSelector"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:OodHelper.net"
+        Title="EntrySheetSelector" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" d:DesignHeight="300" d:DesignWidth="300" SizeToContent="WidthAndHeight">
+    <Window.Resources>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ToolBarTray>
+            <ToolBar>
+                <Button Click="Print_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Printer.png" />
+                        <Label Grid.Column="1">Print</Label>
+                    </StackPanel>
+                </Button>
+                <Button Name="CloseButton" Click="Close_Click" Margin="4,0,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Cancel.png" />
+                        <Label Grid.Column="1">Close</Label>
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+        <ListBox Grid.Row="1" Name="Races">
+            <ListBox.Resources>
+                <local:IntConverter x:Key="IntConverter"/>
+                <local:MyBooleanToVisibilityConverter x:Key="MyBooleanToVisibilityConverter"/>
+                <local:MyDateTimeConverter x:Key="MyDateTimeConverter"/>
+            </ListBox.Resources>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="2">
+                        <CheckBox VerticalAlignment="Center" Click="Include_All_Click" Visibility="{Binding Path=PrintIncludeAllVisible,Converter={StaticResource ResourceKey=MyBooleanToVisibilityConverter}}" IsChecked="{Binding Path=PrintIncludeAll}" Margin="4,0"/>
+                        <CheckBox VerticalAlignment="Center" Click="Include_Click" IsChecked="{Binding Path=PrintInclude}" Margin="4,0"/>
+                        <TextBlock VerticalAlignment="Center" Text="Copies" Margin="4,0,0,0"/>
+                        <TextBox VerticalAlignment="Center" Text="{Binding Path=PrintIncludeCopies,Converter={StaticResource ResourceKey=IntConverter}}" Margin="2,0,4,0"/>
+                        <TextBlock VerticalAlignment="Center" Text="{Binding Path=PrintIncludeDescription}" Margin="4,0"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Window>

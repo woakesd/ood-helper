@@ -355,7 +355,7 @@ namespace OodHelper.net
                     if (rd.Select("bid = " + r["bid"] + " AND rid = " + a["rid"]).Length == 0)
                     {
                         a["bid"] = r["bid"];
-                        a["start_date"] = reds[i].RaceDate;
+                        a["start_date"] = reds[i].StartDate;
                         a["handicap_status"] = r["handicap_status"];
                         a["open_handicap"] = r["open_handicap"];
                         a["rolling_handicap"] = r["rolling_handicap"];

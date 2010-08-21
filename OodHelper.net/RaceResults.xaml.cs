@@ -196,6 +196,8 @@ namespace OodHelper.net
 
         private void Print_Click(object sender, RoutedEventArgs e)
         {
+            ResultsPrintSelector rps = new ResultsPrintSelector(reds);
+            rps.ShowDialog();
             PrintDialog pd = new PrintDialog();
             if (pd.ShowDialog() == true)
             {

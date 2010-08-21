@@ -27,7 +27,7 @@ namespace OodHelper.net
             InitializeComponent();
 
             red.scorer.Calculate(red.Rid);
-            RaceDate.Text = "Date of Race: " + red.RaceDate.ToShortDateString();
+            RaceDate.Text = "Date of Race: " + red.StartDate.Value.ToShortDateString();
             EventDescription.Text = red.RaceName;
             OodName.Text = "OOD: " + red.Ood;
             Start.Text = "Start: " + red.StartTime.ToString("hh\\:mm");
