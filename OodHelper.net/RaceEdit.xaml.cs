@@ -355,7 +355,8 @@ namespace OodHelper.net
             Binding b;
             DataGridTextColumn col;
 
-            if (start_date.Date < time_limit_fixed.Value.Date || time_limit_delta.HasValue && start_date.Date < (start_date.AddSeconds((double)time_limit_delta) + Extension).Date)
+            if (time_limit_fixed.HasValue && start_date.Date < time_limit_fixed.Value.Date 
+                || time_limit_delta.HasValue && start_date.Date < (start_date.AddSeconds((double)time_limit_delta) + Extension).Date)
             {
                 DateTime defaultFinish;
                 if (time_limit_fixed.HasValue)
