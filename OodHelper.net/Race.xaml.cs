@@ -200,6 +200,7 @@ namespace OodHelper.net
                         ", extension = @extension " +
                         ", memo = @memo " +
                         ", raced = @raced " +
+                        ", is_race = @is_race" +
                         ", approved = @approved " +
                         "WHERE rid = @rid");
             save.ExecuteNonQuery(p);

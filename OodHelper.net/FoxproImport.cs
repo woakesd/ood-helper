@@ -11,7 +11,7 @@ namespace OodHelper.net
     {
         public FoxproImport()
         {
-            OleDbConnection con = new OleDbConnection(@"Provider=vfpoledb;Data Source=C:\Users\Administrator\Documents\peyc;Collating Sequence=general;");
+            OleDbConnection con = new OleDbConnection(@"Provider=vfpoledb;Data Source=C:\Documents and Settings\david\My Documents\peyc;Collating Sequence=general;");
             con.Open();
             OleDbCommand cmd = new OleDbCommand("SELECT * FROM people", con);
             OleDbDataAdapter adp = new OleDbDataAdapter(cmd);
