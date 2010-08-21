@@ -35,7 +35,7 @@ namespace OodHelper.net
 
             Db c = new Db(@"SELECT b.boatname Boat, b.boatclass [Class], b.sailno [Sail No], r.rolling_handicap as Hcap,
                 r.finish_code, r.finish_date, '' AS Finish, r.elapsed Elapsed, r.laps Laps, r.corrected Corrected, r.place Pos,
-                CASE WHEN override_points = 0 THEN points ELSE override_points END Pts,
+                CASE WHEN ISNULL(override_points) = 1 THEN points ELSE override_points END Pts,
                 r.achieved_handicap Achp, r.new_rolling_handicap [nhcp],
                 ROUND((r.achieved_handicap - r.open_handicap) * 100.0 / r.open_handicap, 1) PI, r.c C, r.a A,
                 r.handicap_status PY
@@ -91,10 +91,6 @@ namespace OodHelper.net
             b = (Binding)col.Binding;
             b.Converter = new DoubleTimeSpan();
             col.Binding = b;
-
-            //col = (DataGridTextColumn)Results.Columns[rd.Columns["Finish"].Ordinal];
-            //b = (Binding)col.Binding;
-            //b.StringFormat = "HH:mm:ss";
 
             col = (DataGridTextColumn)Results.Columns[rd.Columns["PI"].Ordinal];
             b = (Binding)col.Binding;
