@@ -153,7 +153,7 @@ namespace OodHelper.net
                     if (result == MessageBoxResult.Cancel) break;
                     if (result == MessageBoxResult.Yes)
                     {
-                        Db del = new Db("DELETE FROM portsmouth_numbers " +
+                        HandicapDb del = new HandicapDb("DELETE FROM portsmouth_numbers " +
                             "WHERE id = @id");
                         Hashtable d = new Hashtable();
                         d["id"] = i.Row["id"];

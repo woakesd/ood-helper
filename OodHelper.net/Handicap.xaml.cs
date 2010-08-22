@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -47,10 +48,62 @@ namespace OodHelper.net
         {
             try
             {
+                HandicapDb hdb;
                 if (Id == 0)
-                    hl.portsmouth_numbers.InsertOnSubmit(hcap);
-                hl.SubmitChanges();
-                Id = hcap.id;
+                {
+                    hdb = new HandicapDb(@"INSERT INTO portsmouth_numbers 
+                        ([class_name]
+                        , [no_of_crew]
+                        , [rig]
+                        , [spinnaker]
+                        , [engine]
+                        , [keel]
+                        , [number]
+                        , [status]
+                        , [notes])
+                        VALUES (@class_name
+                        , @no_of_crew
+                        , @rig
+                        , @spinnaker
+                        , @engine
+                        , @keel
+                        , @number
+                        , @status
+                        , @notes)");
+                    Id = hdb.GetNextIdentity("portsmouth_numbers", "id");
+                }
+                else
+                    hdb = new HandicapDb(@"UPDATE portsmouth_numbers 
+                        SET [class_name] = @class_name
+                        , [no_of_crew] = @no_of_crew
+                        , [rig] = @rig
+                        , [spinnaker] = @spinnaker
+                        , [engine] = @engine
+                        , [keel] = @keel
+                        , [number] = @number
+                        , [status] = @status
+                        , [notes] = @notes
+                        WHERE id = @id");
+                Hashtable p = new Hashtable();
+                p["class_name"] = class_name.Text;
+                if (no_of_crew.Text == string.Empty)
+                    p["no_of_crew"] = DBNull.Value;
+                else
+                    p["no_of_crew"] = Int32.Parse(no_of_crew.Text);
+                p["rig"] = rig.SelectedValue;
+                p["spinnaker"] = spinnaker.SelectedValue;
+                p["engine"] = engine.SelectedValue;
+                p["keel"] = keel.SelectedValue;
+                if (number.Text == string.Empty)
+                    p["number"] = DBNull.Value;
+                else
+                    p["number"] = Int32.Parse(number.Text);
+                p["status"] = status.SelectedValue;
+                p["notes"] = notes.Text;
+                p["id"] = Id;
+
+                hdb.ExecuteNonQuery(p);
+
                 this.DialogResult = true;
                 this.Close();
             }
