@@ -396,6 +396,8 @@ namespace OodHelper.net
                 DataTable dt = c.GetData(null);
 
                 Boats.ItemsSource = dt.DefaultView;
+                if (Boatname.Text != string.Empty)
+                    FilterBoats();
             }
         }
 
