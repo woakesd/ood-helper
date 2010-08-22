@@ -62,6 +62,7 @@ namespace OodHelper.net
                     LEFT JOIN calendar c ON c.rid = j.rid
                     WHERE j.sid = @sid
                     AND raced = 1
+                    AND (finish_code IS NOT NULL OR finish_date IS NOT NULL)
                     ORDER BY c.class");
 
                 DataTable rd = c.GetData(p);

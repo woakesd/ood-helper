@@ -127,11 +127,14 @@ namespace OodHelper.net
             Hashtable p = new Hashtable();
             p["rid"] = rid;
             string sql = @"UPDATE races
-                SET elapsed = 0
-                ,corrected = 999999
-                ,standard_corrected = 999999
+                SET elapsed = NULL
+                ,corrected = NULL
+                ,standard_corrected = NULL
                 ,place = 999
-                ,points = 0
+                ,points = NULL
+                ,performance_index = NULL
+                ,c = NULL
+                ,a = NULL
                 WHERE rid = @rid";
             Db c = new Db(sql);
             c.ExecuteNonQuery(p);
