@@ -11,5 +11,9 @@ namespace OodHelper.net
         double StandardCorrectedTime { get; }
 
         void Calculate(int rid);
+
+        int Finishers { get; set; }
+
+        bool Calculated { get; set; }
     }
 }

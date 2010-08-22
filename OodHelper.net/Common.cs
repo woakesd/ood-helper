@@ -145,7 +145,7 @@ namespace OodHelper.net
                 c = new Db(@"SELECT rid,bid,start_date,finish_code,finish_date,last_edit,laps,place,points,override_points,
                         elapsed,corrected,standard_corrected,handicap_status,open_handicap,rolling_handicap,achieved_handicap,
                         new_rolling_handicap,performance_index,a,c
-                        FROM races");
+                        FROM races WHERE rid IN (SELECT rid FROM calendar WHERE raced = 1)");
                 d = c.GetData(null);
 
                 BuildInsertData(d, msql);

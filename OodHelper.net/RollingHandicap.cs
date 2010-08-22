@@ -19,6 +19,10 @@ namespace OodHelper.net
         private bool averageLap;
         private int rid;
 
+        public int Finishers { get; set; }
+
+        public bool Calculated { get; set; }
+
         public double StandardCorrectedTime
         {
             get { return standardCorrectedTime; }
@@ -86,7 +90,7 @@ namespace OodHelper.net
             c.ExecuteNonQuery(p);
         }
 
-        private bool HasFinishers()
+        public bool HasFinishers()
         {
             Hashtable p = new Hashtable();
             p["rid"] = rid;

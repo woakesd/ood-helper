@@ -19,6 +19,10 @@ namespace OodHelper.net
         private bool averageLap;
         private int rid;
 
+        public int Finishers { get; set; }
+
+        public bool Calculated { get; set; }
+
         public double StandardCorrectedTime
         {
             get { return standardCorrectedTime; }
@@ -89,11 +93,13 @@ namespace OodHelper.net
 
         private bool HasFinishers()
         {
+            Hashtable p = new Hashtable();
+            p["rid"] = rid;
             //
             // First remove race entries the user doesn't want
             //
-            Db c = new Db("DELETE FROM races WHERE finish_code IN ('BAD','DNC')");
-            c.ExecuteNonQuery(null);
+            Db c = new Db("DELETE FROM races WHERE RID = @rid AND finish_code IN ('BAD','DNC')");
+            c.ExecuteNonQuery(p);
 
             //
             // Next count valid finishers
@@ -106,9 +112,8 @@ namespace OodHelper.net
                 WHEN 'F' THEN time_limit_fixed
                 WHEN 'D' THEN DATEADD(SECOND, time_limit_delta, c.start_date)
                 END");
-            Hashtable p = new Hashtable();
-            p["rid"] = rid;
             int? count = c.GetScalar(p) as int?;
+            Finishers = count.Value;
             if (count.Value > 0)
                 return true;
             return false;

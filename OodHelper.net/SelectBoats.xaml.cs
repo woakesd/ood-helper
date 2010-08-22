@@ -26,6 +26,8 @@ namespace OodHelper.net
         private Hashtable boatClasses;
         private RaceEdit[] reds;
 
+        private StringBuilder BoatsSql;
+
         public SelectBoats(RaceEdit[] raceEdits)
         {
             InitializeComponent();
@@ -96,7 +98,7 @@ namespace OodHelper.net
                 }
             }
 
-            string sql = @"SELECT * FROM boats ";
+            BoatsSql = new StringBuilder(@"SELECT * FROM boats ");
             bool yachts = false;
             bool dinghies = false;
 
@@ -119,13 +121,13 @@ namespace OodHelper.net
             }
 
             if (!dinghies && yachts)
-                sql += @"WHERE dinghy = 0 ";
+                BoatsSql.Append(@"WHERE dinghy = 0 ");
             else if (dinghies && !yachts)
-                sql += @"WHERE dinghy = 1 ";
+                BoatsSql.Append(@"WHERE dinghy = 1 ");
 
-            sql += @"ORDER BY boatname";
+            BoatsSql.Append(@"ORDER BY boatname");
 
-            Db c = new Db(sql);
+            Db c = new Db(BoatsSql.ToString());
             DataTable dt = c.GetData(null);
 
             Boats.ItemsSource = dt.DefaultView;
@@ -388,7 +390,13 @@ namespace OodHelper.net
         private void NewBoat_Click(object sender, RoutedEventArgs e)
         {
             Boat b = new Boat(0);
-            b.ShowDialog();
+            if (b.ShowDialog() == true)
+            {
+                Db c = new Db(BoatsSql.ToString());
+                DataTable dt = c.GetData(null);
+
+                Boats.ItemsSource = dt.DefaultView;
+            }
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
