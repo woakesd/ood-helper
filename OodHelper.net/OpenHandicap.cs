@@ -51,16 +51,67 @@ namespace OodHelper.net
             if (res["result_calculated"] == DBNull.Value || res["last_edit"] != DBNull.Value &&
                 (DateTime)res["result_calculated"] <= (DateTime)res["last_edit"])
             {
-                CorrectedTime();
-                CalculateSct();
-                Score();
-                UpdateHandicaps();
-                c = new Db(@"UPDATE calendar
+                if (HasFinishers())
+                {
+                    FlagDidNotFinish();
+                    CorrectedTime();
+                    CalculateSct();
+                    Score();
+                    UpdateHandicaps();
+                    c = new Db(@"UPDATE calendar
                         SET result_calculated = GETDATE(),
                         raced = 1
                         WHERE rid = @rid");
-                c.ExecuteNonQuery(p);
+                    c.ExecuteNonQuery(p);
+                }
             }
+        }
+
+        private void FlagDidNotFinish()
+        {
+            //
+            // Mark non finishers
+            //
+            Db c = new Db(@"UPDATE races
+                SET finish_code = 'DNF'
+                WHERE bid IN (SELECT bid
+                FROM calendar c INNER JOIN races r ON c.rid = r.rid
+                WHERE c.rid = @rid
+                AND r.finish_date > DATEADD(SECOND, extension, CASE time_limit_type
+                WHEN 'F' THEN time_limit_fixed
+                WHEN 'D' THEN DATEADD(SECOND, time_limit_delta, c.start_date)
+                END))
+                AND rid = @rid");
+            Hashtable p = new Hashtable();
+            p["rid"] = rid;
+            c.ExecuteNonQuery(p);
+        }
+
+        private bool HasFinishers()
+        {
+            //
+            // First remove race entries the user doesn't want
+            //
+            Db c = new Db("DELETE FROM races WHERE finish_code IN ('BAD','DNC')");
+            c.ExecuteNonQuery(null);
+
+            //
+            // Next count valid finishers
+            //
+            c = new Db(@"SELECT COUNT(1)
+                FROM races r INNER JOIN calendar c
+                ON r.rid = c.rid
+                WHERE c.rid = 151
+                AND r.finish_date <= CASE time_limit_type
+                WHEN 'F' THEN time_limit_fixed
+                WHEN 'D' THEN DATEADD(SECOND, time_limit_delta, c.start_date)
+                END");
+            Hashtable p = new Hashtable();
+            p["rid"] = rid;
+            int? count = c.GetScalar(p) as int?;
+            if (count.Value > 0)
+                return true;
+            return false;
         }
 
         private void CorrectedTime()
@@ -83,7 +134,8 @@ namespace OodHelper.net
             //
             // Next select all boats and work out elapsed, corrected and stdcorr
             //
-            sql = @"SELECT bid, rid, start_date, finish_date, rolling_handicap, open_handicap, laps, 
+            sql = @"SELECT bid, rid, start_date, CASE finish_code WHEN 'DNF' THEN NULL ELSE finish_date END finish_date,
+                rolling_handicap, open_handicap, laps, 
                 elapsed, corrected, standard_corrected, place
                 FROM races
                 WHERE rid = @rid";
