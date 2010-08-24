@@ -142,7 +142,11 @@ namespace OodHelper.net
             //
             // Next select all boats and work out elapsed, corrected and stdcorr
             //
-            sql = @"SELECT bid, rid, start_date, CASE finish_code WHEN 'DNF' THEN NULL ELSE finish_date END finish_date,
+            sql = @"SELECT bid, rid, start_date, 
+                CASE finish_code 
+                    WHEN 'DNF' THEN NULL 
+                    WHEN 'DSQ' THEN NULL 
+                    ELSE finish_date END finish_date,
                 rolling_handicap, open_handicap, laps, 
                 elapsed, corrected, standard_corrected, place
                 FROM races
