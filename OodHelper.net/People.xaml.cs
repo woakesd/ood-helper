@@ -233,5 +233,11 @@ namespace OodHelper.net
         {
             LoadGrid();
         }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.F3)
+                Peoplename.Focus();
+        }
     }
 }

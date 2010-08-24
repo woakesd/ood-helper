@@ -12,7 +12,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0" Margin="0,0,0,0" >
+        <Menu Grid.Row="0">
             <MenuItem Header="_File">
                 <MenuItem Header="E_xit" Name="Exit" Click="Exit_Click"/>
             </MenuItem>
@@ -77,51 +77,38 @@
         </Menu>
         <ToolBarTray Name="mainToolbarTray" VerticalAlignment="Top" Grid.Row="1">
             <ToolBar Name="mainToolbar" VerticalAlignment="Top">
+                <Button Name="Download" Click="Download_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/OodHelper.net;component/Images/Download.png"/>
+                        <Label>Download from Web</Label>
+                    </StackPanel>
+                </Button>
                 <Button Name="Results" Click="Results_Click">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Results.png"/>
-                        <Label Grid.Column="1">Results</Label>
-                    </Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/OodHelper.net;component/Images/Results.png"/>
+                        <Label>Results</Label>
+                    </StackPanel>
                 </Button>
                 <Button Name="SeriesResults" Click="SeriesResults_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Results.png"/>
-                        <Label Grid.Column="1">Series Results</Label>
+                        <Image Source="/OodHelper.net;component/Images/Results.png"/>
+                        <Label>Series Results</Label>
+                    </StackPanel>
+                </Button>
+                <Button Name="Upload" Click="Upload_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/OodHelper.net;component/Images/Upload.png" />
+                        <Label>Upload to Web</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="EntrySheets" Click="EntrySheets_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Applications.png"/>
-                        <Label Grid.Column="1">Entry Sheets</Label>
+                        <Image Source="/OodHelper.net;component/Images/Applications.png"/>
+                        <Label>Entry Sheets</Label>
                     </StackPanel>
-                </Button>
-                <Button Name="Download" Click="Download_Click">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Download.png"/>
-                        <Label Grid.Column="1">Download from Web</Label>
-                    </Grid>
-                </Button>
-                <Button Name="Upload" Click="Upload_Click">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Image Source="/OodHelper.net;component/Images/Upload.png" />
-                        <Label Grid.Column="1">Upload to Web</Label>
-                    </Grid>
                 </Button>
             </ToolBar>
         </ToolBarTray>
-        <DockPanel Grid.Row="2" Name="dock">
-        </DockPanel>
+        <DockPanel Grid.Row="2" Name="dock"/>
     </Grid>
 </Window>

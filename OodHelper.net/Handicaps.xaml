@@ -6,7 +6,7 @@
         mc:Ignorable="d"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        d:DesignHeight="269" d:DesignWidth="431">
+        d:DesignHeight="269" d:DesignWidth="431" KeyUp="Window_KeyUp">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -16,55 +16,36 @@
         <ToolBarTray>
             <ToolBar>
                 <Button Name="Add" Click="Add_Click">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto" />
-                            <ColumnDefinition Width="auto" />
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Add.png" />
-                        <Label Grid.Column="1">Add</Label>
-                    </Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/OodHelper.net;component/Images/Add.png" />
+                        <Label>_Add</Label>
+                    </StackPanel>
                 </Button>
                 <Button Name="Edit" Click="Edit_Click">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto" />
-                            <ColumnDefinition Width="auto" />
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Edit.png" />
-                        <Label Grid.Column="1">Edit</Label>
-                    </Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/OodHelper.net;component/Images/Edit.png" />
+                        <Label>_Edit</Label>
+                    </StackPanel>
                 </Button>
                 <Button Name="Delete" Click="Delete_Click">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto" />
-                            <ColumnDefinition Width="auto" />
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Delete.png" />
-                        <Label Grid.Column="1">Delete</Label>
-                    </Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/OodHelper.net;component/Images/Delete.png" />
+                        <Label >_Delete</Label>
+                    </StackPanel>
                 </Button>
                 <Button Name="CloseButton" Click="Close_Click">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto" />
-                            <ColumnDefinition Width="auto" />
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Cancel.png" />
-                        <Label Grid.Column="1">Close</Label>
-                    </Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/OodHelper.net;component/Images/Cancel.png" />
+                        <Label>Close</Label>
+                    </StackPanel>
                 </Button>
             </ToolBar>
         </ToolBarTray>
-        <Grid Grid.Row="1" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-            </Grid.ColumnDefinitions>
-            <Label Margin="0" Grid.Column="0" Name="findtext">Find</Label>
-            <TextBox Name="ClassName" Grid.Column="1" Margin="2" Width="250" TextChanged="ClassName_TextChanged" />
-        </Grid>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,2">
+            <Label Margin="3,0">Find</Label>
+            <TextBox Name="ClassName" Margin="2" Width="250" TextChanged="ClassName_TextChanged" />
+            <TextBlock VerticalAlignment="Center" Margin="4,0">Press F3 to search</TextBlock>
+        </StackPanel>
         <DockPanel Grid.Row="2" >
             <DataGrid Name="ClassData" IsReadOnly="True">
                 <DataGrid.ContextMenu>
