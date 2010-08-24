@@ -46,6 +46,7 @@ namespace OodHelper.net
                 mysql = mcsb.ConnectionString;
                 MySqlConnection mcon = new MySqlConnection(mysql);
                 mcon.Open();
+                MySqlTransaction mtrn = mcon.BeginTransaction();
 
                 MySqlCommand mcom = new MySqlCommand("DELETE FROM boats");
                 mcom.Connection = mcon;
@@ -202,6 +203,19 @@ namespace OodHelper.net
                 mcom.CommandText = "ALTER TABLE `calendar_series_join` ENABLE KEYS";
                 mcom.ExecuteNonQuery();
 
+                DateTime updateTime = DateTime.Now;
+
+                mcom.CommandText = "INSERT INTO updates (upload, dummy) VALUES (@dt, 2)";
+                mcom.Parameters.AddWithValue("dt", updateTime);
+                mcom.ExecuteNonQuery();
+
+                c = new Db("INSERT INTO updates (upload, dummy) VALUES (@dt, 2)");
+                Hashtable p = new Hashtable();
+                p["dt"] = updateTime;
+                c.ExecuteNonQuery(p);
+
+                mtrn.Commit();
+
                 w.SetProgress("All done", 6);
                 w.CloseWindow();
             });
@@ -273,6 +287,7 @@ namespace OodHelper.net
                     new System.Data.SqlServerCe.SqlCeConnection();
                 scon.ConnectionString = Properties.Settings.Default.OodHelperConnectionString;
                 scon.Open();
+                SqlCeTransaction strn = scon.BeginTransaction();
 
                 //
                 // Boats
@@ -397,7 +412,7 @@ namespace OodHelper.net
 
                 copyData(mtable, ins);
 
-                scmd.CommandText = @"SELECT r1.rid rid, r1.bid bid, 
+                /*scmd.CommandText = @"SELECT r1.rid rid, r1.bid bid, 
                         CASE WHEN r2.new_rolling_handicap IS NOT NULL THEN r2.new_rolling_handicap ELSE b.rolling_handicap END rolling_handicap
                         FROM races r1
                         INNER JOIN calendar c ON r1.rid = c.rid
@@ -426,7 +441,9 @@ namespace OodHelper.net
                     scmd.Parameters.Add("bid", dr["bid"]);
                     scmd.Parameters.Add("rolling_handicap", dr["rolling_handicap"]);
                     scmd.ExecuteNonQuery();
-                }
+                }*/
+
+                strn.Commit();
 
                 scon.Close();
                 mcon.Close();

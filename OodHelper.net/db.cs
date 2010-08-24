@@ -175,6 +175,13 @@ CREATE TABLE [series] (
 )";
                 cmd.ExecuteNonQuery();
 
+                cmd.CommandText = @"
+CREATE TABLE [updates] (
+  [dummy] int
+, [upload] DATETIME NULL
+)";
+                cmd.ExecuteNonQuery();
+
                 cmd.CommandText = @"ALTER TABLE [boats] ADD CONSTRAINT [PK_boats] PRIMARY KEY ([bid])";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = @"ALTER TABLE [calendar] ADD CONSTRAINT [PK_calendar] PRIMARY KEY ([rid])";
