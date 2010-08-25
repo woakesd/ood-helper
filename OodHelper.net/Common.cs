@@ -320,10 +320,19 @@ namespace OodHelper.net
                 // Events
                 //
                 p.SetProgress("Loading Calendar", 1);
-                ins.CommandText = "INSERT INTO [calendar] ([rid], [start_date], [class], [event], [price_code], [course], [ood], [venue], [average_lap], [timegate], [handicapping], [visitors], [flag], [time_limit_type], [time_limit_fixed], [extension], [memo], [is_race], [raced], [approved], [course_choice], [laps_completed], [wind_speed], [wind_direction], [standard_corrected_time], [result_calculated]) " +
-                    "VALUES (@rid, @start_date, @class, @event, @price_code, @course, @ood, @venue, @average_lap, @timegate, @handicapping, @visitors, @flag, @time_limit_type, @time_limit_fixed, @extension, @memo, @is_race, @raced, @approved, @course_choice, @laps_completed, @wind_speed, @wind_direction, @standard_corrected_time, @result_calculated)";
+                ins.CommandText = "INSERT INTO [calendar] ([rid], [start_date], [class], [event], [price_code], [course], [ood], " +
+                    "[venue], [average_lap], [timegate], [handicapping], [visitors], [flag], [time_limit_type], [time_limit_fixed], " +
+                    "[time_limit_delta], [extension], [memo], [is_race], [raced], [approved], [course_choice], [laps_completed], " +
+                    "[wind_speed], [wind_direction], [standard_corrected_time], [result_calculated]) " +
+                    "VALUES (@rid, @start_date, @class, @event, @price_code, @course, @ood, @venue, @average_lap, @timegate, " +
+                    "@handicapping, @visitors, @flag, @time_limit_type, @time_limit_fixed, @time_limit_delta, @extension, @memo, " +
+                    "@is_race, @raced, @approved, @course_choice, @laps_completed, @wind_speed, @wind_direction, " +
+                    "@standard_corrected_time, @result_calculated)";
 
-                myadp = new MySqlDataAdapter("SELECT `rid`, `start_date`, `class`, `event`, `price_code`, `course`, `ood`, `venue`, `average_lap`, `timegate`, `handicapping`, `visitors`, `flag`, `time_limit_type`, `time_limit_fixed`, `extension`, `memo`, `is_race`, `raced`, `approved`, `course_choice`, `laps_completed`, `wind_speed`, `wind_direction`, `standard_corrected_time`, `result_calculated` FROM calendar_new", mcon);
+                myadp = new MySqlDataAdapter("SELECT `rid`, `start_date`, `class`, `event`, `price_code`, `course`, `ood`, `venue`, " +
+                    "`average_lap`, `timegate`, `handicapping`, `visitors`, `flag`, `time_limit_type`, `time_limit_fixed`, " +
+                    "`time_limit_delta`, `extension`, `memo`, `is_race`, `raced`, `approved`, `course_choice`, `laps_completed`, " +
+                    "`wind_speed`, `wind_direction`, `standard_corrected_time`, `result_calculated` FROM calendar_new", mcon);
                 mtable = new DataTable();
                 myadp.Fill(mtable);
 
