@@ -8,7 +8,7 @@ namespace OodHelper.net
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (value != DBNull.Value)
+            if (value != DBNull.Value && value != null)
             {
                 TimeSpan x = (TimeSpan)value;
                 return x.ToString("hh\\:mm");

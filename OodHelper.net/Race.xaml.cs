@@ -154,6 +154,12 @@ namespace OodHelper.net
                     p["time_limit_delta"] = DBNull.Value;
                 p["time_limit_fixed"] = DBNull.Value;
             }
+            else
+            {
+                p["time_limit_type"] = DBNull.Value;
+                p["time_limit_delta"] = DBNull.Value;
+                p["time_limit_fixed"] = DBNull.Value;
+            }
             p["class"] = raceData.calendar_class;
             p["event"] = raceData.calendar_event;
             p["price_code"] = raceData.price_code;

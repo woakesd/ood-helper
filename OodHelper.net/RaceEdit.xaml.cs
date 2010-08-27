@@ -292,7 +292,9 @@ namespace OodHelper.net
             Ood = caldata["ood"].ToString();
             if (caldata["handicapping"] != DBNull.Value)
                 mHandicap = (string)caldata["handicapping"];
-            sct.Text = Common.HMS((double)caldata["standard_corrected_time"]);
+            double? dsct = caldata["standard_corrected_time"] as double?;
+            if (dsct.HasValue)
+                sct.Text = Common.HMS(dsct.Value);
 
             mCourse = caldata["course_choice"] as string;
             mWindSpeed = caldata["wind_speed"] as string;
