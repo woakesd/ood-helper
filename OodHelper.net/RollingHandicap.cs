@@ -513,6 +513,7 @@ namespace OodHelper.net
             p["rid"] = rid;
             c = new Db(@"SELECT bid, new_rolling_handicap
                     FROM races
+                    WHERE new_rolling_handicap IS NOT NULL
                     WHERE rid = @rid");
             d = c.GetData(p);
 
