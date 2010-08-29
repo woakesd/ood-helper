@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="SelectBoats" xmlns:my="http://schemas.microsoft.com/wpf/2008/toolkit"
     ShowInTaskbar="False" WindowState="Maximized" KeyUp="Window_KeyUp">
-    <Grid >
+    <Grid FocusManager.FocusedElement="{Binding ElementName=Boatname}" >
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>

@@ -8,7 +8,7 @@
         d:DesignHeight="300" d:DesignWidth="660" 
         MaxHeight="500"
         SizeToContent="WidthAndHeight">
-    <Grid>
+    <Grid FocusManager.FocusedElement="{Binding ElementName=Eventname}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
