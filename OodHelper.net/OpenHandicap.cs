@@ -51,7 +51,10 @@ namespace OodHelper.net
             Hashtable res = c.GetHashtable(p);
             rdate = (DateTime)res["start_date"];
             averageLap = (bool)res["average_lap"];
-            standardCorrectedTime = (double)res["standard_corrected_time"];
+            double? dsct = res["standard_corrected_time"] as double?;
+            standardCorrectedTime = 0;
+            if (dsct.HasValue)
+                standardCorrectedTime = dsct.Value;
             if (res["result_calculated"] == DBNull.Value || res["last_edit"] != DBNull.Value &&
                 (DateTime)res["result_calculated"] <= (DateTime)res["last_edit"])
             {
