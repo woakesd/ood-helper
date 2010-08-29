@@ -12,8 +12,8 @@ namespace OodHelper.net
 
         void Calculate(int rid);
 
-        int Finishers { get; set; }
+        int Finishers { get; }
 
-        bool Calculated { get; set; }
+        bool Calculated { get; }
     }
 }
