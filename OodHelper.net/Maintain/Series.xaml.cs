@@ -139,7 +139,7 @@ namespace OodHelper.net.Maintain
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-
+            Close();
         }
 
     }
