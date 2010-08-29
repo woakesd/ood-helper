@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using OodHelper.net.Maintain;
 
 namespace OodHelper.net
 {
@@ -389,7 +390,7 @@ namespace OodHelper.net
 
         private void NewBoat_Click(object sender, RoutedEventArgs e)
         {
-            Boat b = new Boat(0);
+            BoatEdit b = new BoatEdit(0);
             if (b.ShowDialog() == true)
             {
                 Db c = new Db(BoatsSql.ToString());

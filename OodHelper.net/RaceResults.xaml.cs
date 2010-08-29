@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Printing;
 using System.Windows.Xps;
+using OodHelper.net.Maintain;
 
 namespace OodHelper.net
 {
@@ -66,7 +67,7 @@ namespace OodHelper.net
                 ContextMenu m = from.ContextMenu;
                 MenuItem editBoat = new MenuItem();
                 editBoat.Header = "Edit Boat";
-                editBoat.Command = new EditBoat();
+                editBoat.Command = new EditBoatCmd();
                 editBoat.CommandParameter = from;
                 m.Items.Add(editBoat);
                 if (rids.Length > 1)
@@ -87,9 +88,9 @@ namespace OodHelper.net
             }
         }
 
-        class EditBoat : ICommand
+        class EditBoatCmd : ICommand
         {
-            public EditBoat()
+            public EditBoatCmd()
             {
             }
 
@@ -112,7 +113,7 @@ namespace OodHelper.net
                 {
                     DataRowView rv = inf.Item as DataRowView;
                     int bid = (int)rv.Row["bid"];
-                    Boat edit = new Boat(bid);
+                    BoatEdit edit = new BoatEdit(bid);
                     if (edit.ShowDialog().Value)
                     {
                         Db c = new Db(@"SELECT bid, rolling_handicap, handicap_status, open_handicap

@@ -13,12 +13,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Threading.Tasks;
 
-namespace OodHelper.net
+namespace OodHelper.net.Maintain
 {
     /// <summary>
     /// Interaction logic for Boats.xaml
     /// </summary>
-    [Svn("$Id$")]
+    [Svn("$Id: Boats.xaml.cs 149 2010-08-24 22:09:28Z woakesdavid $")]
     public partial class Boats : Window
     {
         public Boats()
@@ -65,7 +65,7 @@ namespace OodHelper.net
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            Boat b = new Boat(0);
+            BoatEdit b = new BoatEdit(0);
             if (b.ShowDialog().Value)
             {
                 LoadGrid();
@@ -77,7 +77,7 @@ namespace OodHelper.net
             if (BoatData.SelectedItem != null)
             {
                 DataRowView i = (DataRowView) BoatData.SelectedItem;
-                Boat b = new Boat((int)i.Row["bid"]);
+                BoatEdit b = new BoatEdit((int)i.Row["bid"]);
                 if (b.ShowDialog().Value)
                 {
                     LoadGrid();

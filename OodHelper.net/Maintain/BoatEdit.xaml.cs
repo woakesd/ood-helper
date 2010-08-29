@@ -16,13 +16,12 @@ using System.ComponentModel;
 using System.Data.Linq.Mapping;
 using System.Linq;
 
-namespace OodHelper.net
+namespace OodHelper.net.Maintain
 {
     /// <summary>
     /// Interaction logic for Boat.xaml
     /// </summary>
-    [Svn("$Id$")]
-    public partial class Boat : Window, INotifyPropertyChanged
+    public partial class BoatEdit : Window, INotifyPropertyChanged
     {
         private int bid;
         public int Bid
@@ -55,7 +54,7 @@ namespace OodHelper.net
             }
         }
 
-        public Boat(int b)
+        public BoatEdit(int b)
         {
             bid = b;
             InitializeComponent();

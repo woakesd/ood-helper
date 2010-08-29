@@ -100,7 +100,7 @@ namespace OodHelper.net
             XmlWriter xmlwrite = XmlWriter.Create(strbuild, settings);
             ControlTemplate ct = Download.Template;
             XamlWriter.Save(Download.Template, xmlwrite);*/
-            Boats b = new Boats();
+            Maintain.Boats b = new Maintain.Boats();
             b.ShowDialog();
             b.HorizontalAlignment = HorizontalAlignment.Stretch;
             b.VerticalAlignment = VerticalAlignment.Stretch;

@@ -23,9 +23,11 @@ namespace OodHelper.net
             {
                 Hashtable p = new Hashtable();
                 p["sid"] = SeriesId;
-                Db c = new Db(@"SELECT sname FROM series WHERE sid = @sid");
+                Db c = new Db(@"SELECT sname, discards FROM series WHERE sid = @sid");
 
-                string SeriesName = c.GetScalar(p) as string;
+                Hashtable dt = c.GetHashtable(p);
+                string SeriesName = dt["sname"] as string;
+                string SeriesDiscards = dt["discards"] as string;
 
                 c = new Db(@"SELECT c.event, c.class, c.handicapping, c.rid, c.start_date, c.result_calculated
                     FROM calendar c 
@@ -103,9 +105,13 @@ namespace OodHelper.net
                     foreach (int k in rem)
                         SeriesData[className].Remove(k);
 
-                    string defaultDiscards = (string)DbSettings.GetSetting(DbSettings.settDefaultDiscardProfile);
+                    string defaultDiscards = SeriesDiscards;
                     if (defaultDiscards == string.Empty || defaultDiscards == null)
-                        defaultDiscards = "0,1";
+                    {
+                        defaultDiscards = (string)DbSettings.GetSetting(DbSettings.settDefaultDiscardProfile);
+                        if (defaultDiscards == string.Empty || defaultDiscards == null)
+                            defaultDiscards = "0,1";
+                    }
 
                     string[] DiscardParts = defaultDiscards.Split(new char[] { ',' });
                     int[] discardProfile = new int[DiscardParts.Length];
