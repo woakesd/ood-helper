@@ -365,9 +365,9 @@ namespace OodHelper.net
 
         private void SelectPerson_Click(object sender, RoutedEventArgs e)
         {
-            People ppl = new People(Id);
+            People ppl = new People(true, 0);
             ppl.ShowDialog();
-            if (Id.Value != ppl.Id)
+            if (!Id.HasValue || ppl.Id.HasValue && Id.Value != ppl.Id)
             {
                 id = ppl.Id;
                 SetOwner();

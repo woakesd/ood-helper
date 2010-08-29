@@ -2,6 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Loaded="Window_Loaded" Icon="/OodHelper.net;component/Images/Man.png" Title="People" KeyUp="Window_KeyUp">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -11,44 +14,35 @@
         <ToolBarTray>
             <ToolBar>
                 <Button Name="Add" Click="Add_Click">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto" />
-                            <ColumnDefinition Width="auto" />
-                        </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal">
                         <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Add.png" />
                         <Label Grid.Column="1">Add</Label>
-                    </Grid>
+                    </StackPanel>
                 </Button>
                 <Button Name="Edit" Click="Edit_Click">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto" />
-                            <ColumnDefinition Width="auto" />
-                        </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal">
                         <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Edit.png" />
                         <Label Grid.Column="1">Edit</Label>
-                    </Grid>
+                    </StackPanel>
                 </Button>
                 <Button Name="Delete" Click="Delete_Click">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto" />
-                            <ColumnDefinition Width="auto" />
-                        </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal">
                         <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Delete.png" />
                         <Label Grid.Column="1">Delete</Label>
-                    </Grid>
+                    </StackPanel>
+                </Button>
+                <Button Name="SelectButton" Click="SelectButton_Click" 
+                        Visibility="{Binding Path=SelectMode,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Add.png" />
+                        <Label Grid.Column="1">Select</Label>
+                    </StackPanel>
                 </Button>
                 <Button Name="CloseButton" Click="Close_Click">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto" />
-                            <ColumnDefinition Width="auto" />
-                        </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal">
                         <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Cancel.png" />
                         <Label Grid.Column="1">Close</Label>
-                    </Grid>
+                    </StackPanel>
                 </Button>
             </ToolBar>
         </ToolBarTray>

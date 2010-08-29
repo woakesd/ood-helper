@@ -20,26 +20,42 @@ namespace OodHelper.net
     /// Interaction logic for Boats.xaml
     /// </summary>
     [Svn("$Id$")]
-    public partial class People : Window
+    public partial class People : Window, INotifyPropertyChanged
     {
         public People()
         {
             InitializeComponent();
             dSetGridSource = SetGridSource;
+            SelectMode = false;
+            DataContext = this;
         }
 
-        int? id;
-        public int? Id
+        public int? Id { get; private set; }
+
+        private bool? _selectMode;
+        public bool? SelectMode
         {
             get
             {
-                return id;
+                return _selectMode;
+            }
+            private set
+            {
+                _selectMode = value;
+                OnPropertyChanged("SelectMode");
             }
         }
 
-        public People(int? id) : this()
+        public People(int? id)
+            : this()
         {
-            this.id = id;
+            Id = id;
+        }
+
+        public People(bool selectMode, int? id)
+            : this(id)
+        {
+            SelectMode = selectMode;
         }
 
         private delegate void DSetGridSource(DataTable ppl);
@@ -65,12 +81,12 @@ namespace OodHelper.net
         {
             PeopleData.ItemsSource = ppl.DefaultView;
             if (Peoplename.Text != string.Empty) FilterPeople();
-            if (id != null)
+            if (Id != null)
             {
                 foreach (DataRowView vr in PeopleData.Items)
                 {
                     DataRow r = vr.Row;
-                    if (((int)r["id"]) == id.Value)
+                    if (((int)r["id"]) == Id.Value)
                     {
                         PeopleData.SelectedItem = vr;
                         PeopleData.ScrollIntoView(vr);
@@ -84,7 +100,7 @@ namespace OodHelper.net
         private void Close_Click(object sender, RoutedEventArgs e)
         {
             if (PeopleData.SelectedItem != null)
-                id = (int)((DataRowView)PeopleData.SelectedItem).Row["id"];
+                Id = (int)((DataRowView)PeopleData.SelectedItem).Row["id"];
             Close();
         }
 
@@ -238,6 +254,31 @@ namespace OodHelper.net
         {
             if (e.Key == Key.F3)
                 Peoplename.Focus();
+        }
+
+        private void SelectButton_Click(object sender, RoutedEventArgs e)
+        {
+            DataRowView rv = PeopleData.SelectedItem as DataRowView;
+            if (rv != null)
+            {
+                Id = rv.Row["id"] as int?;
+                Close();
+            }
+            else
+            {
+                MessageBox.Show("You must select a person first", "Please select", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
         }
     }
 }
