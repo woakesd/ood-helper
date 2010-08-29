@@ -77,9 +77,50 @@ namespace OodHelper.net
             w.Close();
         }
 
-        void cal_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        System.Timers.Timer t = null;
+
+        void Eventname_TextChanged(object sender, TextChangedEventArgs e)
         {
-            setChosenRaces();
+            if (t == null)
+                t = new System.Timers.Timer(500);
+            else
+                t.Stop();
+            t.AutoReset = false;
+            t.Elapsed += new System.Timers.ElapsedEventHandler(t_Elapsed);
+            t.Start();
+        }
+
+        void t_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            try
+            {
+                Dispatcher.Invoke(new dFilterRaces(FilterRaces), null);
+            }
+            catch (Exception ex)
+            {
+                string x = ex.Message;
+            }
+        }
+
+        public delegate void dFilterRaces();
+
+        public void FilterRaces()
+        {
+            try
+            {
+                ((DataView)CalGrid.ItemsSource).RowFilter =
+                    "event LIKE '%" + Eventname.Text + "%'";
+            }
+            catch (Exception ex)
+            {
+                string x = ex.Message;
+            }
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.F3)
+                Eventname.Focus();
         }
 
         private void buttonResults_Click(object sender, RoutedEventArgs e)
@@ -110,7 +151,6 @@ namespace OodHelper.net
             {
                 for (int i = rowIndex - 1; i >= 0; i--)
                 {
-                    //TimeSpan? t = Common.tspan(((DataRowView)CalGrid.Items[i]).Row["start"].ToString());
                     DateTime d = (DateTime)((DataRowView)CalGrid.Items[i]).Row["start_date"];
                     if ((rd - d).TotalMinutes > 15)
                         break;
@@ -118,7 +158,6 @@ namespace OodHelper.net
                 }
                 for (int i = rowIndex + 1; i < CalGrid.Items.Count; i++)
                 {
-                    //TimeSpan? t = Common.tspan(((DataRowView)CalGrid.Items[i]).Row["start"].ToString());
                     DateTime d = (DateTime)((DataRowView)CalGrid.Items[i]).Row["start_date"];
                     if ((d - rd).TotalMinutes > 15)
                         break;
