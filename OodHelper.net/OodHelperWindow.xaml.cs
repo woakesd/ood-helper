@@ -106,12 +106,16 @@ namespace OodHelper.net
             b.VerticalAlignment = VerticalAlignment.Stretch;
         }
 
+        private void Series_Click(object sender, RoutedEventArgs e)
+        {
+            Maintain.Series b = new Maintain.Series();
+            b.ShowDialog();
+        }
+
         private void Calendar_Click(object sender, RoutedEventArgs e)
         {
             Races b = new Races();
             b.ShowDialog();
-            b.HorizontalAlignment = HorizontalAlignment.Stretch;
-            b.VerticalAlignment = VerticalAlignment.Stretch;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

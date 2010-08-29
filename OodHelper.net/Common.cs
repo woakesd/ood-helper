@@ -168,9 +168,9 @@ namespace OodHelper.net
                 mcom.ExecuteNonQuery();
 
                 msql.Clear();
-                msql.Append("INSERT INTO `series` (sid,sname) VALUES ");
+                msql.Append("INSERT INTO `series` (sid,sname,discards) VALUES ");
 
-                c = new Db(@"SELECT sid,sname FROM series");
+                c = new Db(@"SELECT sid,sname,discards FROM series");
                 d = c.GetData(null);
 
                 BuildInsertData(d, msql);
@@ -389,9 +389,9 @@ namespace OodHelper.net
                 // Series
                 //
                 p.SetProgress("Loading Series", 4);
-                ins.CommandText = "INSERT INTO [series] ([sid], [sname]) " +
-                    "VALUES (@sid, @sname)";
-                myadp = new MySqlDataAdapter("SELECT * FROM series", mcon);
+                ins.CommandText = "INSERT INTO [series] ([sid], [sname], [discards]) " +
+                    "VALUES (@sid, @sname, @discards)";
+                myadp = new MySqlDataAdapter("SELECT sid, sname, discards FROM series", mcon);
                 mtable = new DataTable();
                 myadp.Fill(mtable);
 

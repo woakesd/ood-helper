@@ -32,6 +32,11 @@
                         <Image Width="16" Height="16" Margin="1" Source="/OodHelper.net;component/Images/Calendar-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="_Series" Click="Series_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
+                    <!--<MenuItem.Icon>
+                        <Image Width="16" Height="16" Margin="1" Source="/OodHelper.net;component/Images/Calendar-16.png" />
+                    </MenuItem.Icon>-->
+                </MenuItem>
                 <MenuItem Header="_Handicaps" Click="Handicaps_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                     <MenuItem.Icon>
                         <Image Width="16" Height="16" Margin="1" Source="/OodHelper.net;component/Images/Hand-16.png" />

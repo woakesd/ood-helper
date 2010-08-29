@@ -13,28 +13,12 @@ namespace OodHelper.net
     {
         public override void CorrectedTime()
         {
-            //
-            // update all boats setting elapsed, corrected, stdcorr, place and pts.
-            //
             Hashtable p = new Hashtable();
             p["rid"] = rid;
-            string sql = @"UPDATE races
-                SET elapsed = NULL
-                ,corrected = NULL
-                ,standard_corrected = NULL
-                ,place = 999
-                ,points = NULL
-                ,performance_index = NULL
-                ,c = NULL
-                ,a = NULL
-                WHERE rid = @rid";
-            Db c = new Db(sql);
-            c.ExecuteNonQuery(p);
-    
             //
-            // Next select all boats and work out elapsed, corrected and stdcorr
+            // Select all boats and work out elapsed, corrected and stdcorr
             //
-            sql = @"SELECT bid, rid, start_date, 
+            String sql = @"SELECT bid, rid, start_date, 
                 CASE finish_code 
                     WHEN 'DNF' THEN NULL 
                     WHEN 'DSQ' THEN NULL 
@@ -43,7 +27,7 @@ namespace OodHelper.net
                 elapsed, corrected, standard_corrected, place, performance_index
                 FROM races
                 WHERE rid = @rid";
-            c = new Db(sql);
+            Db c = new Db(sql);
             DataTable dt = c.GetData(p);
 
             foreach (DataRow dr in dt.Rows)
