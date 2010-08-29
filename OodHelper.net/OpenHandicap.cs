@@ -11,22 +11,17 @@ namespace OodHelper.net
     [Svn("$Id$")]
     class OpenHandicap : IRaceScore
     {
-        private double standardCorrectedTime;
-        private double averageCorrectedTime;
         private double slowLim;
         private double fastLim;
         private DateTime rdate;
-        private bool averageLap;
-        private int rid;
+        public bool averageLap { get; private set; }
+        public int rid { get; private set; }
 
-        public int Finishers { get; set; }
+        public int Finishers { get; private set; }
 
-        public bool Calculated { get; set; }
+        public bool Calculated { get; private set; }
 
-        public double StandardCorrectedTime
-        {
-            get { return standardCorrectedTime; }
-        }
+        public double StandardCorrectedTime { get; private set; }
 
         public double SlowLimit
         {
@@ -52,15 +47,16 @@ namespace OodHelper.net
             rdate = (DateTime)res["start_date"];
             averageLap = (bool)res["average_lap"];
             double? dsct = res["standard_corrected_time"] as double?;
-            standardCorrectedTime = 0;
+            StandardCorrectedTime = 0;
             if (dsct.HasValue)
-                standardCorrectedTime = dsct.Value;
+                StandardCorrectedTime = dsct.Value;
             if (res["result_calculated"] == DBNull.Value || res["last_edit"] != DBNull.Value &&
                 (DateTime)res["result_calculated"] <= (DateTime)res["last_edit"])
             {
                 if (HasFinishers())
                 {
                     FlagDidNotFinish();
+                    InitialiseFields();
                     CorrectedTime();
                     CalculateSct();
                     Score();
@@ -94,6 +90,28 @@ namespace OodHelper.net
             c.ExecuteNonQuery(p);
         }
 
+        private void InitialiseFields()
+        {
+            //
+            // update all boats setting elapsed, corrected, stdcorr, place and pts.
+            //
+            Hashtable p = new Hashtable();
+            p["rid"] = rid;
+            string sql = @"UPDATE races
+                SET elapsed = NULL
+                ,corrected = NULL
+                ,standard_corrected = NULL
+                ,place = 999
+                ,points = NULL
+                ,new_rolling_handicap = rolling_handicap
+                ,performance_index = NULL
+                ,c = NULL
+                ,a = NULL
+                WHERE rid = @rid";
+            Db c = new Db(sql);
+            c.ExecuteNonQuery(p);
+        }
+
         private bool HasFinishers()
         {
             Hashtable p = new Hashtable();
@@ -122,30 +140,15 @@ namespace OodHelper.net
             return false;
         }
 
-        private void CorrectedTime()
+        public virtual void CorrectedTime()
         {
-            //
-            // update all boats setting elapsed, corrected, stdcorr, place and pts.
-            //
             Hashtable p = new Hashtable();
             p["rid"] = rid;
-            string sql = @"UPDATE races
-                SET elapsed = NULL
-                ,corrected = NULL
-                ,standard_corrected = NULL
-                ,place = 999
-                ,points = NULL
-                ,performance_index = NULL
-                ,c = NULL
-                ,a = NULL
-                WHERE rid = @rid";
-            Db c = new Db(sql);
-            c.ExecuteNonQuery(p);
-    
+
             //
-            // Next select all boats and work out elapsed, corrected and stdcorr
+            // Select all boats and work out elapsed, corrected and stdcorr
             //
-            sql = @"SELECT bid, rid, start_date, 
+            string sql = @"SELECT bid, rid, start_date, 
                 CASE finish_code 
                     WHEN 'DNF' THEN NULL 
                     WHEN 'DSQ' THEN NULL 
@@ -154,7 +157,7 @@ namespace OodHelper.net
                 elapsed, corrected, standard_corrected, place
                 FROM races
                 WHERE rid = @rid";
-            c = new Db(sql);
+            Db c = new Db(sql);
             DataTable dt = c.GetData(p);
 
             foreach (DataRow dr in dt.Rows)
@@ -217,7 +220,7 @@ namespace OodHelper.net
             int qual = d.Rows.Count;
             if (qual < 2)
             {
-                standardCorrectedTime = 0;
+                StandardCorrectedTime = 0;
                 return;
             }
 
@@ -233,7 +236,7 @@ namespace OodHelper.net
                 total = total + (double) d.Rows[i]["standard_corrected"];
             }
 
-            averageCorrectedTime = total / n;
+            double averageCorrectedTime = total / n;
 
             //
             // The average slow limit is the average corrected time + 5%.
@@ -245,7 +248,7 @@ namespace OodHelper.net
             // Also sum their standard corrected times.
             //
             int goodBoats = 0;
-            standardCorrectedTime = 0;
+            StandardCorrectedTime = 0;
             for (int i = 0; i < d.Rows.Count; i++)
             {
                 DataRow row = d.Rows[i];
@@ -254,7 +257,7 @@ namespace OodHelper.net
                 {
                     row["a"] = DBNull.Value;
                     goodBoats++;
-                    standardCorrectedTime = standardCorrectedTime + (double)row["standard_corrected"];
+                    StandardCorrectedTime = StandardCorrectedTime + (double)row["standard_corrected"];
                 }           
             }
 
@@ -265,27 +268,27 @@ namespace OodHelper.net
                 // which is the average standard corrected time of the good boats
                 // that beat the 5% slow cutoff.
                 //
-                standardCorrectedTime = Math.Round(standardCorrectedTime / goodBoats);
+                StandardCorrectedTime = Math.Round(StandardCorrectedTime / goodBoats);
 
                 //
                 // NB These limits are related to the standard corrected time and
                 // are the ones used to when working out new handicaps.
                 //
-                slowLim = Math.Round(standardCorrectedTime * 1.05);
-                fastLim = Math.Round(standardCorrectedTime * 0.95);
+                slowLim = Math.Round(StandardCorrectedTime * 1.05);
+                fastLim = Math.Round(StandardCorrectedTime * 0.95);
             }
             else
             {
                 //
                 // Too few good boats so we cant work this out.
                 //
-                standardCorrectedTime = 0;
+                StandardCorrectedTime = 0;
                 slowLim = 0;
                 fastLim = 0;
             }
             Hashtable param = new Hashtable();
             param["rid"] = rid;
-            param["sct"] = standardCorrectedTime;
+            param["sct"] = StandardCorrectedTime;
 
             Db up = new Db(@"UPDATE calendar SET standard_corrected_time = @sct, raced = 1 WHERE rid = @rid");
             up.ExecuteNonQuery(param);
@@ -396,7 +399,7 @@ namespace OodHelper.net
                 int bid = (int)dr["bid"];
                 dr["achieved_handicap"] = dr["open_handicap"];
                 dr["new_rolling_handicap"] = dr["rolling_handicap"];
-                if (standardCorrectedTime > 0)
+                if (StandardCorrectedTime > 0)
                 {
                     //
                     // we have a a standard corrected time for the race so we use this to work out
@@ -408,7 +411,7 @@ namespace OodHelper.net
                     // open handicap and the overall corrected time for the race multiplied by
                     // the open handicap.
                     //
-                    int achhc = (int)Math.Round((double)dr["standard_corrected"] / standardCorrectedTime * (int)dr["open_handicap"]);
+                    int achhc = (int)Math.Round((double)dr["standard_corrected"] / StandardCorrectedTime * (int)dr["open_handicap"]);
                     dr["achieved_handicap"] = achhc;
 
                     //
@@ -508,7 +511,7 @@ namespace OodHelper.net
             c = new Db(@"SELECT bid, new_rolling_handicap
                     FROM races
                     WHERE new_rolling_handicap IS NOT NULL
-                    WHERE rid = @rid");
+                    AND rid = @rid");
             d = c.GetData(p);
 
             Db u = new Db(@"UPDATE boats
