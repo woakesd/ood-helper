@@ -175,6 +175,10 @@
     </Compile>
     <Compile Include="Results.cs" />
     <Compile Include="Rules\BoatSelectRule.cs" />
+    <Compile Include="Rules\SetupRules.xaml.cs">
+      <DependentUpon>SetupRules.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Rules\SetupRulesModelView.cs" />
     <Compile Include="SeriesDisplayPage.xaml.cs">
       <DependentUpon>SeriesDisplayPage.xaml</DependentUpon>
     </Compile>
@@ -270,6 +274,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="RaceNotes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Rules\SetupRules.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

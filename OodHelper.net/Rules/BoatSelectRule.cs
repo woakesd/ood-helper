@@ -5,15 +5,18 @@ using System.Text;
 
 namespace OodHelper.net.Rules
 {
+    public enum RuleType { Simple, Compound }
+    public enum Apply { Any, All }
+    public enum ConditionType
+    {
+        Is_Equal_To, Is_Less_Than, Is_Less_Than_Or_Equal_To, Is_Greater_Than, Is_Greater_Than_Or_Equal_To, 
+        Contains, Start_With, Ends_With, Is_Between
+    }
+    public enum EventType { MembersOnly, Open }
+
     class BoatSelectRule
     {
-        public enum RuleType { Simple, Compound }
-        public enum Apply { Any, All }
-        public enum ConditionType { IsEqual, IsLessThan, IsLessThanOrEqual, IsGreaterThan, IsGreaterThanOrEqual, 
-            Contains, StartWith, EndsWith, IsBetween }
-
         public RuleType Rule { get; set; }
-
         //
         // For simple rules the following will be used.
         //
@@ -27,6 +30,10 @@ namespace OodHelper.net.Rules
         // For a compound rule only these will be used.
         //
         public Apply Application { get; set; }
-        List<BoatSelectRule> Children;
+        private List<BoatSelectRule> _children = new List<BoatSelectRule>();
+        public List<BoatSelectRule> Children
+        {
+            get { return _children; }
+        }
     }
 }

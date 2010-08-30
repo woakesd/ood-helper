@@ -33,9 +33,6 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="_Series" Click="Series_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
-                    <!--<MenuItem.Icon>
-                        <Image Width="16" Height="16" Margin="1" Source="/OodHelper.net;component/Images/Calendar-16.png" />
-                    </MenuItem.Icon>-->
                 </MenuItem>
                 <MenuItem Header="_Handicaps" Click="Handicaps_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                     <MenuItem.Icon>
@@ -44,6 +41,7 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Admin">
+                <!--<MenuItem Header="Rule" Click="MenuItem_Click" />-->
                 <!--<MenuItem Header="_Foxpro Import" Click="Foxpro_Click" />-->
                 <MenuItem Header="_Configuration" Name="Configuration" Click="Configuration_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                     <MenuItem.Icon>
