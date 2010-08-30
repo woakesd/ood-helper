@@ -196,6 +196,12 @@ namespace OodHelper.net
             }
 
             _Results.Sort(new NettComparer());
+
+            int place = 1;
+            foreach (BoatSeriesResult boat in _Results)
+            {
+                boat.place = place++;
+            }
         }
     }
 

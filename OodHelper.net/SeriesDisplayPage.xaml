@@ -64,7 +64,7 @@
                 <DataGridTextColumn Header="Boat class" Binding="{Binding boatclass}"/>
                 <DataGridTextColumn Header="Entered" Binding="{Binding entered}"/>
                 <DataGridTextColumn Header="Sail no" Binding="{Binding sailno}"/>
-                <DataGridTextColumn Header="Pos" Binding="{Binding position}"/>
+                <DataGridTextColumn Header="Pos" Binding="{Binding place}"/>
                 <DataGridTextColumn Header="Score" Binding="{Binding score, StringFormat=#.#}"/>
                 <!--<DataGridTemplateColumn Header="R1">
                         <DataGridTemplateColumn.CellTemplate>

@@ -65,6 +65,7 @@ namespace OodHelper.net
             rd.Columns.Add("boatclass", typeof(string));
             rd.Columns.Add("sailno", typeof(string));
             rd.Columns.Add("entered", typeof(double));
+            rd.Columns.Add("place", typeof(int));
             rd.Columns.Add("score", typeof(double));
 
             events = new List<SeriesEvent>(Result._SeriesData.Values);
@@ -110,6 +111,7 @@ namespace OodHelper.net
                 r["bid"] = bsr.bid;
                 r["entered"] = bsr.count;
                 r["score"] = bsr.nett;
+                r["place"] = bsr.place;
 
                 p["bid"] = bsr.bid;
                 Hashtable bd = c.GetHashtable(p);
