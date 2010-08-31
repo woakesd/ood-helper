@@ -62,9 +62,13 @@ namespace OodHelper.net
                 if (rids != null)
                 {
                     RaceResults r = new RaceResults(rids);
-                    dock.Children.Add(r);
-                    r.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    r.VerticalAlignment = VerticalAlignment.Stretch;
+                    TabItem rp = new TabItem();
+                    rp.Content = r;
+                    rp.Header = "Race Results";
+                    dock.Items.Add(rp);
+                    dock.SelectedItem = rp;
+                    //r.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    //r.VerticalAlignment = VerticalAlignment.Stretch;
                 }
             }
         }
@@ -75,14 +79,22 @@ namespace OodHelper.net
 
         private void Download_Click(object sender, RoutedEventArgs e)
         {
-            Working p = new Working(this, "Downloading Boats", false, 0, 6);
-            Common.copyMySqlData(p);
+            if (MessageBox.Show("Click OK to confirm downloading database from Website", "Confirm Download", 
+                MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.OK) == MessageBoxResult.OK)
+            {
+                Working p = new Working(this, "Downloading Boats", false, 0, 6);
+                Common.copyMySqlData(p);
+            }
         }
 
         private void Upload_Click(object sender, RoutedEventArgs e)
         {
-            Working p = new Working(this, "Uploading Boats", false, 0, 6);
-            Common.copyToMySql(p);
+            if (MessageBox.Show("Click OK to confirm uploading database to Website", "Confirm Upload",
+                MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.OK) == MessageBoxResult.OK)
+            {
+                Working p = new Working(this, "Uploading Boats", false, 0, 6);
+                Common.copyToMySql(p);
+            }
         }
 
         private void SqlCe_Click(object sender, RoutedEventArgs e)
@@ -164,9 +176,13 @@ namespace OodHelper.net
                 myDelegate d = delegate()
                 {
                     SeriesDisplayByClass sd = new SeriesDisplayByClass(rs);
-                    dock.Children.Add(sd);
-                    sd.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    sd.VerticalAlignment = VerticalAlignment.Stretch;
+                    TabItem sp = new TabItem();
+                    sp.Content = sd;
+                    sp.Header = "Series Result";
+                    dock.Items.Add(sp);
+                    dock.SelectedItem = sp;
+                    //sd.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    //sd.VerticalAlignment = VerticalAlignment.Stretch;
                 };
                 rs = new RaceSeriesResult(chooser.Sid, d);
             }

@@ -44,7 +44,7 @@ namespace OodHelper.net
             RemoveBoats();
         }
 
-        private void RemoveBoats()
+        public void RemoveBoats()
         {
             IList x = Boats.SelectedItems;
             DataRow[] rows = new DataRow[x.Count];

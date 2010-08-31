@@ -41,17 +41,21 @@ namespace OodHelper.net
 
             for (int i = 0; i < reds.Length; i++)
             {
-                rdef[i] = new RowDefinition();
-                rdef[i].Height = new GridLength(1, GridUnitType.Star);
-                Fleets.RowDefinitions.Add(rdef[i]);
+                //rdef[i] = new RowDefinition();
+                //rdef[i].Height = new GridLength(1, GridUnitType.Star);
+                //Fleets.RowDefinitions.Add(rdef[i]);
+
+                TabItem ti = new TabItem();
+                ti.Header = reds[i].RaceClass;
 
                 sbt[i] = new SelectedBoats(reds[i].Rid);
                 boatClasses[reds[i].RaceClass] = sbt[i];
-                Grid.SetRow(sbt[i], i);
-                sbt[i].VerticalContentAlignment = VerticalAlignment.Stretch;
+                //Grid.SetRow(sbt[i], i);
+                //sbt[i].VerticalContentAlignment = VerticalAlignment.Stretch;
                 sbt[i].FleetName.Content = reds[i].RaceName;
-                sbt[i].VerticalAlignment = VerticalAlignment.Stretch;
-                Fleets.Children.Add(sbt[i]);
+                //sbt[i].VerticalAlignment = VerticalAlignment.Stretch;
+                ti.Content = sbt[i];
+                Fleets.Items.Add(ti);  //Children.Add(sbt[i]);
 
                 DataView d = (DataView) reds[i].Races.ItemsSource;
                 DataTable bts = new DataTable();
@@ -164,10 +168,14 @@ namespace OodHelper.net
                     DataRow n = toTable.NewRow();
                     for (int i = 0; i < drv.Row.ItemArray.Length; i++)
                         n[i] = drv.Row[i];
-                    drv.DataView.Table.Rows.Remove(drv.Row);
-                    drv.DataView.Table.AcceptChanges();
                     toTable.Rows.Add(n);
                     toTable.AcceptChanges();
+                }
+                while (fromGrid.SelectedItems.Count > 0)
+                {
+                    DataRowView drv = fromGrid.SelectedItems[0] as DataRowView;
+                    drv.DataView.Table.Rows.Remove(drv.Row);
+                    drv.DataView.Table.AcceptChanges();
                 }
             }
 
@@ -223,11 +231,6 @@ namespace OodHelper.net
         }
 
         void Boats_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            AddBoats();
-        }
-
-        private void Add_Click(object sender, RoutedEventArgs e)
         {
             AddBoats();
         }
@@ -332,6 +335,7 @@ namespace OodHelper.net
             ((DataView)sbt.Boats.ItemsSource).Table.Rows.Add(dr);
             ((DataView)sbt.Boats.ItemsSource).Table.AcceptChanges();
             ((DataView)sbt.Boats.ItemsSource).Sort = "Boatname";
+            Notify.Text = string.Format("Added {0} to {1}", new object[] { dr["boatname"], sbt.FleetName.Content });
         }
 
         private void Ok_Click(object sender, RoutedEventArgs e)
@@ -419,6 +423,24 @@ namespace OodHelper.net
                 if (Boats.Items.Count == 1)
                     Boats.SelectAll();
                 AddBoats();
+            }
+        }
+
+        private void SelectBoat_Click(object sender, RoutedEventArgs e)
+        {
+            AddBoats();
+        }
+
+        private void DeselectBoat_Click(object sender, RoutedEventArgs e)
+        {
+            TabItem fleet = Fleets.SelectedItem as TabItem;
+            if (fleet != null)
+            {
+                SelectedBoats sb = fleet.Content as SelectedBoats;
+                if (sb != null)
+                {
+                    sb.RemoveBoats();
+                }
             }
         }
     }

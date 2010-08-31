@@ -257,7 +257,17 @@ namespace OodHelper.net
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
-            ((DockPanel)Parent).Children.Remove(this);
+            DockPanel d = Parent as DockPanel;
+            if (d != null)
+                d.Children.Remove(this);
+            else
+            {
+                TabItem t = Parent as TabItem;
+                TabControl tc = t.Parent as TabControl;
+                if (tc != null)
+                    tc.Items.Remove(t);
+                t.Content = null;
+            }
         }
 
         private void ChooseBoats_Click(object sender, RoutedEventArgs e)

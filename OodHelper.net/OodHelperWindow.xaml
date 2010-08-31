@@ -112,6 +112,6 @@
                 </Button>
             </ToolBar>
         </ToolBarTray>
-        <DockPanel Grid.Row="2" Name="dock"/>
+        <TabControl Grid.Row="2" Name="dock"/>
     </Grid>
 </Window>
