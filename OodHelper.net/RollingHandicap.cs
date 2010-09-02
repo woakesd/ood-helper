@@ -11,7 +11,7 @@ namespace OodHelper.net
     [Svn("$Id$")]
     class RollingHandicap : OpenHandicap
     {
-        public override void CorrectedTime()
+        protected override void CorrectedTime()
         {
             Hashtable p = new Hashtable();
             p["rid"] = rid;

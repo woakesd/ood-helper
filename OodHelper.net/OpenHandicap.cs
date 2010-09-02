@@ -140,7 +140,7 @@ namespace OodHelper.net
             return false;
         }
 
-        public virtual void CorrectedTime()
+        protected virtual void CorrectedTime()
         {
             Hashtable p = new Hashtable();
             p["rid"] = rid;
