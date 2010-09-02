@@ -273,8 +273,7 @@ namespace OodHelper.net
         private void ChooseBoats_Click(object sender, RoutedEventArgs e)
         {
             SelectBoats dlg = new SelectBoats(reds);
-            bool? ret = dlg.ShowDialog();
-            if (ret.Value)
+            if (dlg.ShowDialog() == true)
             {
                 for (int i = 0; i < reds.Length; i++)
                     reds[i].LoadGrid();

@@ -237,6 +237,8 @@ namespace OodHelper.net
 
         private void AddBoats()
         {
+            if (Boats.Items.Count == 1)
+                Boats.SelectAll();
             IList x = Boats.SelectedItems;
             foreach (DataRowView rv in x)
             {
@@ -420,8 +422,6 @@ namespace OodHelper.net
                 Boatname.Focus();
             else if (e.Key == Key.F4)
             {
-                if (Boats.Items.Count == 1)
-                    Boats.SelectAll();
                 AddBoats();
             }
         }
