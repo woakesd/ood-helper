@@ -67,8 +67,6 @@ namespace OodHelper.net
                     rp.Header = "Race Results";
                     dock.Items.Add(rp);
                     dock.SelectedItem = rp;
-                    //r.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    //r.VerticalAlignment = VerticalAlignment.Stretch;
                 }
             }
         }
@@ -104,14 +102,6 @@ namespace OodHelper.net
 
         private void Boats_Click(object sender, RoutedEventArgs e)
         {
-            /*XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
-            settings.IndentChars = new string(' ', 4);
-            settings.NewLineOnAttributes = true;
-            StringBuilder strbuild = new StringBuilder();
-            XmlWriter xmlwrite = XmlWriter.Create(strbuild, settings);
-            ControlTemplate ct = Download.Template;
-            XamlWriter.Save(Download.Template, xmlwrite);*/
             Maintain.Boats b = new Maintain.Boats();
             b.ShowDialog();
             b.HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -213,12 +203,12 @@ namespace OodHelper.net
         
         private void Login_Click(object sender, RoutedEventArgs e)
         {
-            ShowPrivilegedItems = true; // Visibility.Visible;
+            ShowPrivilegedItems = true; 
         }
 
         private void Logout_Click(object sender, RoutedEventArgs e)
         {
-            ShowPrivilegedItems = false; // Visibility.Collapsed;
+            ShowPrivilegedItems = false;
         }
 
         private void EntrySheets_Click(object sender, RoutedEventArgs e)

@@ -25,7 +25,17 @@ namespace OodHelper.net.Rules
             BoatSelectRule b = new BoatSelectRule();
             b.Application = Apply.Any;
             for (int i = 0; i < 3; i++)
-                b.Children.Add(new BoatSelectRule());
+            {
+                BoatSelectRule c1 = new BoatSelectRule();
+                c1.Application = Apply.All;
+                b.Children.Add(c1);
+                for (int j = 0; j < 2; j++)
+                {
+                    BoatSelectRule c2 = new BoatSelectRule();
+                    c1.Children.Add(c2);
+                }
+            }
+
             root.Add(b);
             List<SelectRuleModelView> rm = new List<SelectRuleModelView>();
             rm.Add(new SelectRuleModelView(b));

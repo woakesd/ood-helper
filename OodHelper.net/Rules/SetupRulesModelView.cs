@@ -25,6 +25,9 @@ namespace OodHelper.net.Rules
             _entityFields.Add("Local Boat", "boat.distance");
         }
 
+        private bool _isExpanded = true;
+        public bool IsExpanded { get { return _isExpanded; } set { _isExpanded = value; } }
+
         public bool HasChildren { get { return (_children.Count > 0); } }
         public bool HasNoChildren { get { return (_children.Count == 0); } }
 

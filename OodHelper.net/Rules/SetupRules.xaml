@@ -14,11 +14,16 @@
     </Window.Resources>
     <Grid>
         <TreeView Name="Rules">
+            <TreeView.ItemContainerStyle>
+                <Style>
+                    <Setter Property="TreeViewItem.IsExpanded" Value="True"/>
+                </Style>
+            </TreeView.ItemContainerStyle>
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Path=Children}">
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Visibility="{Binding Path=HasChildren,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
-                            <ComboBox ItemsSource="{Binding Source={StaticResource ResourceKey=DataFromApply}}" SelectionChanged="ComboBox_SelectionChanged" SelectedIndex="0"/>
+                            <ComboBox ItemsSource="{Binding Source={StaticResource ResourceKey=DataFromApply}}" SelectionChanged="ComboBox_SelectionChanged" SelectedItem="{Binding Path=Application}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Visibility="{Binding Path=HasNoChildren,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                             <ComboBox ItemsSource="{Binding Path=EntityFields}"/>
