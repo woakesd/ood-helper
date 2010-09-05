@@ -86,9 +86,9 @@ namespace OodHelper.net.Rules
         }
 
         public static List<Field> Fields = new List<Field>() { 
-            new Rules.Field("Boat class", typeof(string)),
-            new Rules.Field("Dinghy", typeof(bool)),
-            new Rules.Field("Open handicap", typeof(int))
+            new Rules.Field("Boat class", "boatclass", typeof(string)),
+            new Rules.Field("Dinghy", "dinghy", typeof(bool)),
+            new Rules.Field("Open handicap", "open_handicap", typeof(int))
         };
 
         public BoatSelectRule Parent { get; set; }

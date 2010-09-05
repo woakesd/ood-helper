@@ -9,13 +9,15 @@ namespace OodHelper.net.Rules
     class Field
     {
         public string Name { get; set; }
+        public string Column { get; set; }
         public IEnumerable<ConditionType> conditions { get; set; }
         public Type FieldType { get; private set; }
 
-        public Field(string name, Type entityType)
+        public Field(string name, string column, Type entityType)
         {
             Name = name;
             FieldType = entityType;
+            Column = column;
 
             if (entityType == typeof(bool))
             {
