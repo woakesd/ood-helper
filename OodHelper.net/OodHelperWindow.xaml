@@ -41,7 +41,7 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Admin">
-                <!--<MenuItem Header="Rule" Click="MenuItem_Click" />-->
+                <MenuItem Header="Rule" Click="MenuItem_Click" />
                 <!--<MenuItem Header="_Foxpro Import" Click="Foxpro_Click" />-->
                 <MenuItem Header="_Configuration" Name="Configuration" Click="Configuration_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                     <MenuItem.Icon>

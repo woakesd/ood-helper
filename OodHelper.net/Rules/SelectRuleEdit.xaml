@@ -1,0 +1,83 @@
+﻿<Window x:Class="OodHelper.net.Rules.SelectRuleEdit"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:rules="clr-namespace:OodHelper.net.Rules"
+        Title="SetupRules" Height="300" Width="600">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <rules:ConditionNameConverter x:Key="ConditionNameConverter"/>
+        <rules:ConditionNameListConverter x:Key="ConditionNameListConverter"/>
+        <ObjectDataProvider x:Key="DataFromApply" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="rules:Apply"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="DataFromConditionType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="rules:ConditionType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ToolBarTray>
+            <ToolBar>
+                <Button Name="Save" Click="Add_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Add.png" />
+                        <Label Grid.Column="1">Save</Label>
+                    </StackPanel>
+                </Button>
+                <Button Name="CloseButton" Click="CloseButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Cancel.png" />
+                        <Label Grid.Column="1">Cancel</Label>
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <TextBlock VerticalAlignment="Center" Text="Name "/>
+            <TextBox Name="Name" Width="200" Margin="0,2"/>
+        </StackPanel>
+        <TreeView Name="Rules" Grid.Row="2">
+            <TreeView.ItemContainerStyle>
+                <Style>
+                    <Setter Property="TreeViewItem.IsExpanded" Value="True"/>
+                    <Setter Property="TreeViewItem.BorderThickness" Value="1"/>
+                    <Setter Property="TreeViewItem.BorderBrush" Value="#ff000000"/>
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Path=Children}">
+                    <StackPanel Orientation="Horizontal" MinWidth="400">
+                        <StackPanel Orientation="Horizontal" Visibility="{Binding Path=HasChildren,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
+                            <ComboBox Margin="2" Loaded="ComboBox_Loaded" ItemsSource="{Binding Source={StaticResource ResourceKey=DataFromApply}}" SelectedValue="{Binding Path=Application}"/>
+                            <TextBlock Margin="2" VerticalAlignment="Center" Text=" of the following rules:"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Visibility="{Binding Path=HasNoChildren,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
+                            <ComboBox Margin="2" ItemsSource="{Binding Path=EntityFields}" SelectedValue="{Binding Path=Field}" Loaded="ComboBox_Loaded"/>
+                            <ComboBox Margin="2" ItemsSource="{Binding Path=Conditions,Converter={StaticResource ResourceKey=ConditionNameListConverter}}" 
+                                      SelectedValue="{Binding Path=Condition,Converter={StaticResource ResourceKey=ConditionNameConverter}}"
+                                      Loaded="ComboBox_Loaded"/>
+                            <TextBox Margin="2" MinWidth="120" Text="{Binding Path=StringValue}" Visibility="{Binding Path=StringValueVisible}"/>
+                            <TextBox Margin="2" MinWidth="60" Text="{Binding Path=NumberBound1}" Visibility="{Binding Path=Bound1Visible}"/>
+                            <TextBlock Margin="2"  VerticalAlignment="Center" Text=" and " Visibility="{Binding Path=Bound2Visible}"/>
+                            <TextBox Margin="2" MinWidth="60" Text="{Binding Path=NumberBound2}" Visibility="{Binding Path=Bound2Visible}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Visibility="{Binding Path=ButtonVisibility}">
+                            <Button Margin="2" Name="AddSibling" Click="AddSibling_Click">+</Button>
+                            <Button Margin="2" Name="RemoveMe" Visibility="{Binding Path=RemoveMeVisibility}" Click="RemoveMe_Click">-</Button>
+                            <Button Margin="2" Name="AddParentSibling" Click="AddParentSibling_Click">...</Button>
+                        </StackPanel>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </Grid>
+</Window>

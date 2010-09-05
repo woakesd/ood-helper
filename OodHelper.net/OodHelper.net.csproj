@@ -174,11 +174,19 @@
       <DependentUpon>RaceNotes.xaml</DependentUpon>
     </Compile>
     <Compile Include="Results.cs" />
-    <Compile Include="Rules\BoatSelectRule.cs" />
-    <Compile Include="Rules\SetupRules.xaml.cs">
-      <DependentUpon>SetupRules.xaml</DependentUpon>
+    <Compile Include="Rules\SelectRules.xaml.cs">
+      <DependentUpon>SelectRules.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Rules\SetupRulesModelView.cs" />
+    <Compile Include="Rules\BoatSelectRule.cs" />
+    <Compile Include="Rules\ConditionNameConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rules\ConditionNameListConverter.cs" />
+    <Compile Include="Rules\Field.cs" />
+    <Compile Include="Rules\SelectRuleEdit.xaml.cs">
+      <DependentUpon>SelectRuleEdit.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Rules\SelectRuleModelView.cs" />
     <Compile Include="SeriesDisplayPage.xaml.cs">
       <DependentUpon>SeriesDisplayPage.xaml</DependentUpon>
     </Compile>
@@ -277,7 +285,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Rules\SetupRules.xaml">
+    <Page Include="Rules\SelectRules.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Rules\SelectRuleEdit.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

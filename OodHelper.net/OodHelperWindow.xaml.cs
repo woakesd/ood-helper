@@ -225,7 +225,7 @@ namespace OodHelper.net
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            (new Rules.SetupRules()).ShowDialog();
+            (new Rules.SelectRules()).ShowDialog();
         }
     }
 }

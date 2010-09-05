@@ -183,6 +183,20 @@ CREATE TABLE [updates] (
 )";
                 cmd.ExecuteNonQuery();
 
+                cmd.CommandText = @"
+CREATE TABLE [select_rules] (
+  [id] uniqueidentifier NOT NULL
+, [name] nvarchar(255) NULL
+, [parent] uniqueidentifier NULL
+, [application] int NULL
+, [field] nvarchar(255) NULL
+, [condition] int NULL
+, [string_value] nvarchar(255) NULL
+, [number_bound1] numeric(18,4) NULL
+, [number_bound2] numeric(18,4) NULL
+)";
+                cmd.ExecuteNonQuery();
+
                 cmd.CommandText = @"ALTER TABLE [boats] ADD CONSTRAINT [PK_boats] PRIMARY KEY ([bid])";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = @"ALTER TABLE [calendar] ADD CONSTRAINT [PK_calendar] PRIMARY KEY ([rid])";
@@ -200,6 +214,10 @@ CREATE TABLE [updates] (
                 cmd.CommandText = @"CREATE INDEX [IX_bid] ON [races] ([bid] ASC)";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = @"CREATE INDEX [IX_rid] ON [races] ([rid] ASC)";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = @"ALTER TABLE [select_rules] ADD CONSTRAINT [PK_select_rule] PRIMARY KEY ([id])";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = @"CREATE INDEX [IX_select_rule_parent] ON [select_rules] ([parent] ASC)";
                 cmd.ExecuteNonQuery();
             }
             finally
