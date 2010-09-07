@@ -32,6 +32,7 @@ namespace OodHelper.net
             OodName.Text = "OOD: " + red.Ood;
             Start.Text = "Start: " + red.StartTime.ToString("hh\\:mm");
             Sct.Text = "SCT: " + Common.HMS(red.scorer.StandardCorrectedTime);
+            PrintedDate.Text = string.Format("Printed on {0:dd MMM yyyy} at {0:HH:mm:ss}", DateTime.Now);
 
             Db c = new Db(@"SELECT b.boatname Boat, b.boatclass [Class], b.sailno [Sail No], r.open_handicap as Hcap,
                 r.finish_code, r.finish_date, '' AS Finish, r.elapsed Elapsed, r.laps Laps, r.corrected Corrected, r.place Pos,
@@ -153,6 +154,11 @@ namespace OodHelper.net
         private void Results_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Results.SelectedItems.Clear();
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
