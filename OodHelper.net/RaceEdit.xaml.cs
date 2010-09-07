@@ -420,6 +420,10 @@ namespace OodHelper.net
             }
         }
 
+        //
+        // If key down and a cursor key look to see if the cursor is at the end or start. If it is and key down is left
+        // or right (for start and end respectively) then we will commit changes and then end editing.
+        //
         private void DataGridCell_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Down || e.Key == Key.Up || e.Key == Key.Left || e.Key == Key.Right)
@@ -440,6 +444,10 @@ namespace OodHelper.net
             }
         }
 
+        //
+        // on key up with a cursor key go straight to editing mode if the cell is editable and we weren't in
+        // edit mode.
+        //
         void DataGridCell_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Down || e.Key == Key.Up || e.Key == Key.Left || e.Key == Key.Right)
@@ -453,6 +461,9 @@ namespace OodHelper.net
             }
         }
 
+        //
+        // This allows the user to click in an editable cell and immediatly be in edit mode.
+        //
         private void DataGridCell_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             DataGridCell cell = sender as DataGridCell;
@@ -500,8 +511,16 @@ namespace OodHelper.net
             return null;
         }
         
+        //
+        // Will hold the list found below so that if the user says yes to auto population we don't need to select
+        // again.
+        //
         private DataTable autoPopulateData = null;
 
+        //
+        // Bit of a misnomer, this actually gets a list of boats that have done at least one other race in
+        // a series.
+        //
         public int CountAutoPopulateData()
         {
             Db c = new Db("SELECT DISTINCT r.bid " +
@@ -517,6 +536,9 @@ namespace OodHelper.net
             return autoPopulateData.Rows.Count;
         }
 
+        //
+        // Put the auto populate data into the races table for this race.
+        //
         public void DoAutoPopulate()
         {
             Db add = new Db(@"INSERT INTO races
@@ -550,6 +572,35 @@ namespace OodHelper.net
         {
             RaceNotes rn = new RaceNotes(Rid);
             rn.ShowDialog();
+        }
+
+        /*
+         * Refresh rolling handicaps for each boat entered in race from lastest previous race entry
+         */
+        private void buttonRefreshRolling_Click(object sender, RoutedEventArgs e)
+        {
+            Db c = new Db(@"SELECT r1.bid, r3.new_rolling_handicap
+                FROM races r1 
+                INNER JOIN races r2 ON r2.bid = r1.bid AND r2.rid <> r1.rid AND r2.start_date < r1.start_date
+                INNER JOIN races r3 ON r3.bid = r1.bid AND r3.rid <> r1.rid
+                WHERE r1.rid = @rid
+                GROUP BY r1.bid, r3.start_date, r3.new_rolling_handicap
+                HAVING r3.start_date = MAX(r2.start_date)");
+            Hashtable p = new Hashtable();
+            p["rid"] = Rid;
+            DataTable d = c.GetData(p);
+            c = new Db(@"UPDATE races
+                SET last_edit = GETDATE()
+                , rolling_handicap = @rhp
+                WHERE rid = @rid
+                AND bid = @bid");
+            foreach (DataRow r in d.Rows)
+            {
+                p["bid"] = r["bid"];
+                p["rhp"] = r["new_rolling_handicap"];
+                c.ExecuteNonQuery(p);
+            }
+            LoadGrid();
         }
     }
 }
