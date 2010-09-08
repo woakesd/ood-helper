@@ -34,6 +34,7 @@ namespace OodHelper.net
             foreach (SeriesEvent se in sd.events)
             {
                 //rd.Columns.Add("r" + i.ToString(), typeof(SeriesEntry));
+                PrintedDate.Text = string.Format("Printed on {0:dd MMM yyyy} at {0:HH:mm:ss}", DateTime.Now);
 
                 int k = rd.Columns["R" + i].Ordinal;
 

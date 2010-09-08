@@ -38,7 +38,7 @@ namespace OodHelper.net
                 r.finish_code, r.finish_date, '' AS Finish, r.elapsed Elapsed, r.laps Laps, r.corrected Corrected, r.place Pos,
                 CASE WHEN ISNULL(override_points) = 1 THEN points ELSE override_points END Pts,
                 r.achieved_handicap Achp, r.new_rolling_handicap [nhcp],
-                ROUND((r.achieved_handicap - r.open_handicap) * 100.0 / r.open_handicap, 1) PI, r.c C, r.a A,
+                ROUND((r.achieved_handicap - r.open_handicap) * 100.0 / r.open_handicap, 1) [%], r.c C, r.a A,
                 r.handicap_status PY
                 FROM boats b INNER JOIN races r ON r.bid = b.bid
                 WHERE r.rid = @rid
@@ -58,7 +58,7 @@ namespace OodHelper.net
                     r["Pos"] = DBNull.Value;
                     r["Pts"] = DBNull.Value;
                     r["achp"] = DBNull.Value;
-                    r["pi"] = DBNull.Value;
+                    r["%"] = DBNull.Value;
                     r["nhcp"] = DBNull.Value;
                     r["c"] = DBNull.Value;
                     r["a"] = DBNull.Value;
@@ -98,7 +98,7 @@ namespace OodHelper.net
             //b = (Binding)col.Binding;
             //b.StringFormat = "HH:mm:ss";
 
-            col = (DataGridTextColumn)Results.Columns[rd.Columns["PI"].Ordinal];
+            col = (DataGridTextColumn)Results.Columns[rd.Columns["%"].Ordinal];
             b = (Binding)col.Binding;
             b.StringFormat = "0.0";
             col.Binding = b;
@@ -111,7 +111,7 @@ namespace OodHelper.net
             SetRightAlignment(Results.Columns[rd.Columns["Pos"].Ordinal]);
             SetRightAlignment(Results.Columns[rd.Columns["Pts"].Ordinal]);
             SetRightAlignment(Results.Columns[rd.Columns["achp"].Ordinal]);
-            SetRightAlignment(Results.Columns[rd.Columns["pi"].Ordinal]);
+            SetRightAlignment(Results.Columns[rd.Columns["%"].Ordinal]);
             SetRightAlignment(Results.Columns[rd.Columns["nhcp"].Ordinal]);
 
             Hashtable widths = new Hashtable();
@@ -126,7 +126,7 @@ namespace OodHelper.net
             widths["Pos"] = 5.0;
             widths["Pts"] = 5.0;
             widths["achp"] = 6.0;
-            widths["pi"] = 6.0;
+            widths["%"] = 6.0;
             widths["nhcp"] = 6.0;
             widths["c"] = .75;
             widths["a"] = .75;

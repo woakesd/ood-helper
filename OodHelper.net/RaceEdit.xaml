@@ -60,13 +60,13 @@
                         <Label Grid.Column="1">Notes</Label>
                     </StackPanel>
                 </Button>
-                <Button Name="buttonCalculate" Click="buttonCalculate_Click" VerticalAlignment="Center" Margin="5">
+                <Button Name="buttonCalculate" Click="buttonCalculate_Click" VerticalAlignment="Center" Margin="5" IsEnabled="{Binding Path=CalculateEnabled}">
                     <StackPanel Orientation="Horizontal">
                         <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper.net;component/Images/Calc.png"/>
                         <Label Grid.Column="1">Calculate</Label>
                     </StackPanel>
                 </Button>
-                <Button Name="buttonRefreshRolling" Click="buttonRefreshRolling_Click" VerticalAlignment="Center" Margin="5">
+                <Button Name="buttonRefreshRolling" Click="buttonRefreshRolling_Click" VerticalAlignment="Center" Margin="5" IsEnabled="{Binding Path=RefreshHandicapsEnabled}">
                     <StackPanel Orientation="Horizontal">
                         <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper.net;component/Images/Calc.png"/>
                         <Label Grid.Column="1">Refresh Hcaps</Label>

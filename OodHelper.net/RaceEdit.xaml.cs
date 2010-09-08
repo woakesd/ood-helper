@@ -143,6 +143,9 @@ namespace OodHelper.net
             }
         }
 
+        public bool CalculateEnabled { get; set; }
+        public bool RefreshHandicapsEnabled { get; set; }
+
         public string RaceStart
         {
             get { return StartTime.ToString("hh\\:mm"); }
@@ -296,6 +299,29 @@ namespace OodHelper.net
             if (dsct.HasValue)
                 sct.Text = Common.HMS(dsct.Value);
 
+            CalculateEnabled = false;
+            c = new Db(@"SELECT result_calculated, MAX(last_edit) last_edit
+                FROM calendar c LEFT JOIN races r ON c.rid = r.rid
+                WHERE c.rid = @rid
+                GROUP BY result_calculated, standard_corrected_time");
+            Hashtable calc = c.GetHashtable(p);
+            if (calc["result_calculated"] == DBNull.Value || calc["last_edit"] != DBNull.Value && (DateTime)calc["result_calculated"] <= (DateTime)calc["last_edit"])
+                CalculateEnabled = true;
+            OnPropertyChanged("CalculateEnabled");
+
+            RefreshHandicapsEnabled = false;
+            c = new Db(@"SELECT COUNT(1)
+                FROM races r1 
+                INNER JOIN races r2 ON r2.bid = r1.bid AND r2.rid <> r1.rid AND r2.start_date < r1.start_date AND r2.last_edit > r1.last_edit
+                INNER JOIN races r3 ON r3.bid = r1.bid AND r3.rid <> r1.rid
+                WHERE r1.rid = @rid
+                GROUP BY r1.bid, r3.start_date, r3.new_rolling_handicap
+                HAVING r3.start_date = MAX(r2.start_date)");
+            int? updateable = c.GetScalar(p) as int?;
+            if (updateable > 0)
+                RefreshHandicapsEnabled = true;
+            OnPropertyChanged("RefreshHandicapsEnabled");
+
             mCourse = caldata["course_choice"] as string;
             mWindSpeed = caldata["wind_speed"] as string;
             mWindDirection = caldata["wind_direction"] as string;
@@ -361,6 +387,8 @@ namespace OodHelper.net
             sql.Append(" WHERE rid = @rid AND bid = @bid");
             Db d = new Db(sql.ToString());
             d.ExecuteNonQuery(p);
+            CalculateEnabled = true;
+            OnPropertyChanged("CalculateEnabled");
         }
 
         void SetColumnAttributes()
