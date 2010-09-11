@@ -43,7 +43,7 @@
         </ToolBarTray>
         <StackPanel Orientation="Horizontal" Grid.Row="1">
             <TextBlock VerticalAlignment="Center" Text="Name "/>
-            <TextBox Name="Name" Width="200" Margin="0,2"/>
+            <TextBox Name="RuleName" Width="200" Margin="0,2" />
         </StackPanel>
         <TreeView Name="Rules" Grid.Row="2">
             <TreeView.ItemContainerStyle>

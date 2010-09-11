@@ -53,7 +53,7 @@
         <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Name="Handicapping">Open Handicap used</TextBlock>
         <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" Name="Sct">SCT: 00:00:00.00</TextBlock>
         <DataGrid Margin="0,12,0,0" Grid.ColumnSpan="3" Grid.Row="3" GridLinesVisibility="None" Name="Results" 
-                  Loaded="Results_Loaded" ColumnHeaderStyle="{StaticResource ResourceKey=ColumnHeader}"
+                  ColumnHeaderStyle="{StaticResource ResourceKey=ColumnHeader}"
                   CanUserReorderColumns="False" CanUserSortColumns="False" 
                   CanUserResizeColumns="False" CanUserResizeRows="False" AutoGenerateColumns="True" IsReadOnly="True" 
                   IsManipulationEnabled="False" HeadersVisibility="Column" 
@@ -84,7 +84,7 @@
                 <TextBlock Padding="0" Margin="0,0,36,0" Name="PrintedDate" Text="Printed on 6 Sep 2010 at 16:12:39"/>
                 <TextBlock Padding="0" Margin="0,0,12,0" Grid.Column="1" Text="OOD's Signature"/>
                 <Border Padding="0" Margin="0,0,36,0" Grid.Column="2" BorderThickness="0,0,0,1" BorderBrush="Black"/>
-                <TextBlock Padding="0" Grid.Column="3" Text="Page 1"/>
+                <TextBlock Padding="0" Grid.Column="3" Text="Page 1" Name="PageNumber"/>
             </Grid>
         </StackPanel>
     </Grid>

@@ -29,7 +29,7 @@ namespace OodHelper.net.Rules
             if (id.HasValue)
             {
                 Root = new BoatSelectRule(id);
-                Name.Text = Root.Name;
+                RuleName.Text = Root.Name;
             }
             else
             {
@@ -126,7 +126,7 @@ namespace OodHelper.net.Rules
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            Root.Name = Name.Text;
+            Root.Name = RuleName.Text;
             Root.Save();
             DialogResult = true;
             Close();

@@ -48,7 +48,7 @@
         <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Name="EventDescription">Wed A Series - Division 1</TextBlock>
         <DataGrid Margin="0,12,0,0" Grid.ColumnSpan="3" Grid.Row="2" GridLinesVisibility="None" Name="Results" 
                   ColumnHeaderStyle="{StaticResource ResourceKey=ColumnHeader}"
-                  CanUserReorderColumns="False" CanUserSortColumns="False" 
+                  CanUserReorderColumns="False" CanUserSortColumns="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
                   CanUserResizeColumns="False" CanUserResizeRows="False" AutoGenerateColumns="False" IsReadOnly="True" 
                   IsManipulationEnabled="False" HeadersVisibility="Column" 
                   BorderThickness="0" Background="White"

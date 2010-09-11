@@ -5,6 +5,7 @@ using System.Data;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -232,22 +233,25 @@ namespace OodHelper.net
                                     Dispatcher.Invoke(new Action(delegate()
                                     {
                                         Page p = null;
+                                        IResultsPage rp = null;
 
                                         switch (red.Handicap)
                                         {
                                             case "o":
                                                 p = (Page)new OpenHandicapResultsPage(red);
-                                                p.Width = pd.PrintableAreaWidth;
                                                 break;
                                             case "r":
                                                 p = (Page)new RollingHandicapResultsPage(red);
-                                                p.Width = pd.PrintableAreaWidth;
                                                 break;
                                         }
+                                        rp = p as IResultsPage;
+                                        p.Width = pd.PrintableAreaWidth;
                                         p.Measure(ps);
                                         p.Arrange(new Rect(new Point(0, 0), ps));
                                         p.UpdateLayout();
-                                        collator.Write(p);
+
+                                        int pno = 1;
+                                        while (rp.PrintPage(collator, pno)) pno++;
                                     }));
                                 }
                             }
