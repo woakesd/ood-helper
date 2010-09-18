@@ -13,16 +13,24 @@ namespace OodHelper.net
     {
         protected override void CorrectedTime()
         {
+            Hashtable p = new Hashtable();
+            p["rid"] = rid;
             //
             // Select all boats and work out elapsed, corrected and stdcorr
             //
-            foreach (DataRow dr in (from r in racedata.AsEnumerable()
-                                    where r.Field<string>("finish_code") != "DNF"
-                                        && r.Field<string>("finish_code") != "DSQ"
-                                        && r.Field<DateTime?>("start_date") != null
-                                        && r.Field<DateTime?>("finish_date") != null
-                                        && (!averageLap || r.Field<int?>("laps") != null)
-                                    select r))
+            String sql = @"SELECT bid, rid, start_date, 
+                CASE finish_code 
+                    WHEN 'DNF' THEN NULL 
+                    WHEN 'DSQ' THEN NULL 
+                    ELSE finish_date END finish_date,
+                rolling_handicap, open_handicap, laps, 
+                elapsed, corrected, standard_corrected, place, performance_index
+                FROM races
+                WHERE rid = @rid";
+            Db c = new Db(sql);
+            DataTable dt = c.GetData(p);
+
+            foreach (DataRow dr in dt.Rows)
             {
                 if (dr["start_date"] != DBNull.Value && dr["finish_date"] != DBNull.Value && (!averageLap || dr["laps"] != DBNull.Value))
                 {
@@ -54,6 +62,11 @@ namespace OodHelper.net
                     dr["place"] = 0;
                 }
             }
+            //
+            // Update the database.
+            //
+            c.Commit(dt);
+            dt.Dispose();
         }
     }
 }
