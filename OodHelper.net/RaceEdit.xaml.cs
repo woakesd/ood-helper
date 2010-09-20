@@ -109,6 +109,10 @@ namespace OodHelper.net
             }
         }
 
+        public bool AverageLap { get; private set; }
+
+        public bool LapsEnabled { get { return !AverageLap; } }
+
         public string RaceClass { get; set; }
 
         public string RaceName { get; set; }
@@ -298,6 +302,9 @@ namespace OodHelper.net
             double? dsct = caldata["standard_corrected_time"] as double?;
             if (dsct.HasValue)
                 sct.Text = Common.HMS(dsct.Value);
+            AverageLap = false;
+            if (caldata["average_lap"] != DBNull.Value)
+                AverageLap = (bool)caldata["average_lap"];
 
             CalculateEnabled = false;
             c = new Db(@"SELECT result_calculated, MAX(last_edit) last_edit
