@@ -27,12 +27,14 @@ namespace OodHelper.net
             Left = c.Left + c.ActualWidth / 2 - Width / 2;
             Top = c.Top + c.ActualHeight / 2 - Height / 2;
             Progress.IsIndeterminate = true;
+
         }
 
         private BackgroundWorker worker { get; set; }
 
         public Working(BackgroundWorker w) : this()
         {
+            CancelButton.Visibility = Visibility.Visible;
             worker = w;
             Progress.IsIndeterminate = false;
             Progress.Minimum = 0;
