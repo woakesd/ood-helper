@@ -20,16 +20,13 @@ namespace OodHelper.net
     [Svn("$Id$")]
     public partial class Working : Window
     {
-        public Working(Window c)
+        public Working()
         {
+            Window c = Application.Current.MainWindow;
             InitializeComponent();
             Left = c.Left + c.ActualWidth / 2 - Width / 2;
             Top = c.Top + c.ActualHeight / 2 - Height / 2;
             Progress.IsIndeterminate = true;
-        }
-
-        public Working() : this (Application.Current.MainWindow)
-        {
         }
 
         private BackgroundWorker worker { get; set; }
@@ -55,14 +52,6 @@ namespace OodHelper.net
         {
             Progress.Value = e.ProgressPercentage;
             Message.Text = e.UserState as string;
-        }
-
-        public Working(Window c, string initialMessage, bool isIndeterminate, int min, int max): this(c)
-        {
-            Message.Text = initialMessage;
-            Progress.IsIndeterminate = isIndeterminate;
-            Progress.Minimum = min;
-            Progress.Maximum = max;
         }
 
         private delegate void myDelegate();
