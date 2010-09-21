@@ -133,6 +133,8 @@
     <Compile Include="About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UploadToMysql.cs" />
+    <Compile Include="DownloadFromMysql.cs" />
     <Compile Include="Maintain\Series.xaml.cs">
       <DependentUpon>Series.xaml</DependentUpon>
     </Compile>

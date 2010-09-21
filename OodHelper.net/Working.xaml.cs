@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -24,8 +25,32 @@ namespace OodHelper.net
             InitializeComponent();
             Left = c.Left + c.ActualWidth / 2 - Width / 2;
             Top = c.Top + c.ActualHeight / 2 - Height / 2;
-            Show();
             Progress.IsIndeterminate = true;
+        }
+
+        private BackgroundWorker worker { get; set; }
+
+        public Working(Window c, BackgroundWorker w) : this(c)
+        {
+            worker = w;
+            Progress.IsIndeterminate = false;
+            Progress.Minimum = 0;
+            Progress.Maximum = 100;
+            worker.WorkerReportsProgress = true;
+            worker.WorkerSupportsCancellation = true;
+            worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
+            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+        }
+
+        void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            Close();
+        }
+
+        void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            Progress.Value = e.ProgressPercentage;
+            Message.Text = e.UserState as string;
         }
 
         public Working(Window c, string initialMessage, bool isIndeterminate, int min, int max): this(c)
@@ -51,6 +76,14 @@ namespace OodHelper.net
         public void CloseWindow()
         {
             Dispatcher.Invoke((myDelegate)delegate() { Close(); });
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            if (worker != null)
+            {
+                worker.CancelAsync();
+            }
         }
     }
 }

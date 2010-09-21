@@ -82,8 +82,7 @@ namespace OodHelper.net
             if (MessageBox.Show("Click OK to confirm downloading database from Website", "Confirm Download", 
                 MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.OK) == MessageBoxResult.OK)
             {
-                Working p = new Working(this, "Downloading Boats", false, 0, 6);
-                Common.copyMySqlData(p);
+                DownloadFromMysql dtask = new DownloadFromMysql();
             }
         }
 
@@ -92,8 +91,7 @@ namespace OodHelper.net
             if (MessageBox.Show("Click OK to confirm uploading database to Website", "Confirm Upload",
                 MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.OK) == MessageBoxResult.OK)
             {
-                Working p = new Working(this, "Uploading Boats", false, 0, 6);
-                Common.copyToMySql(p);
+                UploadToMysql utask = new UploadToMysql();
             }
         }
 
