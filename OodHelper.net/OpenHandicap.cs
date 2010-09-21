@@ -127,9 +127,9 @@ namespace OodHelper.net
                     p["bid"] = r["bid"];
                     p["rid"] = rid;
                     Db hc = new Db(@"SELECT r3.new_rolling_handicap
-                        FROM races r1 
-                        INNER JOIN races r2 ON r2.bid = r1.bid AND r2.rid <> r1.rid AND r2.start_date < r1.start_date
-                        INNER JOIN races r3 ON r3.bid = r1.bid AND r3.rid <> r1.rid
+                        FROM races r1
+                        INNER JOIN races r2 ON r2.bid = r1.bid AND r2.start_date < r1.start_date
+                        INNER JOIN races r3 ON r3.bid = r1.bid
                         WHERE r1.rid = @rid AND r1.bid = @bid
                         GROUP BY r1.bid, r3.start_date, r3.new_rolling_handicap
                         HAVING r3.start_date = MAX(r2.start_date)");
