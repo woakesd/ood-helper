@@ -17,7 +17,7 @@ namespace OodHelper.net
         {
             BackgroundWorker download = new BackgroundWorker();
             download.DoWork += new DoWorkEventHandler(Process);
-            Working w = new Working(Application.Current.MainWindow, download);
+            Working w = new Working(download);
             download.RunWorkerCompleted += new RunWorkerCompletedEventHandler(download_RunWorkerCompleted);
             download.RunWorkerAsync();
             w.ShowDialog();

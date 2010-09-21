@@ -33,7 +33,8 @@ namespace OodHelper.net
 
         void SeriesChooser_Loaded(object sender, RoutedEventArgs e)
         {
-            w = new Working(this);
+            w = new Working();
+            w.Show();
             System.Threading.Tasks.Task.Factory.StartNew(() =>
                 {
                     Db d = new Db("SELECT * " +

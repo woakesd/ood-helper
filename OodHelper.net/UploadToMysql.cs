@@ -17,7 +17,7 @@ namespace OodHelper.net
         {
             BackgroundWorker upload = new BackgroundWorker();
             upload.DoWork += new DoWorkEventHandler(Process);
-            Working p = new Working(System.Windows.Application.Current.MainWindow, upload);
+            Working p = new Working(upload);
             upload.RunWorkerCompleted += new RunWorkerCompletedEventHandler(upload_RunWorkerCompleted);
             upload.RunWorkerAsync();
             p.ShowDialog();

@@ -43,7 +43,8 @@ namespace OodHelper.net
 
         private void LoadGrid()
         {
-            w = new Working(this);
+            w = new Working();
+            w.Show();
             ClassData.ItemsSource = null;
             Task.Factory.StartNew(() =>
             {

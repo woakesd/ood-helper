@@ -38,7 +38,8 @@ namespace OodHelper.net.Maintain
 
         private void LoadGrid()
         {
-            w = new Working(this);
+            w = new Working();
+            w.Show();
             BoatData.ItemsSource = null;
             Task.Factory.StartNew(() =>
             {

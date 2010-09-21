@@ -28,9 +28,13 @@ namespace OodHelper.net
             Progress.IsIndeterminate = true;
         }
 
+        public Working() : this (Application.Current.MainWindow)
+        {
+        }
+
         private BackgroundWorker worker { get; set; }
 
-        public Working(Window c, BackgroundWorker w) : this(c)
+        public Working(BackgroundWorker w) : this()
         {
             worker = w;
             Progress.IsIndeterminate = false;

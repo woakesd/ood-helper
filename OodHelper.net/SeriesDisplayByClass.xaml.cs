@@ -44,7 +44,8 @@ namespace OodHelper.net
             PrintDialog pd = new PrintDialog();
             if (pd.ShowDialog() == true)
             {
-                Working w = new Working(App.Current.MainWindow);
+                Working w = new Working();
+                w.Show();
                 XpsDocumentWriter write = PrintQueue.CreateXpsDocumentWriter(pd.PrintQueue);
                 VisualsToXpsDocument collator = write.CreateVisualsCollator() as VisualsToXpsDocument;
                 Size ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);

@@ -64,7 +64,8 @@ namespace OodHelper.net
 
         private void LoadGrid()
         {
-            w = new Working(this);
+            w = new Working();
+            w.Show();
             PeopleData.ItemsSource = null;
             Task.Factory.StartNew(() =>
             {

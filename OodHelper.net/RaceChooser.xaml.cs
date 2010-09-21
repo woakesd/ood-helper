@@ -5,7 +5,6 @@ using System.Data;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -40,7 +39,8 @@ namespace OodHelper.net
 
         void RaceChooser_Loaded(object sender, RoutedEventArgs e)
         {
-            w = new Working(this);
+            w = new Working();
+            w.Show();
             System.Threading.Tasks.Task.Factory.StartNew(() =>
                 {
                     Db d = new Db("SELECT rid, start_date, event, class, raced " +
@@ -179,12 +179,6 @@ namespace OodHelper.net
         {
             DialogResult = false;
             Close();
-        }
-
-        private void CalGrid_Loaded(object sender, RoutedEventArgs e)
-        {
-            IList<ScrollBar> sb = Common.FindVisualChild<ScrollBar>(CalGrid);
-            ScrollBar s = sb[0];
         }
     }
 }
