@@ -96,7 +96,7 @@
                     <DataGridTextColumn Binding="{Binding boatclass}" Header="Class"  IsReadOnly="True"/>
                     <DataGridTextColumn Binding="{Binding sailno}" Header="Sail No" IsReadOnly="True"/>
                     <DataGridTextColumn Binding="{Binding start_date}" Header="Start" IsReadOnly="True" />
-                    <DataGridTextColumn Binding="{Binding finish_code,Converter={StaticResource ResourceKey=codeConverter}}" Header="Code"  />
+                    <DataGridTextColumn Binding="{Binding finish_code,Converter={StaticResource ResourceKey=codeConverter}}" Header="Code" />
                     <DataGridTextColumn Binding="{Binding finish_date}" Header="Finish" />
                     <DataGridTextColumn Binding="{Binding laps,Converter={StaticResource ResourceKey=intConverter}}" Header="Laps" />
                     <DataGridTextColumn Binding="{Binding override_points,Converter={StaticResource ResourceKey=DoubleConverter}}" Header="Override Points" />

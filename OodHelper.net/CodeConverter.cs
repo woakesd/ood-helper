@@ -23,7 +23,14 @@ namespace OodHelper.net
             string strValue = value as string;
             if (strValue != null && strValue != string.Empty)
             {
-                return strValue.ToUpper();
+                strValue = strValue.ToUpper();
+                switch (strValue)
+                {
+                    case "RTD":
+                        strValue = "RET";
+                        break;
+                }
+                return strValue;
             }
             return DBNull.Value;
         }

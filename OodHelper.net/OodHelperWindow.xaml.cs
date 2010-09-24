@@ -171,8 +171,6 @@ namespace OodHelper.net
                     sp.Header = "Series Result";
                     dock.Items.Add(sp);
                     dock.SelectedItem = sp;
-                    //sd.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    //sd.VerticalAlignment = VerticalAlignment.Stretch;
                 };
                 rs = new RaceSeriesResult(chooser.Sid, d);
             }

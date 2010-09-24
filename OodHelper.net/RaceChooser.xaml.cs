@@ -39,8 +39,8 @@ namespace OodHelper.net
 
         void RaceChooser_Loaded(object sender, RoutedEventArgs e)
         {
-            w = new Working();
-            w.Show();
+            //w = new Working();
+            //w.Show();
             System.Threading.Tasks.Task.Factory.StartNew(() =>
                 {
                     Db d = new Db("SELECT rid, start_date, event, class, raced " +
@@ -80,7 +80,7 @@ namespace OodHelper.net
                     break;
                 }
             }
-            w.Close();
+            //w.Close();
         }
 
         System.Timers.Timer t = null;
