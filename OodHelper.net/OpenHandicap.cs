@@ -151,7 +151,7 @@ namespace OodHelper.net
             c = new Db(@"SELECT COUNT(1)
                 FROM races r INNER JOIN calendar c
                 ON r.rid = c.rid
-                WHERE c.rid = 151
+                WHERE c.rid = @rid
                 AND r.finish_date <= CASE time_limit_type
                 WHEN 'F' THEN time_limit_fixed
                 WHEN 'D' THEN DATEADD(SECOND, time_limit_delta, c.start_date)
