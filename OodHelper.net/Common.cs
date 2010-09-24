@@ -35,30 +35,6 @@ namespace OodHelper.net
             return r;
         }
 
-        public static TimeSpan? tspan(String s)
-        {
-            TimeSpan t;
-            try
-            {
-                if (s.Length == 5)
-                {
-                    t = new TimeSpan(int.Parse(s.Substring(0, 2)),
-                        int.Parse(s.Substring(3, 2)), 0);
-                }
-                else
-                {
-                    t = new TimeSpan(int.Parse(s.Substring(0, 2)),
-                        int.Parse(s.Substring(3, 2)),
-                        int.Parse(s.Substring(6, 2)));
-                }
-            }
-            catch
-            {
-                return null;
-            }
-            return t;
-        }
-
         public static string HMS(double t)
         {
             if (t != 999999)

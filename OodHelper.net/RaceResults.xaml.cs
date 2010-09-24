@@ -227,7 +227,7 @@ namespace OodHelper.net
                                     string msg = null;
                                     Dispatcher.Invoke(new Action(delegate()
                                     {
-                                        msg = string.Format("Printing {0} - {1}", new object[] { red.Name, red.RaceClass });
+                                        msg = string.Format("Printing {0}", red.RaceName);
                                     }));
                                     w.SetProgress(msg, i + 1);
                                     System.Threading.Thread.Sleep(50);

@@ -7,7 +7,6 @@ using MySql.Data.MySqlClient;
 using MySql.Data.Types;
 using System.Data.SqlServerCe;
 using System.ComponentModel;
-using System.Windows;
 
 namespace OodHelper.net
 {
