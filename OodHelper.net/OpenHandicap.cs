@@ -41,11 +41,13 @@ namespace OodHelper.net
 
         public void Calculate(int r)
         {
-            rid = r;
-            Hashtable p = new Hashtable();
-            p["rid"] = rid;
+            try
+            {
+                rid = r;
+                Hashtable p = new Hashtable();
+                p["rid"] = rid;
 
-            Db c = new Db(@"SELECT average_lap, c.start_date, result_calculated, MAX(last_edit) last_edit, standard_corrected_time,
+                Db c = new Db(@"SELECT average_lap, c.start_date, result_calculated, MAX(last_edit) last_edit, standard_corrected_time,
                 CASE time_limit_type
                 WHEN 'F' THEN time_limit_fixed
                 WHEN 'D' THEN DATEADD(SECOND, time_limit_delta, c.start_date)
@@ -56,43 +58,50 @@ namespace OodHelper.net
                 WHEN 'F' THEN time_limit_fixed
                 WHEN 'D' THEN DATEADD(SECOND, time_limit_delta, c.start_date)
                 END, extension");
-            Hashtable res = c.GetHashtable(p);
+                Hashtable res = c.GetHashtable(p);
 
-            rdate = (DateTime)res["start_date"];
-            averageLap = (bool)res["average_lap"];
-            
-            double? dsct = res["standard_corrected_time"] as double?;
-            StandardCorrectedTime = 0;
-            if (dsct.HasValue)
-                StandardCorrectedTime = dsct.Value;
+                rdate = (DateTime)res["start_date"];
+                averageLap = (bool)res["average_lap"];
 
-            time_limit = res["time_limit"] as DateTime?;
-            extension = res["extension"] as int?;
+                double? dsct = res["standard_corrected_time"] as double?;
+                StandardCorrectedTime = 0;
+                if (dsct.HasValue)
+                    StandardCorrectedTime = dsct.Value;
 
-            if (res["result_calculated"] == DBNull.Value || res["last_edit"] != DBNull.Value &&
-                (DateTime)res["result_calculated"] <= (DateTime)res["last_edit"])
-            {
-                racedb = new Db(@"SELECT * FROM races WHERE rid = @rid");
-                racedata = racedb.GetData(p);
+                time_limit = res["time_limit"] as DateTime?;
+                extension = res["extension"] as int?;
 
-                DeleteDidNotCompete();
-
-                if (HasFinishers())
+                if (res["result_calculated"] == DBNull.Value || res["last_edit"] != DBNull.Value &&
+                    (DateTime)res["result_calculated"] <= (DateTime)res["last_edit"])
                 {
-                    FlagDidNotFinish();
-                    InitialiseFields();
-                    CorrectedTime();
-                    CalculateSct();
-                    Score();
-                    UpdateHandicaps();
-                    CommitChanges();
+                    racedb = new Db(@"SELECT * FROM races WHERE rid = @rid");
+                    racedata = racedb.GetData(p);
 
-                    c = new Db(@"UPDATE calendar
+                    DeleteDidNotCompete();
+
+                    if (HasFinishers())
+                    {
+                        FlagDidNotFinish();
+                        InitialiseFields();
+                        CorrectedTime();
+                        CalculateSct();
+                        Score();
+                        UpdateHandicaps();
+                        CommitChanges();
+
+                        c = new Db(@"UPDATE calendar
                         SET result_calculated = GETDATE(),
                         raced = 1
                         WHERE rid = @rid");
-                    c.ExecuteNonQuery(p);
+                        c.ExecuteNonQuery(p);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogException(ex);
+                System.Windows.MessageBox.Show(ex.Message, "Error", 
+                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
         }
 
