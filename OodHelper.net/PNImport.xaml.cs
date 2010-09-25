@@ -71,7 +71,7 @@ namespace OodHelper.net
                 expr["notes"] = impr["Notes"];
                 pt.Rows.Add(expr);
             }
-            hdb.Commit(pt);
+            //hdb.Commit(pt);
             pn.ItemsSource = pt.DefaultView;
         }
     }

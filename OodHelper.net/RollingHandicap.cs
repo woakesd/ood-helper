@@ -30,15 +30,24 @@ namespace OodHelper.net
             Db c = new Db(sql);
             DataTable dt = c.GetData(p);
 
+            c = new Db(@"UPDATE races 
+                SET elapsed = @elapsed
+                , corrected = @corrected
+                , standard_corrected = @standard_corrected
+                , place = @place
+                WHERE rid = @rid
+                AND bid = @bid");
+
             foreach (DataRow dr in dt.Rows)
             {
                 if (dr["start_date"] != DBNull.Value && dr["finish_date"] != DBNull.Value && (!averageLap || dr["laps"] != DBNull.Value))
                 {
+                    p["bid"] = dr["bid"];
                     DateTime? s = dr["start_date"] as DateTime?;
                     DateTime? f = dr["finish_date"] as DateTime?;
 
                     TimeSpan? e = f - s;
-                    dr["elapsed"] = e.Value.TotalSeconds;
+                    p["elapsed"] = e.Value.TotalSeconds;
 
                     int? l = dr["laps"] as int?;
 
@@ -51,21 +60,23 @@ namespace OodHelper.net
                     //
                     if (averageLap)
                     {
-                        dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap) / l.Value;
-                        dr["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp) / l.Value;
+                        p["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap) / l.Value;
+                        p["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp) / l.Value;
                     }
                     else
                     {
-                        dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap);
-                        dr["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp);
+                        p["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap);
+                        p["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp);
                     }
-                    dr["place"] = 0;
+                    p["place"] = 0;
+
+                    c.ExecuteNonQuery(p);
                 }
             }
             //
             // Update the database.
             //
-            c.Commit(dt);
+            //c.Commit(dt);
             dt.Dispose();
         }
     }

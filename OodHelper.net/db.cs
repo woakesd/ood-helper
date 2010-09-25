@@ -366,25 +366,6 @@ CREATE TABLE [select_rules] (
             }
         }
 
-        public int Commit(DataTable d)
-        {
-            int rowsdone = 0;
-            mCon.Open();
-            try
-            {
-                SqlCeCommandBuilder cmb = new SqlCeCommandBuilder(mAdapt);
-                mAdapt.DeleteCommand = cmb.GetDeleteCommand();
-                mAdapt.InsertCommand = cmb.GetInsertCommand();
-                mAdapt.UpdateCommand = cmb.GetUpdateCommand();
-                rowsdone = mAdapt.Update(d);
-            }
-            finally
-            {
-                mCon.Close();
-            }
-            return rowsdone;
-        }
-
         public void Dispose()
         {
             if (mCon != null) mCon.Dispose();

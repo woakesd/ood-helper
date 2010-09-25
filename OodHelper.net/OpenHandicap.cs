@@ -183,15 +183,25 @@ namespace OodHelper.net
             Db c = new Db(sql);
             DataTable dt = c.GetData(p);
 
+            c = new Db(@"UPDATE races 
+                SET elapsed = @elapsed
+                , corrected = @corrected
+                , standard_corrected = @standard_corrected
+                , place = @place
+                WHERE rid = @rid
+                AND bid = @bid");
+
             foreach (DataRow dr in dt.Rows)
             {
                 if (dr["start_date"] != DBNull.Value && dr["finish_date"] != DBNull.Value && (!averageLap || dr["laps"] != DBNull.Value))
                 {
+                    p["bid"] = dr["bid"];
+
                     DateTime? s = dr["start_date"] as DateTime?;
                     DateTime? f = dr["finish_date"] as DateTime?;
 
                     TimeSpan? e = f - s;
-                    dr["elapsed"] = e.Value.TotalSeconds;
+                    p["elapsed"] = e.Value.TotalSeconds;
 
                     int? l = dr["laps"] as int?;
 
@@ -203,21 +213,23 @@ namespace OodHelper.net
                     //
                     if (averageLap)
                     {
-                        dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap) / l.Value;
+                        p["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap) / l.Value;
                     }
                     else
                     {
-                        dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap);
+                        p["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap);
                     }
-                    dr["standard_corrected"] = dr["corrected"];
-                    dr["place"] = 0;
+                    p["standard_corrected"] = p["corrected"];
+                    p["place"] = 0;
+
+                    c.ExecuteNonQuery(p);
                 }
             }
             //
             // Update the database.
             //
-            c.Commit(dt);
-            dt.Dispose();
+            //c.Commit(dt);
+            //dt.Dispose();
         }
 
         private void CalculateSct()
@@ -272,16 +284,24 @@ namespace OodHelper.net
             //
             int goodBoats = 0;
             StandardCorrectedTime = 0;
+
+            c = new Db(@"UPDATE races 
+                SET a = @a
+                WHERE rid = @rid
+                AND bid = @bid");
+
             for (int i = 0; i < d.Rows.Count; i++)
             {
                 DataRow row = d.Rows[i];
-                row["a"] = "N";
+                p["bid"] = row["bid"];
+                p["a"] = "N";
                 if (((double) row["standard_corrected"]) < AvgSlowLimit)
                 {
-                    row["a"] = DBNull.Value;
+                    p["a"] = DBNull.Value;
                     goodBoats++;
                     StandardCorrectedTime = StandardCorrectedTime + (double)row["standard_corrected"];
-                }           
+                }
+                c.ExecuteNonQuery(p);
             }
 
             if (goodBoats > 1)
@@ -316,7 +336,7 @@ namespace OodHelper.net
             Db up = new Db(@"UPDATE calendar SET standard_corrected_time = @sct, raced = 1 WHERE rid = @rid");
             up.ExecuteNonQuery(param);
             
-            c.Commit(d);
+            //c.Commit(d);
             d.Dispose();
         }
 
@@ -394,7 +414,20 @@ namespace OodHelper.net
                 j = k;
             }
 
-            c.Commit(d);
+            c = new Db(@"UPDATE races 
+                SET points = @points
+                , place = @place
+                WHERE rid = @rid
+                AND bid = @bid");
+            foreach (DataRow r in d.Rows)
+            {
+                p["bid"] = r["bid"];
+                p["place"] = r["place"];
+                p["points"] = r["points"];
+                c.ExecuteNonQuery(p);
+            }
+
+            //c.Commit(d);
             d.Dispose();
         }
 
@@ -525,7 +558,24 @@ namespace OodHelper.net
                 }
             }
 
-            c.Commit(d);
+            c = new Db(@"UPDATE races 
+                SET achieved_handicap = @achieved_handicap
+                , c = @c
+                , new_rolling_handicap = @new_rolling_handicap
+                , performance_index = @performance_index
+                WHERE rid = @rid
+                AND bid = @bid");
+            foreach (DataRow r in d.Rows)
+            {
+                p["bid"] = r["bid"];
+                p["achieved_handicap"] = r["achieved_handicap"];
+                p["c"] = r["c"];
+                p["new_rolling_handicap"] = r["new_rolling_handicap"];
+                p["performance_index"] = r["performance_index"];
+                c.ExecuteNonQuery(p);
+            }
+
+            //c.Commit(d);
             d.Dispose();
 
             p = new Hashtable();
