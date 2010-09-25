@@ -33,26 +33,50 @@ namespace OodHelper.net
             get { return fastLim; }
         }
 
+        private DateTime? time_limit { get; set; }
+        private int? extension { get; set; }
+
+        protected DataTable racedata;
+        protected Db racedb;
+
         public void Calculate(int r)
         {
             rid = r;
             Hashtable p = new Hashtable();
             p["rid"] = rid;
 
-            Db c = new Db(@"SELECT average_lap, c.start_date, result_calculated, MAX(last_edit) last_edit, standard_corrected_time
-                        FROM calendar c LEFT JOIN races r ON c.rid = r.rid
-                        WHERE c.rid = @rid
-                        GROUP BY average_lap, start_date, result_calculated, standard_corrected_time");
+            Db c = new Db(@"SELECT average_lap, c.start_date, result_calculated, MAX(last_edit) last_edit, standard_corrected_time,
+                CASE time_limit_type
+                WHEN 'F' THEN time_limit_fixed
+                WHEN 'D' THEN DATEADD(SECOND, time_limit_delta, c.start_date)
+                END time_limit, extension
+                FROM calendar c LEFT JOIN races r ON c.rid = r.rid
+                WHERE c.rid = @rid
+                GROUP BY average_lap, start_date, result_calculated, standard_corrected_time, CASE time_limit_type
+                WHEN 'F' THEN time_limit_fixed
+                WHEN 'D' THEN DATEADD(SECOND, time_limit_delta, c.start_date)
+                END, extension");
             Hashtable res = c.GetHashtable(p);
+
             rdate = (DateTime)res["start_date"];
             averageLap = (bool)res["average_lap"];
+            
             double? dsct = res["standard_corrected_time"] as double?;
             StandardCorrectedTime = 0;
             if (dsct.HasValue)
                 StandardCorrectedTime = dsct.Value;
+
+            time_limit = res["time_limit"] as DateTime?;
+            extension = res["extension"] as int?;
+
             if (res["result_calculated"] == DBNull.Value || res["last_edit"] != DBNull.Value &&
                 (DateTime)res["result_calculated"] <= (DateTime)res["last_edit"])
             {
+                racedb = new Db(@"SELECT * FROM races WHERE rid = @rid");
+                racedata = racedb.GetData(p);
+
+                DeleteDidNotCompete();
+
                 if (HasFinishers())
                 {
                     FlagDidNotFinish();
@@ -61,6 +85,8 @@ namespace OodHelper.net
                     CalculateSct();
                     Score();
                     UpdateHandicaps();
+                    CommitChanges();
+
                     c = new Db(@"UPDATE calendar
                         SET result_calculated = GETDATE(),
                         raced = 1
@@ -70,93 +96,104 @@ namespace OodHelper.net
             }
         }
 
+        private void CommitChanges()
+        {
+            bool first = true;
+            StringBuilder sql = new StringBuilder("UPDATE races SET ");
+            foreach (DataColumn c in racedata.Columns)
+            {
+                if (c.ColumnName != "bid" && c.ColumnName != "rid")
+                {
+                    if (!first)
+                        sql.Append(",");
+                    first = false;
+                    sql.AppendFormat("{0} = @{0}", c.ColumnName);
+                }
+            }
+            sql.Append(" WHERE rid = @rid AND bid = @bid");
+            Db d = new Db(sql.ToString());
+            Hashtable p = new Hashtable();
+            foreach (DataRow r in racedata.Rows)
+            {
+                foreach (DataColumn c in racedata.Columns)
+                {
+                    p[c.ColumnName] = r[c];
+                }
+                int j = d.ExecuteNonQuery(p);
+            }
+        }
+
         private void FlagDidNotFinish()
         {
             //
             // Mark non finishers
             //
-            Db c = new Db(@"UPDATE races
-                SET finish_code = 'DNF'
-                WHERE bid IN (SELECT bid
-                FROM calendar c INNER JOIN races r ON c.rid = r.rid
-                WHERE c.rid = @rid
-                AND r.finish_date > DATEADD(SECOND, extension, CASE time_limit_type
-                WHEN 'F' THEN time_limit_fixed
-                WHEN 'D' THEN DATEADD(SECOND, time_limit_delta, c.start_date)
-                END))
-                AND rid = @rid");
-            Hashtable p = new Hashtable();
-            p["rid"] = rid;
-            c.ExecuteNonQuery(p);
+            if (time_limit.HasValue)
+            {
+                if (extension.HasValue)
+                    time_limit = time_limit.Value.AddSeconds(extension.Value);
+                foreach (DataRow r in (from r in racedata.AsEnumerable() where r.Field<DateTime?>("finish_date") > time_limit select r))
+                {
+                    r["finish_code"] = "DNF";
+                }
+            }
         }
 
         private void InitialiseFields()
         {
             //
-            // Get any boats where the rolling handicap is null and find the last completed race
-            // and use the new rolling handicap form there.  Failing which use open handicap.
+            // update all boats setting elapsed, corrected, stdcorr, place and pts.
             //
-            Hashtable p = new Hashtable();
-            p["rid"] = rid;
-            Db c = new Db("SELECT bid, open_handicap FROM races WHERE rid = @rid AND rolling_handicap IS NULL");
-            DataTable d = c.GetData(p);
-            c = new Db("UPDATE races SET rolling_handicap = @rolling_handicap WHERE rid = @rid AND bid = @bid");
-            foreach (DataRow r in d.Rows)
+            foreach (DataRow r in (from r in racedata.AsEnumerable() select r))
             {
-                p["bid"] = r["bid"];
-                p["rid"] = rid;
-                Db hc = new Db(@"SELECT r3.new_rolling_handicap
+                r["elapsed"] = DBNull.Value;
+                r["corrected"] = DBNull.Value;
+                r["standard_corrected"] = DBNull.Value;
+                r["place"] = 999;
+                r["points"] = DBNull.Value;
+                if (r["rolling_handicap"] == DBNull.Value)
+                {
+                    Hashtable p = new Hashtable();
+                    p["bid"] = r["bid"];
+                    p["rid"] = rid;
+                    Db hc = new Db(@"SELECT r3.new_rolling_handicap
                         FROM races r1
                         INNER JOIN races r2 ON r2.bid = r1.bid AND r2.start_date < r1.start_date
                         INNER JOIN races r3 ON r3.bid = r1.bid
                         WHERE r1.rid = @rid AND r1.bid = @bid
                         GROUP BY r1.bid, r3.start_date, r3.new_rolling_handicap
                         HAVING r3.start_date = MAX(r2.start_date)");
-                int? nrh = hc.GetScalar(p) as int?;
-                if (!nrh.HasValue)
-                    nrh = (int)r["open_handicap"];
-                p["rolling_handicap"] = nrh.Value;
-                c.ExecuteNonQuery(p);
+                    int? nrh = hc.GetScalar(p) as int?;
+                    if (!nrh.HasValue)
+                        nrh = (int) r["open_handicap"];
+                    r["rolling_handicap"] = nrh.Value;
+                }
+                r["new_rolling_handicap"] = r["rolling_handicap"];
+                r["achieved_handicap"] = DBNull.Value;
+                r["performance_index"] = DBNull.Value;
+                r["c"] = DBNull.Value;
+                r["a"] = DBNull.Value;
+
+                //
+                // if average lap and user enters a finish time and no laps then default to 1.
+                //
+                if (averageLap && r["laps"] == DBNull.Value && r["finish_date"] != DBNull.Value)
+                    r["laps"] = 1;
             }
-            //
-            // update all boats setting elapsed, corrected, stdcorr, place and pts.
-            //
-            string sql = @"UPDATE races
-                SET elapsed = NULL
-                ,corrected = NULL
-                ,standard_corrected = NULL
-                ,place = 999
-                ,points = NULL
-                ,new_rolling_handicap = rolling_handicap
-                ,performance_index = NULL
-                ,c = NULL
-                ,a = NULL
-                WHERE rid = @rid";
-            c = new Db(sql);
+        }
+
+        private void DeleteDidNotCompete()
+        {
+            Db c = new Db("DELETE FROM races WHERE rid = @rid AND finish_code IN ('DNC', 'BAD')");
+            Hashtable p = new Hashtable();
+            p["rid"] = rid;
             c.ExecuteNonQuery(p);
         }
 
         private bool HasFinishers()
         {
-            Hashtable p = new Hashtable();
-            p["rid"] = rid;
-            //
-            // First remove race entries the user doesn't want
-            //
-            Db c = new Db("DELETE FROM races WHERE RID = @rid AND finish_code IN ('BAD','DNC')");
-            c.ExecuteNonQuery(p);
-            //
-            // Next count valid finishers
-            //
-            c = new Db(@"SELECT COUNT(1)
-                FROM races r INNER JOIN calendar c
-                ON r.rid = c.rid
-                WHERE c.rid = @rid
-                AND r.finish_date <= CASE time_limit_type
-                WHEN 'F' THEN time_limit_fixed
-                WHEN 'D' THEN DATEADD(SECOND, time_limit_delta, c.start_date)
-                END");
-            int? count = c.GetScalar(p) as int?;
+            int? count = racedata.AsEnumerable().Where(r => r.Field<DateTime?>("finish_date") <= time_limit).Count();
+
             Finishers = count.Value;
             if (count.Value > 0)
                 return true;
@@ -171,65 +208,39 @@ namespace OodHelper.net
             //
             // Select all boats and work out elapsed, corrected and stdcorr
             //
-            string sql = @"SELECT bid, rid, start_date, 
-                CASE finish_code 
-                    WHEN 'DNF' THEN NULL 
-                    WHEN 'DSQ' THEN NULL 
-                    ELSE finish_date END finish_date,
-                rolling_handicap, open_handicap, laps, 
-                elapsed, corrected, standard_corrected, place
-                FROM races
-                WHERE rid = @rid";
-            Db c = new Db(sql);
-            DataTable dt = c.GetData(p);
-
-            c = new Db(@"UPDATE races 
-                SET elapsed = @elapsed
-                , corrected = @corrected
-                , standard_corrected = @standard_corrected
-                , place = @place
-                WHERE rid = @rid
-                AND bid = @bid");
-
-            foreach (DataRow dr in dt.Rows)
+            foreach (DataRow dr in (from r in racedata.AsEnumerable()
+                                    where r.Field<string>("finish_code") != "DNF"
+                                        && r.Field<string>("finish_code") != "DSQ"
+                                        && r.Field<DateTime?>("start_date") != null
+                                        && r.Field<DateTime?>("finish_date") != null
+                                        && (!averageLap || r.Field<int?>("laps") != null)
+                                    select r))
             {
-                if (dr["start_date"] != DBNull.Value && dr["finish_date"] != DBNull.Value && (!averageLap || dr["laps"] != DBNull.Value))
+                DateTime? s = dr["start_date"] as DateTime?;
+                DateTime? f = dr["finish_date"] as DateTime?;
+
+                TimeSpan? e = f - s;
+                dr["elapsed"] = e.Value.TotalSeconds;
+
+                int? l = dr["laps"] as int?;
+
+                int hcap = (int)dr["open_handicap"];
+
+                //
+                // if spec is 'a' then this is average lap so corrected times are per lap,
+                // otherwise assume everyone did same number of laps.
+                //
+                if (averageLap)
                 {
-                    p["bid"] = dr["bid"];
-
-                    DateTime? s = dr["start_date"] as DateTime?;
-                    DateTime? f = dr["finish_date"] as DateTime?;
-
-                    TimeSpan? e = f - s;
-                    p["elapsed"] = e.Value.TotalSeconds;
-
-                    int? l = dr["laps"] as int?;
-
-                    int hcap = (int)dr["open_handicap"];
-
-                    //
-                    // if spec is 'a' then this is average lap so corrected times are per lap,
-                    // otherwise assume everyone did same number of laps.
-                    //
-                    if (averageLap)
-                    {
-                        p["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap) / l.Value;
-                    }
-                    else
-                    {
-                        p["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap);
-                    }
-                    p["standard_corrected"] = p["corrected"];
-                    p["place"] = 0;
-
-                    c.ExecuteNonQuery(p);
+                    dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap) / l.Value;
                 }
+                else
+                {
+                    dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap);
+                }
+                dr["standard_corrected"] = dr["corrected"];
+                dr["place"] = 0;
             }
-            //
-            // Update the database.
-            //
-            //c.Commit(dt);
-            //dt.Dispose();
         }
 
         private void CalculateSct()
@@ -238,21 +249,21 @@ namespace OodHelper.net
             // First select the boats in the race that have Portsmouth, Secondary, Recorded or
             // Club numbers (handicaps).  These will be called good boats in the comments.
             //
-            Db c = new Db(@"SELECT rid, bid, corrected, standard_corrected, a
-                    FROM races
-                    WHERE rid = @rid
-                    AND handicap_status IN ('PY', 'SY', 'RN', 'CN')
-                    AND place = 0
-                    ORDER BY standard_corrected");
-            Hashtable p = new Hashtable();
-            p["rid"] = rid;
-            DataTable d = c.GetData(p);
+
+            var query = from r in racedata.AsEnumerable()
+                        where r.Field<int?>("place") == 0
+                        && (r.Field<string>("handicap_status") == "PY"
+                        || r.Field<string>("handicap_status") == "SY"
+                        || r.Field<string>("handicap_status") == "RN"
+                        || r.Field<string>("handicap_status") == "CN")
+                        orderby r.Field<double?>("standard_corrected")
+                        select r;
 
             //
             // if we have fewer than 2 good boats there is no
             // corrected time.
             //
-            int qual = d.Rows.Count;
+            int qual = query.Count();
             if (qual < 2)
             {
                 StandardCorrectedTime = 0;
@@ -268,7 +279,8 @@ namespace OodHelper.net
 
             for (int i = 0; i < n; i++)
             {
-                total = total + (double) d.Rows[i]["standard_corrected"];
+                total = total + query.ElementAt(i).Field<double?>("standard_corrected").Value;
+                //total = total + (double) d.Rows[i]["standard_corrected"];
             }
 
             double averageCorrectedTime = total / n;
@@ -284,24 +296,16 @@ namespace OodHelper.net
             //
             int goodBoats = 0;
             StandardCorrectedTime = 0;
-
-            c = new Db(@"UPDATE races 
-                SET a = @a
-                WHERE rid = @rid
-                AND bid = @bid");
-
-            for (int i = 0; i < d.Rows.Count; i++)
+            for (int i = 0; i < query.Count(); i++)
             {
-                DataRow row = d.Rows[i];
-                p["bid"] = row["bid"];
-                p["a"] = "N";
+                DataRow row = query.ElementAt(i);
+                row["a"] = "N";
                 if (((double) row["standard_corrected"]) < AvgSlowLimit)
                 {
-                    p["a"] = DBNull.Value;
+                    row["a"] = DBNull.Value;
                     goodBoats++;
                     StandardCorrectedTime = StandardCorrectedTime + (double)row["standard_corrected"];
                 }
-                c.ExecuteNonQuery(p);
             }
 
             if (goodBoats > 1)
@@ -335,9 +339,6 @@ namespace OodHelper.net
 
             Db up = new Db(@"UPDATE calendar SET standard_corrected_time = @sct, raced = 1 WHERE rid = @rid");
             up.ExecuteNonQuery(param);
-            
-            //c.Commit(d);
-            d.Dispose();
         }
 
         private void Score()
@@ -346,19 +347,15 @@ namespace OodHelper.net
             // This routine sets the places column and the pts column.
             //
 
-            Db c = new Db(@"SELECT bid, rid, corrected, place, points
-                    FROM races
-                    WHERE rid = @rid
-                    AND place = 0
-                    ORDER BY corrected");
-            Hashtable p = new Hashtable();
-            p["rid"] = rid;
-            DataTable d = c.GetData(p);
-
             //
             // First give everyone a placing.
             //
-            for (int i = 0; i < d.Rows.Count; i++)
+            DataRow[] query = (from r in racedata.AsEnumerable()
+                        where r.Field<int?>("place") == 0
+                        orderby r.Field<double?>("corrected")
+                        select r).ToArray<DataRow>();
+
+            for (int i = 0; i < query.Count(); i++)
             {
                 //
                 // NB tied boats are given the same place, so if two boats are tied in 3rd
@@ -368,23 +365,23 @@ namespace OodHelper.net
                     //
                     // first row, so set place.
                     //
-                    d.Rows[i]["place"] = 1;
+                    query.ElementAt(i)["place"] = 1;
                 else
                 {
                     //
                     // Subsequent rows with non zero elapsed time.
                     //
-                    if (d.Rows[i - 1]["corrected"].ToString() == d.Rows[i]["corrected"].ToString())
+                    if (query.ElementAt(i - 1)["corrected"].ToString() == query.ElementAt(i)["corrected"].ToString())
                         //
                         // corrected time is the same as the previous row, so use place
                         // from previous row as we are tied.
                         //
-                        d.Rows[i]["place"] = d.Rows[i - 1]["place"];
+                        query.ElementAt(i)["place"] = query.ElementAt(i - 1)["place"];
                     else
                         //
                         // Not tied so assign place.
                         //
-                        d.Rows[i]["place"] = i + 1;
+                        query.ElementAt(i)["place"] = i + 1;
                 }
             }
 
@@ -396,13 +393,13 @@ namespace OodHelper.net
             // If 3 boats tie in 3rd the points are the average of 3, 4 and 5 which is 4, and so on.
             //
             int j = 0;
-            while (j < d.Rows.Count)
+            while (j < query.Count())
             {
                 int k = j + 1;
                 double psum = k;
-                while (k < d.Rows.Count)
+                while (k < query.Count())
                 {
-                    if (d.Rows[j]["place"].ToString() != d.Rows[k]["place"].ToString())
+                    if (query.ElementAt(j)["place"].ToString() != query.ElementAt(k)["place"].ToString())
                         break;
                     k++;
                     psum = psum + k;
@@ -410,44 +407,21 @@ namespace OodHelper.net
 
                 double avg = Math.Round(psum / (k - j), 2);
                 for (int l = j; l < k; l++)
-                    d.Rows[l]["points"] = avg;
+                    query.ElementAt(l)["points"] = avg;
                 j = k;
             }
-
-            c = new Db(@"UPDATE races 
-                SET points = @points
-                , place = @place
-                WHERE rid = @rid
-                AND bid = @bid");
-            foreach (DataRow r in d.Rows)
-            {
-                p["bid"] = r["bid"];
-                p["place"] = r["place"];
-                p["points"] = r["points"];
-                c.ExecuteNonQuery(p);
-            }
-
-            //c.Commit(d);
-            d.Dispose();
         }
 
         private void UpdateHandicaps()
         {
             //
-            // This routine sets the places column and the pts column.
+            // This routine sets the new rolling handicap column.
             //
+            var query = from r in racedata.AsEnumerable()
+                        where r.Field<int?>("place") != 999
+                        select r;
 
-            Db c = new Db(@"SELECT bid, rid, start_date, standard_corrected, rolling_handicap, open_handicap, 
-                    achieved_handicap, new_rolling_handicap, c, performance_index
-                    FROM races
-                    WHERE rid = @rid
-                    AND place != 999
-                    ORDER BY corrected");
-            Hashtable p = new Hashtable();
-            p["rid"] = rid;
-            DataTable d = c.GetData(p);
-
-            foreach (DataRow dr in d.Rows)
+            foreach (DataRow dr in query)
             {
                 //
                 // Initially assume that achieved and new handicap are the current rolling handicap
@@ -558,35 +532,7 @@ namespace OodHelper.net
                 }
             }
 
-            c = new Db(@"UPDATE races 
-                SET achieved_handicap = @achieved_handicap
-                , c = @c
-                , new_rolling_handicap = @new_rolling_handicap
-                , performance_index = @performance_index
-                WHERE rid = @rid
-                AND bid = @bid");
-            foreach (DataRow r in d.Rows)
-            {
-                p["bid"] = r["bid"];
-                p["achieved_handicap"] = r["achieved_handicap"];
-                p["c"] = r["c"];
-                p["new_rolling_handicap"] = r["new_rolling_handicap"];
-                p["performance_index"] = r["performance_index"];
-                c.ExecuteNonQuery(p);
-            }
-
-            //c.Commit(d);
-            d.Dispose();
-
-            p = new Hashtable();
-            p["rid"] = rid;
-
-            c = new Db(@"SELECT bid, new_rolling_handicap
-                    FROM races
-                    WHERE new_rolling_handicap IS NOT NULL
-                    AND rid = @rid");
-            d = c.GetData(p);
-
+            Hashtable p = new Hashtable();
             Db u = new Db(@"UPDATE boats
                     SET rolling_handicap = @new_rolling_handicap
                     WHERE bid = @bid
@@ -598,15 +544,14 @@ namespace OodHelper.net
                     AND r1.bid = @bid
                     AND r2.start_date > r1.start_date)");
 
-            foreach (DataRow dr in d.Rows)
+            p["rid"] = rid;
+            foreach (DataRow dr in query)
             {
                 p["new_rolling_handicap"] = dr["new_rolling_handicap"];
                 p["bid"] = dr["bid"];
                 u.ExecuteNonQuery(p);
             }
             u.Dispose();
-            d.Dispose();
         }
-
     }
 }

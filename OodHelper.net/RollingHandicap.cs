@@ -13,41 +13,24 @@ namespace OodHelper.net
     {
         protected override void CorrectedTime()
         {
-            Hashtable p = new Hashtable();
-            p["rid"] = rid;
             //
             // Select all boats and work out elapsed, corrected and stdcorr
             //
-            String sql = @"SELECT bid, rid, start_date, 
-                CASE finish_code 
-                    WHEN 'DNF' THEN NULL 
-                    WHEN 'DSQ' THEN NULL 
-                    ELSE finish_date END finish_date,
-                rolling_handicap, open_handicap, laps, 
-                elapsed, corrected, standard_corrected, place, performance_index
-                FROM races
-                WHERE rid = @rid";
-            Db c = new Db(sql);
-            DataTable dt = c.GetData(p);
-
-            c = new Db(@"UPDATE races 
-                SET elapsed = @elapsed
-                , corrected = @corrected
-                , standard_corrected = @standard_corrected
-                , place = @place
-                WHERE rid = @rid
-                AND bid = @bid");
-
-            foreach (DataRow dr in dt.Rows)
+            foreach (DataRow dr in (from r in racedata.AsEnumerable()
+                                    where r.Field<string>("finish_code") != "DNF"
+                                        && r.Field<string>("finish_code") != "DSQ"
+                                        && r.Field<DateTime?>("start_date") != null
+                                        && r.Field<DateTime?>("finish_date") != null
+                                        && (!averageLap || r.Field<int?>("laps") != null)
+                                    select r))
             {
                 if (dr["start_date"] != DBNull.Value && dr["finish_date"] != DBNull.Value && (!averageLap || dr["laps"] != DBNull.Value))
                 {
-                    p["bid"] = dr["bid"];
                     DateTime? s = dr["start_date"] as DateTime?;
                     DateTime? f = dr["finish_date"] as DateTime?;
 
                     TimeSpan? e = f - s;
-                    p["elapsed"] = e.Value.TotalSeconds;
+                    dr["elapsed"] = e.Value.TotalSeconds;
 
                     int? l = dr["laps"] as int?;
 
@@ -60,24 +43,17 @@ namespace OodHelper.net
                     //
                     if (averageLap)
                     {
-                        p["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap) / l.Value;
-                        p["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp) / l.Value;
+                        dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap) / l.Value;
+                        dr["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp) / l.Value;
                     }
                     else
                     {
-                        p["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap);
-                        p["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp);
+                        dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap);
+                        dr["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp);
                     }
-                    p["place"] = 0;
-
-                    c.ExecuteNonQuery(p);
+                    dr["place"] = 0;
                 }
             }
-            //
-            // Update the database.
-            //
-            //c.Commit(dt);
-            dt.Dispose();
         }
     }
 }
