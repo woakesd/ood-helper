@@ -16,7 +16,7 @@ namespace OodHelper.net
             {
                 using (StreamWriter sw = new StreamWriter(FileName, true))
                 {
-                    sw.WriteLine(string.Format("{0:yyyy-MM-ddThh:mm:ss} \"{1}\"", new object[] { DateTime.Now, ex.Message }));
+                    sw.WriteLine(string.Format("{0:yyyy-MM-ddTHH:mm:ss} \"{1}\"", new object[] { DateTime.Now, ex.Message }));
 
                     sw.WriteLine(ex.StackTrace);
                     sw.WriteLine();
