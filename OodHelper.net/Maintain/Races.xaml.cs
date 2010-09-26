@@ -13,12 +13,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Threading.Tasks;
 
-namespace OodHelper.net
+namespace OodHelper.net.Maintain
 {
     /// <summary>
     /// Interaction logic for Races.xaml
     /// </summary>
-    [Svn("$Id$")]
+    [Svn("$Id: Races.xaml.cs 182 2010-09-21 21:12:06Z woakesdavid $")]
     public partial class Races : Window
     {
         int redit = 0;
@@ -98,7 +98,7 @@ namespace OodHelper.net
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            Race b = new Race(0);
+            RaceEdit b = new RaceEdit(0);
             if (b.ShowDialog().Value)
             {
                 redit = b.Rid;
@@ -111,7 +111,7 @@ namespace OodHelper.net
             if (RaceData.SelectedItem != null)
             {
                 DataRowView i = (DataRowView) RaceData.SelectedItem;
-                Race b = new Race((int)i.Row["rid"]);
+                RaceEdit b = new RaceEdit((int)i.Row["rid"]);
                 if (b.ShowDialog().Value)
                 {
                     redit = b.Rid;

@@ -25,11 +25,11 @@ namespace OodHelper.net
         private RowDefinition[] rdef;
         private SelectedBoats[] sbt;
         private Hashtable boatClasses;
-        private RaceEdit[] reds;
+        private ResultsEditor[] reds;
 
         private StringBuilder BoatsSql;
 
-        public SelectBoats(RaceEdit[] raceEdits)
+        public SelectBoats(ResultsEditor[] raceEdits)
         {
             InitializeComponent();
 

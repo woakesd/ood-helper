@@ -17,13 +17,13 @@ using System.Windows.Shapes;
 using System.Windows.Markup;
 using System.Xml;
 
-namespace OodHelper.net
+namespace OodHelper.net.Maintain
 {
     /// <summary>
     /// Interaction logic for Boat.xaml
     /// </summary>
-    [Svn("$Id$")]
-    public partial class Race : Window
+    [Svn("$Id: Race.xaml.cs 151 2010-08-27 19:59:08Z woakesdavid $")]
+    public partial class RaceEdit : Window
     {
         private int rid;
         public int Rid
@@ -33,7 +33,7 @@ namespace OodHelper.net
 
         Calendar raceData;
 
-        public Race(int r)
+        public RaceEdit(int r)
         {
             try
             {
@@ -273,9 +273,7 @@ namespace OodHelper.net
         {
             if (timeFixedRadio.IsChecked.Value)
             {
-                timeLimitFixedDate.BlackoutDates.Clear();
                 timeLimitFixedDate.SelectedDate = raceData.start_date_date;
-                timeLimitFixedDate.BlackoutDates.Add(new CalendarDateRange(DateTime.MinValue, raceData.start_date.Value.AddDays(-1)));
             }
         }
 

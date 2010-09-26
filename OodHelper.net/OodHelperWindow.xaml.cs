@@ -17,6 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MySql.Data.MySqlClient;
 using MySql.Data.Types;
+using OodHelper.net.Maintain;
 
 namespace OodHelper.net
 {
@@ -102,7 +103,7 @@ namespace OodHelper.net
 
         private void Boats_Click(object sender, RoutedEventArgs e)
         {
-            Maintain.Boats b = new Maintain.Boats();
+            Boats b = new Boats();
             b.ShowDialog();
             b.HorizontalAlignment = HorizontalAlignment.Stretch;
             b.VerticalAlignment = VerticalAlignment.Stretch;
@@ -110,7 +111,7 @@ namespace OodHelper.net
 
         private void Series_Click(object sender, RoutedEventArgs e)
         {
-            Maintain.Series b = new Maintain.Series();
+            Series b = new Series();
             b.ShowDialog();
         }
 

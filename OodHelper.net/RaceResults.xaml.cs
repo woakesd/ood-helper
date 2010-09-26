@@ -25,18 +25,18 @@ namespace OodHelper.net
     [Svn("$Id$")]
     public partial class RaceResults : UserControl
     {
-        private RaceEdit[] reds;
+        private ResultsEditor[] reds;
 
         public RaceResults(int[] rids)
         {
             InitializeComponent();
 
-            reds = new RaceEdit[rids.Length];
+            reds = new ResultsEditor[rids.Length];
 
             bool askAutoPopulate = true, doAutoPopulate = false;
             for (int i = 0; i < rids.Length; i++)
             {
-                RaceEdit r = new RaceEdit(rids[i]);
+                ResultsEditor r = new ResultsEditor(rids[i]);
                 if (!r.Races.HasItems && r.CountAutoPopulateData() > 0)
                 {
                     if (askAutoPopulate)
@@ -64,7 +64,7 @@ namespace OodHelper.net
 
             for (int i = 0; i < rids.Length; i++)
             {
-                RaceEdit from = (RaceEdit)((TabItem)raceTabControl.Items[i]).Content;
+                ResultsEditor from = (ResultsEditor)((TabItem)raceTabControl.Items[i]).Content;
                 ContextMenu m = from.ContextMenu;
                 MenuItem editBoat = new MenuItem();
                 editBoat.Header = "Edit Boat";
@@ -75,7 +75,7 @@ namespace OodHelper.net
                 {
                     for (int j = 0; j < rids.Length; j++)
                     {
-                        RaceEdit to = (RaceEdit)((TabItem)raceTabControl.Items[j]).Content;
+                        ResultsEditor to = (ResultsEditor)((TabItem)raceTabControl.Items[j]).Content;
                         if (i != j)
                         {
                             MenuItem mi = new MenuItem();
@@ -110,7 +110,7 @@ namespace OodHelper.net
             public void Execute(object parameter)
             {
                 bool reload = false;
-                RaceEdit rr = (RaceEdit)parameter;
+                ResultsEditor rr = (ResultsEditor)parameter;
                 IList<DataGridCellInfo> cc = rr.Races.SelectedCells;
 
                 foreach (DataGridCellInfo inf in rr.Races.SelectedCells)
@@ -221,7 +221,7 @@ namespace OodHelper.net
                             w.SetRange(0, reds.Length);
                             for (int i = 0; i < reds.Length; i++)
                             {
-                                RaceEdit red = reds[i];
+                                ResultsEditor red = reds[i];
                                 if (red.PrintInclude)
                                 {
                                     string msg = null;

@@ -1,4 +1,4 @@
-﻿<Window x:Class="OodHelper.net.Races"
+﻿<Window x:Class="OodHelper.net.Maintain.Races"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Icon="/OodHelper.net;component/Images/Calendar.png" Title="Races"
         Loaded="Races_Loaded" ShowInTaskbar="False" KeyUp="Window_KeyUp">

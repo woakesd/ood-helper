@@ -19,8 +19,8 @@ namespace OodHelper.net
     /// <summary>
     /// Interaction logic for RaceEdit.xaml
     /// </summary>
-    [Svn("$Id$")]
-    public partial class RaceEdit : UserControl, IPrintSelectItem
+    [Svn("$Id: RaceEdit.xaml.cs 179 2010-09-20 08:14:24Z woakesdavid $")]
+    public partial class ResultsEditor : UserControl, IPrintSelectItem
     {
         private Db rddb;
         private DataTable rd;
@@ -160,7 +160,7 @@ namespace OodHelper.net
 
         private string eventname;
 
-        public RaceEdit(int r)
+        public ResultsEditor(int r)
         {
             InitializeComponent();
 

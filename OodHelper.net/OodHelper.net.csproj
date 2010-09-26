@@ -205,10 +205,10 @@
       <DependentUpon>SeriesDisplay.xaml</DependentUpon>
     </Compile>
     <Compile Include="HMSValidationRule.cs" />
-    <Compile Include="Race.xaml.cs">
-      <DependentUpon>Race.xaml</DependentUpon>
+    <Compile Include="Maintain\RaceEdit.xaml.cs">
+      <DependentUpon>RaceEdit.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Races.xaml.cs">
+    <Compile Include="Maintain\Races.xaml.cs">
       <DependentUpon>Races.xaml</DependentUpon>
     </Compile>
     <Compile Include="RaceSeriesResult.cs" />
@@ -246,10 +246,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Maintain\Boats.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Buttons.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -309,11 +305,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Race.xaml">
+    <Page Include="Maintain\RaceEdit.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Races.xaml">
+    <Page Include="Maintain\Races.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -341,7 +337,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="RaceEdit.xaml">
+    <Page Include="ResultsEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <Generator>MSBuild:Compile</Generator>
@@ -435,8 +431,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="RaceEdit.xaml.cs">
-      <DependentUpon>RaceEdit.xaml</DependentUpon>
+    <Compile Include="ResultsEditor.xaml.cs">
+      <DependentUpon>ResultsEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="RaceResults.xaml.cs">
       <DependentUpon>RaceResults.xaml</DependentUpon>

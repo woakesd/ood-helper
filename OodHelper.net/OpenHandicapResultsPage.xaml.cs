@@ -25,7 +25,7 @@ namespace OodHelper.net
     {
         DataTable rd;
 
-        public OpenHandicapResultsPage(RaceEdit red)
+        public OpenHandicapResultsPage(ResultsEditor red)
         {
             InitializeComponent();
 
