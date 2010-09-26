@@ -4,9 +4,6 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       ShowInTaskbar="False" mc:Ignorable="d" Title="Boat" Loaded="Window_Loaded" d:DesignHeight="535" d:DesignWidth="382" SizeToContent="WidthAndHeight">
-    <Window.Resources>
-        <ResourceDictionary Source="../Buttons.xaml" />
-    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -102,13 +99,29 @@
         </ComboBox>
         <TextBox Grid.Row="12" Grid.Column="1" HorizontalAlignment="Left" Height="47" MaxLength="30" Name="deviations" Width="200" Margin="2" />
         <TextBox Grid.Row="13" Grid.Column="1" HorizontalAlignment="Left" Height="107" Name="notes" Width="200" Margin="2" />
-        <Grid Grid.Row="14" Grid.ColumnSpan="2" Grid.Column="0" Margin="2" >
+        <Grid Grid.Row="14" Grid.ColumnSpan="2" Margin="0,2" Width="300" HorizontalAlignment="Right" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Margin="20,2" Template="{StaticResource ResourceKey=CancelButton}" Click="cancel_Click" IsCancel="True" Name="cancel" />
-            <Button Grid.Column="1" Margin="20,2" Template="{StaticResource ResourceKey=OkButton}" Click="ok_Click" IsDefault="True" Name="ok" />
+            <Grid Grid.Row="3" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Name="CancelButton" IsCancel="True" Click="cancel_Click" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Width="80">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/OodHelper.net;component/Images/Cancel.png" />
+                        <TextBlock Text="Cancel" Margin="5,0"/>
+                    </StackPanel>
+                </Button>
+                <Button Name="OKButton" IsDefault="True" Click="ok_Click" Grid.Column="1" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Width="80">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/OodHelper.net;component/Images/Ok.png" />
+                        <TextBlock Text="OK" Margin="5,0"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

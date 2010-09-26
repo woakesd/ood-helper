@@ -52,8 +52,7 @@
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
-                <DatePicker Template="{StaticResource ResourceKey=MyDatePicker}" 
-                            SelectedDateChanged="startDate_SelectedDateChanged"
+                <DatePicker SelectedDateChanged="startDate_SelectedDateChanged"
                             Margin="2" Name="startDate">
                     <DatePicker.SelectedDate>
                         <Binding Path="start_date_date">
@@ -99,7 +98,7 @@
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
-                    <DatePicker Template="{StaticResource ResourceKey=MyDatePicker}" SelectedDateChanged="timeLimitFixedDate_SelectedDateChanged" Margin="2" Name="timeLimitFixedDate">
+                    <DatePicker SelectedDateChanged="timeLimitFixedDate_SelectedDateChanged" Margin="2" Name="timeLimitFixedDate">
                         <DatePicker.SelectedDate>
                             <Binding Path="time_limit_fixed_date">
                                 <Binding.ValidationRules>
