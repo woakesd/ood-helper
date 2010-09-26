@@ -194,25 +194,28 @@ namespace OodHelper.net
             }
             set
             {
-                if (StartDate.Value.TimeOfDay != value)
-                {
-                    StartDate = StartDate.Value.Date + value;
-                    Db u = new Db(@"UPDATE races
+                if (value > TimeSpan.FromDays(1.0) || StartDate.Value.Date + value >= StartDate.Value.AddDays(1))
+                    MessageBox.Show("You cannot set the start time to this value", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                else
+                    if (StartDate.Value.TimeOfDay != value)
+                    {
+                        StartDate = StartDate.Value.Date + value;
+                        Db u = new Db(@"UPDATE races
                         SET start_date = @start_date
                         , last_edit = GETDATE()
                         WHERE rid = @rid");
-                    Hashtable p = new Hashtable();
-                    p["start_date"] = StartDate;
-                    p["rid"] = Rid;
-                    u.ExecuteNonQuery(p);
+                        Hashtable p = new Hashtable();
+                        p["start_date"] = StartDate;
+                        p["rid"] = Rid;
+                        u.ExecuteNonQuery(p);
 
-                    u = new Db(@"UPDATE calendar
+                        u = new Db(@"UPDATE calendar
                         SET start_date = @start_date
                         WHERE rid = @rid");
-                    u.ExecuteNonQuery(p);
+                        u.ExecuteNonQuery(p);
 
-                    LoadGrid();
-                }
+                        LoadGrid();
+                    }
             }
         }
 
@@ -234,25 +237,35 @@ namespace OodHelper.net
             {
                 if (time_limit_fixed.HasValue)
                 {
-                    time_limit_fixed = time_limit_fixed.Value.Date + value;
-                    Db u = new Db(@"UPDATE calendar
+                    if (value >= TimeSpan.FromDays(1.0) || time_limit_fixed.Value.Date + value >= time_limit_fixed.Value.Date.AddDays(1))
+                        MessageBox.Show("You cannot set the start time to this value", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    else
+                    {
+                        time_limit_fixed = time_limit_fixed.Value.Date + value;
+                        Db u = new Db(@"UPDATE calendar
                         SET time_limit_fixed = @time_limit_fixed
                         WHERE rid = @rid");
-                    Hashtable p = new Hashtable();
-                    p["time_limit_fixed"] = time_limit_fixed;
-                    p["rid"] = Rid;
-                    u.ExecuteNonQuery(p);
+                        Hashtable p = new Hashtable();
+                        p["time_limit_fixed"] = time_limit_fixed;
+                        p["rid"] = Rid;
+                        u.ExecuteNonQuery(p);
+                    }
                 }
                 else if (time_limit_delta.HasValue)
                 {
-                    time_limit_delta = (int)value.Value.TotalSeconds;
-                    Db u = new Db(@"UPDATE calendar
+                    if (value >= TimeSpan.FromDays(1.0))
+                        MessageBox.Show("You cannot set the start time to this value", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    else
+                    {
+                        time_limit_delta = (int)value.Value.TotalSeconds;
+                        Db u = new Db(@"UPDATE calendar
                         SET time_limit_delta = @time_limit_delta
                         WHERE rid = @rid");
-                    Hashtable p = new Hashtable();
-                    p["time_limit_delta"] = time_limit_delta;
-                    p["rid"] = Rid;
-                    u.ExecuteNonQuery(p);
+                        Hashtable p = new Hashtable();
+                        p["time_limit_delta"] = time_limit_delta;
+                        p["rid"] = Rid;
+                        u.ExecuteNonQuery(p);
+                    }
                 }
             }
         }
@@ -285,7 +298,7 @@ namespace OodHelper.net
             p["rid"] = Rid;
             caldata = c.GetHashtable(p);
 
-            StartDate = (caldata["start_date"] as DateTime?).Value;
+            StartDate = (DateTime) caldata["start_date"];
             
             time_limit_fixed = caldata["time_limit_fixed"] as DateTime?;
             time_limit_delta = caldata["time_limit_delta"] as int?;

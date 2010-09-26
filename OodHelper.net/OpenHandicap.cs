@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections;
+using System.Windows;
 
 namespace OodHelper.net
 {
@@ -154,6 +155,7 @@ namespace OodHelper.net
 
         private void FlagDidNotFinish()
         {
+            bool NonFinishers = false;
             //
             // Mark non finishers
             //
@@ -161,11 +163,16 @@ namespace OodHelper.net
             {
                 if (extension.HasValue)
                     time_limit = time_limit.Value.AddSeconds(extension.Value);
+
                 foreach (DataRow r in (from r in racedata.AsEnumerable() where r.Field<DateTime?>("finish_date") > time_limit select r))
                 {
                     r["finish_code"] = "DNF";
+                    NonFinishers = true;
                 }
             }
+
+            if (NonFinishers)
+                MessageBox.Show("Some boats have finished outside the timelimit\n(plus extension if applicable) and have been marked DNF", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         private void InitialiseFields()
@@ -226,6 +233,8 @@ namespace OodHelper.net
             Finishers = count.Value;
             if (count.Value > 0)
                 return true;
+
+            MessageBox.Show("All boats have finished outside the timelimit\nNo calculation can be performed.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             return false;
         }
 
@@ -296,71 +305,73 @@ namespace OodHelper.net
             if (qual < 2)
             {
                 StandardCorrectedTime = 0;
-                return;
-            }
-
-            //
-            // Loop through the top 2/3 of the good boats and work out their 
-            // average corrected time.
-            //
-            double total = 0;
-            int n = (int) Math.Round(qual * 0.67);
-
-            for (int i = 0; i < n; i++)
-            {
-                total = total + query.ElementAt(i).Field<double?>("standard_corrected").Value;
-                //total = total + (double) d.Rows[i]["standard_corrected"];
-            }
-
-            double averageCorrectedTime = total / n;
-
-            //
-            // The average slow limit is the average corrected time + 5%.
-            //
-            double AvgSlowLimit = averageCorrectedTime * 1.05;
-
-            //
-            // Next count the number of good boats that beat the slow time.
-            // Also sum their standard corrected times.
-            //
-            int goodBoats = 0;
-            StandardCorrectedTime = 0;
-            DataRow[] rows = query.ToArray<DataRow>();
-            for (int i = 0; i < rows.Count(); i++)
-            {
-                DataRow row = rows.ElementAt(i);
-                if (((double) row["standard_corrected"]) < AvgSlowLimit)
-                {
-                    row["a"] = DBNull.Value;
-                    goodBoats++;
-                    StandardCorrectedTime = StandardCorrectedTime + (double)row["standard_corrected"];
-                }
-            }
-
-            if (goodBoats > 1)
-            {
-                //
-                // More than 1 good boat so we have enough to calculate the SCT
-                // which is the average standard corrected time of the good boats
-                // that beat the 5% slow cutoff.
-                //
-                StandardCorrectedTime = Math.Round(StandardCorrectedTime / goodBoats);
-
-                //
-                // NB These limits are related to the standard corrected time and
-                // are the ones used to when working out new handicaps.
-                //
-                slowLim = Math.Round(StandardCorrectedTime * 1.05);
-                fastLim = Math.Round(StandardCorrectedTime * 0.95);
             }
             else
             {
+
                 //
-                // Too few good boats so we cant work this out.
+                // Loop through the top 2/3 of the good boats and work out their 
+                // average corrected time.
                 //
+                double total = 0;
+                int n = (int)Math.Round(qual * 0.67);
+
+                for (int i = 0; i < n; i++)
+                {
+                    total = total + query.ElementAt(i).Field<double?>("standard_corrected").Value;
+                    //total = total + (double) d.Rows[i]["standard_corrected"];
+                }
+
+                double averageCorrectedTime = total / n;
+
+                //
+                // The average slow limit is the average corrected time + 5%.
+                //
+                double AvgSlowLimit = averageCorrectedTime * 1.05;
+
+                //
+                // Next count the number of good boats that beat the slow time.
+                // Also sum their standard corrected times.
+                //
+                int goodBoats = 0;
                 StandardCorrectedTime = 0;
-                slowLim = 0;
-                fastLim = 0;
+                DataRow[] rows = query.ToArray<DataRow>();
+                for (int i = 0; i < rows.Count(); i++)
+                {
+                    DataRow row = rows.ElementAt(i);
+                    if (((double)row["standard_corrected"]) < AvgSlowLimit)
+                    {
+                        row["a"] = DBNull.Value;
+                        goodBoats++;
+                        StandardCorrectedTime = StandardCorrectedTime + (double)row["standard_corrected"];
+                    }
+                }
+
+                if (goodBoats > 1)
+                {
+                    //
+                    // More than 1 good boat so we have enough to calculate the SCT
+                    // which is the average standard corrected time of the good boats
+                    // that beat the 5% slow cutoff.
+                    //
+                    StandardCorrectedTime = Math.Round(StandardCorrectedTime / goodBoats);
+
+                    //
+                    // NB These limits are related to the standard corrected time and
+                    // are the ones used to when working out new handicaps.
+                    //
+                    slowLim = Math.Round(StandardCorrectedTime * 1.05);
+                    fastLim = Math.Round(StandardCorrectedTime * 0.95);
+                }
+                else
+                {
+                    //
+                    // Too few good boats so we cant work this out.
+                    //
+                    StandardCorrectedTime = 0;
+                    slowLim = 0;
+                    fastLim = 0;
+                }
             }
             Hashtable param = new Hashtable();
             param["rid"] = rid;
