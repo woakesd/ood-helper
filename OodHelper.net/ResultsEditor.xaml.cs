@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -599,8 +600,22 @@ namespace OodHelper.net
 
         public void Calculate()
         {
-            if (scorer != null) scorer.Calculate(Rid);
+            if (scorer != null)
+            {
+                BackgroundWorker calc = new BackgroundWorker();
+                calc.DoWork += new DoWorkEventHandler(scorer.Calculate);
+                Working w = new Working(calc);
+                calc.RunWorkerCompleted += new RunWorkerCompletedEventHandler(calc_RunWorkerCompleted);
+                calc.RunWorkerAsync(rid);
+                w.ShowDialog();
+
+                //scorer.Calculate(Rid);
+            }
             LoadGrid();
+        }
+
+        void calc_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
         }
 
         private void Notes_Click(object sender, RoutedEventArgs e)

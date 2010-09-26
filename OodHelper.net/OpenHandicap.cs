@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -39,6 +40,14 @@ namespace OodHelper.net
         protected DataTable racedata;
         protected Db racedb;
 
+        BackgroundWorker back = null;
+
+        public void Calculate(object sender, DoWorkEventArgs e)
+        {
+            back = sender as BackgroundWorker;
+            Calculate((int)e.Argument);
+        }
+
         public void Calculate(int r)
         {
             try
@@ -77,23 +86,34 @@ namespace OodHelper.net
                     racedb = new Db(@"SELECT * FROM races WHERE rid = @rid");
                     racedata = racedb.GetData(p);
 
+                    if (back != null) back.ReportProgress(0, "Deleting DNC");
                     DeleteDidNotCompete();
 
+                    if (back != null) back.ReportProgress(10, "Checking for finishers");
                     if (HasFinishers())
                     {
+                        if (back != null) back.ReportProgress(20, "Flagging up DNFs");
                         FlagDidNotFinish();
+                        if (back != null) back.ReportProgress(30, "Initialising");
                         InitialiseFields();
+                        if (back != null) back.ReportProgress(40, "Do corrected time");
                         CorrectedTime();
+                        if (back != null) back.ReportProgress(50, "Calculating SCT");
                         CalculateSct();
+                        if (back != null) back.ReportProgress(60, "Setting places and points");
                         Score();
+                        if (back != null) back.ReportProgress(70, "Updating rolling handicaps");
                         UpdateHandicaps();
+                        if (back != null) back.ReportProgress(80, "Commit changes");
                         CommitChanges();
+                        if (back != null) back.ReportProgress(90, "Updating calendar");
 
                         c = new Db(@"UPDATE calendar
                         SET result_calculated = GETDATE(),
                         raced = 1
                         WHERE rid = @rid");
                         c.ExecuteNonQuery(p);
+                        if (back != null) back.ReportProgress(100, "Completed");
                     }
                 }
             }
@@ -181,7 +201,7 @@ namespace OodHelper.net
                 r["achieved_handicap"] = DBNull.Value;
                 r["performance_index"] = DBNull.Value;
                 r["c"] = DBNull.Value;
-                r["a"] = DBNull.Value;
+                r["a"] = "N";
 
                 //
                 // if average lap and user enters a finish time and no laps then default to 1.
@@ -305,10 +325,10 @@ namespace OodHelper.net
             //
             int goodBoats = 0;
             StandardCorrectedTime = 0;
-            for (int i = 0; i < query.Count(); i++)
+            DataRow[] rows = query.ToArray<DataRow>();
+            for (int i = 0; i < rows.Count(); i++)
             {
-                DataRow row = query.ElementAt(i);
-                row["a"] = "N";
+                DataRow row = rows.ElementAt(i);
                 if (((double) row["standard_corrected"]) < AvgSlowLimit)
                 {
                     row["a"] = DBNull.Value;
@@ -535,7 +555,7 @@ namespace OodHelper.net
                         //
                         // And keep it if it's inside the band.
                         //
-                        if (newhc >= (int)dr["rolling_handicap"] * 0.95 && newhc <= (int)dr["rolling_handicap"] * 1.05)
+                        if (newhc >= (int)dr["open_handicap"] * 0.95 && newhc <= (int)dr["open_handicap"] * 1.05)
                             dr["new_rolling_handicap"] = newhc;
                     }
                 }
