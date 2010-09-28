@@ -305,8 +305,22 @@ namespace OodHelper.net
 
             if (caldata["extension"] != DBNull.Value)
                 extension = (int)caldata["extension"];
-            raceName.Content = StartDate.Value.ToString("ddd dd MMM yyyy") +
-                " (" + ((caldata["handicapping"].ToString() == "r") ? "Rolling " : "Open ") + "handicap)";
+            
+            raceName.Content = StartDate.Value.ToString("ddd dd MMM yyyy") + " (";
+            switch (caldata["handicapping"].ToString())
+            {
+                case "r":
+                    raceName.Content += "Rolling Handicap";
+                    break;
+                case "o":
+                    raceName.Content += "Open Handicap";
+                    break;
+                default:
+                    raceName.Content += "No handicapping method";
+                    break;
+            }
+            raceName.Content += ")";
+
             eventname = caldata["event"].ToString().Trim();
             RaceName = eventname + " - " + caldata["class"].ToString().Trim();
             RaceClass = caldata["class"].ToString().Trim();
