@@ -82,7 +82,7 @@ namespace OodHelper
             if (MessageBox.Show("Click OK to confirm downloading database from Website", "Confirm Download", 
                 MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.OK) == MessageBoxResult.OK)
             {
-                DownloadFromMysql dtask = new DownloadFromMysql();
+                DownloadResults dtask = new DownloadResults();
             }
         }
 
@@ -91,7 +91,7 @@ namespace OodHelper
             if (MessageBox.Show("Click OK to confirm uploading database to Website", "Confirm Upload",
                 MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.OK) == MessageBoxResult.OK)
             {
-                UploadToMysql utask = new UploadToMysql();
+                UploadResults utask = new UploadResults();
             }
         }
 

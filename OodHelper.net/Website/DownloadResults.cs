@@ -9,61 +9,25 @@ using System.ComponentModel;
 
 namespace OodHelper.Website
 {
-    class DownloadFromMysql
+    class DownloadResults : MySqlDownload
     {
-        public DownloadFromMysql()
+        public DownloadResults() : base()
         {
-            BackgroundWorker download = new BackgroundWorker();
-            download.DoWork += new DoWorkEventHandler(Process);
-            Working w = new Working(download);
-            download.RunWorkerCompleted += new RunWorkerCompletedEventHandler(download_RunWorkerCompleted);
-            download.RunWorkerAsync();
-            w.ShowDialog();
         }
-        
-        private SqlCeConnection scon;
-        private SqlCeTransaction strn;
 
-        public void download_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        protected override void download_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled)
-                System.Windows.MessageBox.Show("Download Cancelled", "Cancel", System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBox.Show("Results Download Cancelled", "Cancel", System.Windows.MessageBoxButton.OK,
                     System.Windows.MessageBoxImage.Information);
             else
-                System.Windows.MessageBox.Show("Download Complete", "Finished", System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBox.Show("Results Download Complete", "Finished", System.Windows.MessageBoxButton.OK,
                     System.Windows.MessageBoxImage.Information);
         }
 
-        private void CancelDownload(DoWorkEventArgs e)
-        {
-            e.Cancel = true;
-            strn.Rollback();
-            strn.Dispose();
-            scon.Close();
-            scon.Dispose();
-            return;
-        }
-
-        public void Process(object sender, DoWorkEventArgs e)
+        protected override void DoTheWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker p = sender as BackgroundWorker;
-
-            scon = new SqlCeConnection();
-            scon.ConnectionString = Properties.Settings.Default.OodHelperConnectionString;
-            scon.Open();
-            strn = scon.BeginTransaction();
-
-            string mysql = (string)DbSettings.GetSetting("mysql");
-            MySqlConnectionStringBuilder mcsb = new MySqlConnectionStringBuilder(mysql);
-            mysql = mcsb.ConnectionString;
-            MySqlConnection mcon = new MySqlConnection(mysql);
-            mcon.Open();
-
-            if (p.CancellationPending)
-            {
-                CancelDownload(e);
-                return;
-            }
 
             p.ReportProgress(0, "Loading Boats");
 
@@ -227,28 +191,6 @@ namespace OodHelper.Website
             {
                 CancelDownload(e);
                 return;
-            }
-
-            strn.Commit();
-
-            scon.Close();
-            mcon.Close();
-
-            Db.Compact();
-            p.ReportProgress(100, "All done");
-        }
-
-        private static void CopyData(DataTable rset, SqlCeCommand ins)
-        {
-            foreach (DataRow rrow in rset.Rows)
-            {
-                foreach (DataColumn rc in rset.Columns)
-                {
-                    ins.Parameters.Add(rc.ColumnName, rrow[rc.ColumnName]);
-                }
-                SqlCeParameter p1 = ins.Parameters[1];
-                ins.ExecuteNonQuery();
-                ins.Parameters.Clear();
             }
         }
     }

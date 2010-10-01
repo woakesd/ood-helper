@@ -137,8 +137,10 @@
     <Compile Include="LoadTide\ReadData.xaml.cs">
       <DependentUpon>ReadData.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Website\UploadToMysql.cs" />
-    <Compile Include="Website\DownloadFromMysql.cs" />
+    <Compile Include="Website\MysqlDownload.cs" />
+    <Compile Include="Website\MySqlUpload.cs" />
+    <Compile Include="Website\UploadResults.cs" />
+    <Compile Include="Website\DownloadResults.cs" />
     <Compile Include="Maintain\Series.xaml.cs">
       <DependentUpon>Series.xaml</DependentUpon>
     </Compile>
