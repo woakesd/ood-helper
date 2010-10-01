@@ -1,4 +1,4 @@
-﻿<Window x:Class="OodHelper.net.RaceChooser"
+﻿<Window x:Class="OodHelper.RaceChooser"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     ShowInTaskbar="False" Title="Choose Race" Loaded="RaceChooser_Loaded" 

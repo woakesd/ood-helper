@@ -15,7 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Xps;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     /// <summary>
     /// Interaction logic for TestPage.xaml

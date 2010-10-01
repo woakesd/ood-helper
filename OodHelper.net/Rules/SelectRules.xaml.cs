@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Threading.Tasks;
 
-namespace OodHelper.net.Rules
+namespace OodHelper.Rules
 {
     /// <summary>
     /// Interaction logic for Boats.xaml

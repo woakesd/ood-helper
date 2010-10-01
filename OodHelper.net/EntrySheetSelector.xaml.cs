@@ -15,7 +15,7 @@ using System.Xml;
 using System.Windows.Markup;
 using System.Windows.Xps;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     /// <summary>
     /// Interaction logic for EntrySheetSelector.xaml

@@ -17,7 +17,7 @@ using System.Windows.Shapes;
 using System.Windows.Markup;
 using System.Xml;
 
-namespace OodHelper.net.Maintain
+namespace OodHelper.Maintain
 {
     /// <summary>
     /// Interaction logic for Boat.xaml

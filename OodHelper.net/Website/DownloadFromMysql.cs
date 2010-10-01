@@ -4,11 +4,10 @@ using System.Linq;
 using System.Data;
 using System.Text;
 using MySql.Data.MySqlClient;
-using MySql.Data.Types;
 using System.Data.SqlServerCe;
 using System.ComponentModel;
 
-namespace OodHelper.net
+namespace OodHelper.Website
 {
     class DownloadFromMysql
     {

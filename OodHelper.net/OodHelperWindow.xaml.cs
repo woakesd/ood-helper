@@ -15,11 +15,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using MySql.Data.MySqlClient;
-using MySql.Data.Types;
-using OodHelper.net.Maintain;
+using OodHelper.Maintain;
+using OodHelper.Website;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     /// <summary>
     /// Interaction logic for Window1.xaml
@@ -225,6 +224,12 @@ namespace OodHelper.net
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             (new Rules.SelectRules()).ShowDialog();
+        }
+
+        private void Tide_Click(object sender, RoutedEventArgs e)
+        {
+            LoadTide.ReadData rd = new LoadTide.ReadData();
+            rd.ShowDialog();
         }
     }
 }

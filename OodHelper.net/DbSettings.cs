@@ -7,7 +7,7 @@ using System.Data;
 using System.Data.SqlServerCe;
 using System.Runtime.Serialization.Formatters;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     [Svn("$Id$")]
     static public class DbSettings

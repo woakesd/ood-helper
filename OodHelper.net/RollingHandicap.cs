@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     [Svn("$Id$")]
     class RollingHandicap : OpenHandicap

@@ -5,7 +5,7 @@ using System.Text;
 using System.Data;
 using System.Data.OleDb;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     class FoxproImport
     {

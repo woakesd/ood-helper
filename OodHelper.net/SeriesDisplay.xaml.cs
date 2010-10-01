@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 using System.Xml;
 using System.Windows.Markup;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     /// <summary>
     /// Interaction logic for RaceEdit.xaml

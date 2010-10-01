@@ -1,4 +1,4 @@
-﻿<Window x:Class="OodHelper.net.Configuration"
+﻿<Window x:Class="OodHelper.Configuration"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Configuration" mc:Ignorable="d" 

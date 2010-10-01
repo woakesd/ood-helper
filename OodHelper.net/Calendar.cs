@@ -6,7 +6,7 @@ using System.Data.Linq.Mapping;
 using System.Linq;
 using System.Text;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     [Svn("$Id$")]
     [Table(Name = "calendar")]

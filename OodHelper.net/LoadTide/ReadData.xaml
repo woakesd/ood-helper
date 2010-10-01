@@ -1,0 +1,14 @@
+﻿<Window x:Class="OodHelper.LoadTide.ReadData"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ReadData" Height="300" Width="300">
+    <Grid>
+        <DataGrid Name="TideTable" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Date" Binding="{Binding Date}"/>
+                <DataGridTextColumn Header="Height" Binding="{Binding Height}"/>
+                <DataGridTextColumn Header="Current" Binding="{Binding Current}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

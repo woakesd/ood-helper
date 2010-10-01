@@ -13,12 +13,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace OodHelper.net
+namespace OodHelper.Maintain
 {
     /// <summary>
     /// Interaction logic for Boat.xaml
     /// </summary>
-    [Svn("$Id$")]
+    [Svn("$Id: Person.xaml.cs 68 2010-07-02 15:58:24Z woakesdavid $")]
     public partial class Person : Window
     {
         private int id;

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Xps;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     interface IResultsPage
     {

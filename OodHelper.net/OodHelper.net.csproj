@@ -8,13 +8,13 @@
     <ProjectGuid>{EEAC0779-A0D7-4584-BBEC-F593A61EEB5A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OodHelper.net</RootNamespace>
+    <RootNamespace>OodHelper</RootNamespace>
     <AssemblyName>OodHelper.net</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <StartupObject>OodHelper.net.App</StartupObject>
+    <StartupObject>OodHelper.App</StartupObject>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -134,8 +134,11 @@
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
     <Compile Include="ErrorLogger.cs" />
-    <Compile Include="UploadToMysql.cs" />
-    <Compile Include="DownloadFromMysql.cs" />
+    <Compile Include="LoadTide\ReadData.xaml.cs">
+      <DependentUpon>ReadData.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Website\UploadToMysql.cs" />
+    <Compile Include="Website\DownloadFromMysql.cs" />
     <Compile Include="Maintain\Series.xaml.cs">
       <DependentUpon>Series.xaml</DependentUpon>
     </Compile>
@@ -241,6 +244,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="LoadTide\ReadData.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Maintain\BoatEdit.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -321,11 +328,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="People.xaml">
+    <Page Include="Maintain\People.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Person.xaml">
+    <Page Include="Maintain\Person.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -386,10 +393,10 @@
     <Compile Include="FamilyMember.xaml.cs">
       <DependentUpon>FamilyMember.xaml</DependentUpon>
     </Compile>
-    <Compile Include="People.xaml.cs">
+    <Compile Include="Maintain\People.xaml.cs">
       <DependentUpon>People.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Person.xaml.cs">
+    <Compile Include="Maintain\Person.xaml.cs">
       <DependentUpon>Person.xaml</DependentUpon>
     </Compile>
     <Compile Include="DbSettings.cs" />

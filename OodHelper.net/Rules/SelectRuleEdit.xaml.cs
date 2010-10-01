@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace OodHelper.net.Rules
+namespace OodHelper.Rules
 {
     /// <summary>
     /// Interaction logic for SetupRules.xaml

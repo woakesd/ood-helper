@@ -14,12 +14,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Threading.Tasks;
 
-namespace OodHelper.net
+namespace OodHelper.Maintain
 {
     /// <summary>
     /// Interaction logic for Boats.xaml
     /// </summary>
-    [Svn("$Id$")]
+    [Svn("$Id: People.xaml.cs 182 2010-09-21 21:12:06Z woakesdavid $")]
     public partial class People : Window, INotifyPropertyChanged
     {
         public People()

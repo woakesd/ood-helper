@@ -4,7 +4,7 @@ using System.Data.Linq;
 using System.Linq;
 using System.Text;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     [Svn("$Id$")]
     public partial class Results : DataContext

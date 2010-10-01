@@ -4,7 +4,7 @@ using System.Linq;
 using System.Data.Linq;
 using System.Text;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     [Svn("$Id$")]
     public partial class HandicapLinq : DataContext

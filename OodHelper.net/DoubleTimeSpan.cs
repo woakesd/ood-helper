@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     [Svn("$Id$")]
     class DoubleTimeSpan : IValueConverter

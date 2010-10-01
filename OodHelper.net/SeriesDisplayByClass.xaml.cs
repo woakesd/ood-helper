@@ -15,7 +15,7 @@ using System.Windows.Markup;
 using System.Windows.Xps;
 using System.Printing;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     /// <summary>
     /// Interaction logic for SeriesDisplayByClass.xaml

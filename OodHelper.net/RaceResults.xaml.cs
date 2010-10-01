@@ -15,9 +15,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Printing;
 using System.Windows.Xps;
-using OodHelper.net.Maintain;
+using OodHelper.Maintain;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     /// <summary>
     /// Interaction logic for RaceResults.xaml

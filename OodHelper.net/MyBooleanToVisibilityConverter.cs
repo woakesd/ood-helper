@@ -2,7 +2,7 @@
 using System.Windows.Data;
 
 
-namespace OodHelper.net
+namespace OodHelper
 {
     class MyBooleanToVisibilityConverter : IValueConverter
     {

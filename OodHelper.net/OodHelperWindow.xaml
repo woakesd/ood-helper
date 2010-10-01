@@ -1,4 +1,4 @@
-﻿<Window x:Class="OodHelper.net.OodHelperWindow"
+﻿<Window x:Class="OodHelper.OodHelperWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -41,6 +41,7 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Admin">
+                <MenuItem Header="Tide" Name="Tide" Click="Tide_Click" />
                 <!--<MenuItem Header="Rule" Click="MenuItem_Click" />-->
                 <!--<MenuItem Header="_Foxpro Import" Click="Foxpro_Click" />-->
                 <MenuItem Header="_Configuration" Name="Configuration" Click="Configuration_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">

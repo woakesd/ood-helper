@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     [Svn("$Id$")]
     public class RaceSeriesResult

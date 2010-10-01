@@ -6,7 +6,7 @@ using System.Text;
 using System.Data;
 using System.Data.SqlServerCe;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     [Svn("$Id$")]
     class Db
@@ -197,6 +197,15 @@ CREATE TABLE [select_rules] (
 )";
                 cmd.ExecuteNonQuery();
 
+
+                cmd.CommandText = @"
+CREATE TABLE [tide] (
+  [date] datetime NOT NULL
+, [height] float NOT NULL
+, [current] float NULL
+)";
+                cmd.ExecuteNonQuery();
+
                 cmd.CommandText = @"ALTER TABLE [boats] ADD CONSTRAINT [PK_boats] PRIMARY KEY ([bid])";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = @"ALTER TABLE [calendar] ADD CONSTRAINT [PK_calendar] PRIMARY KEY ([rid])";
@@ -218,6 +227,8 @@ CREATE TABLE [select_rules] (
                 cmd.CommandText = @"ALTER TABLE [select_rules] ADD CONSTRAINT [PK_select_rule] PRIMARY KEY ([id])";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = @"CREATE INDEX [IX_select_rule_parent] ON [select_rules] ([parent] ASC)";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = @"CREATE INDEX [IX_tide_date] ON [tide] ([date] ASC)";
                 cmd.ExecuteNonQuery();
             }
             finally
@@ -375,16 +386,22 @@ CREATE TABLE [select_rules] (
 
         public static void Compact()
         {
-            Properties.Settings s = new Properties.Settings();
-            SqlCeEngine ce = new SqlCeEngine();
-            ce.LocalConnectionString = Properties.Settings.Default.OodHelperConnectionString;
-            ce.Compact(Properties.Settings.Default.OodHelperConnectionString);
-            ce.Dispose();
+            try
+            {
+                Properties.Settings s = new Properties.Settings();
+                SqlCeEngine ce = new SqlCeEngine();
+                ce.LocalConnectionString = Properties.Settings.Default.OodHelperConnectionString;
+                ce.Compact(Properties.Settings.Default.OodHelperConnectionString);
+                ce.Dispose();
 
-            //
-            // After compacting we need to adjust seed values on identity columns
-            //
-            ReseedDatabase();
+                //
+                // After compacting we need to adjust seed values on identity columns
+                //
+                ReseedDatabase();
+            }
+            catch (SqlCeException e)
+            {
+            }
         }
 
         public static void ReseedDatabase()

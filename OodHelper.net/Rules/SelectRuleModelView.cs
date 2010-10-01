@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
-namespace OodHelper.net.Rules
+namespace OodHelper.Rules
 {
     class SelectRuleModelView : INotifyPropertyChanged
     {

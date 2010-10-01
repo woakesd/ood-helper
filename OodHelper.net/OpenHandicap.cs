@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Collections;
 using System.Windows;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     [Svn("$Id$")]
     class OpenHandicap : IRaceScore
@@ -454,23 +454,39 @@ namespace OodHelper.net
 
         private void UpdateHandicaps()
         {
+            Hashtable p = new Hashtable();
             //
             // This routine sets the new rolling handicap column.
             //
             var query = from r in racedata.AsEnumerable()
                         where r.Field<int?>("place") != 999
                         select r;
-
-            foreach (DataRow dr in query)
+            if (StandardCorrectedTime > 0)
             {
-                //
-                // Initially assume that achieved and new handicap are the current rolling handicap
-                //
-                int bid = (int)dr["bid"];
-                dr["achieved_handicap"] = dr["open_handicap"];
-                dr["new_rolling_handicap"] = dr["rolling_handicap"];
-                if (StandardCorrectedTime > 0)
+                /*Db c = new Db(@"SELECT CONVERT(FLOAT,(r3.achieved_handicap - r3.open_handicap))/r3.open_handicap * 100 performance, r1.bid
+                    FROM races r1
+                    INNER JOIN races r2 ON r2.bid = r1.bid AND r2.start_date < r1.start_date
+                    INNER JOIN races r3 ON r3.bid = r1.bid
+                    INNER JOIN calendar c ON c.rid = r2.rid
+                    WHERE r1.rid = @rid
+                    AND r2.place != 999
+                    AND r3.place != 999 
+                    AND c.raced = 1
+                    AND c.standard_corrected_time != 0
+                    GROUP BY r1.bid, r3.start_date, CONVERT(FLOAT,(r3.achieved_handicap - r3.open_handicap))/r3.open_handicap * 100
+                    HAVING r3.start_date = MAX(r2.start_date)");
+                p["rid"] = rid;
+                DataTable PreviousPerformance = c.GetData(p);*/
+
+                foreach (DataRow dr in query)
                 {
+                    //
+                    // Initially assume that achieved and new handicap are the current rolling handicap
+                    //
+                    int bid = (int)dr["bid"];
+                    dr["achieved_handicap"] = dr["open_handicap"];
+                    dr["new_rolling_handicap"] = dr["rolling_handicap"];
+
                     //
                     // we have a a standard corrected time for the race so we use this to work out
                     // the achieved performance.
@@ -500,11 +516,31 @@ namespace OodHelper.net
                         else
                             dr["c"] = "F";
 
+                        /*DataRow prevperf = PreviousPerformance.AsEnumerable().Where(r => r.Field<int>("bid") == (int)dr["bid"]).Single();
+
+                        if (prevperf != null)
+                        {
+                            //
+                            // Found the last result prior to this one
+                            //
+                            double p1 = (double)prevperf["performance"];
+                            if (p1 > 5)
+                            {
+                                //
+                                // and it was also outside the 5% band (slow) so the handicap
+                                // will be modified.
+                                //
+                                sperfover = true;
+                                dr["c"] = "S";
+                            }
+                        }*/
+
                         //
                         // This is a slow or fast performance (time outside the 5% above/below the average.
                         // If the previous perfomance was similarly slow then we will allow the
                         // handicap to change (if it would change).
                         //
+                        
                         Hashtable param = new Hashtable();
                         param["bid"] = dr["bid"];
                         param["rid"] = rid;
@@ -572,7 +608,7 @@ namespace OodHelper.net
                 }
             }
 
-            Hashtable p = new Hashtable();
+            p.Clear();
             Db u = new Db(@"UPDATE boats
                     SET rolling_handicap = @new_rolling_handicap
                     WHERE bid = @bid

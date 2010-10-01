@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     public interface IPrintSelectItem: INotifyPropertyChanged
     {

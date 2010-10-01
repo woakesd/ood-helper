@@ -16,7 +16,7 @@ using System.ComponentModel;
 using System.Data.Linq.Mapping;
 using System.Linq;
 
-namespace OodHelper.net.Maintain
+namespace OodHelper.Maintain
 {
     /// <summary>
     /// Interaction logic for Boat.xaml

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     /**
      * This class is derived from javascript found on http://www.esrl.noaa.gov/gmd/grad/solcalc/

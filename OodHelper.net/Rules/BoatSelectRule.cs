@@ -6,7 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 
-namespace OodHelper.net.Rules
+namespace OodHelper.Rules
 {
     public enum FieldType { ftInt, ftString, ftBoolean }
     public enum RuleType { Simple, Compound }

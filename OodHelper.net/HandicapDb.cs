@@ -6,7 +6,7 @@ using System.Text;
 using System.Data;
 using System.Data.SqlServerCe;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     [Svn("$Id$")]
     class HandicapDb : Db

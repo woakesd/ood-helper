@@ -1,4 +1,4 @@
-﻿<Window x:Class="OodHelper.net.SelectClass"
+﻿<Window x:Class="OodHelper.SelectClass"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         ShowInTaskbar="False" Loaded="Window_Loaded" Icon="/OodHelper.net;component/Images/Man.png" Title="Select Class">

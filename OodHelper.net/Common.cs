@@ -8,7 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     [Svn("$Id$")]
     class Common

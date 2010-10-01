@@ -13,7 +13,7 @@ using System.Windows.Shapes;
 using MySql.Data.MySqlClient;
 using MySql.Data.MySqlClient.Properties;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     /// <summary>
     /// Interaction logic for Configuration.xaml

@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Controls;
 using System.Text.RegularExpressions;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     class HMSValidationRule : ValidationRule
     {

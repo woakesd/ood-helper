@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Data;
 
-namespace OodHelper.net.Rules
+namespace OodHelper.Rules
 {
     [Svn("$Id: IntConverter.cs 113 2010-08-15 12:37:12Z woakesdavid $")]
     class ConditionNameConverter : IValueConverter

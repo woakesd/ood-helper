@@ -5,7 +5,7 @@ using System.Data;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     [Svn("$Id$")]
     public class SeriesResult

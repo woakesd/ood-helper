@@ -1,4 +1,4 @@
-﻿<Window x:Class="OodHelper.net.Rules.SelectRules"
+﻿<Window x:Class="OodHelper.Rules.SelectRules"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Icon="/OodHelper.net;component/Images/Boat.png" Title="Boats"
         Loaded="Boats_Loaded" ShowInTaskbar="False" KeyUp="Window_KeyUp">

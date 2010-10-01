@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Data;
 
-namespace OodHelper.net
+namespace OodHelper
 {
     [Svn("$Id$")]
     class DateTimeTimeConverter : IValueConverter
