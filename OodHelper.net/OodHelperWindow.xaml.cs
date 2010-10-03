@@ -17,6 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using OodHelper.Maintain;
 using OodHelper.Website;
+using OodHelper.Sun;
 
 namespace OodHelper
 {
@@ -230,6 +231,12 @@ namespace OodHelper
         {
             LoadTide.ReadData rd = new LoadTide.ReadData();
             rd.ShowDialog();
+        }
+
+        private void Sun_Click(object sender, RoutedEventArgs e)
+        {
+            DoSunSetRise sd = new DoSunSetRise();
+            sd.ShowDialog();
         }
     }
 }

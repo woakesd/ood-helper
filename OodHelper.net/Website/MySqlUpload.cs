@@ -12,12 +12,24 @@ namespace OodHelper.Website
 {
     class MySqlUpload
     {
-        public MySqlUpload()
+        private Working p;
+        private BackgroundWorker upload;
+
+        public MySqlUpload() : this(false)
         {
-            BackgroundWorker upload = new BackgroundWorker();
+            Run();
+        }
+
+        public MySqlUpload(bool run)
+        {
+            upload = new BackgroundWorker();
             upload.DoWork += new DoWorkEventHandler(Process);
-            Working p = new Working(upload);
+            p = new Working(upload);
             upload.RunWorkerCompleted += new RunWorkerCompletedEventHandler(upload_RunWorkerCompleted);
+        }
+
+        public void Run()
+        {
             upload.RunWorkerAsync();
             p.ShowDialog();
         }

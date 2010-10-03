@@ -72,6 +72,7 @@ namespace OodHelper
                             case "DNF":
                             case "DNS":
                             case "RET":
+                            case "RTD":
                             case "DSQ":
                             case "OCS":
                             case "RAF":
@@ -235,21 +236,27 @@ namespace OodHelper
                 return 1;
             else if (x.nett < y.nett)
                 return -1;
+            else if (!Double.IsNaN(x.nett) && Double.IsNaN(y.nett))
+                return 1;
+            else if (Double.IsNaN(x.nett) && !Double.IsNaN(y.nett))
+                return -1;
 
             for (int i = 0; i < x.performanceSortedPoints.Count && i < y.performanceSortedPoints.Count; i++)
             {
-                if (x.performanceSortedPoints[i].Points > y.performanceSortedPoints[i].Points)
+                if (!x.performanceSortedPoints[i].Discard && !y.performanceSortedPoints[i].Discard 
+                    && x.performanceSortedPoints[i].Points > y.performanceSortedPoints[i].Points)
                     return 1;
-                else if (x.performanceSortedPoints[i].Points < y.performanceSortedPoints[i].Points)
+                else if (!x.performanceSortedPoints[i].Discard && !y.performanceSortedPoints[i].Discard 
+                    && x.performanceSortedPoints[i].Points < y.performanceSortedPoints[i].Points)
                     return -1;
             }
 
-            for (int i = 0; i < x.dateSortedPoints.Count && i < y.dateSortedPoints.Count; i++)
+            for (int i = x.dateSortedPoints.Count - 1; i >= 0; i--)
             {
                 if (x.dateSortedPoints[i].Points > y.dateSortedPoints[i].Points)
-                    return -1;
-                else if (x.dateSortedPoints[i].Points < y.dateSortedPoints[i].Points)
                     return 1;
+                else if (x.dateSortedPoints[i].Points < y.dateSortedPoints[i].Points)
+                    return -1;
             }
             
             return 0;

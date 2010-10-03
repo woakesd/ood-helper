@@ -463,21 +463,6 @@ namespace OodHelper
                         select r;
             if (StandardCorrectedTime > 0)
             {
-                /*Db c = new Db(@"SELECT CONVERT(FLOAT,(r3.achieved_handicap - r3.open_handicap))/r3.open_handicap * 100 performance, r1.bid
-                    FROM races r1
-                    INNER JOIN races r2 ON r2.bid = r1.bid AND r2.start_date < r1.start_date
-                    INNER JOIN races r3 ON r3.bid = r1.bid
-                    INNER JOIN calendar c ON c.rid = r2.rid
-                    WHERE r1.rid = @rid
-                    AND r2.place != 999
-                    AND r3.place != 999 
-                    AND c.raced = 1
-                    AND c.standard_corrected_time != 0
-                    GROUP BY r1.bid, r3.start_date, CONVERT(FLOAT,(r3.achieved_handicap - r3.open_handicap))/r3.open_handicap * 100
-                    HAVING r3.start_date = MAX(r2.start_date)");
-                p["rid"] = rid;
-                DataTable PreviousPerformance = c.GetData(p);*/
-
                 foreach (DataRow dr in query)
                 {
                     //
@@ -516,25 +501,6 @@ namespace OodHelper
                         else
                             dr["c"] = "F";
 
-                        /*DataRow prevperf = PreviousPerformance.AsEnumerable().Where(r => r.Field<int>("bid") == (int)dr["bid"]).Single();
-
-                        if (prevperf != null)
-                        {
-                            //
-                            // Found the last result prior to this one
-                            //
-                            double p1 = (double)prevperf["performance"];
-                            if (p1 > 5)
-                            {
-                                //
-                                // and it was also outside the 5% band (slow) so the handicap
-                                // will be modified.
-                                //
-                                sperfover = true;
-                                dr["c"] = "S";
-                            }
-                        }*/
-
                         //
                         // This is a slow or fast performance (time outside the 5% above/below the average.
                         // If the previous perfomance was similarly slow then we will allow the
@@ -544,8 +510,6 @@ namespace OodHelper
                         Hashtable param = new Hashtable();
                         param["bid"] = dr["bid"];
                         param["rid"] = rid;
-                        //TimeSpan bstart = Common.tspan(dr["start"].ToString()).Value;
-                        //DateTime bdate = rdate.Date + bstart;
                         param["bstart"] = dr["start_date"];
                         Db sl = new Db(@"SELECT TOP(1) CONVERT(FLOAT,(achieved_handicap - open_handicap))/open_handicap * 100
                             FROM races

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace OodHelper.Rules
 {
-    class SelectRuleModelView : INotifyPropertyChanged
+    class SelectRuleModelView : NotifyPropertyChanged
     {
         public SelectRuleModelView(BoatSelectRule rule)
             : this(rule, null)
@@ -242,17 +242,6 @@ namespace OodHelper.Rules
                 for (int i = 0; i < conditionNames.Length; i++)
                     conditionNames[i] = conditionNames[i].Replace('_', ' ');
                 return conditionNames;
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
             }
         }
     }

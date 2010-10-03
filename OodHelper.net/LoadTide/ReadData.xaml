@@ -5,9 +5,10 @@
     <Grid>
         <DataGrid Name="TideTable" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Date" Binding="{Binding Date}"/>
-                <DataGridTextColumn Header="Height" Binding="{Binding Height}"/>
-                <DataGridTextColumn Header="Current" Binding="{Binding Current}"/>
+                <DataGridTextColumn Header="Date" Binding="{Binding date}"/>
+                <DataGridTextColumn Header="Height" Binding="{Binding height}"/>
+                <DataGridTextColumn Header="Current" Binding="{Binding current}"/>
+                <DataGridTextColumn Header="Icurrent" Binding="{Binding icurrent}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

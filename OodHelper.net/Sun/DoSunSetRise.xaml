@@ -1,0 +1,34 @@
+﻿<Window x:Class="OodHelper.Sun.DoSunSetRise"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ReadData" Height="300" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ToolBarTray Name="mainToolbarTray" VerticalAlignment="Top" Grid.Row="0" Margin="0,0,0,2">
+            <ToolBar Name="mainToolbar" VerticalAlignment="Top">
+                <ComboBox SelectedIndex="0" Name="Year" SelectionChanged="Year_SelectionChanged">
+                    <ComboBoxItem Tag="2010" Content="2010"/>
+                    <ComboBoxItem Tag="2011" Content="2011"/>
+                </ComboBox>
+                <Button Name="UploadSun" Click="UploadSun_Click">
+                    <Button.BorderBrush>
+                        <SolidColorBrush Color="Black"/>
+                    </Button.BorderBrush>
+                    <StackPanel>
+                        <TextBlock>Upload</TextBlock>
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+        <DataGrid Name="SunTable" AutoGenerateColumns="False" Grid.Row="1" ItemsSource="{Binding Path=SunDataView}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Date" Binding="{Binding date}"/>
+                <DataGridTextColumn Header="Sunrise" Binding="{Binding sunrise}"/>
+                <DataGridTextColumn Header="Sunset" Binding="{Binding sunset}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

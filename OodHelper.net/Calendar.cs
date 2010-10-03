@@ -10,7 +10,7 @@ namespace OodHelper
 {
     [Svn("$Id$")]
     [Table(Name = "calendar")]
-    public class Calendar : INotifyPropertyChanged
+    public class Calendar : NotifyPropertyChanged
     {
         [Column(IsPrimaryKey = true)]
         public int rid
@@ -309,16 +309,5 @@ namespace OodHelper
         }
         [Column]
         public DateTime? result_calculated { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
-        }
     }
 }

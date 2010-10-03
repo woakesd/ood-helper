@@ -134,9 +134,17 @@
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
     <Compile Include="ErrorLogger.cs" />
+    <Compile Include="LoadTide\ReadAutoTideData.cs" />
     <Compile Include="LoadTide\ReadData.xaml.cs">
       <DependentUpon>ReadData.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LoadTide\TideData.cs" />
+    <Compile Include="Sun\DoSunSetRise.xaml.cs">
+      <DependentUpon>DoSunSetRise.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NotifyPropertyChanged.cs" />
+    <Compile Include="Website\UploadSun.cs" />
+    <Compile Include="Website\UploadTide.cs" />
     <Compile Include="Website\MysqlDownload.cs" />
     <Compile Include="Website\MySqlUpload.cs" />
     <Compile Include="Website\UploadResults.cs" />
@@ -236,7 +244,7 @@
     <Compile Include="SeriesEvent.cs" />
     <Compile Include="SeriesResult.cs" />
     <Compile Include="StringConverter.cs" />
-    <Compile Include="Sun.cs" />
+    <Compile Include="Sun\Sun.cs" />
     <Compile Include="SvnRevision.cs" />
     <Compile Include="TimeSpanHMConverter.cs" />
     <Compile Include="Working.xaml.cs">
@@ -417,6 +425,10 @@
     <Page Include="SeriesDisplayByClass.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sun\DoSunSetRise.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Working.xaml">
       <SubType>Designer</SubType>

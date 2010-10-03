@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OodHelper
+namespace OodHelper.Sun
 {
     /**
      * This class is derived from javascript found on http://www.esrl.noaa.gov/gmd/grad/solcalc/
      */
-    [Svn("$Id$")]
+    [Svn("$Id: Sun.cs 198 2010-10-01 09:14:07Z woakesdavid $")]
     public class Sun
     {
         public DateTime? SunRise { get; private set; }
@@ -17,7 +17,13 @@ namespace OodHelper
         private double Longitude { get; set; }
         private double Lattitude { get; set; }
 
-        public Sun(DateTime dt, double lat, double lng)
+        public Sun(double lat, double lng)
+        {
+            Longitude = lng;
+            Lattitude = lat;
+        }
+
+        public bool Calc(DateTime dt, out DateTime? sunrise, out DateTime? sunset)
         {
             double jday = getJD(dt.Date);
             double tl = getTimeLocal(dt);
@@ -25,14 +31,15 @@ namespace OodHelper
             bool dst = dt.IsDaylightSavingTime();
             double total = jday + tl / 1440 - tz / 24.0;
             double T = calcTimeJulianCent(jday);
-            Longitude = lng;
-            Lattitude = lat;
             double azimuth = calcAzEl(T, tl, Lattitude, Longitude, tz);
             double solNoonLocal = calcSolNoon(jday, Longitude, tz, dst);
             double rise = calcSunriseSet(true, jday, Lattitude, Longitude, tz, dst);
             double set = calcSunriseSet(false, jday, Lattitude, Longitude, tz, dst);
             if (!double.IsNaN(rise)) SunRise = dt.Date + new TimeSpan((long)(rise * 600000000));
             if (!double.IsNaN(set)) SunSet = dt.Date + new TimeSpan((long)(set * 600000000));
+            sunrise = SunRise;
+            sunset = SunSet;
+            return !double.IsNaN(rise) || !double.IsNaN(set);
         }
 
         private double calcSunriseSetUTC(bool rise, double JD, double latitude, double longitude)
