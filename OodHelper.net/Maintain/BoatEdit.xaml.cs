@@ -21,7 +21,7 @@ namespace OodHelper.Maintain
     /// <summary>
     /// Interaction logic for Boat.xaml
     /// </summary>
-    public partial class BoatEdit : Window, INotifyPropertyChanged
+    public partial class BoatEdit : Window
     {
         public int Bid { get { return dc.Bid; } }
 
@@ -451,17 +451,6 @@ namespace OodHelper.Maintain
                             break;
                     }
                 }
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
             }
         }
 
