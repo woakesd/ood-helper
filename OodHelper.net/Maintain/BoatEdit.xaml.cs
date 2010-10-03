@@ -23,42 +23,51 @@ namespace OodHelper.Maintain
     /// </summary>
     public partial class BoatEdit : Window, INotifyPropertyChanged
     {
-        private int bid;
-        public int Bid
-        {
-            get { return bid; }
-        }
+        public int Bid { get { return dc.Bid; } }
 
-        private int? id;
-        public int? Id
+        private class Data: NotifyPropertyChanged
         {
-            get { return id; }
-        }
-
-        private string boatname = string.Empty;
-        public string BoatName
-        {
-            set
+            private int bid;
+            public int Bid
             {
-                if (value != string.Empty && value != null)
+                get { return bid; }
+                set { bid = value; }
+            }
+
+            private int? id;
+            public int? Id
+            {
+                get { return id; }
+                set { id = value; }
+            }
+
+            private string boatname = string.Empty;
+            public string BoatName
+            {
+                set
                 {
-                    boatname = value;
-                    OnPropertyChanged("BoatName");
+                    if (value != string.Empty && value != null)
+                    {
+                        boatname = value;
+                        OnPropertyChanged("BoatName");
+                    }
+                    else
+                        throw new ArgumentException("Boatname must be entered");
                 }
-                else
-                    throw new ArgumentException("Boatname must be entered");
-            }
-            get
-            {
-                return boatname;
+                get
+                {
+                    return boatname;
+                }
             }
         }
+
+        private Data dc = new Data();
 
         public BoatEdit(int b)
         {
-            bid = b;
+            dc.Bid = b;
             InitializeComponent();
-            if (bid != 0)
+            if (dc.Bid != 0)
             {
                 Db get = new Db("SELECT id, boatname, boatclass, sailno, dinghy, " +
                     "hulltype, open_handicap, handicap_status, " +
@@ -66,15 +75,15 @@ namespace OodHelper.Maintain
                     "FROM boats " +
                     "WHERE bid = @bid");
                 Hashtable p = new Hashtable();
-                p["bid"] = Bid;
+                p["bid"] = dc.Bid;
                 Hashtable data = get.GetHashtable(p);
 
                 if (data["id"] != DBNull.Value)
                 {
-                    id = (int)data["id"];
+                    dc.Id = (int)data["id"];
                     SetOwner();
                 }
-                BoatName = data["boatname"].ToString();
+                dc.BoatName = data["boatname"].ToString();
                 boatClass.Text = data["boatclass"].ToString();
                 sailNumber.Text = data["sailno"].ToString();
                 dinghy.IsChecked = (bool)data["dinghy"];
@@ -135,7 +144,7 @@ namespace OodHelper.Maintain
             else
             {
             }
-            DataContext = this;
+            DataContext = dc;
         }
 
         private void SetOwner()
@@ -144,7 +153,7 @@ namespace OodHelper.Maintain
                 "FROM people " +
                 "WHERE id = @id");
             Hashtable p = new Hashtable();
-            p["id"] = Id.Value;
+            p["id"] = dc.Id.Value;
             Hashtable owner = get.GetHashtable(p);
             BoatOwner.Text = (owner["firstname"].ToString() + " " +
                 owner["surname"].ToString()).Trim();
@@ -158,7 +167,7 @@ namespace OodHelper.Maintain
 
         private void ok_Click(object sender, RoutedEventArgs e)
         {
-            if (BoatName.Trim() == string.Empty)
+            if (dc.BoatName.Trim() == string.Empty)
             {
                 MessageBox.Show("Boat name required", "Input Required", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -167,12 +176,12 @@ namespace OodHelper.Maintain
             this.DialogResult = true;
             Hashtable p = new Hashtable();
 
-            if (id != null)
-                p["id"] = id.Value;
+            if (dc.Id != null)
+                p["id"] = dc.Id.Value;
             else
                 p["id"] = DBNull.Value;
 
-            p["boatname"] = BoatName;
+            p["boatname"] = dc.BoatName;
             p["boatclass"] = boatClass.Text;
             p["sailno"] = sailNumber.Text;
             p["dngy"] = dinghy.IsChecked.Value;
@@ -306,16 +315,16 @@ namespace OodHelper.Maintain
             }
             p["deviations"] = deviations.Text;
             p["boatmemo"] = notes.Text;
-            p["bid"] = Bid;
+            p["bid"] = dc.Bid;
             Db save;
-            if (Bid == 0)
+            if (dc.Bid == 0)
             {
                 save = new Db("INSERT INTO boats " +
                         "(id, boatname, boatclass, sailno, dinghy, hulltype, open_handicap, " +
                         "handicap_status, rolling_handicap, small_cat_handicap_rating, " +
                         "engine_propeller, keel, deviations, boatmemo) " +
                         "VALUES (@id, @boatname, @boatclass, @sailno, @dngy, @h, @ohp, @ohstat, @rhp, @schr, @eng, @kl, @deviations, @boatmemo)");
-                bid = save.GetNextIdentity("boats", "bid");
+                dc.Bid = save.GetNextIdentity("boats", "bid");
             }
             else
                 save = new Db("UPDATE boats " +
@@ -340,7 +349,7 @@ namespace OodHelper.Maintain
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (Bid == 0)
+            if (dc.Bid == 0)
             {
                 object o = DbSettings.GetSetting("topseed");
                 if (o != null)
@@ -366,9 +375,9 @@ namespace OodHelper.Maintain
         {
             People ppl = new People(true, 0);
             ppl.ShowDialog();
-            if (!Id.HasValue || ppl.Id.HasValue && Id.Value != ppl.Id)
+            if (!dc.Id.HasValue || ppl.Id.HasValue && dc.Id.Value != ppl.Id)
             {
-                id = ppl.Id;
+                dc.Id = ppl.Id;
                 SetOwner();
             }
         }

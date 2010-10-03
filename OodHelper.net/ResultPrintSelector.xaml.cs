@@ -52,17 +52,6 @@ namespace OodHelper
             Races.ItemsSource = Reds;
         }
 
-        /*public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
-        }*/
-
         private void Print_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
