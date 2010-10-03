@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections;
-using System.ComponentModel;
 using System.Data;
 using System.IO;
 using System.Text;
@@ -25,36 +24,41 @@ namespace OodHelper
     /// Interaction logic for Window1.xaml
     /// </summary>
     [Svn("$Id$")]
-    public partial class OodHelperWindow : Window, INotifyPropertyChanged
+    public partial class OodHelperWindow : Window
     {
         public OodHelperWindow()
         {
             InitializeComponent();
-            DataContext = this;
+            DataContext = dc;
         }
 
-        bool _ShowPrivilegedItems = false;
-        public bool ShowPrivilegedItems
+        private class Data : NotifyPropertyChanged
         {
-            get
+            bool _ShowPrivilegedItems = false;
+            public bool ShowPrivilegedItems
             {
-                return _ShowPrivilegedItems;
+                get
+                {
+                    return _ShowPrivilegedItems;
+                }
+                set
+                {
+                    _ShowPrivilegedItems = value;
+                    OnPropertyChanged("ShowPrivilegedItems");
+                    OnPropertyChanged("HideNonPrivilegedItems");
+                }
             }
-            set
+
+            public bool HideNonPrivilegedItems
             {
-                _ShowPrivilegedItems = value;
-                OnPropertyChanged("ShowPrivilegedItems");
-                OnPropertyChanged("HideNonPrivilegedItems");
+                get
+                {
+                    return !_ShowPrivilegedItems;
+                }
             }
         }
 
-        public bool HideNonPrivilegedItems
-        {
-            get
-            {
-                return !_ShowPrivilegedItems;
-            }
-        }
+        private Data dc = new Data();
 
         private void Results_Click(object sender, RoutedEventArgs e)
         {
@@ -189,7 +193,7 @@ namespace OodHelper
             h.ShowDialog();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        /*public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string name)
         {
@@ -198,16 +202,16 @@ namespace OodHelper
             {
                 handler(this, new PropertyChangedEventArgs(name));
             }
-        }
+        }*/
         
         private void Login_Click(object sender, RoutedEventArgs e)
         {
-            ShowPrivilegedItems = true; 
+            dc.ShowPrivilegedItems = true; 
         }
 
         private void Logout_Click(object sender, RoutedEventArgs e)
         {
-            ShowPrivilegedItems = false;
+            dc.ShowPrivilegedItems = false;
         }
 
         private void EntrySheets_Click(object sender, RoutedEventArgs e)

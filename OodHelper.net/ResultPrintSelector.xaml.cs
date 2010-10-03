@@ -18,7 +18,7 @@ namespace OodHelper
     /// Interaction logic for EntrySheetSelector.xaml
     /// </summary>
     [Svn("$Id: EntrySheetSelector.xaml.cs 121 2010-08-15 23:19:35Z woakesdavid $")]
-    public partial class ResultsPrintSelector : Window, INotifyPropertyChanged
+    public partial class ResultsPrintSelector : Window //, INotifyPropertyChanged
     {
         private IPrintSelectItem[] Reds { get; set; }
 
@@ -52,7 +52,7 @@ namespace OodHelper
             Races.ItemsSource = Reds;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        /*public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string name)
         {
@@ -61,7 +61,7 @@ namespace OodHelper
             {
                 handler(this, new PropertyChangedEventArgs(name));
             }
-        }
+        }*/
 
         private void Print_Click(object sender, RoutedEventArgs e)
         {
