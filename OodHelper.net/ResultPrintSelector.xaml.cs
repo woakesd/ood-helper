@@ -18,7 +18,7 @@ namespace OodHelper
     /// Interaction logic for EntrySheetSelector.xaml
     /// </summary>
     [Svn("$Id: EntrySheetSelector.xaml.cs 121 2010-08-15 23:19:35Z woakesdavid $")]
-    public partial class ResultsPrintSelector : Window //, INotifyPropertyChanged
+    public partial class ResultsPrintSelector : Window
     {
         private IPrintSelectItem[] Reds { get; set; }
 

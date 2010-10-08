@@ -18,51 +18,56 @@ namespace OodHelper.Maintain
     /// <summary>
     /// Interaction logic for SeriesEdit.xaml
     /// </summary>
-    public partial class SeriesEdit : Window, INotifyPropertyChanged
+    public partial class SeriesEdit : Window
     {
-        public int Sid { get; private set; }
-
-        private string _sname;
-        public string Sname
+        class Data : NotifyPropertyChanged
         {
-            get
+            public int Sid { get; set; }
+
+            private string _sname;
+            public string Sname
             {
-                return _sname;
+                get
+                {
+                    return _sname;
+                }
+                set
+                {
+                    _sname = value;
+                    OnPropertyChanged("Sname");
+                }
             }
-            set
+
+            private string _discards;
+            public string Discards
             {
-                _sname = value;
-                OnPropertyChanged("Sname");
+                get
+                {
+                    return _discards;
+                }
+                set
+                {
+                    _discards = value;
+                    OnPropertyChanged("Discards");
+                }
             }
         }
 
-        private string _discards;
-        public string Discards
-        {
-            get
-            {
-                return _discards;
-            }
-            set
-            {
-                _discards = value;
-                OnPropertyChanged("Discards");
-            }
-        }
+        Data dc = new Data();
 
         public SeriesEdit(int sid)
         {
             InitializeComponent();
-            DataContext = this;
-            Sid = sid;
-            if (Sid != 0)
+            DataContext = dc;
+            dc.Sid = sid;
+            if (dc.Sid != 0)
             {
                 Hashtable p = new Hashtable();
                 Db c = new Db("SELECT sname, discards FROM series WHERE sid = @sid");
-                p["sid"] = Sid;
+                p["sid"] = dc.Sid;
                 Hashtable d = c.GetHashtable(p);
-                Sname = d["sname"] as string;
-                Discards = d["discards"] as string;
+                dc.Sname = d["sname"] as string;
+                dc.Discards = d["discards"] as string;
             }
         }
 
@@ -76,38 +81,27 @@ namespace OodHelper.Maintain
         {
             Db c;
             Hashtable p = new Hashtable();
-            if (Sname == null || Sname.Trim() == string.Empty)
+            if (dc.Sname == null || dc.Sname.Trim() == string.Empty)
             {
                 MessageBox.Show("Series name cannot be blank", "Validation error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            p["sname"] = Sname.Trim();
-            p["discards"] = Discards.Trim() == string.Empty ? null : Discards;
-            if (Sid == 0)
+            p["sname"] = dc.Sname.Trim();
+            p["discards"] = dc.Discards.Trim() == string.Empty ? null : dc.Discards;
+            if (dc.Sid == 0)
             {
                 c = new Db("INSERT INTO series (sname, discards) VALUES (@sname, @discards)");
-                Sid = c.GetNextIdentity("series", "sid");
+                dc.Sid = c.GetNextIdentity("series", "sid");
             }
             else
             {
                 c = new Db("UPDATE series SET sname = @sname, discards = @discards WHERE sid = @sid");
-                p["sid"] = Sid;
+                p["sid"] = dc.Sid;
             }
             c.ExecuteNonQuery(p);
             DialogResult = true;
             Close();
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
         }
     }
 }

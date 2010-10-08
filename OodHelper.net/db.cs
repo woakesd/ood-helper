@@ -399,7 +399,7 @@ CREATE TABLE [tide] (
                 //
                 ReseedDatabase();
             }
-            catch (SqlCeException e)
+            catch (SqlCeException)
             {
             }
         }
