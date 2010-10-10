@@ -41,7 +41,7 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Admin">
-                <!--<MenuItem Header="Tide" Name="Tide" Click="Tide_Click" />-->
+                <MenuItem Header="Tide" Name="Tide" Click="Tide_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" />
                 <!--<MenuItem Header="Sun" Name="Sun" Click="Sun_Click" />-->
                 <!--<MenuItem Header="Rule" Click="MenuItem_Click" />-->
                 <!--<MenuItem Header="_Foxpro Import" Click="Foxpro_Click" />-->

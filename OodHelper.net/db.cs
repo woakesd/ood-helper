@@ -197,15 +197,6 @@ CREATE TABLE [select_rules] (
 )";
                 cmd.ExecuteNonQuery();
 
-
-                cmd.CommandText = @"
-CREATE TABLE [tide] (
-  [date] datetime NOT NULL
-, [height] float NOT NULL
-, [current] float NULL
-)";
-                cmd.ExecuteNonQuery();
-
                 cmd.CommandText = @"ALTER TABLE [boats] ADD CONSTRAINT [PK_boats] PRIMARY KEY ([bid])";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = @"ALTER TABLE [calendar] ADD CONSTRAINT [PK_calendar] PRIMARY KEY ([rid])";
@@ -227,8 +218,6 @@ CREATE TABLE [tide] (
                 cmd.CommandText = @"ALTER TABLE [select_rules] ADD CONSTRAINT [PK_select_rule] PRIMARY KEY ([id])";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = @"CREATE INDEX [IX_select_rule_parent] ON [select_rules] ([parent] ASC)";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"CREATE INDEX [IX_tide_date] ON [tide] ([date] ASC)";
                 cmd.ExecuteNonQuery();
             }
             finally

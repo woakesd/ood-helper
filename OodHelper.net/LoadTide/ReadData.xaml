@@ -1,14 +1,39 @@
 ﻿<Window x:Class="OodHelper.LoadTide.ReadData"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="ReadData" Height="300" Width="300">
+        Title="ReadData" Height="300" Width="456">
     <Grid>
-        <DataGrid Name="TideTable" AutoGenerateColumns="False">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <ToolBarTray>
+            <ToolBar>
+                <Button Name="LoadFile" Click="LoadFile_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/OodHelper.net;component/Images/Add.png" />
+                        <Label>_Load file</Label>
+                    </StackPanel>
+                </Button>
+                <Button Name="Upload" Click="Upload_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/OodHelper.net;component/Images/Upload.png" />
+                        <Label>_Upload</Label>
+                    </StackPanel>
+                </Button>
+                <Button Name="CloseButton" Click="CloseButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/OodHelper.net;component/Images/Cancel.png" />
+                        <Label>_Close</Label>
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+        <DataGrid Grid.Row="1" Name="TideTable" AutoGenerateColumns="False" ItemsSource="{Binding Path=Data}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Date" Binding="{Binding date}"/>
                 <DataGridTextColumn Header="Height" Binding="{Binding height}"/>
                 <DataGridTextColumn Header="Current" Binding="{Binding current}"/>
-                <DataGridTextColumn Header="Icurrent" Binding="{Binding icurrent}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

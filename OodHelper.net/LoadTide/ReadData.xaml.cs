@@ -13,8 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using MySql.Data;
-using MySql.Data.MySqlClient;
+using Microsoft.Win32;
 
 namespace OodHelper.LoadTide
 {
@@ -23,11 +22,33 @@ namespace OodHelper.LoadTide
     /// </summary>
     public partial class ReadData : Window
     {
+        ReadFormat11 TideInfo { get; set; }
+
         public ReadData()
         {
             InitializeComponent();
-            ReadAutoTideData r = new ReadAutoTideData(@"C:\Documents and Settings\david\My Documents\Peyc Data\at-rosyth-2011.txt");
-            TideTable.ItemsSource = r.Data.DefaultView;
+            TideInfo = new ReadFormat11();
+            DataContext = TideInfo;
+        }
+
+        private void LoadFile_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog fd = new OpenFileDialog();
+            fd.Filter = "Format11 files; (*.tph)|*.tph|All files (*.*)|*.*";
+            if (fd.ShowDialog() == true)
+            {
+                TideInfo.Load(fd.FileName);
+            }
+        }
+
+        private void Upload_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
