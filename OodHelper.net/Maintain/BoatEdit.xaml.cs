@@ -155,8 +155,11 @@ namespace OodHelper.Maintain
             Hashtable p = new Hashtable();
             p["id"] = dc.Id.Value;
             Hashtable owner = get.GetHashtable(p);
-            BoatOwner.Text = (owner["firstname"].ToString() + " " +
-                owner["surname"].ToString()).Trim();
+            if (owner.Count > 0)
+            {
+                BoatOwner.Text = (owner["firstname"].ToString() + " " +
+                    owner["surname"].ToString()).Trim();
+            }
         }
 
         private void cancel_Click(object sender, RoutedEventArgs e)

@@ -520,7 +520,7 @@ namespace OodHelper
                             ORDER BY start_date DESC");
                         DataTable slow = sl.GetData(param);
 
-                        if (slow.Rows.Count >= 1)
+                        if (slow.Rows.Count >= 1 && slow.Rows[0][0] != DBNull.Value)
                         {
                             //
                             // Found the last result prior to this one
