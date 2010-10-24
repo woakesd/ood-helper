@@ -205,7 +205,7 @@ namespace OodHelper
                     r["rolling_handicap"] = nrh.Value;
                 }
                 r["new_rolling_handicap"] = r["rolling_handicap"];
-                r["achieved_handicap"] = DBNull.Value;
+                r["achieved_handicap"] = r["rolling_handicap"];
                 r["performance_index"] = DBNull.Value;
                 r["c"] = DBNull.Value;
                 r["a"] = "N";
@@ -506,21 +506,22 @@ namespace OodHelper
                         // If the previous perfomance was similarly slow then we will allow the
                         // handicap to change (if it would change).
                         //
-                        
+
                         Hashtable param = new Hashtable();
                         param["bid"] = dr["bid"];
                         param["rid"] = rid;
                         param["bstart"] = dr["start_date"];
                         Db sl = new Db(@"SELECT TOP(1) CONVERT(FLOAT,(achieved_handicap - open_handicap))/open_handicap * 100
-                            FROM races
+                            FROM races INNER JOIN calendar ON races.rid = calendar.rid
                             WHERE bid = @bid
-                            AND rid != @rid
+                            AND races.rid != @rid
                             AND place != 999
-                            AND start_date <= @bstart
-                            ORDER BY start_date DESC");
+                            AND standard_corrected_time <> 0
+                            AND races.start_date <= @bstart
+                            ORDER BY races.start_date DESC");
                         DataTable slow = sl.GetData(param);
 
-                        if (slow.Rows.Count >= 1 && slow.Rows[0][0] != DBNull.Value)
+                        if (slow.Rows.Count >= 1)
                         {
                             //
                             // Found the last result prior to this one
