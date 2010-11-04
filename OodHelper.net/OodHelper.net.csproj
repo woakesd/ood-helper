@@ -144,6 +144,7 @@
       <DependentUpon>DoSunSetRise.xaml</DependentUpon>
     </Compile>
     <Compile Include="NotifyPropertyChanged.cs" />
+    <Compile Include="Website\CheckForUpdates.cs" />
     <Compile Include="Website\UploadSun.cs" />
     <Compile Include="Website\UploadTide.cs" />
     <Compile Include="Website\MysqlDownload.cs" />

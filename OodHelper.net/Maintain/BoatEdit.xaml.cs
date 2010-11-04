@@ -377,11 +377,13 @@ namespace OodHelper.Maintain
         private void SelectPerson_Click(object sender, RoutedEventArgs e)
         {
             People ppl = new People(true, 0);
-            ppl.ShowDialog();
-            if (!dc.Id.HasValue || ppl.Id.HasValue && dc.Id.Value != ppl.Id)
+            if (ppl.ShowDialog() == true)
             {
-                dc.Id = ppl.Id;
-                SetOwner();
+                if (!dc.Id.HasValue || ppl.Id.HasValue && dc.Id.Value != ppl.Id)
+                {
+                    dc.Id = ppl.Id;
+                    SetOwner();
+                }
             }
         }
 

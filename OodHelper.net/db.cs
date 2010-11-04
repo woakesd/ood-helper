@@ -9,7 +9,7 @@ using System.Data.SqlServerCe;
 namespace OodHelper
 {
     [Svn("$Id$")]
-    class Db
+    class Db : IDisposable
     {
         public Db(string connectionString, string sql)
         {
@@ -177,6 +177,18 @@ CREATE TABLE [series] (
                 cmd.ExecuteNonQuery();
 
                 cmd.CommandText = @"
+CREATE TABLE [series_results] (
+  [sid] int not null
+, [bid] int not null
+, [division] nvarchar(20) null
+, [entered] int null
+, [gross] float null
+, [nett] float null
+, [place] int
+)";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = @"
 CREATE TABLE [updates] (
   [dummy] int
 , [upload] DATETIME NULL
@@ -214,6 +226,8 @@ CREATE TABLE [select_rules] (
                 cmd.CommandText = @"CREATE INDEX [IX_bid] ON [races] ([bid] ASC)";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = @"CREATE INDEX [IX_rid] ON [races] ([rid] ASC)";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = @"ALTER TABLE [series_results] ADD CONSTRAINT [PK_series_results] PRIMARY KEY ([sid],[bid])";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = @"ALTER TABLE [select_rules] ADD CONSTRAINT [PK_select_rule] PRIMARY KEY ([id])";
                 cmd.ExecuteNonQuery();

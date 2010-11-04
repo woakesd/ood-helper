@@ -14,8 +14,11 @@ namespace OodHelper.Website
 {
     class UploadTide : MySqlUpload
     {
-        public UploadTide() : base()
+        DataTable Tide { get; set; }
+        public UploadTide(DataTable tide) : base(false)
         {
+            Tide = tide;
+            Run();
         }
 
         protected override void upload_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -38,37 +41,48 @@ namespace OodHelper.Website
                 return;
             }
 
-            w.ReportProgress(0, "Loading tide data from file");
-
-            ReadAutoTideData ltd =
-                new ReadAutoTideData(@"C:\Documents and Settings\david\My Documents\Peyc Data\at-rosyth-2011.txt");
-
-            if (w.CancellationPending)
-            {
-                CancelDownload(e);
-                return;
-            }
-
-            w.ReportProgress(50, "Uploading Tide Data");
+            w.ReportProgress(0, "Uploading Tide Data");
 
             MySqlCommand mcom = new MySqlCommand();
             mcom.Connection = mcon;
             StringBuilder msql = new StringBuilder();
 
-            mcom.CommandText = "DELETE FROM `tidedata` WHERE date >= @date";
-            mcom.Parameters.AddWithValue("date", ltd.Data.Rows[0]["date"]);
-            mcom.ExecuteNonQuery();
+            mcom.CommandText = "DELETE FROM `tidedata` WHERE date >= @sdate AND date <= @edate";
+            mcom.Parameters.AddWithValue("edate", Tide.Rows[0]["date"]);
+            mcom.Parameters.AddWithValue("sdate", Tide.Rows[Tide.Rows.Count-1]["date"]);
+            int n = mcom.ExecuteNonQuery();
 
             mcom.CommandText = "ALTER TABLE `tidedata` DISABLE KEYS";
             mcom.ExecuteNonQuery();
 
-            msql.Clear();
-            msql.Append("INSERT INTO `tidedata` (`date`,`height`,`current`) VALUES ");
+            int i = 0;
+            while (i < Tide.Rows.Count)
+            {
+                DataTable sub = Tide.Clone();
+                for (int j = 0; j + i < Tide.Rows.Count && j < 1000; j++)
+                {
+                    sub.ImportRow(Tide.Rows[i + j]);
+                }
 
-            BuildInsertData(ltd.Data, msql);
+                msql.Clear();
 
-            mcom.CommandText = msql.ToString();
-            mcom.ExecuteNonQuery();
+                msql.Append("INSERT INTO `tidedata` (`date`,`height`,`current`) VALUES ");
+
+                BuildInsertData(sub, msql);
+
+                mcom.CommandText = msql.ToString();
+                mcom.ExecuteNonQuery();
+
+                i += 1000;
+
+                w.ReportProgress((int) (((double)i) / Tide.Rows.Count * 100), "Uploading Tide Data");
+
+                if (w.CancellationPending)
+                {
+                    CancelDownload(e);
+                    return;
+                }
+            }
 
             mcom.CommandText = "ALTER TABLE `tidedata` ENABLE KEYS";
             mcom.ExecuteNonQuery();

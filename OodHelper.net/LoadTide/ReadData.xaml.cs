@@ -43,7 +43,7 @@ namespace OodHelper.LoadTide
 
         private void Upload_Click(object sender, RoutedEventArgs e)
         {
-
+            Website.UploadTide upload = new Website.UploadTide(TideInfo.Data);
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)

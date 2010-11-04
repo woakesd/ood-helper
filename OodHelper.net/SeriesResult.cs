@@ -17,20 +17,24 @@ namespace OodHelper
         public List<BoatSeriesResult> _Results = new List<BoatSeriesResult>();
         private Dictionary<int, BoatSeriesResult> _ResultsLookUp = new Dictionary<int, BoatSeriesResult>();
         public string SeriesName { get; set; }
+        public int Sid { get; set; }
+        public string Division { get; set; }
 
         /// <summary>
         /// Create series result object, pass in rows of data each row contain column bid, with points
         /// or codes for individual races in cols r1, r2 etc
         /// </summary>
         /// <param name="SeriesData"></param>
-        public SeriesResult(Dictionary<int, SeriesEvent> SeriesData, int[] DiscardProfile)
+        public SeriesResult(int sid, string division, Dictionary<int, SeriesEvent> SeriesData, int[] DiscardProfile)
         {
             _SeriesData = SeriesData;
             _DiscardProfile = DiscardProfile;
+            Sid = sid;
+            Division = division;
         }
 
-        public SeriesResult(Dictionary<int, SeriesEvent> SeriesData)
-            : this(SeriesData, new int[] { 0, 1 })
+        public SeriesResult(int sid, string division, Dictionary<int, SeriesEvent> SeriesData)
+            : this(sid, division, SeriesData, new int[] { 0, 1 })
         {
         }
 
@@ -203,6 +207,38 @@ namespace OodHelper
             {
                 boat.place = place++;
             }
+
+            //
+            // Save to database replacing existing values
+            //
+            SaveResults();
+        }
+
+        private void SaveResults()
+        {
+            Hashtable p = new Hashtable();
+            p["sid"] = Sid;
+            p["division"] = Division;
+            using (Db c = new Db(@"DELETE FROM series_results
+                WHERE [sid] = @sid
+                AND [division] = @division"))
+            {
+                c.ExecuteNonQuery(p);
+            }
+            using (Db c = new Db(@"INSERT INTO series_results
+                ([sid], [bid], [division], [entered], [gross], [nett], [place])
+                VALUES (@sid, @bid, @division, @entered, @gross, @nett, @place)"))
+            {
+                foreach (BoatSeriesResult bsr in _Results)
+                {
+                    p["bid"] = bsr.bid;
+                    p["entered"] = bsr.count;
+                    p["gross"] = bsr.total;
+                    p["nett"] = bsr.nett;
+                    p["place"] = bsr.place;
+                    c.ExecuteNonQuery(p);
+                }
+            }
         }
     }
 
@@ -223,7 +259,6 @@ namespace OodHelper
         public List<SeriesEntry> performanceSortedPoints;
         public List<SeriesEntry> dateSortedPoints;
         public int place;
-        public double points;
     }
 
     class NettComparer : IComparer<BoatSeriesResult>

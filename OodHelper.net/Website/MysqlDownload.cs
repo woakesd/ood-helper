@@ -59,38 +59,46 @@ namespace OodHelper.Website
 
         private void Process(object sender, DoWorkEventArgs e)
         {
-            BackgroundWorker p = sender as BackgroundWorker;
-
-            scon = new SqlCeConnection();
-            scon.ConnectionString = Properties.Settings.Default.OodHelperConnectionString;
-            scon.Open();
-            strn = scon.BeginTransaction();
-
-            p.ReportProgress(0, "Connecting to website");
-
-            string mysql = (string)DbSettings.GetSetting("mysql");
-            MySqlConnectionStringBuilder mcsb = new MySqlConnectionStringBuilder(mysql);
-            mysql = mcsb.ConnectionString;
-            mcon = new MySqlConnection(mysql);
-            mcon.Open();
-
-            if (p.CancellationPending)
+            try
             {
-                CancelDownload(e);
-                return;
+                BackgroundWorker p = sender as BackgroundWorker;
+
+                scon = new SqlCeConnection();
+                scon.ConnectionString = Properties.Settings.Default.OodHelperConnectionString;
+                scon.Open();
+                strn = scon.BeginTransaction();
+
+                p.ReportProgress(0, "Connecting to website");
+
+                string mysql = (string)DbSettings.GetSetting("mysql");
+                MySqlConnectionStringBuilder mcsb = new MySqlConnectionStringBuilder(mysql);
+                mysql = mcsb.ConnectionString;
+                mcon = new MySqlConnection(mysql);
+                mcon.Open();
+
+                if (p.CancellationPending)
+                {
+                    CancelDownload(e);
+                    return;
+                }
+
+                DoTheWork(sender, e);
+
+                if (!e.Cancel)
+                {
+                    strn.Commit();
+
+                    scon.Close();
+
+                    Db.Compact();
+                }
+                p.ReportProgress(100, "All done");
             }
-
-            DoTheWork(sender, e);
-
-            if (!e.Cancel)
+            catch (Exception ex)
             {
-                strn.Commit();
-
-                scon.Close();
-
-                Db.Compact();
+                ErrorLogger.LogException(ex);
+                throw;
             }
-            p.ReportProgress(100, "All done");
         }
 
         protected void CopyData(DataTable rset, SqlCeCommand ins)

@@ -100,8 +100,7 @@ namespace OodHelper.Maintain
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
-            if (PeopleData.SelectedItem != null)
-                Id = (int)((DataRowView)PeopleData.SelectedItem).Row["id"];
+            DialogResult = false;
             Close();
         }
 
@@ -263,6 +262,7 @@ namespace OodHelper.Maintain
             if (rv != null)
             {
                 Id = rv.Row["id"] as int?;
+                DialogResult = true;
                 Close();
             }
             else

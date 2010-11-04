@@ -126,7 +126,7 @@ namespace OodHelper
                         discardProfile = new int[] { 0, 1 };
                     }
 
-                    SeriesResult sr = new SeriesResult(SeriesData[className], discardProfile);
+                    SeriesResult sr = new SeriesResult(SeriesId, className, SeriesData[className], discardProfile);
                     w.SetProgress("Calculating series " + className, races.Rows.Count);
                     sr.Score();
                     sr.SeriesName = SeriesName + " - " + className;

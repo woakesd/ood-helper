@@ -41,21 +41,16 @@ namespace OodHelper
 
             for (int i = 0; i < reds.Length; i++)
             {
-                //rdef[i] = new RowDefinition();
-                //rdef[i].Height = new GridLength(1, GridUnitType.Star);
-                //Fleets.RowDefinitions.Add(rdef[i]);
-
                 TabItem ti = new TabItem();
                 ti.Header = reds[i].RaceClass;
 
                 sbt[i] = new SelectedBoats(reds[i].Rid);
                 boatClasses[reds[i].RaceClass] = sbt[i];
-                //Grid.SetRow(sbt[i], i);
-                //sbt[i].VerticalContentAlignment = VerticalAlignment.Stretch;
+
                 sbt[i].FleetName.Content = reds[i].RaceName;
-                //sbt[i].VerticalAlignment = VerticalAlignment.Stretch;
+                
                 ti.Content = sbt[i];
-                Fleets.Items.Add(ti);  //Children.Add(sbt[i]);
+                Fleets.Items.Add(ti);
 
                 DataView d = (DataView) reds[i].Races.ItemsSource;
                 DataTable bts = new DataTable();
