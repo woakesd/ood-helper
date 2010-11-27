@@ -224,6 +224,11 @@ namespace OodHelper.Website
             mcom.ExecuteNonQuery();
 
             DateTime updateTime = DateTime.Now;
+            //
+            // Recreate update time from itself. This will truncate the time to the second.
+            //
+            updateTime = new DateTime(updateTime.Year, updateTime.Month, updateTime.Day, 
+                updateTime.Hour, updateTime.Minute, updateTime.Second);
 
             mcom.CommandText = "INSERT INTO updates (upload, dummy) VALUES (@dt, 2)";
             mcom.Parameters.AddWithValue("dt", updateTime);

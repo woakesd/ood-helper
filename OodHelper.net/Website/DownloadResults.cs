@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
@@ -186,6 +187,21 @@ namespace OodHelper.Website
             scmd.ExecuteNonQuery();
 
             CopyData(mtable, ins);
+
+            //
+            // Find max update row from website db and insert into local db.
+            //
+            myadp = new MySqlDataAdapter("SELECT MAX(upload) FROM updates", mcon);
+            mtable = new DataTable();
+            myadp.Fill(mtable);
+
+            if (mtable.Rows.Count > 0)
+            {
+                scmd.CommandText = "INSERT INTO updates (upload, dummy) VALUES (@dt, 2)";
+                scmd.Parameters.Clear();
+                scmd.Parameters.Add("dt", mtable.Rows[0][0]);
+                scmd.ExecuteNonQuery();
+            }
 
             if (p.CancellationPending)
             {

@@ -231,5 +231,18 @@ namespace OodHelper
             DoSunSetRise sd = new DoSunSetRise();
             sd.ShowDialog();
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            CheckForUpdates c = new CheckForUpdates();
+            if (c.LocalDate < c.RemoteDate)
+            {
+                if (MessageBox.Show("Website results are more up to date\nWould you like to download from Website", "Confirm Download",
+                    MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.OK) == MessageBoxResult.OK)
+                {
+                    DownloadResults dtask = new DownloadResults();
+                }
+            }
+        }
     }
 }

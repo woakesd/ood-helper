@@ -21,10 +21,10 @@ namespace OodHelper.Website
             if (e.Cancelled)
                 System.Windows.MessageBox.Show("Check For Updates Cancelled", "Cancel", System.Windows.MessageBoxButton.OK,
                     System.Windows.MessageBoxImage.Information);
-            else
-                System.Windows.MessageBox.Show("Check For Updates Complete", "Finished", System.Windows.MessageBoxButton.OK,
-                    System.Windows.MessageBoxImage.Information);
         }
+
+        public DateTime? RemoteDate { get; set; }
+        public DateTime? LocalDate { get; set; }
 
         protected override void DoTheWork(object sender, DoWorkEventArgs e)
         {
@@ -33,11 +33,25 @@ namespace OodHelper.Website
             p.ReportProgress(0, "Checking for updates");
 
             //
-            // Boats
+            // Find max update row from website db and local db
             //
-            MySqlDataAdapter myadp = new MySqlDataAdapter("SELECT MAX(date)", mcon);
+            MySqlDataAdapter myadp = new MySqlDataAdapter("SELECT MAX(upload) FROM updates", mcon);
             DataTable mtable = new DataTable();
             myadp.Fill(mtable);
+
+            if (mtable.Rows.Count > 0)
+            {
+                RemoteDate = mtable.Rows[0][0] as DateTime?;
+            }
+
+            SqlCeDataAdapter sqadp = new SqlCeDataAdapter("SELECT MAX(upload) FROM updates", scon);
+            DataTable stable = new DataTable();
+            sqadp.Fill(stable);
+
+            if (mtable.Rows.Count > 0)
+            {
+                LocalDate = stable.Rows[0][0] as DateTime?;
+            }
 
             if (p.CancellationPending)
             {
