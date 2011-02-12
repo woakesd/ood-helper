@@ -30,6 +30,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <Label Content="ID" Grid.Row="0" Visibility="Collapsed" />
         <Label Content="First name" Grid.Row="1" />
@@ -43,6 +44,7 @@
         <Label Content="Club" Grid.Row="12" />
         <Label Content="Membership" Grid.Row="13" />
         <Label Content="Notes" Grid.Row="14" />
+        <Label Content="Paid Up" Grid.Row="15" />
         <TextBox Grid.Column="1" Grid.Row="0" Name="ID" Width="200" IsReadOnly="True" Margin="2" Visibility="Collapsed"/>
         <TextBox Grid.Column="1" Grid.Row="1" Name="FirstName" Width="200" MaxLength="20" Margin="2"/>
         <TextBox Grid.Column="1" Grid.Row="2" Name="LastName" Width="200" MaxLength="20" Margin="2"/>
@@ -58,7 +60,8 @@
         <TextBox Grid.Column="1" Grid.Row="12" Name="Club" Width="200" MaxLength="20" Margin="2"/>
         <TextBox Grid.Column="1" Grid.Row="13" Name="Membership" Width="200" MaxLength="20" Margin="2"/>
         <TextBox Grid.Column="1" Grid.Row="14" Name="Notes" Width="200" MaxLength="20" Margin="2"/>
-        <Grid Grid.Row="15" Grid.ColumnSpan="2" Margin="0,2" Width="300" HorizontalAlignment="Right" >
+        <CheckBox Grid.Column="1" Grid.Row="15" Margin="2" VerticalAlignment="Center" Name="Paid"/>
+        <Grid Grid.Row="16" Grid.ColumnSpan="2" Margin="0,2" Width="300" HorizontalAlignment="Right" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -71,13 +74,13 @@
                 <Button Name="CancelButton" IsCancel="True" Click="cancel_Click" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Width="80">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/OodHelper.net;component/Images/Cancel.png" />
-                        <TextBlock Text="Cancel" Margin="5,0"/>
+                        <TextBlock Text="Cancel" Margin="5,0" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
                 <Button Name="OKButton" IsDefault="True" Click="ok_Click" Grid.Column="1" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Width="80">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/OodHelper.net;component/Images/Ok.png" />
-                        <TextBlock Text="OK" Margin="5,0"/>
+                        <TextBlock Text="OK" Margin="5,0"  VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
             </Grid>

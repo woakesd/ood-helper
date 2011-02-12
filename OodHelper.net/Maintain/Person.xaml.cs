@@ -34,7 +34,7 @@ namespace OodHelper.Maintain
             if (Id != 0)
             {
                 Db get = new Db("SELECT firstname, surname, address1, address2, address3, address4, " +
-                    "postcode, hometel, mobile, worktel, email, club, member, manmemo " +
+                    "postcode, hometel, mobile, worktel, email, club, member, manmemo, cp " +
                     "FROM people " +
                     "WHERE id = @id");
                 Hashtable p = new Hashtable();
@@ -56,6 +56,7 @@ namespace OodHelper.Maintain
                 Club.Text = data["club"].ToString();
                 Membership.Text = data["member"].ToString();
                 Notes.Text = data["manmemo"].ToString();
+                Paid.IsChecked = data["cp"] as bool?;
             }
         }
 
@@ -84,14 +85,15 @@ namespace OodHelper.Maintain
             p["member"] = Membership.Text;
             p["manmemo"] = Notes.Text;
             p["id"] = Id;
+            p["cp"] = Paid.IsChecked;
             Db save;
             if (Id == 0)
             {
                 save = new Db("INSERT INTO people " +
                     "(main_id, firstname, surname, address1, address2, address3, address4, " +
-                    "postcode, hometel, mobile, worktel, email, club, member, manmemo) " +
+                    "postcode, hometel, mobile, worktel, email, club, member, manmemo, cp) " +
                     "VALUES (@main_id, @firstname, @surname, @address1, @address2, @address3, @address4, " +
-                    "@postcode, @hometel, @mobile, @worktel, @email, @club, @member, @manmemo)");
+                    "@postcode, @hometel, @mobile, @worktel, @email, @club, @member, @manmemo, @cp)");
                 id = save.GetNextIdentity("people", "id");
                 p["main_id"] = Id;
                 save.ExecuteNonQuery(p);
@@ -113,7 +115,8 @@ namespace OodHelper.Maintain
                         "email = @email, " +
                         "club = @club, " +
                         "member = @member, " +
-                        "manmemo = @manmemo " +
+                        "manmemo = @manmemo, " +
+                        "cp = @cp " +
                         "WHERE id = @id");
                 save.ExecuteNonQuery(p);
             }

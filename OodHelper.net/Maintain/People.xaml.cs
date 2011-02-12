@@ -281,5 +281,89 @@ namespace OodHelper.Maintain
                 handler(this, new PropertyChangedEventArgs(name));
             }
         }
+
+        private void SetPaid_Click(object sender, RoutedEventArgs e)
+        {
+            if (PeopleData.SelectedItem != null)
+            {
+                MessageBoxResult result = MessageBox.Show("Are you sure you want to mark " + 
+                    PeopleData.SelectedItems.Count.ToString() + " as paid up?",
+                    "Confirm Update", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    Paid = true;
+                    pd = new DataRowView[PeopleData.SelectedItems.Count];
+                    PeopleData.SelectedItems.CopyTo(pd, 0);
+                    BackgroundWorker bw = new BackgroundWorker();
+                    bw.DoWork += new DoWorkEventHandler(bw_DoSetNotPaid);
+                    SetNotPaid = new Working(bw);
+                    bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_SetNotPaidCompleted);
+                    bw.RunWorkerAsync();
+                    SetNotPaid.ShowDialog();
+                }
+            }
+        }
+
+        Working SetNotPaid;
+        bool Paid;
+        DataRowView[] pd;
+
+        private void SetNotPaid_Click(object sender, RoutedEventArgs e)
+        {
+            if (PeopleData.SelectedItem != null)
+            {
+                MessageBoxResult result = MessageBox.Show("Are you sure you want to mark " +
+                    PeopleData.SelectedItems.Count.ToString() + " as not paid up?",
+                    "Confirm Update", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    Paid = false;
+                    pd = new DataRowView[PeopleData.SelectedItems.Count];
+                    PeopleData.SelectedItems.CopyTo(pd, 0);
+                    BackgroundWorker bw = new BackgroundWorker();
+                    bw.DoWork += new DoWorkEventHandler(bw_DoSetNotPaid);
+                    SetNotPaid = new Working(bw);
+                    bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_SetNotPaidCompleted);
+                    bw.RunWorkerAsync();
+                    SetNotPaid.ShowDialog();
+                }
+            }
+        }
+
+        void bw_SetNotPaidCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            SetNotPaid.Close();
+            LoadGrid();
+        }
+
+        void bw_DoSetNotPaid(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                BackgroundWorker w = sender as BackgroundWorker;
+                int cnt = 0;
+                foreach (DataRowView i in pd)
+                {
+                    Db upd = new Db("UPDATE people " +
+                        "SET cp = @paid " +
+                        "WHERE id = @id");
+                    Hashtable d = new Hashtable();
+                    d["id"] = (int)i.Row["id"];
+                    d["paid"] = Paid;
+                    upd.ExecuteNonQuery(d);
+                    cnt++;
+                    int progress = (int)Math.Round(cnt * 100.0 / pd.Length);
+                    w.ReportProgress((int)Math.Round(cnt * 100.0 / pd.Length));
+
+                    if (w.CancellationPending) return;
+                }
+                pd = null;
+            }
+            catch (Exception exp)
+            {
+                System.Windows.MessageBox.Show(exp.Message, "Error", System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Error);
+            }
+        }
     }
 }
