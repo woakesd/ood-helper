@@ -5,22 +5,17 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" Title="Person" 
         Loaded="Window_Loaded"
-        d:DesignHeight="496"
-        d:DesignWidth="342"
+        d:DesignHeight="599"
+        d:DesignWidth="723"
         SizeToContent="WidthAndHeight">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
@@ -37,14 +32,25 @@
         <Label Content="Last name" Grid.Row="2" />
         <Label Content="Address" Grid.Row="3" />
         <Label Content="Postcode" Grid.Row="7" />
-        <Label Content="Home telephone" Grid.Row="8" />
-        <Label Content="Mobile telephone" Grid.Row="9" />
-        <Label Content="Work telephone" Grid.Row="10" />
-        <Label Content="Email" Grid.Row="11" />
-        <Label Content="Club" Grid.Row="12" />
-        <Label Content="Membership" Grid.Row="13" />
-        <Label Content="Notes" Grid.Row="14" />
-        <Label Content="Paid Up" Grid.Row="15" />
+        <Label Content="Home telephone" Grid.Row="1" Grid.Column="2"/>
+        <Label Content="Mobile telephone" Grid.Row="2"  Grid.Column="2"/>
+        <Label Content="Work telephone" Grid.Row="3"  Grid.Column="2"/>
+        <Label Content="Email" Grid.Row="4" Grid.Column="2" />
+        <Label Content="Club" Grid.Row="5" Grid.Column="2" />
+        <Label Content="Membership" Grid.Row="6" Grid.Column="2" />
+        <Label Content="Notes" Grid.Row="8" />
+        <Label Content="Paid Up" Grid.Row="7" Grid.Column="2" />
+        <StackPanel Orientation="Vertical" Grid.Row="8" Grid.Column="2">
+            <Label Content="Crews on" />
+            <Button Name="Edit" Click="Edit_Click" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Width="80">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/OodHelper.net;component/Images/Add.png" />
+                    <TextBlock Text="Edit" Margin="5,0" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+        </StackPanel>
+        
         <TextBox Grid.Column="1" Grid.Row="0" Name="ID" Width="200" IsReadOnly="True" Margin="2" Visibility="Collapsed"/>
         <TextBox Grid.Column="1" Grid.Row="1" Name="FirstName" Width="200" MaxLength="20" Margin="2"/>
         <TextBox Grid.Column="1" Grid.Row="2" Name="LastName" Width="200" MaxLength="20" Margin="2"/>
@@ -53,15 +59,24 @@
         <TextBox Grid.Column="1" Grid.Row="5" Name="Address3" Width="200" MaxLength="20" Margin="2"/>
         <TextBox Grid.Column="1" Grid.Row="6" Name="Address4" Width="200" MaxLength="20" Margin="2"/>
         <TextBox Grid.Column="1" Grid.Row="7" Name="Postcode" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="8" Name="HomePhone" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="9" Name="MobilePhone" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="10" Name="WorkPhone" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="11" Name="Email" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="12" Name="Club" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="13" Name="Membership" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="14" Name="Notes" Width="200" MaxLength="20" Margin="2"/>
-        <CheckBox Grid.Column="1" Grid.Row="15" Margin="2" VerticalAlignment="Center" Name="Paid"/>
-        <Grid Grid.Row="16" Grid.ColumnSpan="2" Margin="0,2" Width="300" HorizontalAlignment="Right" >
+        <TextBox Grid.Column="1" Grid.Row="8" Name="Notes" Width="200" MaxLength="20" Margin="2"/>
+        <TextBox Grid.Column="3" Grid.Row="1" Name="HomePhone" Width="200" MaxLength="20" Margin="2" />
+        <TextBox Grid.Column="3" Grid.Row="2" Name="MobilePhone" Width="200" MaxLength="20" Margin="2"/>
+        <TextBox Grid.Column="3" Grid.Row="3" Name="WorkPhone" Width="200" MaxLength="20" Margin="2"/>
+        <TextBox Grid.Column="3" Grid.Row="4" Name="Email" Width="200" MaxLength="20" Margin="2"/>
+        <TextBox Grid.Column="3" Grid.Row="5" Name="Club" Width="200" MaxLength="20" Margin="2"/>
+        <TextBox Grid.Column="3" Grid.Row="6" Name="Membership" Width="200" MaxLength="20" Margin="2"/>
+        <CheckBox Grid.Column="3" Grid.Row="7" Margin="2" VerticalAlignment="Center" Name="Paid"/>
+        <ListBox Grid.Column="3" Grid.Row="8" Margin="2" Name="Crewing" Height="90">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock VerticalAlignment="Center" Text="{Binding Path=boatname}" Margin="2" Tag="{Binding Path=bid}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Grid Grid.Row="9" Grid.ColumnSpan="4" Margin="0,2" Width="300" HorizontalAlignment="Right" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>

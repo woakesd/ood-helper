@@ -21,15 +21,14 @@ namespace OodHelper.Maintain
     [Svn("$Id: Person.xaml.cs 68 2010-07-02 15:58:24Z woakesdavid $")]
     public partial class Person : Window
     {
-        private int id;
         public int Id
         {
-            get { return id; }
+            get; private set;
         }
 
         public Person(int pid)
         {
-            id = pid;
+            Id = pid;
             InitializeComponent();
             if (Id != 0)
             {
@@ -57,7 +56,21 @@ namespace OodHelper.Maintain
                 Membership.Text = data["member"].ToString();
                 Notes.Text = data["manmemo"].ToString();
                 Paid.IsChecked = data["cp"] as bool?;
+
+                BoatCrewFill();
             }
+        }
+
+        private void BoatCrewFill()
+        {
+            Hashtable p = new Hashtable();
+            p["id"] = Id;
+            Db crewing = new Db("SELECT boats.bid, boatname " +
+                "FROM boats INNER JOIN boat_crew " +
+                "ON boats.bid = boat_crew.bid " +
+                "WHERE boat_crew.id = @id");
+            DataTable crw = crewing.GetData(p);
+            Crewing.ItemsSource = crw.DefaultView;
         }
 
         private void cancel_Click(object sender, RoutedEventArgs e)
@@ -94,7 +107,7 @@ namespace OodHelper.Maintain
                     "postcode, hometel, mobile, worktel, email, club, member, manmemo, cp) " +
                     "VALUES (@main_id, @firstname, @surname, @address1, @address2, @address3, @address4, " +
                     "@postcode, @hometel, @mobile, @worktel, @email, @club, @member, @manmemo, @cp)");
-                id = save.GetNextIdentity("people", "id");
+                Id = save.GetNextIdentity("people", "id");
                 p["main_id"] = Id;
                 save.ExecuteNonQuery(p);
              }
@@ -145,6 +158,13 @@ namespace OodHelper.Maintain
                     }
                 }
             }
+        }
+
+        private void Edit_Click(object sender, RoutedEventArgs e)
+        {
+            SelectCrewBoats d = new SelectCrewBoats(Id);
+            if (d.ShowDialog() == true)
+                BoatCrewFill();
         }
     }
 }

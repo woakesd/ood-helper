@@ -209,6 +209,13 @@ CREATE TABLE [select_rules] (
 )";
                 cmd.ExecuteNonQuery();
 
+                cmd.CommandText = @"
+CREATE TABLE [boat_crew] (
+  [id] int NOT NULL
+, [bid] int NOT NULL
+)";
+                cmd.ExecuteNonQuery();
+
                 cmd.CommandText = @"ALTER TABLE [boats] ADD CONSTRAINT [PK_boats] PRIMARY KEY ([bid])";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = @"ALTER TABLE [calendar] ADD CONSTRAINT [PK_calendar] PRIMARY KEY ([rid])";
@@ -232,6 +239,8 @@ CREATE TABLE [select_rules] (
                 cmd.CommandText = @"ALTER TABLE [select_rules] ADD CONSTRAINT [PK_select_rule] PRIMARY KEY ([id])";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = @"CREATE INDEX [IX_select_rule_parent] ON [select_rules] ([parent] ASC)";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = @"ALTER TABLE [boat_crew] ADD CONSTRAINT [PK_boat_crew] PRIMARY KEY ([id],[bid])";
                 cmd.ExecuteNonQuery();
             }
             finally

@@ -1,0 +1,33 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+
+namespace OodHelper
+{
+    /// <summary>
+    /// Interaction logic for About.xaml
+    /// </summary>
+    [Svn("$Id: About.xaml.cs 198 2010-10-01 09:14:07Z woakesdavid $")]
+    public partial class About : Window
+    {
+        public About()
+        {
+            InitializeComponent();
+            aboutBlock.Text = "Revision: " + SvnRevision.Rev + "\n" +
+                "Revision Range: " + SvnRevision.Range + "\n" +
+                "Commit Date: " + SvnRevision.Date + "\n" +
+                "Build Date: " + SvnRevision.BuildDate + "\n" +
+                "Commit Status: " + SvnRevision.LocalMods + "\n" +
+                "OOD Helper by David Woakes";
+        }
+    }
+}
