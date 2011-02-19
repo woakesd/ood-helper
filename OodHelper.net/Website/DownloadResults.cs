@@ -28,6 +28,7 @@ namespace OodHelper.Website
 
         protected override void DoTheWork(object sender, DoWorkEventArgs e)
         {
+            const int Steps = 7;
             BackgroundWorker p = sender as BackgroundWorker;
 
             p.ReportProgress(0, "Loading Boats");
@@ -68,7 +69,7 @@ namespace OodHelper.Website
                 return;
             }
 
-            p.ReportProgress(100 / 6, "Loading Calendar");
+            p.ReportProgress(100 / Steps, "Loading Calendar");
             ins.CommandText = "INSERT INTO [calendar] ([rid], [start_date], [class], [event], [price_code], [course], [ood], " +
                 "[venue], [average_lap], [timegate], [handicapping], [visitors], [flag], [time_limit_type], [time_limit_fixed], " +
                 "[time_limit_delta], [extension], [memo], [is_race], [raced], [approved], [course_choice], [laps_completed], " +
@@ -105,7 +106,7 @@ namespace OodHelper.Website
                 return;
             }
 
-            p.ReportProgress(200 / 6, "Loading People");
+            p.ReportProgress(200 / Steps, "Loading People");
             ins.CommandText = "INSERT INTO [PEOPLE] ([id], [main_id], [firstname], [surname], [address1], [address2], [address3], [address4], [postcode], [hometel], [worktel], [mobile], [email], [club], [member], [cp], [s], [manmemo], [novice]) " +
                 "VALUES (@id, @sid, @firstname, @surname, @address1, @address2, @address3, @address4, @postcode, @hometel, @worktel, @mobile, @email, @club, @member, @cp, @s, @manmemo, @novice)";
 
@@ -125,9 +126,31 @@ namespace OodHelper.Website
             scmd.ExecuteNonQuery();
 
             //
+            // Boat Crew
+            //
+            if (p.CancellationPending)
+            {
+                CancelDownload(e);
+                return;
+            }
+
+            p.ReportProgress(300 / Steps, "Loading Boat Crew");
+            ins.CommandText = "INSERT INTO [boat_crew] ([id], [bid]) " +
+                "VALUES (@id, @bid)";
+
+            myadp = new MySqlDataAdapter("SELECT * FROM boat_crew", mcon);
+            mtable = new DataTable();
+            myadp.Fill(mtable);
+
+            scmd.CommandText = "DELETE FROM boat_crew";
+            scmd.ExecuteNonQuery();
+
+            CopyData(mtable, ins);
+
+            //
             // Races
             //
-            p.ReportProgress(300 / 6, "Loading Races");
+            p.ReportProgress(400 / Steps, "Loading Races");
             ins.CommandText = "INSERT INTO [races] ([rid], [bid], [start_date], [finish_date], [last_edit], [finish_code], [laps], [elapsed], [corrected], [standard_corrected], [handicap_status], [open_handicap], [rolling_handicap], [achieved_handicap], [new_rolling_handicap], [place], [points], [override_points], [performance_index], [a], [c]) " +
                 "VALUES (@rid, @bid, @start_date, @finish_date, @last_edit, @finish_code, @laps, @elapsed, @corrected, @standard_corrected, @handicap_status, @open_handicap, @rolling_handicap, @achieved_handicap, @new_rolling_handicap, @place, @points, @override_points, @performance_index, @a, @c)";
 
@@ -149,7 +172,7 @@ namespace OodHelper.Website
                 return;
             }
 
-            p.ReportProgress(400 / 6, "Loading Series");
+            p.ReportProgress(500 / Steps, "Loading Series");
             ins.CommandText = "INSERT INTO [series] ([sid], [sname], [discards]) " +
                 "VALUES (@sid, @sname, @discards)";
             myadp = new MySqlDataAdapter("SELECT sid, sname, discards FROM series", mcon);
@@ -176,7 +199,7 @@ namespace OodHelper.Website
                 return;
             }
 
-            p.ReportProgress(500 / 6, "Loading Series links");
+            p.ReportProgress(600 / Steps, "Loading Series links");
             ins.CommandText = "INSERT INTO [calendar_series_join] ([sid], [rid]) " +
                 "VALUES (@sid, @rid)";
             myadp = new MySqlDataAdapter("SELECT * FROM calendar_series_join", mcon);

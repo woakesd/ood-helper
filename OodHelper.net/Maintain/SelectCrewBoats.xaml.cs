@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using OodHelper.Maintain;
 
-namespace OodHelper
+namespace OodHelper.Maintain
 {
     /// <summary>
     /// Interaction logic for SelectBoats.xaml

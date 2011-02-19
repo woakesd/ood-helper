@@ -30,6 +30,8 @@ namespace OodHelper.Website
         {
             BackgroundWorker w = sender as BackgroundWorker;
 
+            const int Steps = 7;
+
             if (w.CancellationPending)
             {
                 CancelDownload(e);
@@ -70,7 +72,7 @@ namespace OodHelper.Website
                 return;
             }
 
-            w.ReportProgress(100 / 6, "Uploading calendar");
+            w.ReportProgress(100 / Steps, "Uploading calendar");
 
             mcom.CommandText = "DELETE FROM calendar_new";
             mcom.Connection = mcon;
@@ -107,7 +109,7 @@ namespace OodHelper.Website
                 return;
             }
 
-            w.ReportProgress(200 / 6, "Uploading people");
+            w.ReportProgress(200 / Steps, "Uploading people");
 
             mcom.CommandText = "DELETE FROM `people`";
             mcom.ExecuteNonQuery();
@@ -138,7 +140,35 @@ namespace OodHelper.Website
                 return;
             }
 
-            w.ReportProgress(300 / 6, "Uploading races");
+            w.ReportProgress(300 / Steps, "Uploading boat crew");
+
+            mcom.CommandText = "DELETE FROM `boat_crew`";
+            mcom.ExecuteNonQuery();
+
+            mcom.CommandText = "ALTER TABLE `boat_crew` DISABLE KEYS";
+            mcom.ExecuteNonQuery();
+
+            msql.Clear();
+            msql.Append("INSERT INTO `boat_crew` (`id`,`bid`) VALUES ");
+
+            c = new Db(@"SELECT id, bid FROM boat_crew");
+            d = c.GetData(null);
+
+            BuildInsertData(d, msql);
+
+            mcom.CommandText = msql.ToString();
+            mcom.ExecuteNonQuery();
+
+            mcom.CommandText = "ALTER TABLE `boat_crew` ENABLE KEYS";
+            mcom.ExecuteNonQuery();
+
+            if (w.CancellationPending)
+            {
+                CancelDownload(e);
+                return;
+            }
+
+            w.ReportProgress(400 / Steps, "Uploading races");
 
             mcom.CommandText = "DELETE FROM `races_new`";
             mcom.ExecuteNonQuery();
@@ -173,7 +203,7 @@ namespace OodHelper.Website
                 return;
             }
 
-            w.ReportProgress(400 / 6, "Uploading series");
+            w.ReportProgress(500 / Steps, "Uploading series");
 
             mcom.CommandText = "DELETE FROM `series`";
             mcom.ExecuteNonQuery();
@@ -201,7 +231,7 @@ namespace OodHelper.Website
                 return;
             }
 
-            w.ReportProgress(500 / 6, "Uploading calendar series join");
+            w.ReportProgress(600 / Steps, "Uploading calendar series join");
 
             mcom.CommandText = "DELETE FROM `calendar_series_join`";
             mcom.ExecuteNonQuery();

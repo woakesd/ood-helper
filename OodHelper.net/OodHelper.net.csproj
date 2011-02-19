@@ -130,7 +130,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="SelectCrewBoats.xaml.cs">
+    <Compile Include="Maintain\SelectCrewBoats.xaml.cs">
       <DependentUpon>SelectCrewBoats.xaml</DependentUpon>
     </Compile>
     <Compile Include="Website\About.xaml.cs">
@@ -255,7 +255,7 @@
     <Compile Include="Working.xaml.cs">
       <DependentUpon>Working.xaml</DependentUpon>
     </Compile>
-    <Page Include="SelectCrewBoats.xaml">
+    <Page Include="Maintain\SelectCrewBoats.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
