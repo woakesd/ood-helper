@@ -53,19 +53,19 @@
         
         <TextBox Grid.Column="1" Grid.Row="0" Name="ID" Width="200" IsReadOnly="True" Margin="2" Visibility="Collapsed"/>
         <TextBox Grid.Column="1" Grid.Row="1" Name="FirstName" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="2" Name="LastName" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="3" Name="Address1" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="4" Name="Address2" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="5" Name="Address3" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="6" Name="Address4" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="7" Name="Postcode" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="8" Name="Notes" Width="200" MaxLength="20" Margin="2"/>
+        <TextBox Grid.Column="1" Grid.Row="2" Name="LastName" Width="200" MaxLength="28" Margin="2"/>
+        <TextBox Grid.Column="1" Grid.Row="3" Name="Address1" Width="200" MaxLength="30" Margin="2"/>
+        <TextBox Grid.Column="1" Grid.Row="4" Name="Address2" Width="200" MaxLength="30" Margin="2"/>
+        <TextBox Grid.Column="1" Grid.Row="5" Name="Address3" Width="200" MaxLength="30" Margin="2"/>
+        <TextBox Grid.Column="1" Grid.Row="6" Name="Address4" Width="200" MaxLength="30" Margin="2"/>
+        <TextBox Grid.Column="1" Grid.Row="7" Name="Postcode" Width="200" MaxLength="9" Margin="2"/>
+        <TextBox Grid.Column="1" Grid.Row="8" Name="Notes" Width="200" MaxLength="255" Margin="2"/>
         <TextBox Grid.Column="3" Grid.Row="1" Name="HomePhone" Width="200" MaxLength="20" Margin="2" />
         <TextBox Grid.Column="3" Grid.Row="2" Name="MobilePhone" Width="200" MaxLength="20" Margin="2"/>
         <TextBox Grid.Column="3" Grid.Row="3" Name="WorkPhone" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="3" Grid.Row="4" Name="Email" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="3" Grid.Row="5" Name="Club" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="3" Grid.Row="6" Name="Membership" Width="200" MaxLength="20" Margin="2"/>
+        <TextBox Grid.Column="3" Grid.Row="4" Name="Email" Width="200" MaxLength="45" Margin="2"/>
+        <TextBox Grid.Column="3" Grid.Row="5" Name="Club" Width="200" MaxLength="10" Margin="2"/>
+        <TextBox Grid.Column="3" Grid.Row="6" Name="Membership" Width="200" MaxLength="6" Margin="2"/>
         <CheckBox Grid.Column="3" Grid.Row="7" Margin="2" VerticalAlignment="Center" Name="Paid"/>
         <ListBox Grid.Column="3" Grid.Row="8" Margin="2" Name="Crewing" Height="90">
             <ListBox.ItemTemplate>
