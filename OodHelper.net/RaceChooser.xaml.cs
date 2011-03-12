@@ -61,8 +61,8 @@ namespace OodHelper
 
             foreach (DataRowView vr in CalGrid.Items)
             {
-                DataRow r = vr.Row;
-                if (((DateTime)r["start_date"]).Date == lr)
+                DateTime? r = vr.Row["start_date"] as DateTime?;
+                if (r.HasValue && r.Value.Date == lr)
                 {
                     CalGrid.ScrollIntoView(vr);
                     CalGrid.SelectedItem = vr;
