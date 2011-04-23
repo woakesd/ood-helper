@@ -23,32 +23,35 @@ namespace OodHelper.Maintain
     /// </summary>
     public partial class BoatEdit : Window
     {
-        public int Bid { get { return dc.Bid; } }
+        public int Bid { get { return dc.Bid.HasValue ? dc.Bid.Value : 0; } }
 
         private class Data: NotifyPropertyChanged
         {
-            private int bid;
-            public int Bid
+            public Data(Hashtable v)
             {
-                get { return bid; }
-                set { bid = value; }
+                Values = v;
             }
 
-            private int? id;
+            public int? Bid
+            {
+                get { return Values["bid"] as int?; }
+                set { Values["bid"] = value; }
+            }
+
             public int? Id
             {
-                get { return id; }
-                set { id = value; }
+                get { return Values["id"] as int?; }
+                set { Values["id"] = value; }
             }
 
-            private string boatname = string.Empty;
+            //private string boatname = string.Empty;
             public string BoatName
             {
                 set
                 {
                     if (value != string.Empty && value != null)
                     {
-                        boatname = value;
+                        Values["boatname"] = value;
                         OnPropertyChanged("BoatName");
                     }
                     else
@@ -56,27 +59,28 @@ namespace OodHelper.Maintain
                 }
                 get
                 {
-                    return boatname;
+                    return Values["boatname"] as string;
                 }
             }
         }
 
-        private Data dc = new Data();
+        private Data dc;
 
         public BoatEdit(int b)
         {
-            dc.Bid = b;
             InitializeComponent();
-            if (dc.Bid != 0)
+            if (b != 0)
             {
-                Db get = new Db("SELECT id, boatname, boatclass, sailno, dinghy, " +
+                Db get = new Db("SELECT bid, id, boatname, boatclass, sailno, dinghy, " +
                     "hulltype, open_handicap, handicap_status, " +
                     "rolling_handicap, small_cat_handicap_rating, engine_propeller, keel, deviations, boatmemo " +
                     "FROM boats " +
                     "WHERE bid = @bid");
                 Hashtable p = new Hashtable();
-                p["bid"] = dc.Bid;
+                p["bid"] = b;
                 Hashtable data = get.GetHashtable(p);
+
+                dc = new Data(data);
 
                 if (data["id"] != DBNull.Value)
                 {
@@ -143,6 +147,7 @@ namespace OodHelper.Maintain
             }
             else
             {
+                dc = new Data(new Hashtable());
             }
             DataContext = dc;
         }
@@ -320,7 +325,7 @@ namespace OodHelper.Maintain
             p["boatmemo"] = notes.Text;
             p["bid"] = dc.Bid;
             Db save;
-            if (dc.Bid == 0)
+            if (!dc.Bid.HasValue)
             {
                 save = new Db("INSERT INTO boats " +
                         "(id, boatname, boatclass, sailno, dinghy, hulltype, open_handicap, " +
