@@ -130,6 +130,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Maintain\FamilyMember.xaml.cs">
+      <DependentUpon>FamilyMember.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Maintain\SelectCrewBoats.xaml.cs">
       <DependentUpon>SelectCrewBoats.xaml</DependentUpon>
     </Compile>
@@ -255,6 +258,10 @@
     <Compile Include="Working.xaml.cs">
       <DependentUpon>Working.xaml</DependentUpon>
     </Compile>
+    <Page Include="Maintain\FamilyMember.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Maintain\SelectCrewBoats.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -343,10 +350,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="FamilyMember.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Maintain\People.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -408,9 +411,6 @@
     </Compile>
     <Compile Include="Maintain\Boats.xaml.cs">
       <DependentUpon>Boats.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="FamilyMember.xaml.cs">
-      <DependentUpon>FamilyMember.xaml</DependentUpon>
     </Compile>
     <Compile Include="Maintain\People.xaml.cs">
       <DependentUpon>People.xaml</DependentUpon>
