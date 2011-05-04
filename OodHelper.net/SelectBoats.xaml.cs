@@ -296,13 +296,13 @@ namespace OodHelper
                             {
                                 AddBoat((SelectedBoats)boatClasses["Division 1"], rv);
                             }
-                            else if (boatClasses.ContainsKey("Division 1a") && ohp <= 880)
+                            else if (boatClasses.ContainsKey("Division 1A") && ohp <= 880)
                             {
-                                AddBoat((SelectedBoats)boatClasses["Division 1a"], rv);
+                                AddBoat((SelectedBoats)boatClasses["Division 1A"], rv);
                             }
-                            else if (boatClasses.ContainsKey("Division 1b") && ohp > 880 && ohp <= 974)
+                            else if (boatClasses.ContainsKey("Division 1B") && ohp > 880 && ohp <= 974)
                             {
-                                AddBoat((SelectedBoats)boatClasses["Division 1b"], rv);
+                                AddBoat((SelectedBoats)boatClasses["Division 1B"], rv);
                             }
                             else if (boatClasses.ContainsKey("S Yacht") && ohp > 974)
                             {
