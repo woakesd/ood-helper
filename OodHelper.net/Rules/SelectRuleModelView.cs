@@ -68,7 +68,7 @@ namespace OodHelper.Rules
         public bool HasChildren { get { return (_children.Count > 0); } }
         public bool HasNoChildren { get { return (_children.Count == 0); } }
 
-        public Apply Application
+        public Apply? Application
         {
             get
             {

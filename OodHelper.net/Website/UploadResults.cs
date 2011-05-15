@@ -189,10 +189,13 @@ namespace OodHelper.Website
                         AND (finish_date IS NOT NULL OR finish_code IS NOT NULL)");
             d = c.GetData(null);
 
-            BuildInsertData(d, msql);
+            if (d.Rows.Count > 0)
+            {
+                BuildInsertData(d, msql);
 
-            mcom.CommandText = msql.ToString();
-            mcom.ExecuteNonQuery();
+                mcom.CommandText = msql.ToString();
+                mcom.ExecuteNonQuery();
+            }
 
             mcom.CommandText = "ALTER TABLE `races_new` ENABLE KEYS";
             mcom.ExecuteNonQuery();

@@ -27,7 +27,8 @@ namespace OodHelper.Rules
         {
         }
 
-        public BoatSelectRule(Guid? id) : this()
+        public BoatSelectRule(Guid? id)
+            : this()
         {
             Db c = new Db(@"SELECT [name], [application]
                 FROM [select_rules]
@@ -36,8 +37,25 @@ namespace OodHelper.Rules
             p["id"] = id;
             Hashtable d = c.GetHashtable(p);
             Name = d["name"] as string;
-            Application = (Apply)d["application"];
+            Rule = RuleType.Compound;
+            Application = (d["application"] != null) ? (Apply?)System.Enum.GetValues(typeof(Apply)).GetValue((int)d["application"]) : null;
             Id = id;
+            AddChildren(this);
+        }
+
+        public BoatSelectRule(string name)
+            : this()
+        {
+            Db c = new Db(@"SELECT [id], [application]
+                FROM [select_rules]
+                WHERE [name] = @name");
+            Hashtable p = new Hashtable();
+            p["name"] = name;
+            Hashtable d = c.GetHashtable(p);
+            Id = d["id"] as Guid?;
+            Rule = RuleType.Compound;
+            Application = (d["application"] != null) ? (Apply?)System.Enum.GetValues(typeof(Apply)).GetValue((int)d["application"]) : null;
+            Name = name;
             AddChildren(this);
         }
 
@@ -78,6 +96,7 @@ namespace OodHelper.Rules
                 }
                 else
                 {
+                    child.Rule = RuleType.Compound;
                     child.Application = (Apply)System.Enum.GetValues(typeof(Apply)).GetValue((int)r["application"]);
                     AddChildren(child);
                 }
@@ -85,10 +104,97 @@ namespace OodHelper.Rules
             }
         }
 
+        public bool AppliesToBoat(DataRowView boat)
+        {
+            switch (Rule)
+            {
+                case RuleType.Compound:
+                    switch (Application)
+                    {
+                        case Apply.All:
+                            foreach (BoatSelectRule c in Children)
+                            {
+                                if (!c.AppliesToBoat(boat))
+                                    return false;
+                            }
+                            return true;
+                            //break;
+                        case Apply.Any:
+                            foreach (BoatSelectRule c in Children)
+                            {
+                                if (c.AppliesToBoat(boat))
+                                    return true;
+                            }
+                            return false;
+                            //break;
+                    }
+                    break;
+                case RuleType.Simple:
+                    object val = boat[Field.Column];
+                    if (val != DBNull.Value)
+                    {
+                        switch (Condition)
+                        {
+                            case ConditionType.Greater_Than:
+                                if ((int)val > Bound1)
+                                    return true;
+                                break;
+                            case ConditionType.Greater_Than_Or_Equal_To:
+                                if ((int)val >= Bound1)
+                                    return true;
+                                break;
+                            case ConditionType.Between:
+                                if ((int)val >= Bound1 && (int)val <= Bound2)
+                                    return true;
+                                break;
+                            case ConditionType.Less_Than:
+                                if ((int)val < Bound1)
+                                    return true;
+                                break;
+                            case ConditionType.Less_Than_Or_Equal_To:
+                                if ((int)val <= Bound1)
+                                    return true;
+                                break;
+                            case ConditionType.Contains:
+                                if (((string)val).ToLower().Contains(StringValue.ToLower()))
+                                    return true;
+                                break;
+                            case ConditionType.Ends_With:
+                                if (((string)val).ToLower().EndsWith(StringValue.ToLower()))
+                                    return true;
+                                break;
+                            case ConditionType.Start_With:
+                                if (((string)val).ToLower().StartsWith(StringValue.ToLower()))
+                                    return true;
+                                break;
+                            case ConditionType.Equals:
+                                if (((string)val).ToLower().Equals(StringValue.ToLower()))
+                                    return true;
+                                break;
+                            case ConditionType.Not_Equal:
+                                if (!((string)val).ToLower().Equals(StringValue.ToLower()))
+                                    return true;
+                                break;
+                            case ConditionType.False:
+                                if (!(bool)val)
+                                    return true;
+                                break;
+                            case ConditionType.True:
+                                if ((bool)val)
+                                    return true;
+                                break;
+                        }
+                    }
+                    break;
+            }
+            return false;
+        }
+
         public static List<Field> Fields = new List<Field>() { 
             new Rules.Field("Boat class", "boatclass", typeof(string)),
             new Rules.Field("Dinghy", "dinghy", typeof(bool)),
-            new Rules.Field("Open handicap", "open_handicap", typeof(int))
+            new Rules.Field("Open handicap", "open_handicap", typeof(int)),
+            new Rules.Field("Hull Type", "hulltype", typeof(string))
         };
 
         public BoatSelectRule Parent { get; set; }
@@ -119,7 +225,7 @@ namespace OodHelper.Rules
         //
         // For a compound rule only these will be used.
         //
-        public Apply Application { get; set; }
+        public Apply? Application { get; set; }
         private List<BoatSelectRule> _children = new List<BoatSelectRule>();
         public ReadOnlyCollection<BoatSelectRule> Children
         {

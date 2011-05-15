@@ -146,9 +146,9 @@ namespace OodHelper.Website
                             if (dr[j] == DBNull.Value)
                                 msql.Append("NULL");
                             else if ((bool)dr[j])
-                                msql.Append("true");
+                                msql.Append("1");
                             else
-                                msql.Append("false");
+                                msql.Append("0");
                             break;
                     }
                     if (j < d.Columns.Count - 1) msql.Append(",");

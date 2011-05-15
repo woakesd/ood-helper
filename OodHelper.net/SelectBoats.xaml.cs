@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using OodHelper.Maintain;
+using OodHelper.Rules;
 
 namespace OodHelper
 {
@@ -26,6 +27,7 @@ namespace OodHelper
         private SelectedBoats[] sbt;
         private Hashtable boatClasses;
         private ResultsEditor[] reds;
+        private BoatSelectRule[] rules;
 
         private StringBuilder BoatsSql;
 
@@ -38,6 +40,7 @@ namespace OodHelper
 
             rdef = new RowDefinition[reds.Length];
             sbt = new SelectedBoats[reds.Length];
+            rules = new BoatSelectRule[reds.Length];
 
             for (int i = 0; i < reds.Length; i++)
             {
@@ -82,6 +85,8 @@ namespace OodHelper
                 sbt[i].Boats.ItemsSource = bts.DefaultView;
                 sbt[i].Boats.IsReadOnly = true;
                 sbt[i].Boats.ContextMenu = new ContextMenu();
+
+                rules[i] = new BoatSelectRule(reds[i].RaceClass);
             }
 
             for (int i = 0; i < sbt.Length; i++)
@@ -256,10 +261,23 @@ namespace OodHelper
                     }
                     if (!alreadySelected)
                     {
+                        for (int i = 0; i < rules.Length; i++)
+                        {
+                            if (rules[i].AppliesToBoat(rv))
+                            {
+                                AddBoat((SelectedBoats)boatClasses[rules[i].Name], rv);
+                                break;
+                            }
+                        }
+
+                        /*
                         bool dngy = (bool)rv["dinghy"];
                         int ohp = (int)rv["open_handicap"];
                         string h = string.Empty;
                         if (rv["hulltype"] != DBNull.Value) h = (string)rv["hulltype"];
+
+
+
                         if (dngy)
                         {
                             if (boatClasses.ContainsKey("C Dinghy") && h == "C")
@@ -331,7 +349,7 @@ namespace OodHelper
                                     break;
                                 }
                             }
-                        }
+                        }*/
                     }
                 }
             }
