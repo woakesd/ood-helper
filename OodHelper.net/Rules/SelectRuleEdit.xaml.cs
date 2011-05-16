@@ -124,12 +124,51 @@ namespace OodHelper.Rules
             }
         }
 
+        private void RecurseControls(TreeViewItem tvi, SelectRuleModelView mv)
+        {
+            ContentPresenter cp = FindVisualChild<ContentPresenter>(tvi);
+            TextBox Bound1 = Rules.ItemTemplate.FindName("Bound1", cp) as TextBox;
+
+            BindingExpression be = Bound1.GetBindingExpression(TextBox.TextProperty);
+            be.UpdateSource();
+
+            foreach (SelectRuleModelView ch in mv.Children)
+            {
+                TreeViewItem childtvi = (TreeViewItem)tvi.ItemContainerGenerator.ContainerFromItem(ch);
+                RecurseControls(childtvi, ch);
+            }
+        }
+
         private void Add_Click(object sender, RoutedEventArgs e)
         {
+            foreach (SelectRuleModelView mv in Rules.Items)
+            {
+                TreeViewItem tvi = (TreeViewItem)Rules.ItemContainerGenerator.ContainerFromItem(mv);
+                RecurseControls(tvi, mv);
+            }
+
             Root.Name = RuleName.Text;
             Root.Save();
             DialogResult = true;
             Close();
+        }
+
+        private childItem FindVisualChild<childItem>(DependencyObject obj)
+            where childItem : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is childItem)
+                    return (childItem)child;
+                else
+                {
+                    childItem childOfChild = FindVisualChild<childItem>(child);
+                    if (childOfChild != null)
+                        return childOfChild;
+                }
+            }
+            return null;
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)

@@ -65,10 +65,10 @@
                             <ComboBox Margin="2" ItemsSource="{Binding Path=Conditions,Converter={StaticResource ResourceKey=ConditionNameListConverter}}" 
                                       SelectedValue="{Binding Path=Condition,Converter={StaticResource ResourceKey=ConditionNameConverter}}"
                                       Loaded="ComboBox_Loaded"/>
-                            <TextBox Margin="2" MinWidth="120" Text="{Binding Path=StringValue}" Visibility="{Binding Path=StringValueVisible}"/>
-                            <TextBox Margin="2" MinWidth="60" Text="{Binding Path=Bound1}" Visibility="{Binding Path=Bound1Visible}"/>
+                            <TextBox Margin="2" MinWidth="120" Name="StringValue" Text="{Binding Path=StringValue}" Visibility="{Binding Path=StringValueVisible}"/>
+                            <TextBox Margin="2" MinWidth="60" Name="Bound1" Text="{Binding Path=Bound1}" Visibility="{Binding Path=Bound1Visible}"/>
                             <TextBlock Margin="2"  VerticalAlignment="Center" Text=" and " Visibility="{Binding Path=Bound2Visible}"/>
-                            <TextBox Margin="2" MinWidth="60" Text="{Binding Path=Bound2}" Visibility="{Binding Path=Bound2Visible}"/>
+                            <TextBox Margin="2" MinWidth="60" Name="Bound2" Text="{Binding Path=Bound2}" Visibility="{Binding Path=Bound2Visible}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Visibility="{Binding Path=ButtonVisibility}">
                             <Button Margin="2" Name="AddSibling" Click="AddSibling_Click">+</Button>

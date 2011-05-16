@@ -118,7 +118,6 @@ namespace OodHelper.Rules
                                     return false;
                             }
                             return true;
-                            //break;
                         case Apply.Any:
                             foreach (BoatSelectRule c in Children)
                             {
@@ -126,7 +125,6 @@ namespace OodHelper.Rules
                                     return true;
                             }
                             return false;
-                            //break;
                     }
                     break;
                 case RuleType.Simple:
