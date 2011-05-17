@@ -17,6 +17,8 @@ using System.Windows.Shapes;
 using OodHelper.Maintain;
 using OodHelper.Website;
 using OodHelper.Sun;
+using System.Printing;
+using System.Windows.Xps;
 
 namespace OodHelper
 {
@@ -242,6 +244,133 @@ namespace OodHelper
                 {
                     DownloadResults dtask = new DownloadResults();
                 }
+            }
+        }
+
+        private void PrintMembershipCards_Click(object sender, RoutedEventArgs e)
+        {
+            PrintDialog pd = new PrintDialog();
+            //pd.PrintTicket.PageMediaSize = new System.Printing.PageMediaSize(1718.4, 1228.8);
+            //pd.PrintTicket.PageOrientation = PageOrientation.Landscape;
+
+            if (pd.ShowDialog() == true)
+            {
+                Db d = new Db(@"SELECT id, main_id, firstname, surname, firstname as order2, surname as order1, member
+                    FROM people
+                    WHERE cp = 1
+                    AND main_id = id
+                    UNION
+                    SELECT p2.id, p2.main_id, p2.firstname, p2.surname, p1.firstname as order2, p1.surname as order1, p2.member
+                    FROM people p1 INNER JOIN people p2 ON p1.id = p2.main_id
+                    WHERE p1.cp = 1
+                    AND p2.main_id <> p2.id
+                    ORDER BY order1, order2");
+                DataTable data = d.GetData(null);
+
+                Working w = new Working();
+                int pages = (int)Math.Floor(data.Rows.Count / 10.0);
+                if (data.Rows.Count > pages * 10) pages++;
+                w.SetRange(0, pages + 1);
+                w.Show();
+                Size ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
+                XpsDocumentWriter write = PrintQueue.CreateXpsDocumentWriter(pd.PrintQueue);
+                VisualsToXpsDocument collator = write.CreateVisualsCollator() as VisualsToXpsDocument;
+
+                System.Threading.Tasks.Task t = System.Threading.Tasks.Task.Factory.StartNew(() =>
+                {
+                    Dispatcher.Invoke(new Action(delegate()
+                    {
+                        collator.BeginBatchWrite();
+                    }));
+
+                    w.SetProgress("Printing ", 0);
+                    System.Threading.Thread.Sleep(50);
+
+                    Membership.CardPage cp = null;
+                    Dispatcher.Invoke(new Action(delegate()
+                    {
+                        cp = new Membership.CardPage();
+                    }));
+
+                    int grow = 0;
+                    int gcol = 0;
+                    int index = 0;
+
+                    for (index = 0; index < data.Rows.Count; index++)
+                    {
+                        grow = index % 5;
+                        gcol = (index % 10 - grow) / 5;
+
+                        if (index > 0 && grow == 0 && gcol == 0)
+                        {
+                            w.SetProgress("Printing ", index / 10);
+                            System.Threading.Thread.Sleep(50);
+                            Dispatcher.Invoke(new Action(delegate()
+                            {
+                                Size pageSize = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
+                                cp.Measure(pageSize);
+                                cp.Arrange(new Rect(new Point(0, 0), pageSize));
+                                cp.UpdateLayout();
+                                collator.Write(cp, pd.PrintTicket);
+                                cp = new Membership.CardPage();
+                            }));
+                        }
+
+                        Dispatcher.Invoke(new Action(delegate()
+                        {
+                            DataRow dr = data.Rows[index];
+                            Membership.Card c = new Membership.Card(string.Format("{0} {1}", new object[] { dr["firstname"], dr["surname"] }), (int)dr["id"], (int)dr["main_id"], dr["member"] as string);
+                            Size cardSize = new Size(324, 204);
+                            c.Measure(cardSize);
+                            c.Arrange(new Rect(new Point(0, 0), cardSize));
+                            c.UpdateLayout();
+                            cp.Cards.Children.Add(c);
+                            Grid.SetColumn(c, gcol);
+                            Grid.SetRow(c, grow);
+                        }));
+                    }
+
+                    if (index > 0)
+                    {
+                        Dispatcher.Invoke(new Action(delegate()
+                        {
+                            Size pageSize = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
+                            cp.Measure(pageSize);
+                            cp.Arrange(new Rect(new Point(0, 0), pageSize));
+                            cp.UpdateLayout();
+                            collator.Write(cp, pd.PrintTicket);
+                        }));
+                    }
+
+                    Dispatcher.Invoke(new Action(delegate()
+                    {
+                        cp = new Membership.CardPage();
+                        for (grow = 0; grow < 5; grow++)
+                        {
+                            for (gcol = 0; gcol < 2; gcol++)
+                            {
+                                Membership.Card c = new Membership.Card();
+                                Size cardSize = new Size(324, 204);
+                                c.Measure(cardSize);
+                                c.Arrange(new Rect(new Point(0, 0), cardSize));
+                                c.UpdateLayout();
+                                cp.Cards.Children.Add(c);
+                                Grid.SetColumn(c, gcol);
+                                Grid.SetRow(c, grow);
+                            }
+                        }
+
+                        Size pageSize = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
+                        cp.Measure(pageSize);
+                        cp.Arrange(new Rect(new Point(0, 0), pageSize));
+                        cp.UpdateLayout();
+                        collator.Write(cp, pd.PrintTicket);
+                        collator.Write(cp, pd.PrintTicket);
+                        collator.EndBatchWrite();
+                    }));
+
+                    w.CloseWindow();
+                });
             }
         }
     }

@@ -62,6 +62,8 @@
                         <Image Source="/OodHelper.net;component/Images/Database-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="Print Membership Cards" Name="PrintMembershipCards" Click="PrintMembershipCards_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
+                </MenuItem>
                 <!--<MenuItem Header="Import _PY" Name="importPY" Click="importPY_Click"  Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"/>-->
                 <MenuItem Header="Logout" Name="Logout" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" Click="Logout_Click">
                     <MenuItem.Icon>

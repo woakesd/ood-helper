@@ -136,6 +136,12 @@
     <Compile Include="Maintain\SelectCrewBoats.xaml.cs">
       <DependentUpon>SelectCrewBoats.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Membership\Card.xaml.cs">
+      <DependentUpon>Card.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Membership\CardPage.xaml.cs">
+      <DependentUpon>CardPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Website\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
@@ -265,6 +271,14 @@
     <Page Include="Maintain\SelectCrewBoats.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Membership\Card.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Membership\CardPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Website\About.xaml">
       <SubType>Designer</SubType>
@@ -605,6 +619,12 @@
   <ItemGroup>
     <Resource Include="Images\Applications.png" />
     <Resource Include="Images\Document.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\MemberCardBack.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\peyclogo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
