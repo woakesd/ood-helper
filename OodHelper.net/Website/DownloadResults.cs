@@ -28,7 +28,7 @@ namespace OodHelper.Website
 
         protected override void DoTheWork(object sender, DoWorkEventArgs e)
         {
-            const int Steps = 7;
+            const int Steps = 8;
             BackgroundWorker p = sender as BackgroundWorker;
 
             p.ReportProgress(0, "Loading Boats");
@@ -207,6 +207,27 @@ namespace OodHelper.Website
             myadp.Fill(mtable);
 
             scmd.CommandText = "DELETE FROM calendar_series_join";
+            scmd.ExecuteNonQuery();
+
+            CopyData(mtable, ins);
+
+            //
+            // Select Rules
+            //
+            if (p.CancellationPending)
+            {
+                CancelDownload(e);
+                return;
+            }
+
+            p.ReportProgress(700 / Steps, "Loading Select Rules");
+            ins.CommandText = "INSERT INTO [select_rules] ([id], [name], [parent], [application], [field], [condition], [string_value], [number_bound1], [number_bound2]) " +
+                "VALUES (@id, @name, @parent, @application, @field, @condition, @string_value, @number_bound1, @number_bound2)";
+            myadp = new MySqlDataAdapter("SELECT * FROM select_rules", mcon);
+            mtable = new DataTable();
+            myadp.Fill(mtable);
+
+            scmd.CommandText = "DELETE FROM select_rules";
             scmd.ExecuteNonQuery();
 
             CopyData(mtable, ins);

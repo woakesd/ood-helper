@@ -124,13 +124,22 @@ namespace OodHelper.Rules
             }
         }
 
+        private void TextBoxUpdateSource(string name, ContentPresenter cp)
+        {
+            TextBox tb = Rules.ItemTemplate.FindName(name, cp) as TextBox;
+            if (tb != null)
+            {
+                BindingExpression be = tb.GetBindingExpression(TextBox.TextProperty);
+                if (be != null) be.UpdateSource();
+            }
+        }
+
         private void RecurseControls(TreeViewItem tvi, SelectRuleModelView mv)
         {
             ContentPresenter cp = FindVisualChild<ContentPresenter>(tvi);
-            TextBox Bound1 = Rules.ItemTemplate.FindName("Bound1", cp) as TextBox;
-
-            BindingExpression be = Bound1.GetBindingExpression(TextBox.TextProperty);
-            be.UpdateSource();
+            TextBoxUpdateSource("Bound1", cp);
+            TextBoxUpdateSource("Bound2", cp);
+            TextBoxUpdateSource("StringValue", cp);
 
             foreach (SelectRuleModelView ch in mv.Children)
             {

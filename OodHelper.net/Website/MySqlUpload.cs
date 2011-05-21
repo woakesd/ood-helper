@@ -150,6 +150,18 @@ namespace OodHelper.Website
                             else
                                 msql.Append("0");
                             break;
+                        case "System.Decimal":
+                            if (dr[j] == DBNull.Value)
+                                msql.Append("NULL");
+                            else
+                                msql.AppendFormat("{0}", dr[j]);
+                            break;
+                        case "System.Guid":
+                            if (dr[j] == DBNull.Value)
+                                msql.Append("NULL");
+                            else
+                                msql.AppendFormat("'{{{0}}}'", dr[j]);
+                            break;
                     }
                     if (j < d.Columns.Count - 1) msql.Append(",");
                 }

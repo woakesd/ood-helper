@@ -21,7 +21,7 @@ namespace OodHelper.Rules
     }
     public enum EventType { MembersOnly, Open }
 
-    class BoatSelectRule
+    public class BoatSelectRule
     {
         public BoatSelectRule()
         {

@@ -5,8 +5,7 @@ using System.Text;
 
 namespace OodHelper.Rules
 {
-
-    class Field
+    public class Field
     {
         public string Name { get; set; }
         public string Column { get; set; }

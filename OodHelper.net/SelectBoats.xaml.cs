@@ -259,97 +259,37 @@ namespace OodHelper
                             alreadySelected = true;
                         }
                     }
+                    
                     if (!alreadySelected)
                     {
+                        List<BoatSelectRule> choices = new List<BoatSelectRule>();
                         for (int i = 0; i < rules.Length; i++)
                         {
                             if (rules[i].AppliesToBoat(rv))
                             {
-                                AddBoat((SelectedBoats)boatClasses[rules[i].Name], rv);
-                                break;
+                                choices.Add(rules[i]);
                             }
                         }
-
-                        /*
-                        bool dngy = (bool)rv["dinghy"];
-                        int ohp = (int)rv["open_handicap"];
-                        string h = string.Empty;
-                        if (rv["hulltype"] != DBNull.Value) h = (string)rv["hulltype"];
-
-
-
-                        if (dngy)
+                        if (choices.Count == 1)
+                            AddBoat((SelectedBoats)boatClasses[choices[0].Name], rv);
+                        else if (choices.Count > 1)
                         {
-                            if (boatClasses.ContainsKey("C Dinghy") && h == "C")
+                            RuleSelector rs = new RuleSelector(choices);
+                            if (rs.ShowDialog().Value)
                             {
-                                AddBoat((SelectedBoats)boatClasses["C Dinghy"], rv);
-                            }
-                            else if (boatClasses.ContainsKey("Dinghy"))
-                            {
-                                AddBoat((SelectedBoats)boatClasses["Dinghy"], rv);
-                            }
-                            else if (boatClasses.ContainsKey("All"))
-                            {
-                                AddBoat((SelectedBoats)boatClasses["All"], rv);
-                            }
-                            else
-                            {
-                                //
-                                // Otherwise just add to the first class
-                                //
-                                foreach (SelectedBoats sb in boatClasses.Values)
-                                {
-                                    AddBoat(sb, rv);
-                                    break;
-                                }
+                                BoatSelectRule rc = rs.RuleChoice.SelectedItem as BoatSelectRule;
+                                if (rc != null) AddBoat((SelectedBoats)boatClasses[rc.Name], rv);
                             }
                         }
                         else
                         {
-                            if (boatClasses.ContainsKey("F Yacht") && ohp <= 974)
+                            RuleSelector rs = new RuleSelector(new List<BoatSelectRule>(rules));
+                            if (rs.ShowDialog().Value)
                             {
-                                AddBoat((SelectedBoats)boatClasses["F Yacht"], rv);
+                                BoatSelectRule rc = rs.RuleChoice.SelectedItem as BoatSelectRule;
+                                if (rc != null) AddBoat((SelectedBoats)boatClasses[rc.Name], rv);
                             }
-                            else if (boatClasses.ContainsKey("Division 1") && ohp <= 974)
-                            {
-                                AddBoat((SelectedBoats)boatClasses["Division 1"], rv);
-                            }
-                            else if (boatClasses.ContainsKey("Division 1A") && ohp <= 880)
-                            {
-                                AddBoat((SelectedBoats)boatClasses["Division 1A"], rv);
-                            }
-                            else if (boatClasses.ContainsKey("Division 1B") && ohp > 880 && ohp <= 974)
-                            {
-                                AddBoat((SelectedBoats)boatClasses["Division 1B"], rv);
-                            }
-                            else if (boatClasses.ContainsKey("S Yacht") && ohp > 974)
-                            {
-                                AddBoat((SelectedBoats)boatClasses["S Yacht"], rv);
-                            }
-                            else if (boatClasses.ContainsKey("Division 2") && ohp > 974)
-                            {
-                                AddBoat((SelectedBoats)boatClasses["Division 2"], rv);
-                            }
-                            else if (boatClasses.ContainsKey("Yacht"))
-                            {
-                                AddBoat((SelectedBoats)boatClasses["Yacht"], rv);
-                            }
-                            else if (boatClasses.ContainsKey("All"))
-                            {
-                                AddBoat((SelectedBoats)boatClasses["All"], rv);
-                            }
-                            else
-                            {
-                                //
-                                // Otherwise just add to the first class
-                                //
-                                foreach (SelectedBoats sb in boatClasses.Values)
-                                {
-                                    AddBoat(sb, rv);
-                                    break;
-                                }
-                            }
-                        }*/
+                        }
                     }
                 }
             }

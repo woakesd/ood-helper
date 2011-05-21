@@ -30,7 +30,7 @@ namespace OodHelper.Website
         {
             BackgroundWorker w = sender as BackgroundWorker;
 
-            const int Steps = 7;
+            const int Steps = 8;
 
             if (w.CancellationPending)
             {
@@ -256,10 +256,31 @@ namespace OodHelper.Website
             mcom.CommandText = "ALTER TABLE `calendar_series_join` ENABLE KEYS";
             mcom.ExecuteNonQuery();
 
-            DateTime updateTime = DateTime.Now;
+            //
+            // select rules
+            //
+
+            w.ReportProgress(700 / Steps, "Uploading select rules");
+
+            mcom.CommandText = "DELETE FROM `select_rules`";
+            mcom.ExecuteNonQuery();
+
+            msql.Clear();
+            msql.Append(@"INSERT INTO `select_rules` (`id`,`name`,`parent`,`application`,`field`,`condition`,`string_value`,`number_bound1`,`number_bound2`) VALUES ");
+
+            c = new Db(@"SELECT [id], [name], [parent], [application], [field], [condition], [string_value]
+, [number_bound1], [number_bound2] FROM select_rules");
+            d = c.GetData(null);
+
+            BuildInsertData(d, msql);
+
+            mcom.CommandText = msql.ToString();
+            mcom.ExecuteNonQuery();
+
             //
             // Recreate update time from itself. This will truncate the time to the second.
             //
+            DateTime updateTime = DateTime.Now;
             updateTime = new DateTime(updateTime.Year, updateTime.Month, updateTime.Day, 
                 updateTime.Hour, updateTime.Minute, updateTime.Second);
 
