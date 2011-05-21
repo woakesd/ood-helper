@@ -9,6 +9,7 @@ using System.ComponentModel;
 
 namespace OodHelper.Website
 {
+    [Svn("$Id$")]
     class MySqlDownload
     {
         public MySqlDownload()

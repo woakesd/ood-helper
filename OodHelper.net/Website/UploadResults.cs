@@ -10,6 +10,7 @@ using System.ComponentModel;
 
 namespace OodHelper.Website
 {
+    [Svn("$Id$")]
     class UploadResults : MySqlUpload
     {
         public UploadResults() : base()

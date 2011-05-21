@@ -12,6 +12,7 @@ using OodHelper.LoadTide;
 
 namespace OodHelper.Website
 {
+    [Svn("$Id$")]
     class UploadTide : MySqlUpload
     {
         DataTable Tide { get; set; }
