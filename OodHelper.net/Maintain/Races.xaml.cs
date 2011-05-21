@@ -18,7 +18,7 @@ namespace OodHelper.Maintain
     /// <summary>
     /// Interaction logic for Races.xaml
     /// </summary>
-    [Svn("$Id: Races.xaml.cs 182 2010-09-21 21:12:06Z woakesdavid $")]
+    [Svn("$Id$")]
     public partial class Races : Window
     {
         int redit = 0;

@@ -21,6 +21,7 @@ namespace OodHelper.Maintain
     /// <summary>
     /// Interaction logic for Boat.xaml
     /// </summary>
+    [Svn("$Id$")]
     public partial class BoatEdit : Window
     {
         public int Bid { get { return dc.Bid.HasValue ? dc.Bid.Value : 0; } }

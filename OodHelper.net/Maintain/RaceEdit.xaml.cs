@@ -22,7 +22,7 @@ namespace OodHelper.Maintain
     /// <summary>
     /// Interaction logic for Boat.xaml
     /// </summary>
-    [Svn("$Id: Race.xaml.cs 151 2010-08-27 19:59:08Z woakesdavid $")]
+    [Svn("$Id$")]
     public partial class RaceEdit : Window
     {
         private int rid;

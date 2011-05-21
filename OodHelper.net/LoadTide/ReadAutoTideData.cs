@@ -7,6 +7,7 @@ using System.Text;
 
 namespace OodHelper.LoadTide
 {
+    [Svn("$Id$")]
     class ReadAutoTideData
     {
         public DataTable Data;

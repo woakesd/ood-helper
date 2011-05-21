@@ -18,7 +18,7 @@ namespace OodHelper.Maintain
     /// <summary>
     /// Interaction logic for Boats.xaml
     /// </summary>
-    [Svn("$Id: Boats.xaml.cs 149 2010-08-24 22:09:28Z woakesdavid $")]
+    [Svn("$Id$")]
     public partial class Boats : Window
     {
         public Boats()

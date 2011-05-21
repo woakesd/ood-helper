@@ -19,7 +19,7 @@ namespace OodHelper.Maintain
     /// <summary>
     /// Interaction logic for Boats.xaml
     /// </summary>
-    [Svn("$Id: People.xaml.cs 182 2010-09-21 21:12:06Z woakesdavid $")]
+    [Svn("$Id$")]
     public partial class People : Window, INotifyPropertyChanged
     {
         public People()

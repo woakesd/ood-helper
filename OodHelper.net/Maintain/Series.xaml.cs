@@ -18,6 +18,7 @@ namespace OodHelper.Maintain
     /// <summary>
     /// Interaction logic for Series.xaml
     /// </summary>
+    [Svn("$Id$")]
     public partial class Series : Window
     {
         public Series()

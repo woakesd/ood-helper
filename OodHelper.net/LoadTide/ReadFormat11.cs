@@ -7,6 +7,7 @@ using System.Text;
 
 namespace OodHelper.LoadTide
 {
+    [Svn("$Id$")]
     class ReadFormat11: NotifyPropertyChanged
     {
         private DataTable _data;

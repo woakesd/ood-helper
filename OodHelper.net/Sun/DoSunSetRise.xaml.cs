@@ -21,6 +21,7 @@ namespace OodHelper.Sun
     /// <summary>
     /// Interaction logic for ReadData.xaml
     /// </summary>
+    [Svn("$Id$")]
     public partial class DoSunSetRise : Window
     {
         private class Data: NotifyPropertyChanged
