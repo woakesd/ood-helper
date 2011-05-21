@@ -7,6 +7,7 @@ using System.Text;
 
 namespace OodHelper
 {
+    [Svn("$Id$")]
     public class NotifyPropertyChanged : INotifyPropertyChanged
     {
         //private Hashtable _values;

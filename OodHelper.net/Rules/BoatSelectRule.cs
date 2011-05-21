@@ -21,6 +21,7 @@ namespace OodHelper.Rules
     }
     public enum EventType { MembersOnly, Open }
 
+    [Svn("$Id$")]
     public class BoatSelectRule
     {
         public BoatSelectRule()

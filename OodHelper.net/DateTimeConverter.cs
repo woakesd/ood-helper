@@ -3,6 +3,7 @@ using System.Windows.Data;
 
 namespace OodHelper
 {
+    [Svn("$Id$")]
     class MyDateTimeConverter : IValueConverter
     {
         DateTime? _date;

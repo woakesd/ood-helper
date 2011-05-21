@@ -5,6 +5,7 @@ using System.Text;
 
 namespace OodHelper.Rules
 {
+    [Svn("$Id$")]
     public class Field
     {
         public string Name { get; set; }

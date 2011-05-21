@@ -17,6 +17,7 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for Handicap.xaml
     /// </summary>
+    [Svn("$Id$")]
     public partial class Handicap : Window
     {
         public int Id { get; set; }

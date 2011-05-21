@@ -7,6 +7,7 @@ using System.Text;
 
 namespace OodHelper.Rules
 {
+    [Svn("$Id$")]
     class SelectRuleModelView : NotifyPropertyChanged
     {
         public SelectRuleModelView(BoatSelectRule rule)
