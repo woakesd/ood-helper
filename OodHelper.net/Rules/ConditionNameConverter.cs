@@ -5,7 +5,7 @@ using System.Windows.Data;
 
 namespace OodHelper.Rules
 {
-    [Svn("$Id: IntConverter.cs 113 2010-08-15 12:37:12Z woakesdavid $")]
+    [Svn("$Id$")]
     class ConditionNameConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

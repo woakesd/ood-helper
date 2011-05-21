@@ -20,7 +20,7 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for RaceEdit.xaml
     /// </summary>
-    [Svn("$Id: RaceEdit.xaml.cs 179 2010-09-20 08:14:24Z woakesdavid $")]
+    [Svn("$Id$")]
     public partial class ResultsEditor : UserControl, IPrintSelectItem
     {
         private Db rddb;
