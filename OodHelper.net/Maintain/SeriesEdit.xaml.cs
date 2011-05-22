@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
+using System.Data;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -69,7 +69,19 @@ namespace OodHelper.Maintain
                 Hashtable d = c.GetHashtable(p);
                 dc.Sname = d["sname"] as string;
                 dc.Discards = d["discards"] as string;
+                PopulateCalendar();
             }
+        }
+
+        private void PopulateCalendar()
+        {
+            Hashtable p = new Hashtable();
+            Db c = new Db("SELECT event, class as event_class, start_date " +
+                "FROM calendar INNER JOIN calendar_series_join ON calendar_series_join.rid = calendar.rid " +
+                "WHERE sid = @sid");
+            p["sid"] = dc.Sid;
+            DataTable d = c.GetData(p);
+            Calendar.ItemsSource = d.DefaultView;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -89,7 +101,7 @@ namespace OodHelper.Maintain
             }
 
             p["sname"] = dc.Sname.Trim();
-            p["discards"] = dc.Discards.Trim() == string.Empty ? null : dc.Discards;
+            p["discards"] = dc.Discards == null ? null : (dc.Discards.Trim() == string.Empty ? null : dc.Discards);
             if (dc.Sid == 0)
             {
                 c = new Db("INSERT INTO series (sname, discards) VALUES (@sname, @discards)");
@@ -103,6 +115,15 @@ namespace OodHelper.Maintain
             c.ExecuteNonQuery(p);
             DialogResult = true;
             Close();
+        }
+
+        private void EditRaces_Click(object sender, RoutedEventArgs e)
+        {
+            SeriesRaceSelect d = new SeriesRaceSelect(dc.Sid);
+            if (d.ShowDialog().Value)
+            {
+                PopulateCalendar();
+            }
         }
     }
 }

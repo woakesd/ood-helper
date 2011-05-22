@@ -14,24 +14,37 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="15*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="227*" />
         </Grid.RowDefinitions>
         <TextBlock Text="Name"/>
         <TextBlock Grid.Row="1" Text="Discard Profile"/>
         <TextBox Grid.Column="1" Text="{Binding Path=Sname,UpdateSourceTrigger=PropertyChanged}" Width="300"/>
         <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Path=Discards,UpdateSourceTrigger=PropertyChanged}" Width="300"/>
-        <!--<Grid Grid.Row="2" Grid.ColumnSpan="2">
+        <Button VerticalAlignment="Center" Grid.Row="2" Name="EditRaces" Click="EditRaces_Click">
+            <StackPanel>
+                <TextBlock Text="Edit"/>
+            </StackPanel>
+        </Button>
+        <Grid Grid.Row="2" Grid.Column="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <DataGrid Name="Calendar" AutoGenerateColumns="True" IsReadOnly="True"/>
-        </Grid>-->
+            <DataGrid Name="Calendar" MinHeight="120" IsReadOnly="True" AutoGenerateColumns="False" HorizontalAlignment="Stretch">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Event" Binding="{Binding event}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Class" Binding="{Binding event_class}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Date" Binding="{Binding Path=start_date,StringFormat={}{0:dd MMM yyyy HH:mm:ss}}"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
         <Grid Grid.Row="3" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

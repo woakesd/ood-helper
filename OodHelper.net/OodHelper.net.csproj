@@ -139,6 +139,9 @@
     <Compile Include="Maintain\SelectCrewBoats.xaml.cs">
       <DependentUpon>SelectCrewBoats.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Maintain\SeriesRaceSelect.xaml.cs">
+      <DependentUpon>SeriesRaceSelect.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Membership\Card.xaml.cs">
       <DependentUpon>Card.xaml</DependentUpon>
     </Compile>
@@ -278,6 +281,10 @@
     <Page Include="Maintain\SelectCrewBoats.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Maintain\SeriesRaceSelect.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Membership\Card.xaml">
       <SubType>Designer</SubType>
