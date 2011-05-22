@@ -53,7 +53,9 @@ namespace OodHelper.Maintain
                 MobilePhone.Text = data["mobile"].ToString();
                 WorkPhone.Text = data["worktel"].ToString();
                 Email.Text = data["email"].ToString();
-                Notes.Text = data["manmemo"].ToString();                
+                Notes.Text = data["manmemo"].ToString();
+
+                Crewing.ItemsSource = Person.BoatCrewFill(Id);
             }
             else
             {
@@ -124,6 +126,13 @@ namespace OodHelper.Maintain
             }
             this.DialogResult = true;
             this.Close();
+        }
+
+        private void Edit_Click(object sender, RoutedEventArgs e)
+        {
+            SelectCrewBoats d = new SelectCrewBoats(Id);
+            if (d.ShowDialog() == true)
+                Crewing.ItemsSource = Person.BoatCrewFill(Id);
         }
     }
 }

@@ -57,11 +57,11 @@ namespace OodHelper.Maintain
                 Notes.Text = data["manmemo"].ToString();
                 Paid.IsChecked = data["cp"] as bool?;
 
-                BoatCrewFill();
+                Crewing.ItemsSource = BoatCrewFill(Id);
             }
         }
 
-        private void BoatCrewFill()
+        public static DataView BoatCrewFill(int Id)
         {
             Hashtable p = new Hashtable();
             p["id"] = Id;
@@ -70,7 +70,7 @@ namespace OodHelper.Maintain
                 "ON boats.bid = boat_crew.bid " +
                 "WHERE boat_crew.id = @id");
             DataTable crw = crewing.GetData(p);
-            Crewing.ItemsSource = crw.DefaultView;
+            return crw.DefaultView;
         }
 
         private void cancel_Click(object sender, RoutedEventArgs e)
@@ -164,7 +164,7 @@ namespace OodHelper.Maintain
         {
             SelectCrewBoats d = new SelectCrewBoats(Id);
             if (d.ShowDialog() == true)
-                BoatCrewFill();
+                Crewing.ItemsSource = BoatCrewFill(Id);
         }
     }
 }

@@ -150,7 +150,7 @@ WHERE is_race = 1 ");
             }
             catch (Exception ex)
             {
-                string x = ex.Message;
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

@@ -217,7 +217,7 @@ namespace OodHelper
 
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void Rule_Click(object sender, RoutedEventArgs e)
         {
             (new Rules.SelectRules()).ShowDialog();
         }
