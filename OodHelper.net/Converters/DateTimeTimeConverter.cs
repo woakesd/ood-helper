@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows.Data;
 
-namespace OodHelper
+namespace OodHelper.Converters
 {
-    [Svn("$Id$")]
+    [Svn("$Id: DateTimeTimeConverter.cs 198 2010-10-01 09:14:07Z woakesdavid $")]
     class DateTimeTimeConverter : IValueConverter
     {
         DateTime _date;

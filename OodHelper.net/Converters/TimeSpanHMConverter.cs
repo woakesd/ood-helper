@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows.Data;
 
-namespace OodHelper
+namespace OodHelper.Converters
 {
-    [Svn("$Id$")]
+    [Svn("$Id: TimeSpanHMConverter.cs 198 2010-10-01 09:14:07Z woakesdavid $")]
     class TimeSpanHMConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

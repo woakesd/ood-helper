@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Windows.Data;
 
-namespace OodHelper
+namespace OodHelper.Converters
 {
-    [Svn("$Id$")]
-    class DoubleConverter : IValueConverter
+    [Svn("$Id: StringConverter.cs 198 2010-10-01 09:14:07Z woakesdavid $")]
+    class StringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (value != DBNull.Value && value != null)
             {
-                double i = (double)value;
-                return i.ToString("0.#");
+                return value;
             }
             else
             {
@@ -22,10 +21,9 @@ namespace OodHelper
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             string strValue = value as string;
-            double i;
-            if (Double.TryParse(strValue, out i))
+            if (strValue != string.Empty && strValue != null)
             {
-                return i;
+                return strValue;
             }
             return DBNull.Value;
         }
