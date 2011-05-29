@@ -3,7 +3,7 @@ using System.Windows.Data;
 
 namespace OodHelper.Converters
 {
-    [Svn("$Id: CodeConverter.cs 198 2010-10-01 09:14:07Z woakesdavid $")]
+    [Svn("$Id$")]
     class CodeConverter: IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

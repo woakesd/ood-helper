@@ -3,7 +3,7 @@ using System.Windows.Data;
 
 namespace OodHelper.Converters
 {
-    [Svn("$Id: MyBooleanToVisibilityConverter.cs 224 2011-05-21 16:07:44Z woakesdavid $")]
+    [Svn("$Id$")]
     class MyBooleanToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
