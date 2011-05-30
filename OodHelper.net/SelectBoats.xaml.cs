@@ -367,7 +367,7 @@ namespace OodHelper
 
         private void NewBoat_Click(object sender, RoutedEventArgs e)
         {
-            BoatEdit b = new BoatEdit(0);
+            BoatView b = new BoatView(0);
             if (b.ShowDialog() == true)
             {
                 Db c = new Db(BoatsSql.ToString());

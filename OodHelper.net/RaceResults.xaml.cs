@@ -117,7 +117,7 @@ namespace OodHelper
                 {
                     DataRowView rv = inf.Item as DataRowView;
                     int bid = (int)rv.Row["bid"];
-                    BoatEdit edit = new BoatEdit(bid);
+                    BoatView edit = new BoatView(bid);
                     if (edit.ShowDialog().Value)
                     {
                         Db c = new Db(@"SELECT bid, rolling_handicap, handicap_status, open_handicap

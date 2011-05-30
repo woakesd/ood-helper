@@ -133,9 +133,14 @@
     <Compile Include="About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Maintain\BoatModel.cs" />
+    <Compile Include="Maintain\BoatView.xaml.cs">
+      <DependentUpon>BoatView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Maintain\FamilyMember.xaml.cs">
       <DependentUpon>FamilyMember.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Maintain\NamedValuePair.cs" />
     <Compile Include="Maintain\SelectCrewBoats.xaml.cs">
       <DependentUpon>SelectCrewBoats.xaml</DependentUpon>
     </Compile>
@@ -274,6 +279,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Maintain\BoatView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Maintain\FamilyMember.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -299,10 +308,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="LoadTide\ReadData.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Maintain\BoatEdit.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -433,9 +438,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Maintain\BoatEdit.xaml.cs">
-      <DependentUpon>BoatEdit.xaml</DependentUpon>
     </Compile>
     <Compile Include="Maintain\Boats.xaml.cs">
       <DependentUpon>Boats.xaml</DependentUpon>

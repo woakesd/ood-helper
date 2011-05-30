@@ -66,7 +66,7 @@ namespace OodHelper.Maintain
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            BoatEdit b = new BoatEdit(0);
+            BoatView b = new BoatView(0);
             if (b.ShowDialog().Value)
             {
                 LoadGrid();
@@ -78,7 +78,7 @@ namespace OodHelper.Maintain
             if (BoatData.SelectedItem != null)
             {
                 DataRowView i = (DataRowView) BoatData.SelectedItem;
-                BoatEdit b = new BoatEdit((int)i.Row["bid"]);
+                BoatView b = new BoatView((int)i.Row["bid"]);
                 if (b.ShowDialog().Value)
                 {
                     LoadGrid();
