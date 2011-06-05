@@ -304,10 +304,10 @@ CREATE TABLE [boat_crew] (
             {
                 foreach (string k in p.Keys)
                 {
-                    if (p[k] != null)
-                        mCmd.Parameters.Add(new SqlCeParameter(k, p[k]));
-                    else
+                    if (p[k] == null || (p[k]).GetType() == typeof(string) && p[k] as string == string.Empty)
                         mCmd.Parameters.Add(new SqlCeParameter(k, DBNull.Value));
+                    else
+                        mCmd.Parameters.Add(new SqlCeParameter(k, p[k]));
                 }
             }
         }

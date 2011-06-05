@@ -28,35 +28,27 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="19*" />
         </Grid.ColumnDefinitions>
-        <Label Content="Boat name" Grid.Row="0" Grid.Column="0" Name="labelBoatName" />
-        <Label Content="Boat class" Grid.Row="1" Grid.Column="0" Name="labelBoatClass" />
-        <Label Content="Boat owner" Grid.Row="2" Grid.Column="0" Name="labelBoatOwner" />
-        <Label Content="Sail number" Grid.Row="3" Grid.Column="0" Name="labelSailno" />
-        <Label Content="Dinghy" Grid.Row="4" Grid.Column="0" Name="labelDinghy" />
-        <Label Content="Hull type" Grid.Row="5" Grid.Column="0" Name="labelHull" />
-        <Label Content="Open handicap" Grid.Row="6" Grid.Column="0" Name="labelOpenHandicap" />
-        <Label Content="Handicap status" Grid.Row="7" Grid.Column="0" Name="labelHandicapStatus" />
-        <Label Content="Rolling handicap" Grid.Row="8" Grid.Column="0" Name="labelRollingHandicap" />
-        <Label Content="Small cat handicap" Grid.Row="9" Grid.Column="0" Name="labelSmallCatHandicap" />
-        <Label Content="Engine/Propeller" Grid.Row="10" Grid.Column="0" Name="labelEngine" />
-        <Label Content="Keel" Grid.Row="11" Grid.Column="0" Name="labelKeel" />
-        <Label Content="Non standard features" Grid.Row="12" Grid.Column="0" Name="labelDeviations" />
-        <Label Content="Notes" Grid.Row="13" Grid.Column="0" Name="labelNotes" />
-        <TextBox Grid.Row="0" Grid.Column="1" Name="boatName" HorizontalAlignment="Left" Width="200" MaxLength="20" Margin="2" LostFocus="boatName_LostFocus">
-            <TextBox.Text>
-                <Binding Path="BoatName" UpdateSourceTrigger="Default">
-                    <Binding.ValidationRules>
-                        <ExceptionValidationRule/>
-                    </Binding.ValidationRules>
-                </Binding>
-            </TextBox.Text>
-        </TextBox>
+        <Label Content="Boat name" Grid.Row="0" Grid.Column="0"/>
+        <Label Content="Boat class" Grid.Row="1" Grid.Column="0"/>
+        <Label Content="Boat owner" Grid.Row="2" Grid.Column="0"/>
+        <Label Content="Sail number" Grid.Row="3" Grid.Column="0"/>
+        <Label Content="Dinghy" Grid.Row="4" Grid.Column="0"/>
+        <Label Content="Hull type" Grid.Row="5" Grid.Column="0"/>
+        <Label Content="Open handicap" Grid.Row="6" Grid.Column="0"/>
+        <Label Content="Handicap status" Grid.Row="7" Grid.Column="0"/>
+        <Label Content="Rolling handicap" Grid.Row="8" Grid.Column="0"/>
+        <Label Content="Small cat handicap" Grid.Row="9" Grid.Column="0"/>
+        <Label Content="Engine/Propeller" Grid.Row="10" Grid.Column="0"/>
+        <Label Content="Keel" Grid.Row="11" Grid.Column="0"/>
+        <Label Content="Non standard features" Grid.Row="12" Grid.Column="0"/>
+        <Label Content="Notes" Grid.Row="13" Grid.Column="0"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding BoatName}" HorizontalAlignment="Left" Width="200" MaxLength="20" Margin="2"/>
         <Grid Grid.Row="1" Grid.Column="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" Name="boatClass" Text="{Binding BoatClass}" Width="120" MaxLength="20" Margin="2" />
+            <TextBox Grid.Column="0" Text="{Binding BoatClass}" Width="120" MaxLength="20" Margin="2" />
             <Button Grid.Column="1" Content="Select Class" Click="SelectClass_Click" Name="SelectClass" Margin="2" Padding="14,0,15,0" />
         </Grid>
         <Grid Grid.Row="2" Grid.Column="1">
@@ -64,13 +56,13 @@
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" Text="{Binding Owner,Mode=OneWay}" Name="BoatOwner" IsReadOnly="True" Width="120" MaxLength="20" Margin="2" />
+            <TextBox Grid.Column="0" Text="{Binding Owner,Mode=OneWay}" IsReadOnly="True" Width="120" MaxLength="20" Margin="2" />
             <Button Grid.Column="1" Content="Select Person" Name="SelectPerson" Margin="2" Padding="10,0" Click="SelectPerson_Click" />
         </Grid>
-        <TextBox Text="{Binding SailNumber}" Grid.Row="3" Grid.Column="1" Name="sailNumber" HorizontalAlignment="Left" Width="120" MaxLength="8" Margin="2,2,0,2" />
-        <CheckBox IsChecked="{Binding Dinghy}" Grid.Row="4" Grid.Column="1" Content="" HorizontalAlignment="Left" VerticalAlignment="Center" Name="dinghy" Margin="2" />
+        <TextBox Text="{Binding SailNumber}" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Width="120" MaxLength="8" Margin="2,2,0,2" />
+        <CheckBox IsChecked="{Binding Dinghy}" Grid.Row="4" Grid.Column="1" Content="" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="2" />
         <ComboBox SelectedValuePath="Tag" SelectedValue="{Binding HullType}" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" SelectedIndex="0" Width="120" Margin="2">
-            <ComboBoxItem Content="Monohull" Tag=""/>
+            <ComboBoxItem Content="Monohull" />
             <ComboBoxItem Content="Catamaran (C)" Tag="C"/>
             <ComboBoxItem Content="Open keelboat (K)" Tag="K"/>
         </ComboBox>
@@ -79,9 +71,10 @@
                   SelectedValuePath="Tag" SelectedValue="{Binding HandicapStatus}">
             <ComboBoxItem Content="Primary Yardstick (PY)" Tag="PY"/>
             <ComboBoxItem Content="Secondary Yardstick (SY)" Tag="SY"/>
-            <ComboBoxItem Content="Tertiary Number (TN)" Tag="TN"/>
+            <ComboBoxItem Content="Recorded Number (RN)" Tag="RN"/>
+            <ComboBoxItem Content="Portsmouth Number (PN)" Tag="PN"/>
+            <ComboBoxItem Content="Trial Number (TN)" Tag="TN"/>
             <ComboBoxItem Content="Club Number (CN)" Tag="CN"/>
-            <ComboBoxItem Content="Experimental Number (EN)" Tag="EN"/>
         </ComboBox>
         <TextBox Text="{Binding Path=RollingHandicap}" Grid.Row="8" Grid.Column="1" HorizontalAlignment="Left" MaxLength="4" Width="74" Margin="2" />
         <TextBox Text="{Binding Path=SmallCatHandicapRating}" Grid.Row="9" Grid.Column="1" HorizontalAlignment="Left" MaxLength="5" Width="74" Margin="2" />
@@ -114,13 +107,13 @@
                 <Button Name="CancelButton" IsCancel="True" Click="cancel_Click" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Width="80">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/OodHelper.net;component/Images/Cancel.png" />
-                        <TextBlock Text="Cancel" Margin="5,0"/>
+                        <TextBlock VerticalAlignment="Center" Text="Cancel" Margin="5,0"/>
                     </StackPanel>
                 </Button>
-                <Button Name="OKButton" IsDefault="True" Click="ok_Click" Grid.Column="1" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Width="80">
+                <Button Name="OKButton" IsDefault="True" Click="ok_Click" Grid.Column="1" HorizontalAlignment="Center" HorizontalContentAlignment="Stretch" Width="80">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/OodHelper.net;component/Images/Ok.png" />
-                        <TextBlock Text="OK" Margin="5,0"/>
+                        <TextBlock Text="OK" VerticalAlignment="Center" Margin="5,0"/>
                     </StackPanel>
                 </Button>
             </Grid>

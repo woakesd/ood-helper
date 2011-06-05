@@ -51,6 +51,18 @@ namespace OodHelper.Maintain
 
         private void ok_Click(object sender, RoutedEventArgs e)
         {
+            //
+            // If a user changes the content of a text box and then hits return
+            // this trigger is fired without the text box firing it's lost focus
+            // trigger, so we need to update the source for the text box by hand.
+            //
+            List<TextBox> tboxes = FindVisualChild<TextBox>(this);
+            foreach (TextBox tb in tboxes)
+            {
+                BindingExpression be = tb.GetBindingExpression(TextBox.TextProperty);
+                if (be != null) be.UpdateSource();
+            }
+
             BoatModel dc = DataContext as BoatModel;
             if (dc != null)
             {
@@ -102,6 +114,25 @@ namespace OodHelper.Maintain
             }
         }
 
+        private List<childItem> FindVisualChild<childItem>(DependencyObject obj)
+            where childItem : DependencyObject
+        {
+            List<childItem> ret = new List<childItem>();
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is childItem)
+                    ret.Add((childItem)child);
+                else
+                {
+                    List<childItem> childOfChild = FindVisualChild<childItem>(child);
+                    if (childOfChild.Count != 0)
+                        ret.AddRange(childOfChild);
+                }
+            }
+            return ret;
+        }
+
         private void SelectClass_Click(object sender, RoutedEventArgs e)
         {
             SelectClass cls = new SelectClass();
@@ -134,7 +165,7 @@ namespace OodHelper.Maintain
                             dc.HandicapStatus = "RN";
                             break;
                         case "E":
-                            dc.HandicapStatus = "EN";
+                            dc.HandicapStatus = "TN";
                             break;
                     }
 
@@ -162,12 +193,6 @@ namespace OodHelper.Maintain
                     }
                 }
             }
-        }
-
-        private void boatName_LostFocus(object sender, RoutedEventArgs e)
-        {
-            BindingExpression be = boatName.GetBindingExpression(TextBox.TextProperty);
-            be.UpdateSource();
         }
     }
 }
