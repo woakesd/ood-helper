@@ -27,7 +27,6 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <Label Content="ID" Grid.Row="0" Visibility="Collapsed" />
         <Label Content="First name" Grid.Row="1" />
         <Label Content="Last name" Grid.Row="2" />
         <Label Content="Address" Grid.Row="3" />
@@ -51,7 +50,6 @@
 
         </StackPanel>
         
-        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Path=Id,Mode=OneWay}" Width="200" IsReadOnly="True" Margin="2" Visibility="Collapsed"/>
         <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding FirstName}" Width="200" MaxLength="20" Margin="2"/>
         <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Surname}" Width="200" MaxLength="28" Margin="2"/>
         <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Address1}" Width="200" MaxLength="30" Margin="2"/>
@@ -67,7 +65,7 @@
         <TextBox Grid.Column="3" Grid.Row="5" Text="{Binding Club}" Width="200" MaxLength="10" Margin="2"/>
         <TextBox Grid.Column="3" Grid.Row="6" Text="{Binding Membership}" Width="200" MaxLength="6" Margin="2"/>
         <CheckBox Grid.Column="3" Grid.Row="7" Margin="2" VerticalAlignment="Center" IsChecked="{Binding Paid}"/>
-        <ListBox Grid.Column="3" Grid.Row="8" Margin="2" DataContext="{Binding Crewing}" Height="90">
+        <ListBox Grid.Column="3" Grid.Row="8" Margin="2" ItemsSource="{Binding Crewing}" Height="90">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>

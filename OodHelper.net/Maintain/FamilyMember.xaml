@@ -36,7 +36,7 @@
                 </StackPanel>
             </Button>
         </StackPanel>
-        <ListBox Grid.Column="1" Grid.Row="8" Margin="2" Name="Crewing" Height="90" DataContext="{Binding Crewing}">
+        <ListBox Grid.Column="1" Grid.Row="8" Margin="2" Name="Crewing" Height="90" ItemsSource="{Binding Crewing}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>

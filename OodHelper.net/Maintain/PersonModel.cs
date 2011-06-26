@@ -205,6 +205,19 @@ namespace OodHelper.Maintain
             }
         }
 
+        public string Notes
+        {
+            get
+            {
+                return Values["manmemo"] as string;
+            }
+
+            set
+            {
+                Values["manmemo"] = value; OnPropertyChanged("Notes");
+            }
+        }
+
         public bool? Paid
         {
             get
