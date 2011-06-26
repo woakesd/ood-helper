@@ -54,7 +54,7 @@ namespace OodHelper.Maintain
 
             set
             {
-                Values["dinghy"] = value;
+                Values["dinghy"] = value; OnPropertyChanged("Dinghy");
             }
         }
 
@@ -62,7 +62,6 @@ namespace OodHelper.Maintain
         {
             get
             {
-                string t = Values["hulltype"] as string;
                 return Values["hulltype"] as string;
             }
 

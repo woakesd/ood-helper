@@ -36,7 +36,7 @@
                 </StackPanel>
             </Button>
         </StackPanel>
-        <ListBox Grid.Column="1" Grid.Row="8" Margin="2" Name="Crewing" Height="90">
+        <ListBox Grid.Column="1" Grid.Row="8" Margin="2" Name="Crewing" Height="90" DataContext="{Binding Crewing}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
@@ -45,14 +45,14 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <TextBox Grid.Column="1" Grid.Row="0" Name="ID" Width="200" IsReadOnly="True" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="1" Name="FirstName" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="2" Name="LastName" Width="200" MaxLength="28" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="3" Name="HomePhone" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="4" Name="MobilePhone" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="5" Name="WorkPhone" Width="200" MaxLength="20" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="6" Name="Email" Width="200" MaxLength="45" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="7" Name="Notes" Width="200" MaxLength="20" Margin="2"/>
+        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Path=id,Mode=OneWay}" Width="200" IsReadOnly="True" Margin="2"/>
+        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding FirstName}" Width="200" MaxLength="20" Margin="2"/>
+        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Surname}" Width="200" MaxLength="28" Margin="2"/>
+        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding HomePhone}" Width="200" MaxLength="20" Margin="2"/>
+        <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding MobilePhone}" Width="200" MaxLength="20" Margin="2"/>
+        <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding WorkPhone}" Width="200" MaxLength="20" Margin="2"/>
+        <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding Email}" Width="200" MaxLength="45" Margin="2"/>
+        <TextBox Grid.Column="1" Grid.Row="7" Text="{Binding Notes}" Width="200" MaxLength="20" Margin="2"/>
         <Grid Grid.ColumnSpan="2" Grid.Row="9" Grid.Column="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />

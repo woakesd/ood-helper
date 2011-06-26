@@ -106,7 +106,7 @@ namespace OodHelper.Maintain
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            Person p = new Person(0);
+            PersonView p = new PersonView(0);
             if (p.ShowDialog().Value)
             {
                 LoadGrid();
@@ -120,7 +120,7 @@ namespace OodHelper.Maintain
                 DataRowView i = (DataRowView) PeopleData.SelectedItem;
                 if ((int)i.Row["id"] == (int)i.Row["main_id"])
                 {
-                    Person p = new Person((int)i.Row["id"]);
+                    PersonView p = new PersonView((int)i.Row["id"]);
                     if (p.ShowDialog().Value)
                     {
                         LoadGrid();

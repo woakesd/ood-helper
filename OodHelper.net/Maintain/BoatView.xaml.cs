@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.ComponentModel;
 using System.Data.Linq.Mapping;
 using System.Linq;
+using OodHelper.Helpers;
 
 namespace OodHelper.Maintain
 {
@@ -56,12 +57,7 @@ namespace OodHelper.Maintain
             // this trigger is fired without the text box firing it's lost focus
             // trigger, so we need to update the source for the text box by hand.
             //
-            List<TextBox> tboxes = FindVisualChild<TextBox>(this);
-            foreach (TextBox tb in tboxes)
-            {
-                BindingExpression be = tb.GetBindingExpression(TextBox.TextProperty);
-                if (be != null) be.UpdateSource();
-            }
+            VisualHelper.UpdateTextBoxSources(this);
 
             BoatModel dc = DataContext as BoatModel;
             if (dc != null)
@@ -112,25 +108,6 @@ namespace OodHelper.Maintain
                     dc.Id = ppl.Id;
                 }
             }
-        }
-
-        private List<childItem> FindVisualChild<childItem>(DependencyObject obj)
-            where childItem : DependencyObject
-        {
-            List<childItem> ret = new List<childItem>();
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
-            {
-                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
-                if (child != null && child is childItem)
-                    ret.Add((childItem)child);
-                else
-                {
-                    List<childItem> childOfChild = FindVisualChild<childItem>(child);
-                    if (childOfChild.Count != 0)
-                        ret.AddRange(childOfChild);
-                }
-            }
-            return ret;
         }
 
         private void SelectClass_Click(object sender, RoutedEventArgs e)

@@ -133,6 +133,7 @@
     <Compile Include="About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\VisualHelper.cs" />
     <Compile Include="Maintain\BoatModel.cs" />
     <Compile Include="Maintain\BoatView.xaml.cs">
       <DependentUpon>BoatView.xaml</DependentUpon>
@@ -141,6 +142,7 @@
       <DependentUpon>FamilyMember.xaml</DependentUpon>
     </Compile>
     <Compile Include="Maintain\NamedValuePair.cs" />
+    <Compile Include="Maintain\PersonModel.cs" />
     <Compile Include="Maintain\SelectCrewBoats.xaml.cs">
       <DependentUpon>SelectCrewBoats.xaml</DependentUpon>
     </Compile>
