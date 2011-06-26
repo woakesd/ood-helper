@@ -25,6 +25,16 @@ namespace OodHelper.Helpers
                 if (be != null) be.UpdateSource();
             }
         }
+
+        static public void UpdateListBoxTargets(ContentControl p)
+        {
+            List<ListBox> lboxes = FindVisualChild<ListBox>(p);
+            foreach (ListBox lb in lboxes)
+            {
+                BindingExpression be = lb.GetBindingExpression(ListBox.ItemsSourceProperty);
+                if (be != null) be.UpdateTarget();
+            }
+        }
         
         static public List<childItem> FindVisualChild<childItem>(DependencyObject obj)
             where childItem : DependencyObject

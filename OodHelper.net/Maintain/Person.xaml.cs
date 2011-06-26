@@ -93,7 +93,11 @@ namespace OodHelper.Maintain
         {
             SelectCrewBoats d = new SelectCrewBoats(Id);
             if (d.ShowDialog() == true)
-                ;//Crewing.ItemsSource = BoatCrewFill(Id);
+            {
+                PersonModel p = DataContext as PersonModel;
+                if (p != null)
+                    p.OnPropertyChanged("Crewing");
+            }
         }
     }
 }

@@ -17,7 +17,7 @@ namespace OodHelper.Maintain
 
         public PersonModel(int id)
         {
-            Db get = new Db("SELECT id, firstname, surname, address1, address2, address3, address4, " +
+            Db get = new Db("SELECT id, main_id, firstname, surname, address1, address2, address3, address4, " +
                 "postcode, hometel, mobile, worktel, email, club, member, manmemo, cp " +
                 "FROM people " +
                 "WHERE id = @id");
@@ -280,8 +280,7 @@ namespace OodHelper.Maintain
                 }
                 else
                     save = new Db("UPDATE people " +
-                            "SET main_id = @id, " +
-                            "firstname = @firstname, " +
+                            "SET firstname = @firstname, " +
                             "surname = @surname, " +
                             "address1 = @address1, " +
                             "address2 = @address2, " +

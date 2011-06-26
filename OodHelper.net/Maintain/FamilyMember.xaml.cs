@@ -31,6 +31,30 @@ namespace OodHelper.Maintain
             }
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (Id == 0)
+            {
+                object o = DbSettings.GetSetting("topseed");
+                if (o != null)
+                {
+                    int topseed, nextval;
+                    topseed = (int)o;
+
+                    Db seed = new Db(string.Empty);
+                    nextval = seed.GetNextIdentity("people", "id");
+
+                    if (nextval > topseed)
+                    {
+                        MessageBox.Show("You need to get a new set of seed values", "Cannot add a new person",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                        this.DialogResult = false;
+                        this.Close();
+                    }
+                }
+            }
+        }
+
         public int MainId
         {
             get {
@@ -77,7 +101,11 @@ namespace OodHelper.Maintain
         {
             SelectCrewBoats d = new SelectCrewBoats(Id);
             if (d.ShowDialog() == true)
-                ; // Crewing.ItemsSource = PersonView.BoatCrewFill(Id);
+            {
+                PersonModel p = DataContext as PersonModel;
+                if (p != null)
+                    p.OnPropertyChanged("Crewing");
+            }
         }
     }
 }
