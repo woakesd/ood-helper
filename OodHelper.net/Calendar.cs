@@ -8,7 +8,6 @@ using System.Text;
 
 namespace OodHelper
 {
-    [Svn("$Id$")]
     [Table(Name = "calendar")]
     public class Calendar : NotifyPropertyChanged
     {

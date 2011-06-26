@@ -17,7 +17,6 @@ namespace OodHelper.Rules
     /// <summary>
     /// Interaction logic for RuleSelector.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class RuleSelector : Window
     {
         public RuleSelector(List<BoatSelectRule> rules)

@@ -17,7 +17,6 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for EntrySheetSelector.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class ResultsPrintSelector : Window
     {
         private IPrintSelectItem[] Reds { get; set; }

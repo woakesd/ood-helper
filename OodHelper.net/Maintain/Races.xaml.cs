@@ -18,7 +18,6 @@ namespace OodHelper.Maintain
     /// <summary>
     /// Interaction logic for Races.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class Races : Window
     {
         int redit = 0;

@@ -17,7 +17,6 @@ namespace OodHelper.Membership
     /// <summary>
     /// Interaction logic for Cards.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class Card : UserControl
     {
         public string MemberName { get; set; }

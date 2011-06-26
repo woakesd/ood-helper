@@ -10,7 +10,6 @@ using System.Windows.Media;
 
 namespace OodHelper
 {
-    [Svn("$Id$")]
     class Common
     {
         public static List<T> FindVisualChild<T>(UIElement element) where T : UIElement

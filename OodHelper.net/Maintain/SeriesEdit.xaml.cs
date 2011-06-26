@@ -18,7 +18,6 @@ namespace OodHelper.Maintain
     /// <summary>
     /// Interaction logic for SeriesEdit.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class SeriesEdit : Window
     {
         class Data : NotifyPropertyChanged

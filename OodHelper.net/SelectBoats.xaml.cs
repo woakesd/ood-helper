@@ -20,7 +20,6 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for SelectBoats.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class SelectBoats : Window
     {
         private RowDefinition[] rdef;

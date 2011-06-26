@@ -6,7 +6,6 @@ using System.Text;
 
 namespace OodHelper
 {
-    [Svn("$Id$")]
     public partial class Results : DataContext
     {
         public Table<Calendar> Calendar;

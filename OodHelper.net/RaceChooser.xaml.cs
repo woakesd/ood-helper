@@ -18,7 +18,6 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for Window2.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class RaceChooser : Window
     {
         private DataTable cal;

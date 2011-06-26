@@ -18,7 +18,6 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for Configuration.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class Configuration : Window
     {
         public Configuration()

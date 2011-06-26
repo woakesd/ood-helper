@@ -17,7 +17,6 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for PNImport.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class PNImport : Window
     {
         public PNImport()

@@ -16,7 +16,6 @@ namespace OodHelper.net
     /// <summary>
     /// Interaction logic for SeriesResultDisplay.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class SeriesResultDisplay : Window
     {
         public SeriesResultDisplay()

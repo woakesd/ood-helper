@@ -5,7 +5,6 @@ using System.Windows.Data;
 
 namespace OodHelper.Rules
 {
-    [Svn("$Id$")]
     class ConditionNameListConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

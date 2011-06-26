@@ -21,7 +21,6 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for TestPage.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class OpenHandicapResultsPage : Page, IResultsPage
     {
         DataTable rd;

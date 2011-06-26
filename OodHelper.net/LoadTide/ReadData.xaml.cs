@@ -20,7 +20,6 @@ namespace OodHelper.LoadTide
     /// <summary>
     /// Interaction logic for ReadData.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class ReadData : Window
     {
         ReadFormat11 TideInfo { get; set; }

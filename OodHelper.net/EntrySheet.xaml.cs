@@ -17,7 +17,6 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for EntrySheets.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class EntrySheet : Page
     {
         public EntrySheet(int rid)

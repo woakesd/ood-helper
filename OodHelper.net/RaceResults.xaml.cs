@@ -22,7 +22,6 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for RaceResults.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class RaceResults : UserControl
     {
         private ResultsEditor[] reds;

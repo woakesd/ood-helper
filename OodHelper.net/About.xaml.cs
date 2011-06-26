@@ -16,7 +16,6 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for About.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class About : Window
     {
         public About()

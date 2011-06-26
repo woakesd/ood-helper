@@ -20,7 +20,6 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for SeriesDisplayByClass.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class SeriesDisplayByClass : UserControl
     {
         List<SeriesDisplay> sds = new List<SeriesDisplay>();

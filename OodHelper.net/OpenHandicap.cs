@@ -10,7 +10,6 @@ using System.Windows;
 
 namespace OodHelper
 {
-    [Svn("$Id$")]
     class OpenHandicap : IRaceScore
     {
         private double slowLim;

@@ -5,7 +5,6 @@ using System.Text;
 
 namespace OodHelper.LoadTide
 {
-    [Svn("$Id$")]
     struct TideData
     {
         public DateTime date;

@@ -6,7 +6,6 @@ using System.Text;
 
 namespace OodHelper
 {
-    [Svn("$Id$")]
     [Table(Name = "portsmouth_numbers")]
     public class HandicapRecord
     {

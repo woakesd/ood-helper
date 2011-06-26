@@ -16,7 +16,6 @@ namespace OodHelper.Maintain
     /// <summary>
     /// Interaction logic for SeriesRaceSelect.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class SeriesRaceSelect : Window
     {
         public int Sid { get; private set; }

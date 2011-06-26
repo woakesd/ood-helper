@@ -7,7 +7,6 @@ using System.Data.OleDb;
 
 namespace OodHelper
 {
-    [Svn("$Id$")]
     class FoxproImport
     {
         public FoxproImport()

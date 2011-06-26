@@ -18,7 +18,6 @@ namespace OodHelper.Rules
     /// <summary>
     /// Interaction logic for SetupRules.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class SelectRuleEdit : Window
     {
         private BoatSelectRule Root;

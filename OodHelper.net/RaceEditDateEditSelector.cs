@@ -7,7 +7,6 @@ using System.Text;
 
 namespace OodHelper
 {
-    [Svn("$Id$")]
     public class RaceEditDateEditSelector : DataTemplateSelector
     {
         public DataTemplate TimeOnly { get; set; }

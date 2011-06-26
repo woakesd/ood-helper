@@ -18,7 +18,6 @@ namespace OodHelper.Rules
     /// <summary>
     /// Interaction logic for Boats.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class SelectRules : Window
     {
         public SelectRules()

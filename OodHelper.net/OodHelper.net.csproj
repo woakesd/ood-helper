@@ -509,7 +509,6 @@
     <Compile Include="SelectedBoats.xaml.cs">
       <DependentUpon>SelectedBoats.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Svn.cs" />
     <Compile Include="RaceChooser.xaml.cs">
       <DependentUpon>RaceChooser.xaml</DependentUpon>
     </Compile>

@@ -5,7 +5,6 @@ using System.Text;
 
 namespace OodHelper
 {
-    [Svn("$Id$")]
     public class SeriesEntry
     {
         public int rid;

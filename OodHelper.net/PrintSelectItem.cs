@@ -3,7 +3,6 @@ using System.ComponentModel;
 
 namespace OodHelper
 {
-    [Svn("$Id$")]
     public interface IPrintSelectItem: INotifyPropertyChanged
     {
         bool PrintIncludeAllVisible { get; set; }

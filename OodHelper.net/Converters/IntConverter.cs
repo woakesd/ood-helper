@@ -3,7 +3,6 @@ using System.Windows.Data;
 
 namespace OodHelper.Converters
 {
-    [Svn("$Id$")]
     class IntConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

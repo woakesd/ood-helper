@@ -9,7 +9,6 @@ using System.Runtime.Serialization.Formatters;
 
 namespace OodHelper
 {
-    [Svn("$Id$")]
     static public class DbSettings
     {
         public const string settDefaultDiscardProfile = "DefaultDiscardProfile";

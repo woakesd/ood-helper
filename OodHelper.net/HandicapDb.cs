@@ -8,7 +8,6 @@ using System.Data.SqlServerCe;
 
 namespace OodHelper
 {
-    [Svn("$Id$")]
     class HandicapDb : Db
     {
         public static string DatabaseName = @"data\handicaps.sdf";

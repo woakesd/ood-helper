@@ -18,7 +18,6 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for SelectedBoats.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class SelectedBoats : UserControl
     {
         int raceId;

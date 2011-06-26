@@ -8,7 +8,6 @@ using System.Data.SqlServerCe;
 
 namespace OodHelper
 {
-    [Svn("$Id$")]
     class Db : IDisposable
     {
         public Db(string connectionString, string sql)

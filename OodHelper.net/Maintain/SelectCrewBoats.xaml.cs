@@ -19,7 +19,6 @@ namespace OodHelper.Maintain
     /// <summary>
     /// Interaction logic for SelectBoats.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class SelectCrewBoats : Window
     {
         private StringBuilder BoatsSql;

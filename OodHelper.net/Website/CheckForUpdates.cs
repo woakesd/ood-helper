@@ -9,7 +9,6 @@ using System.ComponentModel;
 
 namespace OodHelper.Website
 {
-    [Svn("$Id$")]
     class CheckForUpdates : MySqlDownload
     {
         public CheckForUpdates()

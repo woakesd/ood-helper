@@ -17,7 +17,6 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for SeriesChooser.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class SeriesChooser : Window
     {
         private DataTable cal;

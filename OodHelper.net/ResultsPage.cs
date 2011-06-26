@@ -6,7 +6,6 @@ using System.Windows.Xps;
 
 namespace OodHelper
 {
-    [Svn("$Id$")]
     interface IResultsPage
     {
         bool PrintPage(VisualsToXpsDocument collator, int pageNo);

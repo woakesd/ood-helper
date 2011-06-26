@@ -16,7 +16,6 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for RaceNotes.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class RaceNotes : Window
     {
         private int Rid { get; set; }

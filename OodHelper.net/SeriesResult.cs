@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 
 namespace OodHelper
 {
-    [Svn("$Id$")]
     public class SeriesResult
     {
         private int[] _DiscardProfile;

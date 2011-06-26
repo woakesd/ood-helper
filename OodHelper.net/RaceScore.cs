@@ -6,7 +6,6 @@ using System.Text;
 
 namespace OodHelper
 {
-    [Svn("$Id$")]
     public interface IRaceScore
     {
         double StandardCorrectedTime { get; }

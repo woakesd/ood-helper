@@ -25,7 +25,6 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class OodHelperWindow : Window
     {
         public OodHelperWindow()

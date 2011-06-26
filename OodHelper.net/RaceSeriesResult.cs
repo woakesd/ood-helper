@@ -8,7 +8,6 @@ using System.Threading;
 
 namespace OodHelper
 {
-    [Svn("$Id$")]
     public class RaceSeriesResult
     {
         //

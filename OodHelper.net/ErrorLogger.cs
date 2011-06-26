@@ -6,7 +6,6 @@ using System.Text;
 
 namespace OodHelper
 {
-    [Svn("$Id$")]
     class ErrorLogger
     {
         private static string FileName = "Errors.log";

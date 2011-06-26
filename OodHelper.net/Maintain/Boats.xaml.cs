@@ -18,7 +18,6 @@ namespace OodHelper.Maintain
     /// <summary>
     /// Interaction logic for Boats.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class Boats : Window
     {
         public Boats()

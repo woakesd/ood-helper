@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 
 namespace OodHelper
 {
-    [Svn("$Id$")]
     class HMSValidationRule : ValidationRule
     {
         public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)

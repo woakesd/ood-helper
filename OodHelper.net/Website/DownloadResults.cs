@@ -10,7 +10,6 @@ using System.ComponentModel;
 
 namespace OodHelper.Website
 {
-    [Svn("$Id$")]
     class DownloadResults : MySqlDownload
     {
         public DownloadResults() : base()

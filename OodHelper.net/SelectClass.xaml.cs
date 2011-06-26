@@ -19,7 +19,6 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for Boats.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class SelectClass : Window
     {
         public SelectClass()

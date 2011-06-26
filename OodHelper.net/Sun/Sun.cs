@@ -8,7 +8,6 @@ namespace OodHelper.Sun
     /**
      * This class is derived from javascript found on http://www.esrl.noaa.gov/gmd/grad/solcalc/
      */
-    [Svn("$Id$")]
     public class Sun
     {
         public DateTime? SunRise { get; private set; }

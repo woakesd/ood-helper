@@ -19,7 +19,6 @@ namespace OodHelper.Maintain
     /// <summary>
     /// Interaction logic for Boats.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class People : Window, INotifyPropertyChanged
     {
         public People()

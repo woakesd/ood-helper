@@ -8,7 +8,6 @@ using System.Collections;
 
 namespace OodHelper
 {
-    [Svn("$Id$")]
     class RollingHandicap : OpenHandicap
     {
         protected override void CorrectedTime()

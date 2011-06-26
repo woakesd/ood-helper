@@ -22,7 +22,6 @@ namespace OodHelper.Maintain
     /// <summary>
     /// Interaction logic for Boat.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class RaceEdit : Window
     {
         private int rid;

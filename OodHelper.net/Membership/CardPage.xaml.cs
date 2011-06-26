@@ -17,7 +17,6 @@ namespace OodHelper.Membership
     /// <summary>
     /// Interaction logic for CardPage.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class CardPage : Page
     {
         public CardPage()

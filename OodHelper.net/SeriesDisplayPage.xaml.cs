@@ -17,7 +17,6 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for TestPage.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class SeriesDisplayPage : Page
     {
         DataTable rd;

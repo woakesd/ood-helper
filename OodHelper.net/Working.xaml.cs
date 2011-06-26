@@ -17,7 +17,6 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for Working.xaml
     /// </summary>
-    [Svn("$Id$")]
     public partial class Working : Window
     {
         public Working()
