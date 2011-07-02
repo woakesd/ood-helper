@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 using System.Windows.Xps;
 using OodHelper.Converters;
 
-namespace OodHelper
+namespace OodHelper.Results
 {
     /// <summary>
     /// Interaction logic for TestPage.xaml

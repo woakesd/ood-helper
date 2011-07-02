@@ -69,7 +69,7 @@ namespace OodHelper
                 int[] rids = rc.Rids;
                 if (rids != null)
                 {
-                    RaceResults r = new RaceResults(rids);
+                    Results.RaceResults r = new Results.RaceResults(rids);
                     TabItem rp = new TabItem();
                     rp.Content = r;
                     rp.Header = "Race Results";

@@ -155,6 +155,7 @@
     <Compile Include="Membership\CardPage.xaml.cs">
       <DependentUpon>CardPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Maintain\Results.cs" />
     <Compile Include="Rules\RuleSelector.xaml.cs">
       <DependentUpon>RuleSelector.xaml</DependentUpon>
     </Compile>
@@ -183,7 +184,7 @@
       <DependentUpon>SeriesEdit.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Calendar.cs" />
+    <Compile Include="Maintain\Calendar.cs" />
     <Compile Include="Converters\CodeConverter.cs" />
     <Compile Include="Configuration.xaml.cs">
       <DependentUpon>Configuration.xaml</DependentUpon>
@@ -212,11 +213,9 @@
     </Compile>
     <Compile Include="Converters\IntConverter.cs" />
     <Compile Include="Converters\MyBooleanToVisibilityConverter.cs" />
-    <Compile Include="RaceEditDateEditSelector.cs" />
     <Compile Include="RaceNotes.xaml.cs">
       <DependentUpon>RaceNotes.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Results.cs" />
     <Compile Include="ResultsPage.cs" />
     <Compile Include="Rules\SelectRules.xaml.cs">
       <DependentUpon>SelectRules.xaml</DependentUpon>
@@ -234,10 +233,10 @@
     <Compile Include="SeriesDisplayPage.xaml.cs">
       <DependentUpon>SeriesDisplayPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="OpenHandicapResultsPage.xaml.cs">
+    <Compile Include="Results\OpenHandicapResultsPage.xaml.cs">
       <DependentUpon>OpenHandicapResultsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RollingHandicapResultsPage.xaml.cs">
+    <Compile Include="Results\RollingHandicapResultsPage.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>RollingHandicapResultsPage.xaml</DependentUpon>
     </Compile>
@@ -365,7 +364,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="OpenHandicapResultsPage.xaml">
+    <Page Include="Results\OpenHandicapResultsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -389,7 +388,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Maintain\Person.xaml">
+    <Page Include="Maintain\PersonView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -401,13 +400,13 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ResultsEditor.xaml">
+    <Page Include="Results\ResultsEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="RaceResults.xaml">
+    <Page Include="Results\RaceResults.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <Generator>MSBuild:Compile</Generator>
@@ -425,13 +424,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SelectBoats.xaml">
+    <Page Include="Results\SelectBoats.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SelectedBoats.xaml">
+    <Page Include="Results\SelectedBoats.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <Generator>MSBuild:Compile</Generator>
@@ -447,15 +446,15 @@
     <Compile Include="Maintain\People.xaml.cs">
       <DependentUpon>People.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Maintain\Person.xaml.cs">
-      <DependentUpon>Person.xaml</DependentUpon>
+    <Compile Include="Maintain\PersonView.xaml.cs">
+      <DependentUpon>PersonView.xaml</DependentUpon>
     </Compile>
     <Compile Include="DbSettings.cs" />
     <Compile Include="OodHelperWindow.xaml.cs">
       <DependentUpon>OodHelperWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="RollingHandicapResultsPage.xaml">
+    <Page Include="Results\RollingHandicapResultsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -493,20 +492,20 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="ResultsEditor.xaml.cs">
+    <Compile Include="Results\ResultsEditor.xaml.cs">
       <DependentUpon>ResultsEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RaceResults.xaml.cs">
+    <Compile Include="Results\RaceResults.xaml.cs">
       <DependentUpon>RaceResults.xaml</DependentUpon>
     </Compile>
     <Compile Include="RaceScore.cs" />
     <Compile Include="RollingHandicap.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SelectBoats.xaml.cs">
+    <Compile Include="Results\SelectBoats.xaml.cs">
       <DependentUpon>SelectBoats.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SelectedBoats.xaml.cs">
+    <Compile Include="Results\SelectedBoats.xaml.cs">
       <DependentUpon>SelectedBoats.xaml</DependentUpon>
     </Compile>
     <Compile Include="RaceChooser.xaml.cs">

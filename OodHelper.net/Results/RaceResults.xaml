@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="OodHelper.RaceResults"
+﻿<UserControl x:Class="OodHelper.Results.RaceResults"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     VerticalAlignment="Stretch" HorizontalAlignment="Stretch">

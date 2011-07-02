@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace OodHelper
+namespace OodHelper.Results
 {
     /// <summary>
     /// Interaction logic for SelectedBoats.xaml

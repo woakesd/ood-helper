@@ -4,7 +4,7 @@ using System.Data.Linq;
 using System.Linq;
 using System.Text;
 
-namespace OodHelper
+namespace OodHelper.Maintain
 {
     public partial class Results : DataContext
     {

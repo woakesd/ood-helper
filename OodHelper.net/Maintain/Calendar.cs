@@ -6,7 +6,7 @@ using System.Data.Linq.Mapping;
 using System.Linq;
 using System.Text;
 
-namespace OodHelper
+namespace OodHelper.Maintain
 {
     [Table(Name = "calendar")]
     public class Calendar : NotifyPropertyChanged

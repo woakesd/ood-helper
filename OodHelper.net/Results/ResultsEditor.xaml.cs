@@ -16,7 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using OodHelper.Converters;
 
-namespace OodHelper
+namespace OodHelper.Results
 {
     /// <summary>
     /// Interaction logic for RaceEdit.xaml

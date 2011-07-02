@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 using OodHelper.Maintain;
 using OodHelper.Rules;
 
-namespace OodHelper
+namespace OodHelper.Results
 {
     /// <summary>
     /// Interaction logic for SelectBoats.xaml

@@ -17,7 +17,7 @@ using System.Printing;
 using System.Windows.Xps;
 using OodHelper.Maintain;
 
-namespace OodHelper
+namespace OodHelper.Results
 {
     /// <summary>
     /// Interaction logic for RaceResults.xaml
