@@ -156,6 +156,7 @@
       <DependentUpon>CardPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Maintain\Results.cs" />
+    <Compile Include="Results\ResultModel.cs" />
     <Compile Include="Rules\RuleSelector.xaml.cs">
       <DependentUpon>RuleSelector.xaml</DependentUpon>
     </Compile>
