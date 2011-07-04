@@ -8,7 +8,6 @@ namespace OodHelper.Maintain
 {
     public class NamedValuePair
     {
-        private string _txt;
         public string Txt { get; set; }
         private string _val;
         public string Val { get { return _val; } set { _val = value; } }
