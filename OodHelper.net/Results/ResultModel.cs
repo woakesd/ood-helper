@@ -70,7 +70,7 @@ namespace OodHelper.Results
             }
         }
 
-        private int? _overridePoints;
+        private double? _overridePoints;
         public string OverridePoints
         {
             get
@@ -79,8 +79,8 @@ namespace OodHelper.Results
             }
             set
             {
-                int tmp;
-                if (Int32.TryParse(value, out tmp))
+                double tmp;
+                if (Double.TryParse(value, out tmp))
                     _overridePoints = tmp;
                 OnPropertyChanged("OverridePoints");
             }
@@ -198,6 +198,86 @@ namespace OodHelper.Results
                     _points = null;
                 OnPropertyChanged("Points");
             }
+        }
+
+        private int? _openHandicap;
+        public string OpenHandicap
+        {
+            get
+            {
+                return _openHandicap.ToString();
+            }
+
+            set
+            {
+            }
+        }
+
+        private int? _rollingHandicap;
+        public string RollingHandicap
+        {
+            get
+            {
+                return _rollingHandicap.ToString();
+            }
+
+            set
+            {
+            }
+        }
+
+        private int? _achievedHandicap;
+        public string AchievedHandicap
+        {
+            get
+            {
+                return _achievedHandicap.ToString();
+            }
+
+            set
+            {
+            }
+        }
+
+        private int? _newRollingHandicap;
+        public string NewRollingHandicap
+        {
+            get
+            {
+                return _newRollingHandicap.ToString();
+            }
+
+            set
+            {
+            }
+        }
+
+        private string _handicapStatus;
+        public string HandicapStatus
+        {
+            get { return _handicapStatus; }
+            set { _handicapStatus = value; }
+        }
+
+        private string _c;
+        public string C
+        {
+            get { return _c; }
+            set { _c= value; }
+        }
+
+        private string _a;
+        public string A
+        {
+            get { return _a; }
+            set { _a = value; }
+        }
+
+        private int _performanceIndex;
+        public string PerformanceIndex
+        {
+            get { return _performanceIndex.ToString(); }
+            set { }
         }
     }
 }

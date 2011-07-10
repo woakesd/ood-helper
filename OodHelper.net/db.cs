@@ -215,6 +215,21 @@ CREATE TABLE [boat_crew] (
 )";
                 cmd.ExecuteNonQuery();
 
+                cmd.CommandText = @"
+CREATE TABLE [portsmouth_numbers] (
+  [id] int NOT NULL IDENTITY (1,1)
+, [class_name] nvarchar(100) NULL
+, [no_of_crew] int NULL
+, [rig] nvarchar(1) NULL
+, [spinnaker] nvarchar(1) NULL
+, [engine] nvarchar(3) NULL
+, [keel] nvarchar(1) NULL
+, [number] int NULL
+, [status] nvarchar(1) NULL
+, [notes] ntext NULL
+)";
+                cmd.ExecuteNonQuery();
+
                 cmd.CommandText = @"ALTER TABLE [boats] ADD CONSTRAINT [PK_boats] PRIMARY KEY ([bid])";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = @"ALTER TABLE [calendar] ADD CONSTRAINT [PK_calendar] PRIMARY KEY ([rid])";
@@ -240,6 +255,8 @@ CREATE TABLE [boat_crew] (
                 cmd.CommandText = @"CREATE INDEX [IX_select_rule_parent] ON [select_rules] ([parent] ASC)";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = @"ALTER TABLE [boat_crew] ADD CONSTRAINT [PK_boat_crew] PRIMARY KEY ([id],[bid])";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = @"ALTER TABLE [portsmouth_numbers] ADD CONSTRAINT [PK_portsmouth_numbers] PRIMARY KEY ([id])";
                 cmd.ExecuteNonQuery();
             }
             finally

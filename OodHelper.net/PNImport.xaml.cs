@@ -28,8 +28,8 @@ namespace OodHelper
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.FileName = fileName.Text;
-            dlg.DefaultExt = "*.csv";
-            dlg.Filter = "Comma Seperated Value files (*.csv)|*.csv";
+            dlg.DefaultExt = "*.xls";
+            dlg.Filter = "Excel Files (*.xls)|*.xls";
             Nullable<bool> result = dlg.ShowDialog();
 
             if (result.Value)
@@ -49,12 +49,12 @@ namespace OodHelper
             con.Dispose();
             da.Dispose();
 
-            HandicapDb hdb = new HandicapDb("DELETE FROM portsmouth_numbers");
-            hdb.ExecuteNonQuery(null);
+            Db db = new Db("DELETE FROM portsmouth_numbers");
+            db.ExecuteNonQuery(null);
 
-            hdb = new HandicapDb("SELECT * FROM portsmouth_numbers");
+            db = new Db("SELECT * FROM portsmouth_numbers");
             DataTable pt = new DataTable();
-            hdb.Fill(pt, null);
+            db.Fill(pt, null);
 
             foreach (DataRow impr in pi.Rows)
             {
@@ -70,7 +70,6 @@ namespace OodHelper
                 expr["notes"] = impr["Notes"];
                 pt.Rows.Add(expr);
             }
-            //hdb.Commit(pt);
             pn.ItemsSource = pt.DefaultView;
         }
     }
