@@ -156,11 +156,6 @@ namespace OodHelper
             pni.ShowDialog();
         }
 
-        private void CreateHandicapDB_Click(object sender, RoutedEventArgs e)
-        {
-            HandicapDb.CreateDb();
-        }
-
         private delegate void myDelegate();
         
         private void SeriesResults_Click(object sender, RoutedEventArgs e)

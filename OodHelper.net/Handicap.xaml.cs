@@ -48,10 +48,10 @@ namespace OodHelper
         {
             try
             {
-                HandicapDb hdb;
+                Db hdb;
                 if (Id == 0)
                 {
-                    hdb = new HandicapDb(@"INSERT INTO portsmouth_numbers 
+                    hdb = new Db(@"INSERT INTO portsmouth_numbers 
                         ([class_name]
                         , [no_of_crew]
                         , [rig]
@@ -73,7 +73,7 @@ namespace OodHelper
                     Id = hdb.GetNextIdentity("portsmouth_numbers", "id");
                 }
                 else
-                    hdb = new HandicapDb(@"UPDATE portsmouth_numbers 
+                    hdb = new Db(@"UPDATE portsmouth_numbers 
                         SET [class_name] = @class_name
                         , [no_of_crew] = @no_of_crew
                         , [rig] = @rig

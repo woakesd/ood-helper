@@ -219,7 +219,7 @@ namespace OodHelper.Maintain
             {
                 Hashtable p = new Hashtable();
                 p["id"] = cls.Id;
-                HandicapDb hdb = new HandicapDb("SELECT * FROM portsmouth_numbers WHERE id = @id");
+                Db hdb = new Db("SELECT * FROM portsmouth_numbers WHERE id = @id");
                 Hashtable data = hdb.GetHashtable(p);
 
                 raceClass.Text = data["class_name"].ToString();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Odbc;
@@ -28,49 +29,59 @@ namespace OodHelper
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.FileName = fileName.Text;
-            dlg.DefaultExt = "*.xls";
-            dlg.Filter = "Excel Files (*.xls)|*.xls";
-            Nullable<bool> result = dlg.ShowDialog();
+            dlg.DefaultExt = "*.csv";
+            dlg.Filter = "CSV files (*.csv)|*.csv";
+            bool? result = dlg.ShowDialog();
 
             if (result.Value)
             {
                 fileName.Text = dlg.FileName;
+                OdbcConnection con = new OdbcConnection("Driver={Microsoft Text Driver (*.txt; *.csv)};Dbq=" +
+    Path.GetDirectoryName(fileName.Text) + ";Extended Properties=\"Text;HDR=No;FMT=Delimited\"");
+                OdbcDataAdapter da = new OdbcDataAdapter("SELECT * FROM [" + Path.GetFileName(fileName.Text) + "]", con);
+                DataTable pi = new DataTable();
+                da.Fill(pi);
+                con.Close();
+                con.Dispose();
+                da.Dispose();
+
+                pn.ItemsSource = pi.DefaultView;
             }
         }
 
         private void import_Click(object sender, RoutedEventArgs e)
         {
-            OdbcConnection con = new OdbcConnection("Driver={Microsoft Text Driver (*.txt; *.csv)};Dbq=" +
-                Path.GetDirectoryName(fileName.Text) + ";Extended Properties=\"Text;HDR=No;FMT=Delimited\"");
-            OdbcDataAdapter da = new OdbcDataAdapter("SELECT * FROM [" + Path.GetFileName(fileName.Text) + "]", con);
-            DataTable pi = new DataTable();
-            da.Fill(pi);
-            con.Close();
-            con.Dispose();
-            da.Dispose();
+            DataTable pi = ((DataView)pn.ItemsSource).Table;
 
-            Db db = new Db("DELETE FROM portsmouth_numbers");
-            db.ExecuteNonQuery(null);
+            Db del = new Db("DELETE FROM portsmouth_numbers");
+            del.ExecuteNonQuery(null);
 
-            db = new Db("SELECT * FROM portsmouth_numbers");
-            DataTable pt = new DataTable();
-            db.Fill(pt, null);
+            Db db = new Db(@"INSERT INTO [portsmouth_numbers] 
+([id], [class_name], [no_of_crew], [rig], [spinnaker], [engine], [keel], [number], [status], [notes])
+VALUES (@id, @class_name, @no_of_crew, @rig, @spinnaker, @engine, @keel, @number, @status, @notes)");
 
+            Hashtable expr = new Hashtable();
             foreach (DataRow impr in pi.Rows)
             {
-                DataRow expr = pt.NewRow();
+                expr["id"] = Guid.NewGuid();
                 expr["class_name"] = impr["ClassName"];
-                expr["no_of_crew"] = impr["NoOfCrew"];
+                int tmp;
+                if (Int32.TryParse(impr["NoOfCrew"].ToString(), out tmp))
+                    expr["no_of_crew"] =  tmp;
+                else
+                    expr["no_of_crew"] =  DBNull.Value;
                 expr["rig"] = impr["Rig"];
                 expr["spinnaker"] = impr["Spinnaker"];
                 expr["engine"] = impr["Engine"];
                 expr["keel"] = impr["Keel"];
-                expr["number"] = impr["Number"];
+                if (Int32.TryParse(impr["Number"].ToString(), out tmp))
+                    expr["number"] = tmp;
+                else
+                    expr["number"] = DBNull.Value;
                 expr["status"] = impr["Status"];
                 expr["notes"] = impr["Notes"];
-                pt.Rows.Add(expr);
+                int rowdone = db.ExecuteNonQuery(expr);
             }
-            pn.ItemsSource = pt.DefaultView;
         }
     }
 }

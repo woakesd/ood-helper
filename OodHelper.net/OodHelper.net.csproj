@@ -257,7 +257,6 @@
     </Compile>
     <Compile Include="Converters\DoubleTimeSpan.cs" />
     <Compile Include="Converters\IntTimeSpan.cs" />
-    <Compile Include="HandicapDb.cs" />
     <Compile Include="PNImport.xaml.cs">
       <DependentUpon>PNImport.xaml</DependentUpon>
     </Compile>

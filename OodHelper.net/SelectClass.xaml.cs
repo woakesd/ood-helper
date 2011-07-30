@@ -27,14 +27,7 @@ namespace OodHelper
             dSetGridSource = SetGridSource;
         }
 
-        int? id;
-        public int? Id
-        {
-            get
-            {
-                return id;
-            }
-        }
+        public Guid? Id { get; private set; }
 
         private delegate void DSetGridSource(DataTable ppl);
         private DSetGridSource dSetGridSource;
@@ -47,7 +40,7 @@ namespace OodHelper
             ClassData.ItemsSource = null;
             Task.Factory.StartNew(() =>
             {
-                HandicapDb c = new HandicapDb("SELECT * " +
+                Db c = new Db("SELECT * " +
                     "FROM portsmouth_numbers " +
                     "ORDER BY class_name");
                 DataTable cls = c.GetData(null);
@@ -60,12 +53,12 @@ namespace OodHelper
         {
             ClassData.ItemsSource = cls.DefaultView;
             if (Classname.Text != string.Empty) FilterPeople();
-            if (id != null)
+            if (Id != null)
             {
                 foreach (DataRowView vr in ClassData.Items)
                 {
                     DataRow r = vr.Row;
-                    if (((int)r["id"]) == id.Value)
+                    if (((Guid)r["id"]) == Id.Value)
                     {
                         ClassData.SelectedItem = vr;
                         ClassData.ScrollIntoView(vr);
@@ -80,7 +73,7 @@ namespace OodHelper
         {
             if (ClassData.SelectedItem != null)
             {
-                id = (int)((DataRowView)ClassData.SelectedItem).Row["id"];
+                Id = ((DataRowView)ClassData.SelectedItem).Row["id"] as Guid?;
                 this.DialogResult = true;
             }
             else
@@ -91,7 +84,7 @@ namespace OodHelper
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            id = null;
+            Id = null;
             this.DialogResult = false;
             Close();
         }

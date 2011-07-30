@@ -9,6 +9,6 @@ namespace OodHelper
     public partial class HandicapLinq : DataContext
     {
         public Table<HandicapRecord> portsmouth_numbers;
-        public HandicapLinq() : base(HandicapDb.DatabaseConstr) { }
+        public HandicapLinq() : base(Db.DatabaseConstr) { }
     }
 }

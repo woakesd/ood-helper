@@ -10,6 +10,10 @@ namespace OodHelper
 {
     class Db : IDisposable
     {
+        public static string DatabaseFolder = AppDomain.CurrentDomain.BaseDirectory;
+        public static string DatabaseName = DatabaseFolder + @"\data\oodhelper.sdf";
+        public static string DatabaseConstr = "Data Source=" + DatabaseName;
+        
         public Db(string connectionString, string sql)
         {
             mCon = new SqlCeConnection();
@@ -20,8 +24,8 @@ namespace OodHelper
         public Db(string sql)
         {
             mCon = new SqlCeConnection();
-            mCon.ConnectionString = Properties.Settings.Default.OodHelperConnectionString;
-            if (!File.Exists(@".\data\oodhelper.sdf"))
+            mCon.ConnectionString = DatabaseConstr;
+            if (!File.Exists(DatabaseName))
             {
                 Db.CreateDb();
             }
@@ -30,14 +34,14 @@ namespace OodHelper
 
         public static void CreateDb()
         {
-            string constr = Properties.Settings.Default.OodHelperConnectionString;
+            string constr = Db.DatabaseConstr;
 
-            if (!Directory.Exists(@".\data"))
-                Directory.CreateDirectory(@".\data");
+            if (!Directory.Exists(DatabaseFolder))
+                Directory.CreateDirectory(DatabaseFolder);
 
-            if (File.Exists(@".\data\oodhelper.sdf"))
+            if (File.Exists(DatabaseName))
             {
-                File.Move(@".\data\oodhelper.sdf", ".\\data\\oodhelper-" + DateTime.Now.Ticks.ToString() + ".sdf");
+                File.Move(DatabaseName, DatabaseFolder + @"\oodhelper-" + DateTime.Now.Ticks.ToString() + ".sdf");
             }
 
             SqlCeEngine ce = new SqlCeEngine(constr);
@@ -217,7 +221,7 @@ CREATE TABLE [boat_crew] (
 
                 cmd.CommandText = @"
 CREATE TABLE [portsmouth_numbers] (
-  [id] int NOT NULL IDENTITY (1,1)
+  [id] uniqueidentifier NOT NULL
 , [class_name] nvarchar(100) NULL
 , [no_of_crew] int NULL
 , [rig] nvarchar(1) NULL
@@ -418,8 +422,8 @@ CREATE TABLE [portsmouth_numbers] (
             {
                 Properties.Settings s = new Properties.Settings();
                 SqlCeEngine ce = new SqlCeEngine();
-                ce.LocalConnectionString = Properties.Settings.Default.OodHelperConnectionString;
-                ce.Compact(Properties.Settings.Default.OodHelperConnectionString);
+                ce.LocalConnectionString = DatabaseConstr;
+                ce.Compact(DatabaseConstr);
                 ce.Dispose();
 
                 //

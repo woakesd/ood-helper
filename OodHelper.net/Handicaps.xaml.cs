@@ -38,7 +38,7 @@ namespace OodHelper
             ClassData.ItemsSource = null;
             Task.Factory.StartNew(() =>
             {
-                HandicapDb c = new HandicapDb("SELECT * " +
+                Db c = new Db("SELECT * " +
                     "FROM portsmouth_numbers " +
                     "ORDER BY class_name");
                 DataTable rcs = c.GetData(null);
@@ -154,7 +154,7 @@ namespace OodHelper
                     if (result == MessageBoxResult.Cancel) break;
                     if (result == MessageBoxResult.Yes)
                     {
-                        HandicapDb del = new HandicapDb("DELETE FROM portsmouth_numbers " +
+                        Db del = new Db("DELETE FROM portsmouth_numbers " +
                             "WHERE id = @id");
                         Hashtable d = new Hashtable();
                         d["id"] = i.Row["id"];

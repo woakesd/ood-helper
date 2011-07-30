@@ -28,7 +28,7 @@ namespace OodHelper.Website
 
         protected override void DoTheWork(object sender, DoWorkEventArgs e)
         {
-            const int Steps = 8;
+            const int Steps = 9;
             BackgroundWorker p = sender as BackgroundWorker;
 
             p.ReportProgress(0, "Loading Boats");
@@ -228,6 +228,28 @@ namespace OodHelper.Website
             myadp.Fill(mtable);
 
             scmd.CommandText = "DELETE FROM select_rules";
+            scmd.ExecuteNonQuery();
+
+            CopyData(mtable, ins);
+
+            //
+            // Select Rules
+            //
+            if (p.CancellationPending)
+            {
+                CancelDownload(e);
+                return;
+            }
+
+            p.ReportProgress(800 / Steps, "Loading Portsmouth numbers");
+            ins.CommandText = @"INSERT INTO [portsmouth_numbers] 
+([id], [class_name], [no_of_crew], [rig], [spinnaker], [engine], [keel], [number], [status], [notes])
+VALUES (@id, @class_name, @no_of_crew, @rig, @spinnaker, @engine, @keel, @number, @status, @notes)";
+            myadp = new MySqlDataAdapter("SELECT * FROM portsmouth_numbers", mcon);
+            mtable = new DataTable();
+            myadp.Fill(mtable);
+
+            scmd.CommandText = "DELETE FROM portsmouth_numbers";
             scmd.ExecuteNonQuery();
 
             CopyData(mtable, ins);

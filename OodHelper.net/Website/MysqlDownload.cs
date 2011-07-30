@@ -64,7 +64,7 @@ namespace OodHelper.Website
                 BackgroundWorker p = sender as BackgroundWorker;
 
                 scon = new SqlCeConnection();
-                scon.ConnectionString = Properties.Settings.Default.OodHelperConnectionString;
+                scon.ConnectionString = Db.DatabaseConstr;
                 scon.Open();
                 strn = scon.BeginTransaction();
 

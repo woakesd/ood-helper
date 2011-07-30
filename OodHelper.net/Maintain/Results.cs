@@ -9,6 +9,6 @@ namespace OodHelper.Maintain
     public partial class Results : DataContext
     {
         public Table<Calendar> Calendar;
-        public Results() : base(Properties.Settings.Default.OodHelperConnectionString) { }
+        public Results() : base(Db.DatabaseConstr) { }
     }
 }

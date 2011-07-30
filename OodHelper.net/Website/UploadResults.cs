@@ -30,7 +30,7 @@ namespace OodHelper.Website
         {
             BackgroundWorker w = sender as BackgroundWorker;
 
-            const int Steps = 8;
+            const int Steps = 9;
 
             if (w.CancellationPending)
             {
@@ -275,6 +275,39 @@ namespace OodHelper.Website
             BuildInsertData(d, msql);
 
             mcom.CommandText = msql.ToString();
+            mcom.ExecuteNonQuery();
+
+            if (w.CancellationPending)
+            {
+                CancelDownload(e);
+                return;
+            }
+
+            w.ReportProgress(800 / Steps, "Uploading portsmouth numbers");
+
+            mcom = new MySqlCommand("DELETE FROM `portsmouth_numbers`");
+            mcom.Connection = mcon;
+            mcom.ExecuteNonQuery();
+
+            mcom.CommandText = "ALTER TABLE `portsmouth_numbers` DISABLE KEYS";
+            mcom.ExecuteNonQuery();
+
+            msql.Clear();
+            msql.Append(@"INSERT INTO `portsmouth_numbers` 
+(`id`, `class_name`, `no_of_crew`, `rig`, `spinnaker`, `engine`, `keel`, `number`, `status`, `notes`)
+VALUES ");
+
+            c = new Db(@"SELECT id, class_name, no_of_crew, rig, spinnaker, engine, keel, number, status, notes
+                    FROM portsmouth_numbers");
+            d = c.GetData(null);
+            c.Dispose();
+
+            BuildInsertData(d, msql);
+
+            mcom.CommandText = msql.ToString();
+            mcom.ExecuteNonQuery();
+
+            mcom.CommandText = "ALTER TABLE `portsmouth_numbers` ENABLE KEYS";
             mcom.ExecuteNonQuery();
 
             //
