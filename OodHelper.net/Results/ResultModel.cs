@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data;
 using System.Text;
 //using OodHelper;
 
@@ -8,31 +9,35 @@ namespace OodHelper.Results
 {
     class ResultModel : NotifyPropertyChanged
     {
-        public ResultModel()
+        private DataRow _row;
+        public ResultModel(DataRow result, DateTime StartDate)
         {
+            _row = result;
+            _date = StartDate;
         }
 
-        public int Rid { get; set; }
-        public int Bid { get; set; }
-        public string BoatName { get; set; }
-        public string BoatClass { get; set; }
-        public string SailNo { get; set; }
+        public int Rid { get { return (int)_row["rid"]; } }
+        public int Bid { get { return (int)_row["bid"]; } }
+        public string BoatName { get { return _row["boatname"] as string; } }
+        public string BoatClass { get { return _row["boatclass"] as string; } }
+        public string SailNo { get { return _row["sailno"] as string; } }
 
-        private DateTime _date = DateTime.Today;
-        private DateTime _startDate;
+        private DateTime _date;
         public string StartDate {
             get
             {
-                return _startDate.ToString("HH:mm:ss");
+                if (_row["start_date"] != DBNull.Value)
+                    return ((DateTime)_row["start_date"]).ToString("HH:mm:ss");
+                else
+                    return string.Empty;
             }
+
             set
             {
                 TimeSpan resultTime;
                 if (TimeSpan.TryParse(value, out resultTime) || 
                     TimeSpan.TryParseExact(value, "hh\\ mm\\ ss", null, out resultTime))
-                {
-                    _startDate = _date + resultTime;
-                }
+                    _row["start_date"] = _date + resultTime;
                 OnPropertyChanged("StartDate");
             }
         }
