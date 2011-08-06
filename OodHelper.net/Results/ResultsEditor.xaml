@@ -83,36 +83,31 @@
                         <EventSetter Event="PreviewKeyDown" Handler="DataGridCell_PreviewKeyDown" />
                         <EventSetter Event="KeyUp" Handler="DataGridCell_KeyUp" />
                     </Style>
-                    <local:IntTimeSpan x:Key="intTimeSpan" />
-                    <local:DoubleTimeSpan x:Key="doubleTimeSpan" />
-                    <local:IntConverter x:Key="intConverter" />
-                    <local:DoubleConverter x:Key="DoubleConverter" />
-                    <local:CodeConverter x:Key="codeConverter" />
                 </DataGrid.Resources>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding rid}" Header="RID" IsReadOnly="True" Visibility="Collapsed" />
-                    <DataGridTextColumn Binding="{Binding bid}" Header="BID" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding boatname}" Header="Boat" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding boatclass}" Header="Class"  IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding sailno}" Header="Sail No" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding start_date}" Header="Start" IsReadOnly="True" />
-                    <DataGridTextColumn Binding="{Binding finish_code,Converter={StaticResource ResourceKey=codeConverter}}" Header="Code" />
-                    <DataGridTextColumn Binding="{Binding finish_date}" Header="Finish" />
-                    <DataGridTextColumn Binding="{Binding laps,Converter={StaticResource ResourceKey=intConverter}}" Header="Laps" />
-                    <DataGridTextColumn Binding="{Binding override_points,Converter={StaticResource ResourceKey=DoubleConverter}}" Header="Override Points" />
-                    <DataGridTextColumn Binding="{Binding elapsed,Converter={StaticResource ResourceKey=intTimeSpan}}" Header="Elapsed" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding standard_corrected,Converter={StaticResource ResourceKey=doubleTimeSpan}}" Header="Std Corrected" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding corrected,Converter={StaticResource ResourceKey=doubleTimeSpan}}" Header="Corrected" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding place}" Header="Place" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding points}" Header="Points" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding open_handicap}" Header="Open Handicap" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding rolling_handicap}" Header="Rolling Handicap" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding achieved_handicap}" Header="Achieved Handicap" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding new_rolling_handicap}" Header="New Rolling Handicap" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding handicap_status}" Header="Handicap Status" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding c}" Header="C" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding a}" Header="A" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding performance_index}" Header="PI" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Rid}" Header="RID" IsReadOnly="True" Visibility="Collapsed" />
+                    <DataGridTextColumn Binding="{Binding Bid}" Header="BID" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding BoatName}" Header="Boat" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding BoatClass}" Header="Class"  IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding SailNo}" Header="Sail No" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding StartDate}" Header="Start" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding FinishCode}" Header="Code" />
+                    <DataGridTextColumn Binding="{Binding FinishDate}" Header="Finish" />
+                    <DataGridTextColumn Binding="{Binding Laps}" Header="Laps" />
+                    <DataGridTextColumn Binding="{Binding OverridePoints}" Header="Override Points" />
+                    <DataGridTextColumn Binding="{Binding Elapsed}" Header="Elapsed" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding StandardCorrected}" Header="Std Corrected" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Corrected}" Header="Corrected" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Place}" Header="Place" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Points}" Header="Points" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding OpenHandicap}" Header="Open Handicap" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding RollingHandicap}" Header="Rolling Handicap" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding AchievedHandicap}" Header="Achieved Handicap" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding NewRollingHandicap}" Header="New Rolling Handicap" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding HandicapStatus}" Header="Handicap Status" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding C}" Header="C" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding A}" Header="A" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding PerformanceIndex}" Header="PI" IsReadOnly="True"/>
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using System.Text;
-//using OodHelper;
 
 namespace OodHelper.Results
 {
@@ -42,175 +41,163 @@ namespace OodHelper.Results
             }
         }
         
-        private string _finishCode;
         public string FinishCode
         {
             get
             {
-                return _finishCode;
+                return _row["finish_code"] as string;
             }
             set
             {
-                _finishCode = value;
+                _row["finish_code"] = value;
             }
         }
 
-        private DateTime _finishDate;
         public string FinishDate
         {
             get
             {
-                return _finishDate.ToString("HH:mm:ss");
+                if (_row["finish_date"] != DBNull.Value)
+                {
+                    DateTime finish = (DateTime)_row["finish_date"];
+                    return finish.ToString("HH:mm:ss");
+                }
+                else
+                    return string.Empty;
             }
 
             set
             {
                 TimeSpan resultTime;
-                if (TimeSpan.TryParse(value, out resultTime) ||
+                if (TimeSpan.TryParse(value, out resultTime) || 
                     TimeSpan.TryParseExact(value, "hh\\ mm\\ ss", null, out resultTime))
-                {
-                    _finishDate = _date + resultTime;
-                }
+                    _row["finish_date"] = _date + resultTime;
                 OnPropertyChanged("FinishDate");
             }
         }
 
-        private double? _overridePoints;
         public string OverridePoints
         {
             get
             {
-                return _overridePoints.ToString();
+                return (_row["override_points"] != DBNull.Value) ? _row["override_points"].ToString() : string.Empty;
             }
             set
             {
                 double tmp;
                 if (Double.TryParse(value, out tmp))
-                    _overridePoints = tmp;
+                    _row["override_points"] = tmp;
                 OnPropertyChanged("OverridePoints");
             }
         }
 
-        private int _laps;
         public string Laps
         {
             get
             {
-                return _laps.ToString();
+                return (_row["laps"] != DBNull.Value) ? _row["laps"].ToString() : string.Empty;
             }
             set
             {
                 int tmp;
                 if (Int32.TryParse(value, out tmp))
-                    _laps = tmp;
+                    _row["laps"] = tmp;
                 OnPropertyChanged("Laps");
             }
         }
 
-        private int? _elapsed;
         public string Elapsed
         {
             get
             {
-                if (_elapsed.HasValue)
-                    return new TimeSpan(_elapsed.Value*10000000).ToString();
+                if (_row["elapsed"] != DBNull.Value)
+                {
+                    TimeSpan s = new TimeSpan(0,0,(int)_row["elapsed"]);
+                    if (s.Days > 0)
+                        return s.ToString("d\\ hh\\:mm\\:ss");
+                    return s.ToString("hh\\:mm\\:ss");
+                }
                 else
                     return string.Empty;
             }
             set
             {
-                TimeSpan resultTime;
-                if (TimeSpan.TryParse(value, out resultTime) ||
-                    TimeSpan.TryParseExact(value, "hh\\ mm\\ ss", null, out resultTime))
-                {
-                    _elapsed = (int)Math.Round(resultTime.TotalSeconds);
-                }
-                OnPropertyChanged("Elapsed");
             }
         }
 
-        private double? _corrected;
         public string Corrected
         {
             get
             {
-                if (_corrected.HasValue)
-                    return new TimeSpan((long)Math.Round(_corrected.Value*10000000)).ToString();
+                if (_row["corrected"] != DBNull.Value)
+                {
+                    TimeSpan s = new TimeSpan((long)((double)_row["corrected"] * 10000000));
+                    if (s.Days > 0)
+                        return s.ToString("d\\ hh\\:mm\\:ss\\.ff");
+                    return s.ToString("hh\\:mm\\:ss\\.ff");
+                }
                 else
                     return string.Empty;
             }
             set
             {
-                TimeSpan resultTime;
-                if (TimeSpan.TryParse(value, out resultTime) ||
-                    TimeSpan.TryParseExact(value, "hh\\ mm\\ ss\\ ff", null, out resultTime))
-                {
-                    _corrected = resultTime.TotalSeconds;
-                }
-                OnPropertyChanged("Corrected");
             }
         }
 
-        private double? _standardCorrected;
         public string StandardCorrected
         {
             get
             {
-                if (_standardCorrected.HasValue)
-                    return new TimeSpan((long)Math.Round(_standardCorrected.Value * 10000000)).ToString();
+                if (_row["standard_corrected"] != DBNull.Value)
+                {
+                    TimeSpan s = new TimeSpan((long)((double)_row["standard_corrected"] * 10000000));
+                    if (s.Days > 0)
+                        return s.ToString("d\\ hh\\:mm\\:ss\\.ff");
+                    return s.ToString("hh\\:mm\\:ss\\.ff");
+                }
                 else
                     return string.Empty;
             }
             set
             {
-                TimeSpan resultTime;
-                if (TimeSpan.TryParse(value, out resultTime) ||
-                    TimeSpan.TryParseExact(value, "hh\\ mm\\ ss\\ ff", null, out resultTime))
-                {
-                    _standardCorrected = resultTime.TotalSeconds;
-                }
-                OnPropertyChanged("StandardCorrected");
             }
         }
 
-        private int? _place;
-        public int? Place
+        public string Place
         {
             get
             {
-                return _place;
+                return _row["place"].ToString();
             }
             set
             {
-                _place = value;
+                _row["place"] = value;
                 OnPropertyChanged("Place");
             }
         }
 
-        private double? _points;
         public string Points
         {
             get
             {
-                return _place.ToString();
+                return _row["place"].ToString();
             }
             set
             {
                 Double tmp;
                 if (Double.TryParse(value, out tmp))
-                    _points = tmp;
+                    _row["points"] = tmp;
                 else if (value.Trim() == string.Empty)
-                    _points = null;
+                    _row["points"] = null;
                 OnPropertyChanged("Points");
             }
         }
 
-        private int? _openHandicap;
         public string OpenHandicap
         {
             get
             {
-                return _openHandicap.ToString();
+                return _row["open_handicap"].ToString();
             }
 
             set
@@ -218,12 +205,11 @@ namespace OodHelper.Results
             }
         }
 
-        private int? _rollingHandicap;
         public string RollingHandicap
         {
             get
             {
-                return _rollingHandicap.ToString();
+                return _row["rolling_handicap"].ToString();
             }
 
             set
@@ -231,12 +217,11 @@ namespace OodHelper.Results
             }
         }
 
-        private int? _achievedHandicap;
         public string AchievedHandicap
         {
             get
             {
-                return _achievedHandicap.ToString();
+                return _row["achieved_handicap"].ToString();
             }
 
             set
@@ -244,12 +229,11 @@ namespace OodHelper.Results
             }
         }
 
-        private int? _newRollingHandicap;
         public string NewRollingHandicap
         {
             get
             {
-                return _newRollingHandicap.ToString();
+                return _row["new_rolling_handicap"].ToString();
             }
 
             set
@@ -257,31 +241,28 @@ namespace OodHelper.Results
             }
         }
 
-        private string _handicapStatus;
         public string HandicapStatus
         {
-            get { return _handicapStatus; }
-            set { _handicapStatus = value; }
+            get { return _row["handicap_status"] as string; }
+            set { }
         }
 
-        private string _c;
         public string C
         {
-            get { return _c; }
-            set { _c= value; }
+            get { return _row["c"] as string; }
+            set { }
         }
 
         private string _a;
         public string A
         {
-            get { return _a; }
-            set { _a = value; }
+            get { return _row["a"] as string; }
+            set { }
         }
 
-        private int _performanceIndex;
         public string PerformanceIndex
         {
-            get { return _performanceIndex.ToString(); }
+            get { return _row["performance_index"].ToString(); }
             set { }
         }
     }

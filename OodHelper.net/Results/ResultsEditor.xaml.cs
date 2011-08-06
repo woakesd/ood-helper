@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -401,7 +402,10 @@ namespace OodHelper.Results
                 rd.Columns["laps"].ReadOnly = false;
             rd.Columns["override_points"].ReadOnly = false;
 
-            Races.ItemsSource = rd.DefaultView;
+            IList<ResultModel> results = (from DataRow r in rd.Rows
+                                          select new ResultModel(r, DateTime.Today)).ToList<ResultModel>();
+
+            Races.ItemsSource = results;
             this.DataContext = this;
         }
 
@@ -440,7 +444,7 @@ namespace OodHelper.Results
                 else
                     defaultFinish = StartDate.Value.AddSeconds((double)time_limit_delta) + Extension;
 
-                col = (DataGridTextColumn)Races.Columns[rd.Columns["start_date"].Ordinal];
+                /*col = (DataGridTextColumn)Races.Columns[rd.Columns["start_date"].Ordinal];
                 b = (Binding)col.Binding;
                 b.Converter = new MyDateTimeConverter(StartDate.Value.Date);
                 col.Binding = b;
@@ -448,10 +452,11 @@ namespace OodHelper.Results
                 col = (DataGridTextColumn)Races.Columns[rd.Columns["finish_date"].Ordinal];
                 b = (Binding)col.Binding;
                 b.Converter = new MyDateTimeConverter(defaultFinish.Date);
-                col.Binding = b;
+                col.Binding = b;*/
             }
             else
             {
+                /*
                 col = (DataGridTextColumn)Races.Columns[rd.Columns["start_date"].Ordinal];
                 b = (Binding)col.Binding;
                 b.Converter = new DateTimeTimeConverter(StartDate.Value.Date);
@@ -460,11 +465,11 @@ namespace OodHelper.Results
                 col = (DataGridTextColumn)Races.Columns[rd.Columns["finish_date"].Ordinal];
                 b = (Binding)col.Binding;
                 b.Converter = new DateTimeTimeConverter(StartDate.Value.Date);
-                col.Binding = b;
+                col.Binding = b;*/
             }
 
             foreach (DataGridColumn gc in Races.Columns)
-                gc.IsReadOnly = rd.Columns[gc.SortMemberPath].ReadOnly;
+                ;//gc.IsReadOnly = rd.Columns[gc.SortMemberPath].ReadOnly;
 
             Color x = new Color();
             x.A = 255;
