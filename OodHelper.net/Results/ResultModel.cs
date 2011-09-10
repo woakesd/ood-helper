@@ -228,7 +228,9 @@ namespace OodHelper.Results
             }
             set
             {
-                _row["place"] = value;
+                int tmp;
+                if (Int32.TryParse(value, out tmp))
+                    _row["place"] = tmp;
                 OnPropertyChanged("Place");
             }
         }
@@ -310,7 +312,6 @@ namespace OodHelper.Results
             set { }
         }
 
-        private string _a;
         public string A
         {
             get { return _row["a"] as string; }
