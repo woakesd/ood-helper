@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using System.Text;
+using System.Windows;
 
 namespace OodHelper.Results
 {
     class ResultModel : NotifyPropertyChanged
     {
         private DataRow _row;
-        public ResultModel(DataRow result, DateTime StartDate)
+        public ResultModel(DataRow result, DateTime StartDate, DateTime LimitDate)
         {
             _row = result;
-            _date = StartDate;
+            _startDate = StartDate;
+            _limitDate = LimitDate;
         }
 
         public int Rid { get { return (int)_row["rid"]; } }
@@ -21,8 +23,31 @@ namespace OodHelper.Results
         public string BoatClass { get { return _row["boatclass"] as string; } }
         public string SailNo { get { return _row["sailno"] as string; } }
 
-        private DateTime _date;
-        public string StartDate {
+        private DateTime _startDate;
+        private DateTime _limitDate;
+
+        public DateTime? StartDate
+        {
+            get
+            {
+                if (_row["start_date"] != DBNull.Value)
+                    return ((DateTime)_row["start_date"]).Date;
+                else
+                    return null;
+            }
+
+            set
+            {
+                if (_row["start_date"] != DBNull.Value)
+                    _row["start_date"] = value + ((DateTime)_row["start_date"]).TimeOfDay;
+                else
+                    _row["start_date"] = value;
+                OnPropertyChanged("StartDate");
+            }
+        }
+
+        public string StartTime
+        {
             get
             {
                 if (_row["start_date"] != DBNull.Value)
@@ -36,8 +61,8 @@ namespace OodHelper.Results
                 TimeSpan resultTime;
                 if (TimeSpan.TryParse(value, out resultTime) || 
                     TimeSpan.TryParseExact(value, "hh\\ mm\\ ss", null, out resultTime))
-                    _row["start_date"] = _date + resultTime;
-                OnPropertyChanged("StartDate");
+                    _row["start_date"] = _startDate.Date + resultTime;
+                OnPropertyChanged("StartTime");
             }
         }
         
@@ -53,7 +78,27 @@ namespace OodHelper.Results
             }
         }
 
-        public string FinishDate
+        public DateTime? FinishDate
+        {
+            get
+            {
+                if (_row["finish_date"] != DBNull.Value)
+                    return ((DateTime)_row["finish_date"]).Date;
+                else
+                    return null;
+            }
+
+            set
+            {
+                if (_row["finish_date"] != DBNull.Value)
+                    _row["finish_date"] = value + ((DateTime)_row["finish_date"]).TimeOfDay;
+                else
+                    _row["finish_date"] = value;
+                OnPropertyChanged("FinishDate");
+            }
+        }
+
+        public string FinishTime
         {
             get
             {
@@ -69,10 +114,15 @@ namespace OodHelper.Results
             set
             {
                 TimeSpan resultTime;
-                if (TimeSpan.TryParse(value, out resultTime) || 
+                if (TimeSpan.TryParse(value, out resultTime) ||
                     TimeSpan.TryParseExact(value, "hh\\ mm\\ ss", null, out resultTime))
-                    _row["finish_date"] = _date + resultTime;
-                OnPropertyChanged("FinishDate");
+                {
+                    if (_row["finish_date"] != DBNull.Value)
+                        _row["finish_date"] = ((DateTime)_row["finish_date"]).Date + resultTime;
+                    else
+                        _row["finish_date"] = _startDate.Date + resultTime;
+                }
+                OnPropertyChanged("FinishTime");
             }
         }
 

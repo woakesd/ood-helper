@@ -288,6 +288,8 @@ namespace OodHelper.Results
             }
         }
 
+        DateTime LimitDate = DateTime.Now;
+
         public void LoadGrid()
         {
             Db c = new Db(@"SELECT start_date, time_limit_fixed, time_limit_delta, extension, 
@@ -303,6 +305,11 @@ namespace OodHelper.Results
             
             time_limit_fixed = caldata["time_limit_fixed"] as DateTime?;
             time_limit_delta = caldata["time_limit_delta"] as int?;
+
+            if (time_limit_fixed.HasValue)
+                LimitDate = time_limit_fixed.Value;
+            else if (time_limit_delta.HasValue)
+                LimitDate = StartDate.Value.AddSeconds(time_limit_delta.Value);
 
             if (caldata["extension"] != DBNull.Value)
                 extension = (int)caldata["extension"];
@@ -402,12 +409,39 @@ namespace OodHelper.Results
                 rd.Columns["laps"].ReadOnly = false;
             rd.Columns["override_points"].ReadOnly = false;
 
+            //if (!DisplayDate)
+            {
+                //Races.Columns.
+            }
+
+
             IList<ResultModel> results = (from DataRow r in rd.Rows
-                                          select new ResultModel(r, DateTime.Today)).ToList<ResultModel>();
+                                          select new ResultModel(r, StartDate.Value, LimitDate)).ToList<ResultModel>();
 
             Races.ItemsSource = results;
             this.DataContext = this;
         }
+
+        public Visibility DisplayDate
+        {
+            //
+            // If time limit date is not the same day as start date then we show
+            // start and finish dates as well as time.
+            //
+            get
+            {
+                return (StartDate.Value.Date != LimitDate.Date) ? Visibility.Visible : Visibility.Hidden;
+            }
+        }
+
+        public bool StartReadOnly
+        {
+            get
+            {
+                return rd.Columns["start_date"].ReadOnly;
+            }
+        }
+
 
         void rd_RowChanged(object sender, DataRowChangeEventArgs e)
         {
@@ -432,9 +466,6 @@ namespace OodHelper.Results
 
         void SetColumnAttributes()
         {
-            Binding b;
-            DataGridTextColumn col;
-
             if (time_limit_fixed.HasValue && StartDate.Value.Date < time_limit_fixed.Value.Date
                 || time_limit_delta.HasValue && StartDate.Value.Date < (StartDate.Value.AddSeconds((double)time_limit_delta) + Extension).Date)
             {
@@ -443,29 +474,6 @@ namespace OodHelper.Results
                     defaultFinish = time_limit_fixed.Value;
                 else
                     defaultFinish = StartDate.Value.AddSeconds((double)time_limit_delta) + Extension;
-
-                /*col = (DataGridTextColumn)Races.Columns[rd.Columns["start_date"].Ordinal];
-                b = (Binding)col.Binding;
-                b.Converter = new MyDateTimeConverter(StartDate.Value.Date);
-                col.Binding = b;
-
-                col = (DataGridTextColumn)Races.Columns[rd.Columns["finish_date"].Ordinal];
-                b = (Binding)col.Binding;
-                b.Converter = new MyDateTimeConverter(defaultFinish.Date);
-                col.Binding = b;*/
-            }
-            else
-            {
-                /*
-                col = (DataGridTextColumn)Races.Columns[rd.Columns["start_date"].Ordinal];
-                b = (Binding)col.Binding;
-                b.Converter = new DateTimeTimeConverter(StartDate.Value.Date);
-                col.Binding = b;
-
-                col = (DataGridTextColumn)Races.Columns[rd.Columns["finish_date"].Ordinal];
-                b = (Binding)col.Binding;
-                b.Converter = new DateTimeTimeConverter(StartDate.Value.Date);
-                col.Binding = b;*/
             }
 
             foreach (DataGridColumn gc in Races.Columns)
@@ -479,6 +487,7 @@ namespace OodHelper.Results
             SolidColorBrush vlg = new SolidColorBrush(x);
             foreach (DataGridColumn c in Races.Columns)
             {
+                
                 if (c.IsReadOnly)
                 {
                     c.CellStyle = new System.Windows.Style();

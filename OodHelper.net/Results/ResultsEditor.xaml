@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:OodHelper.Converters"
+             xmlns:me="clr-namespace:OodHelper.Results"
              d:DesignHeight="128" d:DesignWidth="1293">
     <UserControl.Resources>
         <local:TimeSpanHMConverter x:Key="TimeSpanHMConverter" />
@@ -78,7 +79,7 @@
             <DataGrid SelectionMode="Single" Name="Races" CanUserDeleteRows="False" AutoGenerateColumns="False" SelectionUnit="Cell" 
                       CanUserResizeRows="False" CanUserAddRows="False" IsReadOnly="False">
                 <DataGrid.Resources>
-                    <Style TargetType="{x:Type DataGridCell}">
+                   <Style TargetType="{x:Type DataGridCell}">
                         <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridCell_PreviewMouseLeftButtonDown" />
                         <EventSetter Event="PreviewKeyDown" Handler="DataGridCell_PreviewKeyDown" />
                         <EventSetter Event="KeyUp" Handler="DataGridCell_KeyUp" />
@@ -90,9 +91,36 @@
                     <DataGridTextColumn Binding="{Binding BoatName}" Header="Boat" IsReadOnly="True"/>
                     <DataGridTextColumn Binding="{Binding BoatClass}" Header="Class"  IsReadOnly="True"/>
                     <DataGridTextColumn Binding="{Binding SailNo}" Header="Sail No" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding StartDate}" Header="Start" IsReadOnly="True" />
+                    <DataGridTemplateColumn Header="Start Date" 
+                                            Visibility="{Binding Path=(FrameworkElement.DataContext).DisplayDate,RelativeSource={x:Static RelativeSource.Self}}" 
+                                            IsReadOnly="{Binding Path=(FrameworkElement.DataContext).StartReadOnly,RelativeSource={x:Static RelativeSource.Self}}">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding StartDate,StringFormat={}{0:dd MMM yyyy}}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <DatePicker SelectedDate="{Binding StartDate}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Binding="{Binding StartTime}" Header="Start" 
+                                        IsReadOnly="{Binding Path=(FrameworkElement.DataContext).StartReadOnly,RelativeSource={x:Static RelativeSource.Self}}" />
                     <DataGridTextColumn Binding="{Binding FinishCode}" Header="Code" />
-                    <DataGridTextColumn Binding="{Binding FinishDate}" Header="Finish" />
+                    <DataGridTemplateColumn Header="Finish Date" Visibility="{Binding Path=(FrameworkElement.DataContext).DisplayDate,RelativeSource={x:Static RelativeSource.Self}}">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding FinishDate,StringFormat={}{0:dd MMM yyyy}}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <DatePicker SelectedDate="{Binding FinishDate}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Binding="{Binding FinishTime}" Header="Finish" />
                     <DataGridTextColumn Binding="{Binding Laps}" Header="Laps" />
                     <DataGridTextColumn Binding="{Binding OverridePoints}" Header="Override Points" />
                     <DataGridTextColumn Binding="{Binding Elapsed}" Header="Elapsed" IsReadOnly="True"/>
