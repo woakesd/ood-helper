@@ -409,16 +409,8 @@ namespace OodHelper.Results
                 rd.Columns["laps"].ReadOnly = false;
             rd.Columns["override_points"].ReadOnly = false;
 
-            //if (!DisplayDate)
-            {
-                //Races.Columns.
-            }
-
-
-            IList<ResultModel> results = (from DataRow r in rd.Rows
+            Races.ItemsSource = (from DataRow r in rd.Rows
                                           select new ResultModel(r, StartDate.Value, LimitDate)).ToList<ResultModel>();
-
-            Races.ItemsSource = results;
             this.DataContext = this;
         }
 
@@ -442,6 +434,69 @@ namespace OodHelper.Results
             }
         }
 
+        public Visibility LapsVisible
+        {
+            get
+            {
+                return rd.Columns["laps"].ReadOnly ? Visibility.Hidden : Visibility.Visible;
+            }
+        }
+
+        public Visibility StdCorrectedVisible
+        {
+            get
+            {
+                switch (Handicap)
+                {
+                    case "o":
+                        return Visibility.Visible;
+                    default:
+                        return Visibility.Collapsed;
+                }
+            }
+        }
+
+        public Visibility CorrectedVisible
+        {
+            get
+            {
+                switch (Handicap)
+                {
+                    case "r":
+                        return Visibility.Visible;
+                    default:
+                        return Visibility.Collapsed;
+                }
+            }
+        }
+
+        public Visibility OpenHandicapVisible
+        {
+            get
+            {
+                switch (Handicap)
+                {
+                    case "o":
+                        return Visibility.Visible;
+                    default:
+                        return Visibility.Collapsed;
+                }
+            }
+        }
+
+        public Visibility RollingHandicapVisible
+        {
+            get
+            {
+                switch (Handicap)
+                {
+                    case "r":
+                        return Visibility.Visible;
+                    default:
+                        return Visibility.Collapsed;
+                }
+            }
+        }
 
         void rd_RowChanged(object sender, DataRowChangeEventArgs e)
         {
@@ -466,19 +521,6 @@ namespace OodHelper.Results
 
         void SetColumnAttributes()
         {
-            if (time_limit_fixed.HasValue && StartDate.Value.Date < time_limit_fixed.Value.Date
-                || time_limit_delta.HasValue && StartDate.Value.Date < (StartDate.Value.AddSeconds((double)time_limit_delta) + Extension).Date)
-            {
-                DateTime defaultFinish;
-                if (time_limit_fixed.HasValue)
-                    defaultFinish = time_limit_fixed.Value;
-                else
-                    defaultFinish = StartDate.Value.AddSeconds((double)time_limit_delta) + Extension;
-            }
-
-            foreach (DataGridColumn gc in Races.Columns)
-                ;//gc.IsReadOnly = rd.Columns[gc.SortMemberPath].ReadOnly;
-
             Color x = new Color();
             x.A = 255;
             x.R = 224;

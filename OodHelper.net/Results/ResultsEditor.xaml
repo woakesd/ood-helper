@@ -101,11 +101,11 @@
                         </DataGridTemplateColumn.CellTemplate>
                         <DataGridTemplateColumn.CellEditingTemplate>
                             <DataTemplate>
-                                <DatePicker SelectedDate="{Binding StartDate}" />
+                                <DatePicker SelectedDate="{Binding StartDate,UpdateSourceTrigger=PropertyChanged}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Binding="{Binding StartTime}" Header="Start" 
+                    <DataGridTextColumn Binding="{Binding StartTime,UpdateSourceTrigger=LostFocus}" Header="Start" 
                                         IsReadOnly="{Binding Path=(FrameworkElement.DataContext).StartReadOnly,RelativeSource={x:Static RelativeSource.Self}}" />
                     <DataGridTextColumn Binding="{Binding FinishCode}" Header="Code" />
                     <DataGridTemplateColumn Header="Finish Date" Visibility="{Binding Path=(FrameworkElement.DataContext).DisplayDate,RelativeSource={x:Static RelativeSource.Self}}">
@@ -116,26 +116,27 @@
                         </DataGridTemplateColumn.CellTemplate>
                         <DataGridTemplateColumn.CellEditingTemplate>
                             <DataTemplate>
-                                <DatePicker SelectedDate="{Binding FinishDate}" />
+                                <DatePicker SelectedDate="{Binding FinishDate,UpdateSourceTrigger=PropertyChanged}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Binding="{Binding FinishTime}" Header="Finish" />
-                    <DataGridTextColumn Binding="{Binding Laps}" Header="Laps" />
-                    <DataGridTextColumn Binding="{Binding OverridePoints}" Header="Override Points" />
+                    <DataGridTextColumn Binding="{Binding FinishTime,UpdateSourceTrigger=LostFocus}" Header="Finish" />
+                    <DataGridTextColumn Binding="{Binding Laps,UpdateSourceTrigger=LostFocus}" Header="Laps" 
+                                        Visibility="{Binding Path=(FrameworkElement.DataContext).LapsVisible,RelativeSource={x:Static RelativeSource.Self}}"/>
+                    <DataGridTextColumn Binding="{Binding OverridePoints,UpdateSourceTrigger=LostFocus}" Header="Override Points" />
                     <DataGridTextColumn Binding="{Binding Elapsed}" Header="Elapsed" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding StandardCorrected}" Header="Std Corrected" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding Corrected}" Header="Corrected" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding StandardCorrected}" Header="Std Corrected" IsReadOnly="True"
+                                        Visibility="{Binding Path=(FrameworkElement.DataContext).StdCorrectedVisible,RelativeSource={x:Static RelativeSource.Self}}"/>
+                    <DataGridTextColumn Binding="{Binding Corrected}" Header="Corrected" IsReadOnly="True"
+                                        Visibility="{Binding Path=(FrameworkElement.DataContext).CorrectedVisible,RelativeSource={x:Static RelativeSource.Self}}"/>
                     <DataGridTextColumn Binding="{Binding Place}" Header="Place" IsReadOnly="True"/>
                     <DataGridTextColumn Binding="{Binding Points}" Header="Points" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding OpenHandicap}" Header="Open Handicap" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding RollingHandicap}" Header="Rolling Handicap" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding OpenHandicap}" Header="Open Handicap" IsReadOnly="True"
+                                        Visibility="{Binding Path=(FrameworkElement.DataContext).OpenHandicapVisible,RelativeSource={x:Static RelativeSource.Self}}"/>
+                    <DataGridTextColumn Binding="{Binding RollingHandicap}" Header="Rolling Handicap" IsReadOnly="True"
+                                        Visibility="{Binding Path=(FrameworkElement.DataContext).RollingHandicapVisible,RelativeSource={x:Static RelativeSource.Self}}"/>
                     <DataGridTextColumn Binding="{Binding AchievedHandicap}" Header="Achieved Handicap" IsReadOnly="True"/>
                     <DataGridTextColumn Binding="{Binding NewRollingHandicap}" Header="New Rolling Handicap" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding HandicapStatus}" Header="Handicap Status" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding C}" Header="C" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding A}" Header="A" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding PerformanceIndex}" Header="PI" IsReadOnly="True"/>
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>

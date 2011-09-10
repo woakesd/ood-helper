@@ -54,10 +54,10 @@ namespace OodHelper.Results
                 ti.Content = sbt[i];
                 Fleets.Items.Add(ti);
 
-                DataView d = (DataView) reds[i].Races.ItemsSource;
+                IList<ResultModel> d = reds[i].Races.ItemsSource as IList<ResultModel>;
                 DataTable bts = new DataTable();
                 bts.TableName = "boats";
-                bts.Columns.Add(new DataColumn("bid"));
+                bts.Columns.Add(new DataColumn("bid", typeof(int)));
                 DataColumn[] pk = new DataColumn[1];
                 pk[0] = bts.Columns["bid"];
                 bts.PrimaryKey = pk;
@@ -65,18 +65,18 @@ namespace OodHelper.Results
                 bts.Columns.Add(new DataColumn("boatclass"));
                 bts.Columns.Add(new DataColumn("sailno"));
                 bts.Columns.Add(new DataColumn("handicap_status"));
-                bts.Columns.Add(new DataColumn("open_handicap"));
-                bts.Columns.Add(new DataColumn("rolling_handicap"));
-                foreach (DataRow r in d.Table.Rows)
+                bts.Columns.Add(new DataColumn("open_handicap", typeof(int)));
+                bts.Columns.Add(new DataColumn("rolling_handicap", typeof(int)));
+                foreach (ResultModel r in d)
                 {
                     DataRow gr = bts.NewRow();
-                    gr["bid"] = r["bid"];
-                    gr["boatname"] = r["boatname"];
-                    gr["boatclass"] = r["boatclass"];
-                    gr["sailno"] = r["sailno"];
-                    gr["handicap_status"] = r["handicap_status"];
-                    gr["open_handicap"] = r["open_handicap"];
-                    gr["rolling_handicap"] = r["rolling_handicap"];
+                    gr["bid"] = r.Bid;
+                    gr["boatname"] = r.BoatName;
+                    gr["boatclass"] = r.BoatClass;
+                    gr["sailno"] = r.SailNo;
+                    gr["handicap_status"] = r.HandicapStatus;
+                    gr["open_handicap"] = r.OpenHandicap;
+                    gr["rolling_handicap"] = r.RollingHandicap;
                     bts.Rows.Add(gr);
                 }
                 bts.AcceptChanges();
@@ -321,7 +321,7 @@ namespace OodHelper.Results
             this.DialogResult = true;
             for (int i = 0; i < sbt.Length; i++)
             {
-                DataTable rd = ((DataView)reds[i].Races.ItemsSource).Table;
+                IList<ResultModel> rd = reds[i].Races.ItemsSource as IList<ResultModel>;
                 a["rid"] = sbt[i].RaceId;
                 DataTable sb = ((DataView)sbt[i].Boats.ItemsSource).Table;
                 Hashtable selectedBids = new Hashtable();
@@ -331,7 +331,16 @@ namespace OodHelper.Results
                 //
                 foreach (DataRow r in sb.Rows)
                 {
-                    if (rd.Select("bid = " + r["bid"] + " AND rid = " + a["rid"]).Length == 0)
+                    bool inRaceEdit = false;
+                    foreach (ResultModel rm in rd)
+                    {
+                        if (rm.Bid == (int)r["bid"] && rm.Rid == (int)a["rid"])
+                        {
+                            inRaceEdit = true;
+                            break;
+                        }
+                    }
+                    if (!inRaceEdit)
                     {
                         a["bid"] = r["bid"];
                         a["start_date"] = reds[i].StartDate;
@@ -346,10 +355,10 @@ namespace OodHelper.Results
                 // For each boat in the race edit control check to see if it is in selected boats,
                 // if not then delete it.
                 //
-                foreach (DataRow r in rd.Rows)
+                foreach (ResultModel r in rd)
                 {
-                    a["bid"] = r["bid"];
-                    if (!selectedBids.ContainsKey(r["bid"].ToString()))
+                    a["bid"] = r.Bid;
+                    if (!selectedBids.ContainsKey(r.Bid.ToString()))
                     {
                         delete.ExecuteNonQuery(a);
                     }

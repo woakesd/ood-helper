@@ -42,6 +42,7 @@ namespace OodHelper.Results
                     _row["start_date"] = value + ((DateTime)_row["start_date"]).TimeOfDay;
                 else
                     _row["start_date"] = value;
+                OnPropertyChanged("StartTime");
                 OnPropertyChanged("StartDate");
             }
         }
@@ -63,6 +64,7 @@ namespace OodHelper.Results
                     TimeSpan.TryParseExact(value, "hh\\ mm\\ ss", null, out resultTime))
                     _row["start_date"] = _startDate.Date + resultTime;
                 OnPropertyChanged("StartTime");
+                OnPropertyChanged("StartDate");
             }
         }
         
@@ -75,6 +77,7 @@ namespace OodHelper.Results
             set
             {
                 _row["finish_code"] = value;
+                OnPropertyChanged("FinishCode");
             }
         }
 
@@ -94,6 +97,7 @@ namespace OodHelper.Results
                     _row["finish_date"] = value + ((DateTime)_row["finish_date"]).TimeOfDay;
                 else
                     _row["finish_date"] = value;
+                OnPropertyChanged("FinishTime");
                 OnPropertyChanged("FinishDate");
             }
         }
@@ -122,7 +126,10 @@ namespace OodHelper.Results
                     else
                         _row["finish_date"] = _startDate.Date + resultTime;
                 }
+                else
+                    _row["finish_date"] = DBNull.Value;
                 OnPropertyChanged("FinishTime");
+                OnPropertyChanged("FinishDate");
             }
         }
 
