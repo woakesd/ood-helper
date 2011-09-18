@@ -4,12 +4,13 @@
              mc:Ignorable="d"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:local="clr-namespace:OodHelper.Converters"
-             xmlns:me="clr-namespace:OodHelper.Results"
+             xmlns:cnv="clr-namespace:OodHelper.Converters"
              d:DesignHeight="128" d:DesignWidth="1293">
     <UserControl.Resources>
-        <local:TimeSpanHMConverter x:Key="TimeSpanHMConverter" />
-        <local:IntConverter x:Key="IntConverter" />
+        <cnv:IntConverter x:Key="IntConverter"/>
+        <cnv:MyBooleanToVisibilityConverter x:Key="MyBooleanToVisibilityConverter"/>
+        <cnv:MyDateTimeConverter x:Key="MyDateTimeConverter"/>
+        <cnv:TimeSpanHMConverter x:Key="TimeSpanHMConverter"/>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -108,7 +109,9 @@
                     <DataGridTextColumn Binding="{Binding StartTime,UpdateSourceTrigger=LostFocus}" Header="Start" 
                                         IsReadOnly="{Binding Path=(FrameworkElement.DataContext).StartReadOnly,RelativeSource={x:Static RelativeSource.Self}}" />
                     <DataGridTextColumn Binding="{Binding FinishCode}" Header="Code" />
-                    <DataGridTemplateColumn Header="Finish Date" Visibility="{Binding Path=(FrameworkElement.DataContext).DisplayDate,RelativeSource={x:Static RelativeSource.Self}}">
+                    <DataGridTemplateColumn Header="Finish Date" 
+                                            IsReadOnly="{Binding Path=(FrameworkElement.DataContext).FinishReadOnly,RelativeSource={x:Static RelativeSource.Self}}"
+                                            Visibility="{Binding Path=(FrameworkElement.DataContext).DisplayDate,RelativeSource={x:Static RelativeSource.Self}}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding FinishDate,StringFormat={}{0:dd MMM yyyy}}" />
@@ -120,7 +123,8 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Binding="{Binding FinishTime,UpdateSourceTrigger=LostFocus}" Header="Finish" />
+                    <DataGridTextColumn Binding="{Binding FinishTime,UpdateSourceTrigger=LostFocus}" Header="Finish"
+                                        IsReadOnly="{Binding Path=(FrameworkElement.DataContext).FinishReadOnly,RelativeSource={x:Static RelativeSource.Self}}" />
                     <DataGridTextColumn Binding="{Binding Laps,UpdateSourceTrigger=LostFocus}" Header="Laps" 
                                         Visibility="{Binding Path=(FrameworkElement.DataContext).LapsVisible,RelativeSource={x:Static RelativeSource.Self}}"/>
                     <DataGridTextColumn Binding="{Binding OverridePoints,UpdateSourceTrigger=LostFocus}" Header="Override Points" />
@@ -129,14 +133,17 @@
                                         Visibility="{Binding Path=(FrameworkElement.DataContext).StdCorrectedVisible,RelativeSource={x:Static RelativeSource.Self}}"/>
                     <DataGridTextColumn Binding="{Binding Corrected}" Header="Corrected" IsReadOnly="True"
                                         Visibility="{Binding Path=(FrameworkElement.DataContext).CorrectedVisible,RelativeSource={x:Static RelativeSource.Self}}"/>
-                    <DataGridTextColumn Binding="{Binding Place}" Header="Place" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Place}" Header="Place"
+                                        IsReadOnly="{Binding Path=(FrameworkElement.DataContext).PlaceReadOnly,RelativeSource={x:Static RelativeSource.Self}}"/>
                     <DataGridTextColumn Binding="{Binding Points}" Header="Points" IsReadOnly="True"/>
                     <DataGridTextColumn Binding="{Binding OpenHandicap}" Header="Open Handicap" IsReadOnly="True"
                                         Visibility="{Binding Path=(FrameworkElement.DataContext).OpenHandicapVisible,RelativeSource={x:Static RelativeSource.Self}}"/>
                     <DataGridTextColumn Binding="{Binding RollingHandicap}" Header="Rolling Handicap" IsReadOnly="True"
                                         Visibility="{Binding Path=(FrameworkElement.DataContext).RollingHandicapVisible,RelativeSource={x:Static RelativeSource.Self}}"/>
-                    <DataGridTextColumn Binding="{Binding AchievedHandicap}" Header="Achieved Handicap" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding NewRollingHandicap}" Header="New Rolling Handicap" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding AchievedHandicap}" Header="Achieved Handicap" IsReadOnly="True"
+                                        Visibility="{Binding Path=(FrameworkElement.DataContext).AchievedHandicapVisible,RelativeSource={x:Static RelativeSource.Self}}"/>
+                    <DataGridTextColumn Binding="{Binding NewRollingHandicap}" Header="New Rolling Handicap" IsReadOnly="True"
+                                        Visibility="{Binding Path=(FrameworkElement.DataContext).NewRollingHandicapVisible,RelativeSource={x:Static RelativeSource.Self}}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
