@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -282,11 +283,18 @@ namespace OodHelper.Results
                         }
                         else
                         {
-                            RuleSelector rs = new RuleSelector(new List<BoatSelectRule>(rules));
-                            if (rs.ShowDialog().Value)
+                            if (rules.Count() > 1)
                             {
-                                BoatSelectRule rc = rs.RuleChoice.SelectedItem as BoatSelectRule;
-                                if (rc != null) AddBoat((SelectedBoats)boatClasses[rc.Name], rv);
+                                RuleSelector rs = new RuleSelector(new List<BoatSelectRule>(rules));
+                                if (rs.ShowDialog().Value)
+                                {
+                                    BoatSelectRule rc = rs.RuleChoice.SelectedItem as BoatSelectRule;
+                                    if (rc != null) AddBoat((SelectedBoats)boatClasses[rc.Name], rv);
+                                }
+                            }
+                            else
+                            {
+                                AddBoat((SelectedBoats)boatClasses[rules.First().Name], rv);
                             }
                         }
                     }
@@ -331,16 +339,7 @@ namespace OodHelper.Results
                 //
                 foreach (DataRow r in sb.Rows)
                 {
-                    bool inRaceEdit = false;
-                    foreach (ResultModel rm in rd)
-                    {
-                        if (rm.Bid == (int)r["bid"] && rm.Rid == (int)a["rid"])
-                        {
-                            inRaceEdit = true;
-                            break;
-                        }
-                    }
-                    if (!inRaceEdit)
+                    if (rd.Where(rm => rm.Bid == (int)r["bid"] && rm.Rid == (int)a["rid"]).Count() == 0)
                     {
                         a["bid"] = r["bid"];
                         a["start_date"] = reds[i].StartDate;
