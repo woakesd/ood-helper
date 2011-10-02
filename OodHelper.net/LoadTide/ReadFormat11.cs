@@ -12,8 +12,36 @@ namespace OodHelper.LoadTide
         private DataTable _data;
         public DataTable Data { get { return _data; } set { _data = value; OnPropertyChanged("Data"); } }
 
+        private int _baseyear;
+        public int BaseYear
+        {
+            get
+            {
+                return _baseyear;
+            }
+            set
+            {
+                if (_baseyear != value && value > 0)
+                {
+                    DateTime _base = new DateTime(_baseyear == 0 ? 1 : _baseyear, 1, 1);
+                    DateTime _newBase = new DateTime(value, 1, 1);
+                    if (Data != null)
+                        foreach (DataRow r in Data.Rows)
+                        {
+                            DateTime tmp = (DateTime)r["date"];
+                            //TimeSpan ts = ;
+                            r["date"] = _newBase.Add(tmp - _base);
+                        }
+                    _baseyear = value;
+                    OnPropertyChanged("Data");
+                }
+                OnPropertyChanged("Year");
+            }
+        }
+
         public ReadFormat11()
         {
+            BaseYear = DateTime.Today.Year + 1;
         }
 
         public void Load(string FileName)
@@ -25,7 +53,8 @@ namespace OodHelper.LoadTide
 
             using (StreamReader sr = File.OpenText(FileName))
             {
-                DateTime d = DateTime.Today;
+                DateTime based = new DateTime(BaseYear - 1, 12, 31);
+                DateTime d = based;
                 string line;
                 while ((line = sr.ReadLine()) != null)
                 {
@@ -33,8 +62,8 @@ namespace OodHelper.LoadTide
                     {
                         int day;
                         day = Int32.Parse(line.Substring(0, 3));
-                        d = new DateTime(2010, 12, 31);
-                        d = d.AddDays(day);
+                        //d = new DateTime(BaseYear - 1, 12, 31);
+                        d = based.AddDays(day);
                     }
                     line = line.Substring(6).Trim();
                     int centimeters;

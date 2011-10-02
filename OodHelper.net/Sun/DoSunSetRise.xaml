@@ -12,6 +12,7 @@
                 <ComboBox SelectedIndex="0" Name="Year" SelectionChanged="Year_SelectionChanged">
                     <ComboBoxItem Tag="2010" Content="2010"/>
                     <ComboBoxItem Tag="2011" Content="2011"/>
+                    <ComboBoxItem Tag="2012" Content="2012"/>
                 </ComboBox>
                 <Button Name="UploadSun" Click="UploadSun_Click">
                     <Button.BorderBrush>

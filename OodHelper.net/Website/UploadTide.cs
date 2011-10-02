@@ -48,8 +48,8 @@ namespace OodHelper.Website
             StringBuilder msql = new StringBuilder();
 
             mcom.CommandText = "DELETE FROM `tidedata` WHERE date >= @sdate AND date <= @edate";
-            mcom.Parameters.AddWithValue("edate", Tide.Rows[0]["date"]);
-            mcom.Parameters.AddWithValue("sdate", Tide.Rows[Tide.Rows.Count-1]["date"]);
+            mcom.Parameters.AddWithValue("sdate", Tide.Rows[0]["date"]);
+            mcom.Parameters.AddWithValue("edate", Tide.Rows[Tide.Rows.Count-1]["date"]);
             int n = mcom.ExecuteNonQuery();
 
             mcom.CommandText = "ALTER TABLE `tidedata` DISABLE KEYS";

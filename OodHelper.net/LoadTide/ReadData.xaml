@@ -27,6 +27,8 @@
                         <Label>_Close</Label>
                     </StackPanel>
                 </Button>
+                <TextBlock Text="Year" VerticalAlignment="Center" Margin="3"/>
+                <TextBox Name="BaseYear" Width="50" BorderThickness="1" BorderBrush="Gray" Text="{Binding BaseYear}"/>
             </ToolBar>
         </ToolBarTray>
         <DataGrid Grid.Row="1" Name="TideTable" AutoGenerateColumns="False" ItemsSource="{Binding Path=Data}">

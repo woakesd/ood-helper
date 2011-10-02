@@ -50,5 +50,10 @@ namespace OodHelper.LoadTide
         {
 
         }
+
+        private void BaseYear_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }
