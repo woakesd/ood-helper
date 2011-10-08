@@ -426,6 +426,18 @@ namespace OodHelper.Results
             }
         }
 
+        public bool FinishReadOnly
+        {
+            //
+            // If time limit date is not the same day as start date then we show
+            // start and finish dates as well as time.
+            //
+            get
+            {
+                return false;
+            }
+        }
+
         public bool StartReadOnly
         {
             get

@@ -98,6 +98,7 @@ CREATE TABLE [calendar] (
 , [venue] nvarchar(11) NULL
 , [average_lap] bit NULL
 , [timegate] bit NULL
+, [sternchase] bit NULL
 , [handicapping] nvarchar(1) NULL
 , [visitors] int NULL
 , [flag] nvarchar(10) NULL

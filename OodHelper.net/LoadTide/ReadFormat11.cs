@@ -50,6 +50,8 @@ namespace OodHelper.LoadTide
             _data.Columns.Add("date", typeof(DateTime));
             _data.Columns.Add("height", typeof(double));
             _data.Columns.Add("current", typeof(double));
+            _data.Columns.Add("flow", typeof(string));
+            _data.Columns.Add("tide", typeof(string));
 
             using (StreamReader sr = File.OpenText(FileName))
             {

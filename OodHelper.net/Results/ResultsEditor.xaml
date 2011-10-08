@@ -93,7 +93,8 @@
                     <DataGridTextColumn Binding="{Binding BoatClass}" Header="Class"  IsReadOnly="True"/>
                     <DataGridTextColumn Binding="{Binding SailNo}" Header="Sail No" IsReadOnly="True"/>
                     <DataGridTemplateColumn Header="Start Date"
-                                            Visibility="{Binding Path=(FrameworkElement.DataContext).DisplayDate,RelativeSource={x:Static RelativeSource.Self}}" 
+                                            Visibility="{Binding Path=(FrameworkElement.DataContext).DisplayDate,
+                        RelativeSource={x:Static RelativeSource.Self}}" 
                                             IsReadOnly="{Binding Path=(FrameworkElement.DataContext).StartReadOnly,RelativeSource={x:Static RelativeSource.Self}}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

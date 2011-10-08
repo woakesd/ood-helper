@@ -66,7 +66,7 @@ namespace OodHelper.Website
 
                 msql.Clear();
 
-                msql.Append("INSERT INTO `tidedata` (`date`,`height`,`current`) VALUES ");
+                msql.Append("INSERT INTO `tidedata` (`date`,`height`,`current`, `flow`, `tide`) VALUES ");
 
                 BuildInsertData(sub, msql);
 
