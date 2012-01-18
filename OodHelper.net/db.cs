@@ -79,6 +79,7 @@ CREATE TABLE [boats] (
 , [p] nvarchar(1) NULL
 , [s] bit NULL
 , [beaten] int NULL
+, [uid] uniqueidentfier NULL
 )";
                 cmd.ExecuteNonQuery();
 
@@ -143,6 +144,7 @@ CREATE TABLE [people] (
 , [cp] bit NULL
 , [s] bit NULL
 , [novice] bit NULL
+, [uid] uniqueidentfier NULL
 )";
                 cmd.ExecuteNonQuery();
 

@@ -49,11 +49,11 @@ namespace OodHelper.Website
 
             StringBuilder msql = new StringBuilder("INSERT INTO `boats` (`boatname`,`boatclass`,`sailno`,`dngy`,`h`,`bid`,");
             msql.Append("`distance`,`crewname`,`ohp`,`ohstat`,`chp`,`rhp`,`ihp`,`csf`,`eng`,`kl`,`deviations`,`subscriptn`,`p`,`s`,");
-            msql.Append("`boatmemo`,`id`,`beaten`,`berth`,`hired`) VALUES ");
+            msql.Append("`boatmemo`,`id`,`beaten`,`berth`,`hired`,`uid`) VALUES ");
 
             Db c = new Db(@"SELECT boatname, boatclass, sailno, dinghy dngy, hulltype h, bid,
                     distance, crewname, open_handicap ohp, handicap_status ohstat, null chp, rolling_handicap rhp, null ihp, crew_skill_factor csf, engine_propeller eng, keel kl,
-                    deviations, subscription subscriptn, p, s, boatmemo, id, beaten, berth, hired
+                    deviations, subscription subscriptn, p, s, boatmemo, id, beaten, berth, hired, uid
                     FROM boats");
             DataTable d = c.GetData(null);
             c.Dispose();
@@ -119,10 +119,10 @@ namespace OodHelper.Website
 
             msql.Clear();
             msql.Append("INSERT INTO `people` (`firstname`,`surname`,`address1`,`address2`,`address3`,`address4`,`postcode`,");
-            msql.Append("`hometel`,`worktel`,`mobile`,`email`,`club`,`member`,`cp`,`s`,`id`,`manmemo`,`sid`,`novice`) VALUES ");
+            msql.Append("`hometel`,`worktel`,`mobile`,`email`,`club`,`member`,`cp`,`s`,`id`,`manmemo`,`sid`,`novice`,`uid`) VALUES ");
 
             c = new Db(@"SELECT firstname,surname,address1,address2,address3,address4,postcode,hometel,worktel,mobile,email,
-                        club,member,cp,s,id,manmemo,main_id sid,novice
+                        club,member,cp,s,id,manmemo,main_id sid,novice,uid
                         FROM people");
             d = c.GetData(null);
 
