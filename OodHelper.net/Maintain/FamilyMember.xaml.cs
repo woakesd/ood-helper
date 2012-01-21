@@ -69,6 +69,7 @@ namespace OodHelper.Maintain
             InitializeComponent();
 
             PersonModel pm = new PersonModel(id, mainid);
+            pm.Membership = "Fmemb";
             DataContext = pm;
         }
 
