@@ -35,6 +35,11 @@ namespace OodHelper
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             //
+            // This ensures that the SQL Server Compact DB is created.
+            //
+            Db C = new Db("SELECT 1");
+            C.Dispose();
+            //
             // This allows DataColumns to have DataContext properties as per their DataGrid.
             //
             FrameworkElement.DataContextProperty.AddOwner(typeof(DataGridColumn));

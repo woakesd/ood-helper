@@ -10,9 +10,11 @@ namespace OodHelper
 {
     class Db : IDisposable
     {
-        public static string DatabaseFolder = AppDomain.CurrentDomain.BaseDirectory;
-        public static string DatabaseName = DatabaseFolder + @"\data\oodhelper.sdf";
-        public static string DatabaseConstr = "Data Source=" + DatabaseName;
+        private static string DatabaseFolder = AppDomain.CurrentDomain.BaseDirectory;
+        private static string DatabaseName = DatabaseFolder + @"\data\oodhelper.sdf";
+        private static string _DatabaseConstr = "Data Source=" + DatabaseName;
+
+        public static string DatabaseConstr { get { return _DatabaseConstr; } }
         
         public Db(string connectionString, string sql)
         {
@@ -79,7 +81,7 @@ CREATE TABLE [boats] (
 , [p] nvarchar(1) NULL
 , [s] bit NULL
 , [beaten] int NULL
-, [uid] uniqueidentfier NULL
+, [uid] uniqueidentifier NULL
 )";
                 cmd.ExecuteNonQuery();
 
@@ -144,7 +146,7 @@ CREATE TABLE [people] (
 , [cp] bit NULL
 , [s] bit NULL
 , [novice] bit NULL
-, [uid] uniqueidentfier NULL
+, [uid] uniqueidentifier NULL
 )";
                 cmd.ExecuteNonQuery();
 
