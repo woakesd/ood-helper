@@ -18,7 +18,7 @@ namespace OodHelper.Maintain
         public PersonModel(int id)
         {
             Db get = new Db("SELECT id, main_id, firstname, surname, address1, address2, address3, address4, " +
-                "postcode, hometel, mobile, worktel, email, club, member, manmemo, cp " +
+                "postcode, hometel, mobile, worktel, email, club, member, manmemo, cp, papernewsletter, handbookexclude " +
                 "FROM people " +
                 "WHERE id = @id");
             Hashtable p = new Hashtable();
@@ -218,6 +218,7 @@ namespace OodHelper.Maintain
             }
         }
 
+
         public bool? Paid
         {
             get
@@ -227,7 +228,36 @@ namespace OodHelper.Maintain
 
             set
             {
-                Values["cp"] = value; OnPropertyChanged("Paid");
+                Values["cp"] = value;
+                OnPropertyChanged("Paid");
+            }
+        }
+
+        public bool? PaperNewsletter
+        {
+            get
+            {
+                return Values["papernewsletter"] as bool?;
+            }
+
+            set
+            {
+                Values["papernewsletter"] = value;
+                OnPropertyChanged("PaperNewsletter");
+            }
+        }
+
+        public bool? HandbookExclude
+        {
+            get
+            {
+                return Values["handbookexclude"] as bool?;
+            }
+
+            set
+            {
+                Values["handbookexclude"] = value;
+                OnPropertyChanged("HandbookExclude");
             }
         }
 
@@ -270,10 +300,10 @@ namespace OodHelper.Maintain
                 if (Id == null)
                 {
                     save = new Db("INSERT INTO people " +
-                        "(main_id, firstname, surname, address1, address2, address3, address4, " +
-                        "postcode, hometel, mobile, worktel, email, club, member, manmemo, cp) " +
-                        "VALUES (@main_id, @firstname, @surname, @address1, @address2, @address3, @address4, " +
-                        "@postcode, @hometel, @mobile, @worktel, @email, @club, @member, @manmemo, @cp)");
+                        "(main_id, firstname, surname, address1, address2, address3, address4, postcode, " +
+                        "hometel, mobile, worktel, email, club, member, manmemo, cp, papernewsletter, handbookexclude) " +
+                        "VALUES (@main_id, @firstname, @surname, @address1, @address2, @address3, @address4, @postcode, " +
+                        "@hometel, @mobile, @worktel, @email, @club, @member, @manmemo, @cp, @papernewsletter, @handbookexclude )");
                     Id = save.GetNextIdentity("people", "id");
                     if (MainId == 0)
                         MainId = Id;
@@ -294,7 +324,9 @@ namespace OodHelper.Maintain
                             "club = @club, " +
                             "member = @member, " +
                             "manmemo = @manmemo, " +
-                            "cp = @cp " +
+                            "cp = @cp, " +
+                            "papernewsletter = @papernewsletter, " +
+                            "handbookexclude = @handbookexclude " +
                             "WHERE id = @id");
 
                 save.ExecuteNonQuery(Values);

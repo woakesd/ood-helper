@@ -147,6 +147,8 @@ CREATE TABLE [people] (
 , [s] bit NULL
 , [novice] bit NULL
 , [uid] uniqueidentifier NULL
+, [papernewsletter] bit NULL
+, [handbookexclude] bit NULL
 )";
                 cmd.ExecuteNonQuery();
 

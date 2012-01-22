@@ -119,10 +119,11 @@ namespace OodHelper.Website
 
             msql.Clear();
             msql.Append("INSERT INTO `people` (`firstname`,`surname`,`address1`,`address2`,`address3`,`address4`,`postcode`,");
-            msql.Append("`hometel`,`worktel`,`mobile`,`email`,`club`,`member`,`cp`,`s`,`id`,`manmemo`,`sid`,`novice`,`uid`) VALUES ");
+            msql.Append("`hometel`,`worktel`,`mobile`,`email`,`club`,`member`,`cp`,`s`,`id`,`manmemo`,`sid`,`novice`,`uid`,");
+            msql.Append("`papernewsletter`,`handbookexclude`) VALUES ");
 
             c = new Db(@"SELECT firstname,surname,address1,address2,address3,address4,postcode,hometel,worktel,mobile,email,
-                        club,member,cp,s,id,manmemo,main_id sid,novice,uid
+                        club,member,cp,s,id,manmemo,main_id sid,novice,uid,papernewsletter,handbookexclude
                         FROM people");
             d = c.GetData(null);
 

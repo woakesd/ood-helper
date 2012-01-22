@@ -26,6 +26,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <Label Content="First name" Grid.Row="1" />
         <Label Content="Last name" Grid.Row="2" />
@@ -37,9 +38,11 @@
         <Label Content="Email" Grid.Row="4" Grid.Column="2" />
         <Label Content="Club" Grid.Row="5" Grid.Column="2" />
         <Label Content="Membership" Grid.Row="6" Grid.Column="2" />
-        <Label Content="Notes" Grid.Row="8" />
+        <Label Content="Notes" Grid.Row="9" />
         <Label Content="Paid Up" Grid.Row="7" Grid.Column="2" />
-        <StackPanel Orientation="Vertical" Grid.Row="8" Grid.Column="2">
+        <Label Content="Handbook exclude" Grid.Row="8" Grid.Column="2" />
+        <Label Content="Post newsletter" Grid.Row="8" />
+        <StackPanel Orientation="Vertical" Grid.Row="9" Grid.Column="2">
             <Label Content="Crews on" />
             <Button Name="Edit" Click="Edit_Click" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Width="80">
                 <StackPanel Orientation="Horizontal">
@@ -57,7 +60,7 @@
         <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Address3}" Width="200" MaxLength="30" Margin="2"/>
         <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding Address4}" Width="200" MaxLength="30" Margin="2"/>
         <TextBox Grid.Column="1" Grid.Row="7" Text="{Binding Postcode}" Width="200" MaxLength="9" Margin="2"/>
-        <TextBox Grid.Column="1" Grid.Row="8" Text="{Binding Notes}" Width="200" MaxLength="255" Margin="2"/>
+        <TextBox Grid.Column="1" Grid.Row="9" Text="{Binding Notes}" Width="200" MaxLength="255" Margin="2"/>
         <TextBox Grid.Column="3" Grid.Row="1" Text="{Binding HomePhone}" Width="200" MaxLength="20" Margin="2" />
         <TextBox Grid.Column="3" Grid.Row="2" Text="{Binding MobilePhone}" Width="200" MaxLength="20" Margin="2"/>
         <TextBox Grid.Column="3" Grid.Row="3" Text="{Binding WorkPhone}" Width="200" MaxLength="20" Margin="2"/>
@@ -65,7 +68,9 @@
         <TextBox Grid.Column="3" Grid.Row="5" Text="{Binding Club}" Width="200" MaxLength="10" Margin="2"/>
         <TextBox Grid.Column="3" Grid.Row="6" Text="{Binding Membership}" Width="200" MaxLength="6" Margin="2"/>
         <CheckBox Grid.Column="3" Grid.Row="7" Margin="2" VerticalAlignment="Center" IsChecked="{Binding Paid}"/>
-        <ListBox Grid.Column="3" Grid.Row="8" Margin="2" ItemsSource="{Binding Crewing}" Height="90">
+        <CheckBox Grid.Column="1" Grid.Row="8" Margin="2" VerticalAlignment="Center" IsChecked="{Binding PaperNewsletter}"/>
+        <CheckBox Grid.Column="3" Grid.Row="8" Margin="2" VerticalAlignment="Center" IsChecked="{Binding HandbookExclude}"/>
+        <ListBox Grid.Column="3" Grid.Row="9" Margin="2" ItemsSource="{Binding Crewing}" Height="90">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
@@ -74,7 +79,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Grid Grid.Row="9" Grid.ColumnSpan="4" Margin="0,2" Width="300" HorizontalAlignment="Right" >
+        <Grid Grid.Row="10" Grid.ColumnSpan="4" Margin="0,2" Width="300" HorizontalAlignment="Right" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
