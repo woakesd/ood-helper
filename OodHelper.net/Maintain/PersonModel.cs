@@ -305,7 +305,7 @@ namespace OodHelper.Maintain
                         "VALUES (@main_id, @firstname, @surname, @address1, @address2, @address3, @address4, @postcode, " +
                         "@hometel, @mobile, @worktel, @email, @club, @member, @manmemo, @cp, @papernewsletter, @handbookexclude )");
                     Id = save.GetNextIdentity("people", "id");
-                    if (MainId == 0)
+                    if (!MainId.HasValue || MainId.Value == 0)
                         MainId = Id;
                 }
                 else

@@ -1,0 +1,142 @@
+﻿<Page x:Class="OodHelper.Membership.Renew_part1"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      d:DesignHeight="841" d:DesignWidth="595"
+	Title="Renew_part1">
+    <Grid Margin="60">
+        <StackPanel Orientation="Vertical">
+            <TextBlock Padding="6" TextAlignment="Justify" TextWrapping="Wrap" Name="Salutation" Text="Dear x y" />
+            <TextBlock Padding="6" TextAlignment="Justify" TextWrapping="Wrap">The new season is fast approaching and it's time to renew your yacht club membership. The first race of the Easter Series is on Sunday April 1st (no fooling!). Wednesday Evening Racing commences Wednesday April 18th. The cruising section's first drinks meeting is on Thursday April 26th and with first cruise the following week . There is a 707 Regatta on April 28th with a barbecue afterwards.</TextBlock>
+            <TextBlock Padding="6" TextAlignment="Justify" TextWrapping="Wrap">Please check your details below the sign this letter and return it to:</TextBlock>
+            <Grid Margin="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Vertical" Grid.Column="0">
+                    <TextBlock Text="First name"/>
+                    <TextBlock Text="Last name"/>
+                    <TextBlock Text="Address"/>
+                    <TextBlock Text=""/>
+                    <TextBlock Text=""/>
+                    <TextBlock Text=""/>
+                    <TextBlock Text="Postcode"/>
+                    <TextBlock Text="Home phone"/>
+                    <TextBlock Text="Work phone"/>
+                    <TextBlock Text="Mobile"/>
+                    <TextBlock Text="Email"/>
+                    <TextBlock Text="Paper copy of newsletter"/>
+                    <TextBlock Text="Exclude from handbook"/>
+                    <TextBlock Text="Membership type"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Grid.Column="1">
+                    <TextBlock Name="FirstName"/>
+                    <TextBlock Name="LastName"/>
+                    <TextBlock Name="Address1"/>
+                    <TextBlock Name="Address2"/>
+                    <TextBlock Name="Address3"/>
+                    <TextBlock Name="Address4"/>
+                    <TextBlock Name="Postcode"/>
+                    <TextBlock Name="HomePhone"/>
+                    <TextBlock Name="WorkPhone"/>
+                    <TextBlock Name="Mobile"/>
+                    <TextBlock Name="Email"/>
+                    <TextBlock Name="PaperCopyOfNewsletter"/>
+                    <TextBlock Name="ExcludeFromHandbook"/>
+                    <TextBlock Name="MembershipType"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Grid.Column="2">
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                </StackPanel>
+            </Grid>
+            <TextBlock Padding="6" TextAlignment="Justify" TextWrapping="Wrap">Please check your details below the sign this letter and return it to:</TextBlock>
+        </StackPanel>
+    </Grid>
+</Page>

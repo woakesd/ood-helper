@@ -44,8 +44,8 @@
                 <MenuItem Header="_Rule" Click="Rule_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" />
             </MenuItem>
             <MenuItem Header="_Admin">
-                <MenuItem Header="Tide" Name="Tide" Click="Tide_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" />
-                <MenuItem Header="Sun" Name="Sun" Click="Sun_Click" />
+                <!--<MenuItem Header="Tide" Name="Tide" Click="Tide_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" />-->
+                <!--<MenuItem Header="Sun" Name="Sun" Click="Sun_Click" />-->
                 <!--<MenuItem Header="_Foxpro Import" Click="Foxpro_Click" />-->
                 <MenuItem Header="_Configuration" Name="Configuration" Click="Configuration_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                     <MenuItem.Icon>
@@ -57,7 +57,7 @@
                         <Image Source="/OodHelper.net;component/Images/Database-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <!--<MenuItem Header="Print Membership Cards" Name="PrintMembershipCards" Click="PrintMembershipCards_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" />-->
+                <MenuItem Header="Print Membership Cards" Name="PrintMembershipCards" Click="PrintMembershipCards_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" />
                 <MenuItem Header="Import _PY" Name="importPY" Click="importPY_Click"  Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"/>
                 <MenuItem Header="Logout" Name="Logout" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" Click="Logout_Click">
                     <MenuItem.Icon>

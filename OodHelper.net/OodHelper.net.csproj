@@ -156,6 +156,9 @@
       <DependentUpon>CardPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Maintain\Results.cs" />
+    <Compile Include="Membership\Renew-part1.xaml.cs">
+      <DependentUpon>Renew-part1.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Results\ResultModel.cs" />
     <Compile Include="Rules\RuleSelector.xaml.cs">
       <DependentUpon>RuleSelector.xaml</DependentUpon>
@@ -301,6 +304,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Membership\CardPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Membership\Renew-part1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
