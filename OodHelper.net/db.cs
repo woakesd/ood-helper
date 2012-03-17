@@ -10,9 +10,9 @@ namespace OodHelper
 {
     class Db : IDisposable
     {
-        private static string DatabaseFolder = AppDomain.CurrentDomain.BaseDirectory;
-        private static string DatabaseName = DatabaseFolder + @"\data\oodhelper.sdf";
-        private static string _DatabaseConstr = "Data Source=" + DatabaseName;
+        private static string DatabaseFolder = string.Format(@"{0}\data", AppDomain.CurrentDomain.BaseDirectory);
+        private static string DatabaseName = string.Format(@"{0}\oodhelper.sdf", DatabaseFolder);
+        private static string _DatabaseConstr = string.Format(@"Data Source={0}", DatabaseName);
 
         public static string DatabaseConstr { get { return _DatabaseConstr; } }
         

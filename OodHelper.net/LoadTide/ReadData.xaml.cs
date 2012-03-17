@@ -112,7 +112,6 @@ ORDER BY date";
                         d.Rows[i]["tide"] = "H";
             }
 
-            int p;
             DataRow[] tides = d.Select("tide is not null", "date");
             foreach (DataRow r in tides)
             {

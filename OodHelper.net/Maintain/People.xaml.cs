@@ -236,7 +236,10 @@ namespace OodHelper.Maintain
         private void AddFamilyMember_Click(object sender, RoutedEventArgs e)
         {
             DataRowView i = (DataRowView) PeopleData.SelectedItem;
-            if ((int)i.Row["id"] == (int)i.Row["main_id"] && (string)i.Row["member"] == "Family")
+            int id = (int)i.Row["id"];
+            int main_id = (int)i.Row["main_id"];
+            string member = (string)i.Row["member"];
+            if (id == main_id && member == "Family")
             {
                 FamilyMember f = new FamilyMember(0, (int)i.Row["main_id"]);
                 if (f.ShowDialog().Value)
