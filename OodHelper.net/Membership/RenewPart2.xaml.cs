@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace OodHelper.Membership
 {
     /// <summary>
-    /// Interaction logic for Renew_part1.xaml
+    /// Interaction logic for RenewPart2.xaml
     /// </summary>
-    public partial class Renew_part1 : Page
+    public partial class RenewPart2 : Page
     {
-        public Renew_part1()
+        public RenewPart2()
         {
             InitializeComponent();
         }
