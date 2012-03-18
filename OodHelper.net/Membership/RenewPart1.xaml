@@ -46,20 +46,20 @@ Mob: 07903 880 056" />
                     <TextBlock Text="Membership type"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Grid.Column="1">
-                    <TextBlock Name="FirstName"/>
-                    <TextBlock Name="LastName"/>
-                    <TextBlock Name="Address1"/>
-                    <TextBlock Name="Address2"/>
-                    <TextBlock Name="Address3"/>
-                    <TextBlock Name="Address4"/>
-                    <TextBlock Name="Postcode"/>
-                    <TextBlock Name="HomePhone"/>
-                    <TextBlock Name="WorkPhone"/>
-                    <TextBlock Name="Mobile"/>
-                    <TextBlock Name="Email"/>
-                    <TextBlock Name="PaperCopyOfNewsletter"/>
-                    <TextBlock Name="ExcludeFromHandbook"/>
-                    <TextBlock Name="MembershipType"/>
+                    <TextBlock Text="{Binding FirstName}"/>
+                    <TextBlock Text="{Binding LastName}"/>
+                    <TextBlock Text="{Binding Address1}"/>
+                    <TextBlock Text="{Binding Address2}"/>
+                    <TextBlock Text="{Binding Address3}"/>
+                    <TextBlock Text="{Binding Address4}"/>
+                    <TextBlock Text="{Binding Postcode}"/>
+                    <TextBlock Text="{Binding HomePhone}"/>
+                    <TextBlock Text="{Binding WorkPhone}"/>
+                    <TextBlock Text="{Binding Mobile}"/>
+                    <TextBlock Text="{Binding Email}"/>
+                    <TextBlock Text="{Binding PaperCopyOfNewsletter}"/>
+                    <TextBlock Text="{Binding ExcludeFromHandbook}"/>
+                    <TextBlock Text="{Binding MembershipType}"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Grid.Column="2">
                     <Border BorderBrush="Black">
@@ -148,6 +148,39 @@ Mob: 07903 880 056" />
                     </Border>
                 </StackPanel>
             </Grid>
+            <DataGrid>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Family Members">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical" Margin="0 0 0 12">
+                                    <Grid Margin="6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Vertical" Grid.Column="0">
+                                            <TextBlock Text="Name"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical" Grid.Column="1">
+                                            <TextBlock Text="{Binding Name}" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical" Grid.Column="2">
+                                            <Border BorderBrush="Black">
+                                                <Border.BorderThickness>
+                                                    <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                                                </Border.BorderThickness>
+                                                <TextBlock Height="15" />
+                                            </Border>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
         </StackPanel>
     </Grid>
 </Page>
