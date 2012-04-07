@@ -22,6 +22,9 @@ namespace OodHelper.Membership
         public RenewPart1()
         {
             InitializeComponent();
+            using (Db _conn = new Db(""))
+            {
+            }
         }
     }
 }
