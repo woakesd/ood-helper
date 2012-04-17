@@ -114,8 +114,8 @@ namespace OodHelper.Results
 
                 foreach (DataGridCellInfo inf in rr.Races.SelectedCells)
                 {
-                    DataRowView rv = inf.Item as DataRowView;
-                    int bid = (int)rv.Row["bid"];
+                    ResultModel rv = inf.Item as ResultModel;
+                    int bid = rv.Bid;
                     BoatView edit = new BoatView(bid);
                     if (edit.ShowDialog().Value)
                     {
@@ -188,8 +188,8 @@ namespace OodHelper.Results
                     p["start_date"] = rstart;
                     foreach (DataGridCellInfo inf in races.SelectedCells)
                     {
-                        DataRowView drv = inf.Item as DataRowView;
-                        p["bid"] = drv.Row["bid"];
+                        ResultModel drv = inf.Item as ResultModel;
+                        p["bid"] = drv.Bid;
                         c.ExecuteNonQuery(p);
                     }
 
