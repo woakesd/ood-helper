@@ -26,7 +26,8 @@ namespace OodHelper.Maintain
             Hashtable p = new Hashtable();
             Db c = new Db("SELECT sid selected, calendar.rid, event, class as event_class, start_date " +
                 "FROM calendar LEFT JOIN calendar_series_join ON calendar_series_join.rid = calendar.rid " +
-                "AND calendar_series_join.sid = @sid");
+                "AND calendar_series_join.sid = @sid " +
+                "ORDER BY start_date");
             p["@sid"] = Sid;
             DataTable d = c.GetData(p);
             foreach (DataRow r in d.Rows)
@@ -34,7 +35,7 @@ namespace OodHelper.Maintain
                     r["selected"] = true;
                 else
                     r["selected"] = false;
-            CalGrid.ItemsSource = d.DefaultView;
+            CalGrid.ItemsSource = d.AsDataView();
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
@@ -44,7 +45,12 @@ namespace OodHelper.Maintain
             Db c = new Db("DELETE FROM calendar_series_join WHERE sid = @sid");
             c.ExecuteNonQuery(p);
             c = new Db("INSERT INTO calendar_series_join (sid, rid) VALUES (@sid, @rid)");
-            foreach (DataRow r in (CalGrid.ItemsSource as DataView).Table.Select("selected = true"))
+
+            var _races = (CalGrid.ItemsSource as DataView).Table.AsEnumerable();
+
+            foreach (DataRow r in (from r in _races
+                where r.Field<int>("selected") == 1
+                select r))
             {
                 p["rid"] = r["rid"];
                 c.ExecuteNonQuery(p);

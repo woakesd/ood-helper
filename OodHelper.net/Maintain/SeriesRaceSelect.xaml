@@ -40,12 +40,12 @@
             <TextBlock VerticalAlignment="Center" Margin="4,0">Press F3 to search</TextBlock>
         </StackPanel>
         <DockPanel Grid.Row="2" Name="calDockPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1">
-            <DataGrid Name="CalGrid" AutoGenerateColumns="False" CanUserDeleteRows="False" CanUserAddRows="False" IsReadOnly="True">
+            <DataGrid Name="CalGrid" AutoGenerateColumns="False" CanUserDeleteRows="False" CanUserAddRows="False" IsReadOnly="False">
                 <DataGrid.Columns>
-                    <DataGridCheckBoxColumn Header="Selected" Binding="{Binding selected}"/>
-                    <DataGridTextColumn Header="Event" Binding="{Binding event}"/>
-                    <DataGridTextColumn Header="Class" Binding="{Binding event_class}"/>
-                    <DataGridTextColumn Header="Date" Binding="{Binding start_date,StringFormat={}{0:dd MMM yyyy HH:mm:ss}}"/>
+                    <DataGridCheckBoxColumn Header="Selected" Binding="{Binding selected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Event" Binding="{Binding event}" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Class" Binding="{Binding event_class}" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Date" Binding="{Binding start_date,StringFormat={}{0:dd MMM yyyy HH:mm:ss}}" IsReadOnly="True"/>
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
