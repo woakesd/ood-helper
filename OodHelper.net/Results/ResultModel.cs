@@ -239,7 +239,7 @@ namespace OodHelper.Results
         {
             get
             {
-                return _row["place"].ToString();
+                return _row["points"].ToString();
             }
             set
             {
