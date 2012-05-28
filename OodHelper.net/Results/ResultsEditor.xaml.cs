@@ -193,11 +193,13 @@ namespace OodHelper.Results
             {
                 return StartDate.Value.TimeOfDay;
             }
+
             set
             {
                 if (value > TimeSpan.FromDays(1.0) || StartDate.Value.Date + value >= StartDate.Value.AddDays(1))
                     MessageBox.Show("You cannot set the start time to this value", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 else
+                {
                     if (StartDate.Value.TimeOfDay != value)
                     {
                         StartDate = StartDate.Value.Date + value;
@@ -217,6 +219,7 @@ namespace OodHelper.Results
 
                         LoadGrid();
                     }
+                }
             }
         }
 
