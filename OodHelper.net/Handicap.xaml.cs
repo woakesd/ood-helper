@@ -19,15 +19,15 @@ namespace OodHelper
     /// </summary>
     public partial class Handicap : Window
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         HandicapRecord hcap;
         HandicapLinq hl = new HandicapLinq();
 
-        public Handicap(int i)
+        public Handicap(Guid i)
         {
             InitializeComponent();
             Id = i;
-            if (Id != 0)
+            if (Id != Guid.Empty)
             {
                 hcap = hl.portsmouth_numbers.Single(c => c.id == Id);
             }
@@ -49,7 +49,7 @@ namespace OodHelper
             try
             {
                 Db hdb;
-                if (Id == 0)
+                if (Id == Guid.Empty)
                 {
                     hdb = new Db(@"INSERT INTO portsmouth_numbers 
                         ([class_name]
@@ -70,7 +70,7 @@ namespace OodHelper
                         , @number
                         , @status
                         , @notes)");
-                    Id = hdb.GetNextIdentity("portsmouth_numbers", "id");
+                    Id = Guid.NewGuid();
                 }
                 else
                     hdb = new Db(@"UPDATE portsmouth_numbers 

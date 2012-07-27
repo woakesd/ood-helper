@@ -29,7 +29,7 @@ namespace OodHelper
         private delegate void DSetGridSource(DataTable rcs);
         private DSetGridSource dSetGridSource;
         Working w;
-        int redit = 0;
+        Guid redit = Guid.Empty;
 
         private void LoadGrid()
         {
@@ -51,12 +51,12 @@ namespace OodHelper
         {
             ClassData.ItemsSource = rcs.DefaultView;
             if (ClassName.Text != string.Empty) FilterClasses();
-            if (redit != 0)
+            if (redit != Guid.Empty)
             {
                 foreach (DataRowView vr in ClassData.Items)
                 {
                     DataRow r = vr.Row;
-                    if ((int)r["id"] == redit)
+                    if ((Guid)r["id"] == redit)
                     {
                         ClassData.ScrollIntoView(vr);
                         ClassData.SelectedItem = vr;
@@ -119,7 +119,7 @@ namespace OodHelper
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            Handicap h = new Handicap(0);
+            Handicap h = new Handicap(Guid.Empty);
             if (h.ShowDialog().Value)
             {
                 redit = h.Id;
@@ -132,7 +132,7 @@ namespace OodHelper
             if (ClassData.SelectedItem != null)
             {
                 DataRowView i = (DataRowView)ClassData.SelectedItem;
-                Handicap h = new Handicap((int)i.Row["id"]);
+                Handicap h = new Handicap((Guid)i.Row["id"]);
                 if (h.ShowDialog().Value)
                 {
                     redit = h.Id;

@@ -9,8 +9,8 @@ namespace OodHelper
     [Table(Name = "portsmouth_numbers")]
     public class HandicapRecord
     {
-        [Column(IsPrimaryKey = true, IsDbGenerated = true)]
-        public int id { get; set; }
+        [Column(IsPrimaryKey = true, IsDbGenerated = false)]
+        public Guid id { get; set; }
 
         [Column(CanBeNull = false)]
         public string class_name { get; set; }
