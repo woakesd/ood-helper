@@ -95,7 +95,7 @@ namespace OodHelper.Maintain
         public void FilterRaces()
         {
             ((DataView)CalGrid.ItemsSource).RowFilter =
-                "event LIKE '%" + Eventname.Text + "%'";
+                String.Format("event LIKE '%{0}%' OR event_class LIKE '%{0}%'", Eventname.Text);
         }
 
         private void SelectAll_Click(object sender, RoutedEventArgs e)
