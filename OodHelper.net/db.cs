@@ -190,7 +190,7 @@ CREATE TABLE [series] (
 CREATE TABLE [series_results] (
   [sid] int not null
 , [bid] int not null
-, [division] nvarchar(20) null
+, [division] nvarchar(20) not null
 , [entered] int null
 , [gross] float null
 , [nett] float null
@@ -259,7 +259,7 @@ CREATE TABLE [portsmouth_numbers] (
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = @"CREATE INDEX [IX_rid] ON [races] ([rid] ASC)";
                 cmd.ExecuteNonQuery();
-                cmd.CommandText = @"ALTER TABLE [series_results] ADD CONSTRAINT [PK_series_results] PRIMARY KEY ([sid],[bid])";
+                cmd.CommandText = @"ALTER TABLE [series_results] ADD CONSTRAINT [PK_series_results] PRIMARY KEY ([sid],[division],[bid])";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = @"ALTER TABLE [select_rules] ADD CONSTRAINT [PK_select_rule] PRIMARY KEY ([id])";
                 cmd.ExecuteNonQuery();
