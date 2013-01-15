@@ -277,7 +277,6 @@
     <Compile Include="SeriesResult.cs" />
     <Compile Include="Converters\StringConverter.cs" />
     <Compile Include="Sun\Sun.cs" />
-    <Compile Include="SvnRevision.cs" />
     <Compile Include="Converters\TimeSpanHMConverter.cs" />
     <Compile Include="Working.xaml.cs">
       <DependentUpon>Working.xaml</DependentUpon>
@@ -658,7 +657,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>"c:\Program Files\TortoiseSVN\bin\SubWCRev.exe" "$(ProjectDir)." "$(ProjectDir)SvnRevisionTemplate.cs" "$(ProjectDir)SvnRevision.cs"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>

@@ -21,12 +21,12 @@ namespace OodHelper
         public About()
         {
             InitializeComponent();
-            aboutBlock.Text = "Revision: " + SvnRevision.Rev + "\n" +
-                "Revision Range: " + SvnRevision.Range + "\n" +
-                "Commit Date: " + SvnRevision.Date + "\n" +
-                "Build Date: " + SvnRevision.BuildDate + "\n" +
-                "Commit Status: " + SvnRevision.LocalMods + "\n" +
-                "OOD Helper by David Woakes";
+            //aboutBlock.Text = "Revision: " + SvnRevision.Rev + "\n" +
+            //    "Revision Range: " + SvnRevision.Range + "\n" +
+            //    "Commit Date: " + SvnRevision.Date + "\n" +
+            //    "Build Date: " + SvnRevision.BuildDate + "\n" +
+            //    "Commit Status: " + SvnRevision.LocalMods + "\n" +
+            //    "OOD Helper by David Woakes";
         }
     }
 }
