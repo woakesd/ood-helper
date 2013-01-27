@@ -160,20 +160,20 @@ namespace OodHelper
         
         private void SeriesResults_Click(object sender, RoutedEventArgs e)
         {
-            SeriesChooser chooser = new SeriesChooser();
-            if (chooser.ShowDialog().Value)
+            SeriesChooser _chooser = new SeriesChooser();
+            if (_chooser.ShowDialog().Value)
             {
                 RaceSeriesResult rs = null;
-                myDelegate d = delegate()
+                myDelegate _uiDelegate = delegate()
                 {
-                    SeriesDisplayByClass sd = new SeriesDisplayByClass(rs);
-                    TabItem sp = new TabItem();
-                    sp.Content = sd;
-                    sp.Header = "Series Result";
-                    dock.Items.Add(sp);
-                    dock.SelectedItem = sp;
+                    SeriesDisplayByClass _ResultDisplayByClass = new SeriesDisplayByClass(rs);
+                    TabItem _seriesDisplayTab = new TabItem();
+                    _seriesDisplayTab.Content = _ResultDisplayByClass;
+                    _seriesDisplayTab.Header = "Series Result";
+                    dock.Items.Add(_seriesDisplayTab);
+                    dock.SelectedItem = _seriesDisplayTab;
                 };
-                rs = new RaceSeriesResult(chooser.Sid, d);
+                rs = new RaceSeriesResult(_chooser.Sid, _uiDelegate);
             }
         }
 
@@ -239,6 +239,10 @@ namespace OodHelper
                     DownloadResults dtask = new DownloadResults();
                 }
             }
+        }
+
+        private void ExportResults_Click(object sender, RoutedEventArgs e)
+        {
         }
 
         private void PrintMembershipCards_Click(object sender, RoutedEventArgs e)

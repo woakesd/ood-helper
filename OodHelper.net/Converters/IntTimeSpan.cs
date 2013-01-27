@@ -13,7 +13,7 @@ namespace OodHelper.Converters
                 int seconds = (Int32)value;
                 TimeSpan s = new TimeSpan(0, 0, seconds);
                 if (s.Days > 0)
-                    return s.ToString("d\\ hh\\:mm\\:ss");
+                    return s.ToString("UpdateUIDelegate\\ hh\\:mm\\:ss");
                 return s.ToString("hh\\:mm\\:ss");
             }
             else

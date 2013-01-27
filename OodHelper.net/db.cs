@@ -474,10 +474,10 @@ CREATE TABLE [portsmouth_numbers] (
             {
                 Db s = new Db("SELECT MAX(" + ident + ") " +
                     "FROM " + tname + " " +
-                    "WHERE " + ident + " BETWEEN @b AND @t");
+                    "WHERE " + ident + " BETWEEN @b AND @_task");
                 Hashtable p = new Hashtable();
                 p["b"] = b;
-                p["t"] = t;
+                p["_task"] = t;
                 object o;
                 int seedvalue;
                 if ((o = s.GetScalar(p)) != DBNull.Value)

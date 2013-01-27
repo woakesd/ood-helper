@@ -579,7 +579,7 @@ namespace OodHelper.Results
         }
 
         //
-        // on key up with a cursor key go straight to editing mode if the cell is editable and we weren't in
+        // on key up with a cursor key go straight to editing mode if the cell is editable and we weren'_task in
         // edit mode.
         //
         void DataGridCell_KeyUp(object sender, KeyEventArgs e)
@@ -646,7 +646,7 @@ namespace OodHelper.Results
         }
         
         //
-        // Will hold the list found below so that if the user says yes to auto population we don't need to select
+        // Will hold the list found below so that if the user says yes to auto population we don'_task need to select
         // again.
         //
         private DataTable autoPopulateData = null;

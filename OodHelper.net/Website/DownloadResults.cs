@@ -28,7 +28,7 @@ namespace OodHelper.Website
 
         protected override void DoTheWork(object sender, DoWorkEventArgs e)
         {
-            const int Steps = 9;
+            const int Steps = 10;
             BackgroundWorker p = sender as BackgroundWorker;
 
             p.ReportProgress(0, "Loading Boats");
@@ -212,6 +212,27 @@ namespace OodHelper.Website
             CopyData(mtable, ins);
 
             //
+            // Series Results
+            //
+            if (p.CancellationPending)
+            {
+                CancelDownload(e);
+                return;
+            }
+
+            p.ReportProgress(600 / Steps, "Loading Series Results");
+            ins.CommandText = "INSERT INTO [series_results] ([sid], [bid], [division], [entered], [gross], [nett], [place]) " +
+                "VALUES (@sid, @bid, @division, @entered, @gross, @nett, @place)";
+            myadp = new MySqlDataAdapter("SELECT * FROM series_results", mcon);
+            mtable = new DataTable();
+            myadp.Fill(mtable);
+
+            scmd.CommandText = "DELETE FROM series_results";
+            scmd.ExecuteNonQuery();
+
+            CopyData(mtable, ins);
+
+            //
             // Select Rules
             //
             if (p.CancellationPending)
@@ -220,7 +241,7 @@ namespace OodHelper.Website
                 return;
             }
 
-            p.ReportProgress(700 / Steps, "Loading Select Rules");
+            p.ReportProgress(800 / Steps, "Loading Select Rules");
             ins.CommandText = "INSERT INTO [select_rules] ([id], [name], [parent], [application], [field], [condition], [string_value], [number_bound1], [number_bound2]) " +
                 "VALUES (@id, @name, @parent, @application, @field, @condition, @string_value, @number_bound1, @number_bound2)";
             myadp = new MySqlDataAdapter("SELECT * FROM select_rules", mcon);
@@ -241,7 +262,7 @@ namespace OodHelper.Website
                 return;
             }
 
-            p.ReportProgress(800 / Steps, "Loading Portsmouth numbers");
+            p.ReportProgress(900 / Steps, "Loading Portsmouth numbers");
             ins.CommandText = @"INSERT INTO [portsmouth_numbers] 
 ([id], [class_name], [no_of_crew], [rig], [spinnaker], [engine], [keel], [number], [status], [notes])
 VALUES (@id, @class_name, @no_of_crew, @rig, @spinnaker, @engine, @keel, @number, @status, @notes)";

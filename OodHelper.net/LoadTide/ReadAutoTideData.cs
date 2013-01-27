@@ -26,7 +26,7 @@ namespace OodHelper.LoadTide
             string[] fd = File.ReadAllLines(FileName);
             foreach (string t in fd)
             {
-                if (DateTime.TryParseExact(t, "d MMM yyyy dddd", null, System.Globalization.DateTimeStyles.None, out date))
+                if (DateTime.TryParseExact(t, "UpdateUIDelegate MMM yyyy dddd", null, System.Globalization.DateTimeStyles.None, out date))
                 {
                     currdate = date;
                 }

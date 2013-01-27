@@ -64,7 +64,7 @@ namespace OodHelper.LoadTide
                     {
                         int day;
                         day = Int32.Parse(line.Substring(0, 3));
-                        //d = new DateTime(BaseYear - 1, 12, 31);
+                        //UpdateUIDelegate = new DateTime(BaseYear - 1, 12, 31);
                         d = based.AddDays(day);
                     }
                     line = line.Substring(6).Trim();

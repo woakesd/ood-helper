@@ -318,7 +318,7 @@ namespace OodHelper
                 for (int i = 0; i < n; i++)
                 {
                     total = total + query.ElementAt(i).Field<double?>("standard_corrected").Value;
-                    //total = total + (double) d.Rows[i]["standard_corrected"];
+                    //total = total + (double) UpdateUIDelegate.Rows[i]["standard_corrected"];
                 }
 
                 double averageCorrectedTime = total / n;
@@ -541,7 +541,7 @@ namespace OodHelper
                     dr["performance_index"] = (int)dr["achieved_handicap"] - (int)dr["open_handicap"];
 
                     //
-                    // if this doesn't count as a slow race then adjust the handicap if the new value
+                    // if this doesn'_task count as a slow race then adjust the handicap if the new value
                     // falls between +/- 5% of open.
                     //
                     if (!sperf || sperfover)

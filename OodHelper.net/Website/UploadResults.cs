@@ -30,7 +30,7 @@ namespace OodHelper.Website
         {
             BackgroundWorker w = sender as BackgroundWorker;
 
-            const int Steps = 9;
+            const int Steps = 10;
 
             if (w.CancellationPending)
             {
@@ -258,10 +258,41 @@ namespace OodHelper.Website
             mcom.ExecuteNonQuery();
 
             //
+            // Series results
+            //
+            w.ReportProgress(700 / Steps, "Uploading series results");
+
+            mcom.CommandText = "DELETE FROM `series_results`";
+            mcom.ExecuteNonQuery();
+
+            mcom.CommandText = "ALTER TABLE `series_results` DISABLE KEYS";
+            mcom.ExecuteNonQuery();
+
+            msql.Clear();
+            msql.Append("INSERT INTO `series_results` (sid,bid,division,entered,gross,nett,place) VALUES ");
+
+            c = new Db(@"SELECT sid,bid,division,entered,gross,nett,place FROM series_results");
+            d = c.GetData(null);
+
+            BuildInsertData(d, msql);
+
+            mcom.CommandText = msql.ToString();
+            mcom.ExecuteNonQuery();
+
+            mcom.CommandText = "ALTER TABLE `series_results` ENABLE KEYS";
+            mcom.ExecuteNonQuery();
+
+            if (w.CancellationPending)
+            {
+                CancelDownload(e);
+                return;
+            }
+
+            //
             // select rules
             //
 
-            w.ReportProgress(700 / Steps, "Uploading select rules");
+            w.ReportProgress(800 / Steps, "Uploading select rules");
 
             mcom.CommandText = "DELETE FROM `select_rules`";
             mcom.ExecuteNonQuery();
@@ -284,7 +315,7 @@ namespace OodHelper.Website
                 return;
             }
 
-            w.ReportProgress(800 / Steps, "Uploading portsmouth numbers");
+            w.ReportProgress(900 / Steps, "Uploading portsmouth numbers");
 
             mcom = new MySqlCommand("DELETE FROM `portsmouth_numbers`");
             mcom.Connection = mcon;

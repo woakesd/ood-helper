@@ -131,7 +131,7 @@ namespace OodHelper.Website
                                 msql.Append("NULL");
                             break;
                         case "System.Double":
-                            if (dr[j] != DBNull.Value)
+                            if (dr[j] != DBNull.Value && !Double.IsNaN((double)dr[j]))
                                 msql.AppendFormat("{0}", dr[j]);
                             else
                                 msql.Append("NULL");

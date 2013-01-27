@@ -14,7 +14,7 @@ namespace OodHelper.Converters
                 TimeSpan s = new TimeSpan(0, 0, 0, (int)Math.Truncate(seconds),
                     (int)Math.Round((seconds - Math.Truncate(seconds)) * 1000));
                 if (s.Days > 0)
-                    return s.ToString("d\\ hh\\:mm\\:ss\\.ff");
+                    return s.ToString("UpdateUIDelegate\\ hh\\:mm\\:ss\\.ff");
                 return s.ToString("hh\\:mm\\:ss\\.ff");
             }
             else

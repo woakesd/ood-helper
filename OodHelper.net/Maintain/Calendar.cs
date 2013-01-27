@@ -178,7 +178,7 @@ namespace OodHelper.Maintain
                     if (d < new TimeSpan(1,0,0,0))
                         return d.ToString("h\\:mm");
                     else
-                        return d.ToString("d\\ hh\\:mm");
+                        return d.ToString("UpdateUIDelegate\\ hh\\:mm");
                 }
                 else
                     return null;
@@ -190,7 +190,7 @@ namespace OodHelper.Maintain
                 {
                     try
                     {
-                        time_limit_delta = (int)TimeSpan.ParseExact(value, "d\\ hh\\:mm", null).TotalSeconds;
+                        time_limit_delta = (int)TimeSpan.ParseExact(value, "UpdateUIDelegate\\ hh\\:mm", null).TotalSeconds;
                         OnPropertyChanged("TimeLimitDelta");
                     }
                     catch (Exception)
@@ -225,7 +225,7 @@ namespace OodHelper.Maintain
                     if (d < new TimeSpan(1, 0, 0, 0))
                         return d.ToString("h\\:mm");
                     else
-                        return d.ToString("d\\ hh\\:mm");
+                        return d.ToString("UpdateUIDelegate\\ hh\\:mm");
                 }
                 else
                     return string.Empty;
@@ -237,7 +237,7 @@ namespace OodHelper.Maintain
                 {
                     try
                     {
-                        extension = (int)TimeSpan.ParseExact(value, "d\\ hh\\:mm", null).TotalSeconds;
+                        extension = (int)TimeSpan.ParseExact(value, "UpdateUIDelegate\\ hh\\:mm", null).TotalSeconds;
                         OnPropertyChanged("Extension");
                     }
                     catch (Exception)

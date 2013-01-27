@@ -14,12 +14,12 @@ namespace OodHelper
         // Series date indexed by class
         //
         public Dictionary<string, SeriesResult> SeriesResults;
-        public RaceSeriesResult(int SeriesId, Delegate d)
+        public RaceSeriesResult(int SeriesId, Delegate UpdateUIDelegate)
         {
-            Working w = new Working();
-            w.Show();
+            Working _worker = new Working();
+            _worker.Show();
 
-            Task t = Task.Factory.StartNew(() =>
+            Task _task = Task.Factory.StartNew(() =>
             {
                 Hashtable p = new Hashtable();
                 p["sid"] = SeriesId;
@@ -40,11 +40,11 @@ namespace OodHelper
 
                 DataTable races = c.GetData(p);
 
-                w.SetRange(0, races.Rows.Count);
+                _worker.SetRange(0, races.Rows.Count);
 
                 foreach (DataRow race in races.Rows)
                 {
-                    w.SetProgress("Calculating " + race["event"] + " - " + race["class"], races.Rows.IndexOf(race));
+                    _worker.SetProgress("Calculating " + race["event"] + " - " + race["class"], races.Rows.IndexOf(race));
                     IRaceScore scorer;
                     switch (race["handicapping"].ToString().ToUpper())
                     {
@@ -126,13 +126,13 @@ namespace OodHelper
                     }
 
                     SeriesResult sr = new SeriesResult(SeriesId, className, SeriesData[className], discardProfile);
-                    w.SetProgress("Calculating series " + className, races.Rows.Count);
+                    _worker.SetProgress("Calculating series " + className, races.Rows.Count);
                     sr.Score();
                     sr.SeriesName = SeriesName + " - " + className;
                     SeriesResults.Add(className, sr);
                 }
-                w.CloseWindow();
-                w.Dispatcher.Invoke(d, null);
+                _worker.CloseWindow();
+                _worker.Dispatcher.Invoke(UpdateUIDelegate, null);
             });
         }
     }
