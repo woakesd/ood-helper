@@ -118,6 +118,7 @@ namespace OodHelper.Results
             set
             {
                 TimeSpan resultTime;
+                System.Text.RegularExpressions.Regex _finishCode = new System.Text.RegularExpressions.Regex("[a-zA-Z]{3,4}");
                 if (TimeSpan.TryParse(value, out resultTime) ||
                     TimeSpan.TryParseExact(value, "hh\\ mm\\ ss", null, out resultTime))
                 {
@@ -125,6 +126,10 @@ namespace OodHelper.Results
                         _row["finish_date"] = ((DateTime)_row["finish_date"]).Date + resultTime;
                     else
                         _row["finish_date"] = _startDate.Date + resultTime;
+                }
+                else if (_finishCode.IsMatch(value))
+                {
+                    FinishCode = value;
                 }
                 else
                     _row["finish_date"] = DBNull.Value;

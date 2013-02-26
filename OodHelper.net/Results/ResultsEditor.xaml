@@ -94,7 +94,7 @@
                     <DataGridTextColumn Binding="{Binding SailNo}" Header="Sail No" IsReadOnly="True"/>
                     <DataGridTemplateColumn Header="Start Date"
                                             Visibility="{Binding Path=(FrameworkElement.DataContext).DisplayDate,
-                        RelativeSource={x:Static RelativeSource.Self}}" 
+                                            RelativeSource={x:Static RelativeSource.Self}}" 
                                             IsReadOnly="{Binding Path=(FrameworkElement.DataContext).StartReadOnly,RelativeSource={x:Static RelativeSource.Self}}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -109,7 +109,23 @@
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Binding="{Binding StartTime,UpdateSourceTrigger=LostFocus}" Header="Start" 
                                         IsReadOnly="{Binding Path=(FrameworkElement.DataContext).StartReadOnly,RelativeSource={x:Static RelativeSource.Self}}" />
-                    <DataGridTextColumn Binding="{Binding FinishCode}" Header="Code" />
+                    <DataGridTemplateColumn Header="Interim Date" 
+                                            IsReadOnly="{Binding Path=(FrameworkElement.DataContext).InterimReadOnly,RelativeSource={x:Static RelativeSource.Self}}"
+                                            Visibility="{Binding Path=(FrameworkElement.DataContext).DisplayInterimDate,RelativeSource={x:Static RelativeSource.Self}}">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding FinishDate,StringFormat={}{0:dd MMM yyyy}}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <DatePicker SelectedDate="{Binding FinishDate,UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Binding="{Binding InterimTime,UpdateSourceTrigger=LostFocus}" Header="Interim"
+                                        IsReadOnly="{Binding Path=(FrameworkElement.DataContext).InterimTimeReadOnly,RelativeSource={x:Static RelativeSource.Self}}"
+                                        Visibility="{Binding Path=(FrameworkElement.DataContext).DisplayInterimTime,RelativeSource={x:Static RelativeSource.Self}}"/>
                     <DataGridTemplateColumn Header="Finish Date" 
                                             IsReadOnly="{Binding Path=(FrameworkElement.DataContext).FinishReadOnly,RelativeSource={x:Static RelativeSource.Self}}"
                                             Visibility="{Binding Path=(FrameworkElement.DataContext).DisplayDate,RelativeSource={x:Static RelativeSource.Self}}">
@@ -127,7 +143,9 @@
                     <DataGridTextColumn Binding="{Binding FinishTime,UpdateSourceTrigger=LostFocus}" Header="Finish"
                                         IsReadOnly="{Binding Path=(FrameworkElement.DataContext).FinishReadOnly,RelativeSource={x:Static RelativeSource.Self}}" />
                     <DataGridTextColumn Binding="{Binding Laps,UpdateSourceTrigger=LostFocus}" Header="Laps" 
-                                        Visibility="{Binding Path=(FrameworkElement.DataContext).LapsVisible,RelativeSource={x:Static RelativeSource.Self}}"/>
+                                        Visibility="{Binding Path=(FrameworkElement.DataContext).LapsVisible,RelativeSource={x:Static RelativeSource.Self}}"
+                                        IsReadOnly="{Binding Path=(FrameworkElement.DataContext).LapsReadOnly,RelativeSource={x:Static RelativeSource.Self}}"/>
+                    <DataGridTextColumn Binding="{Binding FinishCode}" Header="Code" />
                     <DataGridTextColumn Binding="{Binding OverridePoints,UpdateSourceTrigger=LostFocus}" Header="Override Points" />
                     <DataGridTextColumn Binding="{Binding Elapsed}" Header="Elapsed" IsReadOnly="True"/>
                     <DataGridTextColumn Binding="{Binding StandardCorrected}" Header="Std Corrected" IsReadOnly="True"

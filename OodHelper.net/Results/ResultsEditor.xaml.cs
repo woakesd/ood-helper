@@ -111,6 +111,8 @@ namespace OodHelper.Results
             }
         }
 
+        public bool Timegate { get; private set; }
+
         public bool AverageLap { get; private set; }
 
         public bool LapsEnabled { get { return !AverageLap; } }
@@ -296,7 +298,7 @@ namespace OodHelper.Results
         public void LoadGrid()
         {
             Db c = new Db(@"SELECT start_date, time_limit_fixed, time_limit_delta, extension, 
-                    event, class, timegate, average_lap, handicapping, laps_completed,
+                    event, class, racetype, handicapping, laps_completed,
                     standard_corrected_time, ood, course_choice, wind_speed, wind_direction
                     FROM calendar
                     WHERE rid = @rid");
@@ -342,8 +344,19 @@ namespace OodHelper.Results
             if (dsct.HasValue)
                 sct.Text = Common.HMS(dsct.Value);
             AverageLap = false;
-            if (caldata["average_lap"] != DBNull.Value)
-                AverageLap = (bool)caldata["average_lap"];
+            Timegate = false;
+            if (caldata["racetype"] != DBNull.Value)
+            {
+                switch (caldata["racetype"].ToString())
+                {
+                    case "AverageLap":
+                        AverageLap = true;
+                        break;
+                    case "Timegate":
+                        Timegate = true;
+                        break;
+                }
+            }
 
             CalculateEnabled = false;
             c = new Db(@"SELECT result_calculated, MAX(last_edit) last_edit
@@ -404,17 +417,31 @@ namespace OodHelper.Results
             {
                 col.ReadOnly = true;
             }
-            if ((bool)caldata["timegate"])
-                rd.Columns["start_date"].ReadOnly = false;
             rd.Columns["finish_code"].ReadOnly = false;
-            rd.Columns["finish_date"].ReadOnly = false;
-            if ((bool)caldata["average_lap"])
-                rd.Columns["laps"].ReadOnly = false;
             rd.Columns["override_points"].ReadOnly = false;
 
             Races.ItemsSource = (from DataRow r in rd.Rows
                                           select new ResultModel(r, StartDate.Value, LimitDate)).ToList<ResultModel>();
             this.DataContext = this;
+        }
+
+        public bool StartReadOnly
+        {
+            get { return !Timegate; }
+        }
+
+        public bool PlaceReadOnly
+        {
+            get { return true; }
+        }
+
+        public bool LapsReadOnly
+        {
+            get
+            {
+                if (AverageLap) return false;
+                return true;
+            }
         }
 
         public Visibility DisplayDate
@@ -431,21 +458,33 @@ namespace OodHelper.Results
 
         public bool FinishReadOnly
         {
-            //
-            // If time limit date is not the same day as start date then we show
-            // start and finish dates as well as time.
-            //
             get
             {
                 return false;
             }
         }
 
-        public bool StartReadOnly
+        public bool InterimTimeReadOnly
+        {
+            get { return false; }
+        }
+
+        public Visibility DisplayInterimTime
         {
             get
             {
-                return rd.Columns["start_date"].ReadOnly;
+                return Visibility.Hidden;
+            }
+        }
+
+        public Visibility DisplayInterimDate
+        {
+            get
+            {
+                if (DisplayDate == Visibility.Visible)
+                    return DisplayInterimTime;
+                else
+                    return DisplayDate;
             }
         }
 
@@ -453,7 +492,7 @@ namespace OodHelper.Results
         {
             get
             {
-                return rd.Columns["laps"].ReadOnly ? Visibility.Hidden : Visibility.Visible;
+                return AverageLap ? Visibility.Visible : Visibility.Hidden;
             }
         }
 
@@ -706,8 +745,6 @@ namespace OodHelper.Results
                 calc.RunWorkerCompleted += new RunWorkerCompletedEventHandler(calc_RunWorkerCompleted);
                 calc.RunWorkerAsync(rid);
                 w.ShowDialog();
-
-                //scorer.Calculate(Rid);
             }
             LoadGrid();
         }
