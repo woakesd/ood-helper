@@ -151,10 +151,10 @@ namespace OodHelper.Website
             // Races
             //
             p.ReportProgress(400 / Steps, "Loading Races");
-            ins.CommandText = "INSERT INTO [races] ([rid], [bid], [start_date], [finish_date], [last_edit], [finish_code], [laps], [elapsed], [corrected], [standard_corrected], [handicap_status], [open_handicap], [rolling_handicap], [achieved_handicap], [new_rolling_handicap], [place], [points], [override_points], [performance_index], [a], [c]) " +
-                "VALUES (@rid, @bid, @start_date, @finish_date, @last_edit, @finish_code, @laps, @elapsed, @corrected, @standard_corrected, @handicap_status, @open_handicap, @rolling_handicap, @achieved_handicap, @new_rolling_handicap, @place, @points, @override_points, @performance_index, @a, @c)";
+            ins.CommandText = "INSERT INTO [races] ([rid], [bid], [start_date], [finish_date], [finish_date_2], [last_edit], [finish_code], [laps], [elapsed], [corrected], [standard_corrected], [handicap_status], [open_handicap], [rolling_handicap], [achieved_handicap], [new_rolling_handicap], [place], [points], [override_points], [performance_index], [a], [c]) " +
+                "VALUES (@rid, @bid, @start_date, @finish_date, @finish_date_2, @last_edit, @finish_code, @laps, @elapsed, @corrected, @standard_corrected, @handicap_status, @open_handicap, @rolling_handicap, @achieved_handicap, @new_rolling_handicap, @place, @points, @override_points, @performance_index, @a, @c)";
 
-            myadp = new MySqlDataAdapter("SELECT `rid`, `bid`, `start_date`, `finish_date`, `last_edit`, `finish_code`, `laps`, `elapsed`, `corrected`, `standard_corrected`, `handicap_status`, `open_handicap`, `rolling_handicap`, `achieved_handicap`, `new_rolling_handicap`, `place`, `points`, `override_points`, `performance_index`, `a`, `c` FROM races_new", mcon);
+            myadp = new MySqlDataAdapter("SELECT `rid`, `bid`, `start_date`, `finish_date`, `finish_date_2`, `last_edit`, `finish_code`, `laps`, `elapsed`, `corrected`, `standard_corrected`, `handicap_status`, `open_handicap`, `rolling_handicap`, `achieved_handicap`, `new_rolling_handicap`, `place`, `points`, `override_points`, `performance_index`, `a`, `c` FROM races_new", mcon);
             mtable = new DataTable();
             myadp.Fill(mtable);
 
