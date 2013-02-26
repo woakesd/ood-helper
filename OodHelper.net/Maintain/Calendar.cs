@@ -275,9 +275,7 @@ namespace OodHelper.Maintain
         [Column]
         public string venue { get; set; }
         [Column]
-        public bool? average_lap { get; set; }
-        [Column]
-        public bool? timegate { get; set; }
+        public string racetype { get; set; }
         [Column]
         public string handicapping { get; set; }
         [Column]

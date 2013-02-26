@@ -99,9 +99,7 @@ CREATE TABLE [calendar] (
 , [course] nvarchar(9) NULL
 , [ood] nvarchar(30) NULL
 , [venue] nvarchar(11) NULL
-, [average_lap] bit NULL
-, [timegate] bit NULL
-, [sternchase] bit NULL
+, [racetype] nvarchar(20) NULL
 , [handicapping] nvarchar(1) NULL
 , [visitors] int NULL
 , [flag] nvarchar(10) NULL

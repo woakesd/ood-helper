@@ -64,9 +64,8 @@ namespace OodHelper.Maintain
                     raceData = new Calendar();
                     timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
                     timeFixedRadio.IsChecked = true;
-                    raceData.average_lap = false;
+                    raceData.racetype = "";
                     raceData.is_race = true;
-                    raceData.timegate = false;
                     raceData.raced = false;
                     raceData.approved = false;
                     raceData.time_limit_type = "F";
@@ -165,8 +164,7 @@ namespace OodHelper.Maintain
             p["course"] = raceData.course;
             p["ood"] = raceData.ood;
             p["venue"] = raceData.venue;
-            p["average_lap"] = raceData.average_lap;
-            p["timegate"] = raceData.timegate;
+            p["racetype"] = raceData.racetype;
             p["handicapping"] = raceData.handicapping;
             p["visitors"] = raceData.visitors;
             p["flag"] = raceData.flag;
@@ -181,8 +179,8 @@ namespace OodHelper.Maintain
             if (Rid == 0)
             {
                 save = new Db("INSERT INTO calendar " +
-                        "([start_date], [time_limit_type], [time_limit_delta], [time_limit_fixed], [class], [event], [price_code], [course], [ood], [venue], [average_lap], [timegate], [handicapping], [visitors], [flag], [extension], [memo], [raced], [approved], [is_race]) " +
-                        "VALUES (@start_date, @time_limit_type, @time_limit_delta, @time_limit_fixed, @class, @event, @price_code, @course, @ood, @venue, @average_lap, @timegate, @handicapping, @visitors, @flag, @extension, @memo, @raced, @approved, @is_race)");
+                        "([start_date], [time_limit_type], [time_limit_delta], [time_limit_fixed], [class], [event], [price_code], [course], [ood], [venue], [racetype], [handicapping], [visitors], [flag], [extension], [memo], [raced], [approved], [is_race]) " +
+                        "VALUES (@start_date, @time_limit_type, @time_limit_delta, @time_limit_fixed, @class, @event, @price_code, @course, @ood, @venue, @racetype, @handicapping, @visitors, @flag, @extension, @memo, @raced, @approved, @is_race)");
                 rid = save.GetNextIdentity("calendar", "rid");
             }
             else
@@ -197,8 +195,7 @@ namespace OodHelper.Maintain
                         ", course = @course " + 
                         ", ood = @ood " +
                         ", venue = @venue " +
-                        ", average_lap = @average_lap " +
-                        ", timegate = @timegate " +
+                        ", racetype = @racetype " +
                         ", handicapping = @handicapping " +
                         ", visitors = @visitors " +
                         ", flag = @flag " +

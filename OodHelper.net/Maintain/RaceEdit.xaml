@@ -167,24 +167,29 @@
                 <ComboBoxItem Name="HC_Open" Tag="o">Open</ComboBoxItem>
                 <ComboBoxItem Name="HC_Rolling" Tag="r">Rolling</ComboBoxItem>
                 <ComboBoxItem Name="HC_SCHR" Tag="s">Small Cat</ComboBoxItem>
+                <ComboBoxItem Name="HC_Class" Tag="c">Class (no handicap)</ComboBoxItem>
             </ComboBox>
-            <Label Content="Average Lap" Grid.Row="3" Grid.Column="0" />
-            <CheckBox Grid.Row="3" Grid.Column="1" Margin="2" Name="averageLap" VerticalAlignment="Center" IsChecked="{Binding Path=average_lap}" />
-            <Label Content="Timegate" Grid.Row="4" Grid.Column="0" />
-            <CheckBox Grid.Row="4" Grid.Column="1" Margin="2" Name="timegate" VerticalAlignment="Center" IsChecked="{Binding Path=timegate}" />
-            <Label Content="Visitors" Grid.Row="5" Grid.Column="0" />
-            <ComboBox Grid.Column="1" Grid.Row="5" Margin="2" Name="visitors" Height="auto" SelectedValuePath="Tag" SelectedValue="{Binding Path=visitors}">
+            <Label Content="Race Type" Grid.Row="3" Grid.Column="0"/>
+            <ComboBox Grid.Row="3" Grid.Column="1" Margin="2" Name="RaceType" Height="auto" SelectedValuePath="Tag" SelectedValue="{Binding Path=racetype}">
+                <ComboBoxItem Tag="FixedLength">Fixed Length</ComboBoxItem>
+                <ComboBoxItem Tag="AverageLap">Average Lap</ComboBoxItem>
+                <ComboBoxItem Tag="Hybrid">Hybrid Fixed/Average</ComboBoxItem>
+                <ComboBoxItem Tag="Timegate">Timegate</ComboBoxItem>
+                <ComboBoxItem Tag="Sternchase">Stern Chase</ComboBoxItem>
+            </ComboBox>
+            <Label Content="Visitors" Grid.Row="4" Grid.Column="0" />
+            <ComboBox Grid.Column="1" Grid.Row="4" Margin="2" Name="visitors" Height="auto" SelectedValuePath="Tag" SelectedValue="{Binding Path=visitors}">
                 <ComboBoxItem Content="" />
                 <ComboBoxItem Tag="0">Members only</ComboBoxItem>
                 <ComboBoxItem Tag="1">Local clubs</ComboBoxItem>
                 <ComboBoxItem Tag="2">Open</ComboBoxItem>
             </ComboBox>
-            <Label Content="Raced" Grid.Row="6" Grid.Column="0" />
-            <CheckBox Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Name="raced" Margin="2" IsChecked="{Binding Path=raced}" />
-            <Label Content="Approved" Grid.Row="7" Grid.Column="0" />
-            <CheckBox Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Name="approved" Margin="2" IsChecked="{Binding Path=approved}" />
-            <Label Content="Is race" Grid.Row="8" Grid.Column="0" />
-            <CheckBox Grid.Row="8" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Name="is_race" Margin="2" IsChecked="{Binding Path=is_race}" />
+            <Label Content="Raced" Grid.Row="5" Grid.Column="0" />
+            <CheckBox Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Name="raced" Margin="2" IsChecked="{Binding Path=raced}" />
+            <Label Content="Approved" Grid.Row="6" Grid.Column="0" />
+            <CheckBox Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Name="approved" Margin="2" IsChecked="{Binding Path=approved}" />
+            <Label Content="Is race" Grid.Row="7" Grid.Column="0" />
+            <CheckBox Grid.Row="7" HorizontalAlignment="Left" VerticalAlignment="Center" Name="is_race" Margin="2" IsChecked="{Binding Path=is_race}" Grid.Column="1" />
         </Grid>
         <Grid Grid.Row="1" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
