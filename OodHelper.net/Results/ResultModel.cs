@@ -85,57 +85,107 @@ namespace OodHelper.Results
         {
             get
             {
-                if (_row["finish_date"] != DBNull.Value)
-                    return ((DateTime)_row["finish_date"]).Date;
-                else
-                    return null;
+                return ReadDate(_row["finish_date"]);
             }
 
             set
             {
-                if (_row["finish_date"] != DBNull.Value)
-                    _row["finish_date"] = value + ((DateTime)_row["finish_date"]).TimeOfDay;
-                else
-                    _row["finish_date"] = value;
+                SetFinishDate(value, _row["finish_date"]);
                 OnPropertyChanged("FinishTime");
                 OnPropertyChanged("FinishDate");
             }
+        }
+
+        public DateTime? InterimDate
+        {
+            get
+            {
+                return ReadDate(_row["finish_date_2"]);
+            }
+
+            set
+            {
+                SetFinishDate(value, _row["finish_date_2"]);
+                OnPropertyChanged("InterimTime");
+                OnPropertyChanged("InterimDate");
+            }
+        }
+
+        private DateTime? ReadDate(object DateTimeValue)
+        {
+            if (DateTimeValue != DBNull.Value)
+                return ((DateTime)DateTimeValue).Date;
+            else
+                return null;
+        }
+
+        private void SetFinishDate(DateTime? value, object DateTimeValue)
+        {
+            if (DateTimeValue != DBNull.Value)
+                DateTimeValue = value + ((DateTime)DateTimeValue).TimeOfDay;
+            else
+                DateTimeValue = value;
         }
 
         public string FinishTime
         {
             get
             {
-                if (_row["finish_date"] != DBNull.Value)
-                {
-                    DateTime finish = (DateTime)_row["finish_date"];
-                    return finish.ToString("HH:mm:ss");
-                }
-                else
-                    return string.Empty;
+                return ReadTime(_row["finish_date"]);
             }
 
             set
             {
-                TimeSpan resultTime;
-                System.Text.RegularExpressions.Regex _finishCode = new System.Text.RegularExpressions.Regex("[a-zA-Z]{3,4}");
-                if (TimeSpan.TryParse(value, out resultTime) ||
-                    TimeSpan.TryParseExact(value, "hh\\ mm\\ ss", null, out resultTime))
-                {
-                    if (_row["finish_date"] != DBNull.Value)
-                        _row["finish_date"] = ((DateTime)_row["finish_date"]).Date + resultTime;
-                    else
-                        _row["finish_date"] = _startDate.Date + resultTime;
-                }
-                else if (_finishCode.IsMatch(value))
-                {
-                    FinishCode = value;
-                }
-                else
-                    _row["finish_date"] = DBNull.Value;
+                SetFinishTime(value, "finish_date");
                 OnPropertyChanged("FinishTime");
                 OnPropertyChanged("FinishDate");
             }
+        }
+
+        public string InterimTime
+        {
+            get
+            {
+                return ReadTime(_row["finish_date_2"]);
+            }
+
+            set
+            {
+                SetFinishTime(value, "finish_date_2");
+                OnPropertyChanged("InterimTime");
+                OnPropertyChanged("InterimDate");
+            }
+        }
+
+        private void SetFinishTime(string value, string DateTimeValue)
+        {
+            TimeSpan resultTime;
+            System.Text.RegularExpressions.Regex _finishCode = new System.Text.RegularExpressions.Regex("[a-zA-Z]{3,4}");
+            if (TimeSpan.TryParse(value, out resultTime) ||
+                TimeSpan.TryParseExact(value, "hh\\ mm\\ ss", null, out resultTime))
+            {
+                if (_row[DateTimeValue] != DBNull.Value)
+                    _row[DateTimeValue] = ((DateTime)_row[DateTimeValue]).Date + resultTime;
+                else
+                    _row[DateTimeValue] = _startDate.Date + resultTime;
+            }
+            else if (_finishCode.IsMatch(value))
+            {
+                FinishCode = value;
+            }
+            else
+                _row[DateTimeValue] = DBNull.Value;
+        }
+
+        private string ReadTime(object DateTimeValue)
+        {
+            if (DateTimeValue != DBNull.Value)
+            {
+                DateTime finish = (DateTime)DateTimeValue;
+                return finish.ToString("HH:mm:ss");
+            }
+            else
+                return string.Empty;
         }
 
         public string OverridePoints

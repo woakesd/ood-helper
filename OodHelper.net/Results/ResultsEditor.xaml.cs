@@ -111,11 +111,16 @@ namespace OodHelper.Results
             }
         }
 
-        public bool Timegate { get; private set; }
+        public enum RaceTypes { Undefined, FixedLength, AverageLap, Hybrid, TimeGate, SternChase, }
 
-        public bool AverageLap { get; private set; }
+        public RaceTypes RaceType { get; private set; }
 
-        public bool LapsEnabled { get { return !AverageLap; } }
+        //
+        // Hybrid race involves
+        //
+        public bool Hybrid { get; private set; }
+
+        public bool LapsEnabled { get { return RaceType != RaceTypes.AverageLap; } }
 
         public string RaceClass { get; set; }
 
@@ -343,19 +348,14 @@ namespace OodHelper.Results
             double? dsct = caldata["standard_corrected_time"] as double?;
             if (dsct.HasValue)
                 sct.Text = Common.HMS(dsct.Value);
-            AverageLap = false;
-            Timegate = false;
+            
             if (caldata["racetype"] != DBNull.Value)
             {
-                switch (caldata["racetype"].ToString())
-                {
-                    case "AverageLap":
-                        AverageLap = true;
-                        break;
-                    case "Timegate":
-                        Timegate = true;
-                        break;
-                }
+                RaceTypes _racetype;
+                if (Enum.TryParse<RaceTypes>(caldata["racetype"].ToString(), out _racetype))
+                    RaceType = _racetype;
+                else
+                    RaceType = RaceTypes.Undefined;
             }
 
             CalculateEnabled = false;
@@ -400,7 +400,7 @@ namespace OodHelper.Results
             }
 
             rddb = new Db("SELECT r.rid, r.bid, boatname, boatclass, sailno, r.start_date, " +
-                    "r.finish_code, r.finish_date, r.laps, r.override_points, r.elapsed, r.standard_corrected, r.corrected, r.place, " +
+                    "r.finish_code, r.finish_date, r.finish_date_2, r.laps, r.override_points, r.elapsed, r.standard_corrected, r.corrected, r.place, " +
                     "r.points, r.open_handicap, r.rolling_handicap, r.achieved_handicap, " +
                     "r.new_rolling_handicap, r.handicap_status, r.c, r.a, r.performance_index " +
                     "FROM races r INNER JOIN boats ON boats.bid = r.bid " +
@@ -417,17 +417,52 @@ namespace OodHelper.Results
             {
                 col.ReadOnly = true;
             }
-            rd.Columns["finish_code"].ReadOnly = false;
-            rd.Columns["override_points"].ReadOnly = false;
+
+            //
+            // Adjust updatable columns according to race type
+            //
+            switch (RaceType)
+            {
+                case RaceTypes.AverageLap:
+                    rd.Columns["finish_date"].ReadOnly = false;
+                    rd.Columns["override_points"].ReadOnly = false;
+                    rd.Columns["finish_code"].ReadOnly = false;
+                    rd.Columns["laps"].ReadOnly = false;
+                    break;
+                case RaceTypes.FixedLength:
+                    rd.Columns["finish_date"].ReadOnly = false;
+                    rd.Columns["override_points"].ReadOnly = false;
+                    rd.Columns["finish_code"].ReadOnly = false;
+                    break;
+                case RaceTypes.Hybrid:
+                    rd.Columns["finish_date"].ReadOnly = false;
+                    rd.Columns["override_points"].ReadOnly = false;
+                    rd.Columns["finish_code"].ReadOnly = false;
+                    rd.Columns["finish_date_2"].ReadOnly = false;
+                    rd.Columns["laps"].ReadOnly = false;
+                    break;
+                case RaceTypes.TimeGate:
+                    rd.Columns["start_date"].ReadOnly = false;
+                    rd.Columns["finish_date"].ReadOnly = false;
+                    rd.Columns["override_points"].ReadOnly = false;
+                    rd.Columns["finish_code"].ReadOnly = false;
+                    break;
+                case RaceTypes.SternChase:
+                    rd.Columns["place"].ReadOnly = false;
+                    break;
+            }
 
             Races.ItemsSource = (from DataRow r in rd.Rows
                                           select new ResultModel(r, StartDate.Value, LimitDate)).ToList<ResultModel>();
             this.DataContext = this;
         }
 
+        //
+        // Start time entry for boats is read only apart from for Time Gate races.
+        //
         public bool StartReadOnly
         {
-            get { return !Timegate; }
+            get { return RaceType != RaceTypes.TimeGate; }
         }
 
         public bool PlaceReadOnly
@@ -435,12 +470,21 @@ namespace OodHelper.Results
             get { return true; }
         }
 
+        //
+        // Number of laps box for each boat is read only apart from Average Lap and Hybrid races.
+        //
         public bool LapsReadOnly
         {
             get
             {
-                if (AverageLap) return false;
-                return true;
+                switch (RaceType)
+                {
+                    case RaceTypes.AverageLap:
+                    case RaceTypes.Hybrid:
+                        return false;
+                    default:
+                        return true;
+                }
             }
         }
 
@@ -464,16 +508,11 @@ namespace OodHelper.Results
             }
         }
 
-        public bool InterimTimeReadOnly
-        {
-            get { return false; }
-        }
-
         public Visibility DisplayInterimTime
         {
             get
             {
-                return Visibility.Hidden;
+                return RaceType == RaceTypes.Hybrid ? Visibility.Visible : Visibility.Hidden;
             }
         }
 
@@ -488,11 +527,32 @@ namespace OodHelper.Results
             }
         }
 
+        //
+        // Interim only writeable if race type is hybrid race
+        //
+        public bool InterimReadOnly
+        {
+            get
+            {
+                return RaceType != RaceTypes.Hybrid;
+            }
+        }
+
+        //
+        // Laps entry for boats only visible for average lap and hybrid races
+        //
         public Visibility LapsVisible
         {
             get
             {
-                return AverageLap ? Visibility.Visible : Visibility.Hidden;
+                switch (RaceType)
+                {
+                    case RaceTypes.AverageLap:
+                    case RaceTypes.Hybrid:
+                        return Visibility.Visible;
+                    default:
+                        return Visibility.Hidden;
+                }
             }
         }
 

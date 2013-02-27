@@ -124,7 +124,7 @@
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Binding="{Binding InterimTime,UpdateSourceTrigger=LostFocus}" Header="Interim"
-                                        IsReadOnly="{Binding Path=(FrameworkElement.DataContext).InterimTimeReadOnly,RelativeSource={x:Static RelativeSource.Self}}"
+                                        IsReadOnly="{Binding Path=(FrameworkElement.DataContext).InterimReadOnly,RelativeSource={x:Static RelativeSource.Self}}"
                                         Visibility="{Binding Path=(FrameworkElement.DataContext).DisplayInterimTime,RelativeSource={x:Static RelativeSource.Self}}"/>
                     <DataGridTemplateColumn Header="Finish Date" 
                                             IsReadOnly="{Binding Path=(FrameworkElement.DataContext).FinishReadOnly,RelativeSource={x:Static RelativeSource.Self}}"
