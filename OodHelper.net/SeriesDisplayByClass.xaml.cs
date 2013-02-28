@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using System.Windows.Markup;
 using System.Windows.Xps;
 using System.Printing;
+using OodHelper.Results;
 
 namespace OodHelper
 {

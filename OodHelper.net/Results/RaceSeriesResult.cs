@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace OodHelper
+namespace OodHelper.Results
 {
     public class RaceSeriesResult
     {
@@ -29,13 +29,13 @@ namespace OodHelper
                 string SeriesName = dt["sname"] as string;
                 string SeriesDiscards = dt["discards"] as string;
 
-                c = new Db(@"SELECT c.event, c.class, c.handicapping, c.rid, c.start_date, c.result_calculated
-                    FROM calendar c 
+                c = new Db(@"SELECT c.event, c.class, c.handicapping, c.rid, c.start_date, c.result_calculated, c.race_type
+                    FROM calendar c
                     INNER JOIN calendar_series_join j ON c.rid = j.rid
                     INNER JOIN races r on r.rid = c.rid
                     WHERE j.sid = @sid
                     AND c.raced = 1 
-                    GROUP BY c.event, c.class, c.handicapping, c.rid, c.start_date, c.result_calculated
+                    GROUP BY c.event, c.class, c.handicapping, c.rid, c.start_date, c.result_calculated, c.race_type
                     ORDER BY c.start_date");
 
                 DataTable races = c.GetData(p);
@@ -44,18 +44,29 @@ namespace OodHelper
 
                 foreach (DataRow race in races.Rows)
                 {
-                    _worker.SetProgress("Calculating " + race["event"] + " - " + race["class"], races.Rows.IndexOf(race));
-                    IRaceScore scorer;
-                    switch (race["handicapping"].ToString().ToUpper())
+                    CalendarModel.RaceTypes _raceType;
+                    if (Enum.TryParse<CalendarModel.RaceTypes>(race["race_type"].ToString(), out _raceType))
                     {
-                        case "R":
-                            scorer = new RollingHandicap();
-                            break;
-                        default:
-                            scorer = new OpenHandicap();
-                            break;
+                        bool _useHybrid = false;
+                        if (_raceType == CalendarModel.RaceTypes.Hybrid)
+                            _useHybrid = true;
+
+                        _worker.SetProgress("Calculating " + race["event"] + " - " + race["class"], races.Rows.IndexOf(race));
+
+                        IRaceScore scorer = null;
+                        switch (race["handicapping"].ToString().ToUpper())
+                        {
+                            case "R":
+                                scorer = new RollingHandicap(_useHybrid);
+                                break;
+                            case "O":
+                                scorer = new OpenHandicap(_useHybrid);
+                                break;
+                        }
+
+                        if (scorer != null)
+                            scorer.Calculate((int)race["rid"]);
                     }
-                    scorer.Calculate((int)race["rid"]);
                 }
 
                 c = new Db(@"SELECT c.class, r.rid, c.start_date, bid, points, override_points, finish_code

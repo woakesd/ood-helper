@@ -42,6 +42,13 @@ namespace OodHelper
 
         BackgroundWorker back = null;
 
+        protected bool _UseHybrid;
+
+        public OpenHandicap(bool Hybrid)
+        {
+            _UseHybrid = Hybrid;
+        }
+
         public void Calculate(object sender, DoWorkEventArgs e)
         {
             back = sender as BackgroundWorker;

@@ -10,6 +10,10 @@ namespace OodHelper
 {
     class RollingHandicap : OpenHandicap
     {
+        public RollingHandicap(bool Hybrid):base(Hybrid)
+        {
+        }
+
         protected override void CorrectedTime()
         {
             //

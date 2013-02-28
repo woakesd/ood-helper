@@ -4,6 +4,7 @@ using System.Linq;
 using System.Data;
 using System.Text;
 using System.Windows;
+using OodHelper.Converters;
 
 namespace OodHelper.Results
 {
@@ -61,7 +62,7 @@ namespace OodHelper.Results
             {
                 TimeSpan resultTime;
                 if (TimeSpan.TryParse(value, out resultTime) || 
-                    TimeSpan.TryParseExact(value, "hh\\ mm\\ ss", null, out resultTime))
+                    TimeSpan.TryParseExact(value, @"hh\ mm\ ss", null, out resultTime))
                     _row["start_date"] = _startDate.Date + resultTime;
                 OnPropertyChanged("StartTime");
                 OnPropertyChanged("StartDate");
@@ -162,7 +163,7 @@ namespace OodHelper.Results
             TimeSpan resultTime;
             System.Text.RegularExpressions.Regex _finishCode = new System.Text.RegularExpressions.Regex("[a-zA-Z]{3,4}");
             if (TimeSpan.TryParse(value, out resultTime) ||
-                TimeSpan.TryParseExact(value, "hh\\ mm\\ ss", null, out resultTime))
+                TimeSpan.TryParseExact(value, @"hh\ mm\ ss", null, out resultTime))
             {
                 if (_row[DateTimeValue] != DBNull.Value)
                     _row[DateTimeValue] = ((DateTime)_row[DateTimeValue]).Date + resultTime;
@@ -199,6 +200,9 @@ namespace OodHelper.Results
                 double tmp;
                 if (Double.TryParse(value, out tmp))
                     _row["override_points"] = tmp;
+                else
+                    _row["override_points"] = null;
+
                 OnPropertyChanged("OverridePoints");
             }
         }
@@ -211,9 +215,7 @@ namespace OodHelper.Results
             }
             set
             {
-                int tmp;
-                if (Int32.TryParse(value, out tmp))
-                    _row["laps"] = tmp;
+                _row["laps"] = ValueParsers.ReadInt(value);
                 OnPropertyChanged("Laps");
             }
         }
@@ -226,8 +228,8 @@ namespace OodHelper.Results
                 {
                     TimeSpan s = new TimeSpan(0,0,(int)_row["elapsed"]);
                     if (s.Days > 0)
-                        return s.ToString("UpdateUIDelegate\\ hh\\:mm\\:ss");
-                    return s.ToString("hh\\:mm\\:ss");
+                        return s.ToString(@"d\ hh\:mm\:ss");
+                    return s.ToString(@"hh\:mm\:ss");
                 }
                 else
                     return string.Empty;
@@ -245,8 +247,8 @@ namespace OodHelper.Results
                 {
                     TimeSpan s = new TimeSpan((long)((double)_row["corrected"] * 10000000));
                     if (s.Days > 0)
-                        return s.ToString("UpdateUIDelegate\\ hh\\:mm\\:ss\\.ff");
-                    return s.ToString("hh\\:mm\\:ss\\.ff");
+                        return s.ToString(@"d\ hh\:mm\:ss\.ff");
+                    return s.ToString(@"hh\:mm\:ss\.ff");
                 }
                 else
                     return string.Empty;
@@ -264,8 +266,8 @@ namespace OodHelper.Results
                 {
                     TimeSpan s = new TimeSpan((long)((double)_row["standard_corrected"] * 10000000));
                     if (s.Days > 0)
-                        return s.ToString("UpdateUIDelegate\\ hh\\:mm\\:ss\\.ff");
-                    return s.ToString("hh\\:mm\\:ss\\.ff");
+                        return s.ToString(@"d\ hh\:mm\:ss\.ff");
+                    return s.ToString(@"hh\:mm\:ss\.ff");
                 }
                 else
                     return string.Empty;
@@ -283,9 +285,7 @@ namespace OodHelper.Results
             }
             set
             {
-                int tmp;
-                if (Int32.TryParse(value, out tmp))
-                    _row["place"] = tmp;
+                _row["place"] = ValueParsers.ReadInt(value);
                 OnPropertyChanged("Place");
             }
         }
@@ -298,11 +298,7 @@ namespace OodHelper.Results
             }
             set
             {
-                Double tmp;
-                if (Double.TryParse(value, out tmp))
-                    _row["points"] = tmp;
-                else if (value.Trim() == string.Empty)
-                    _row["points"] = null;
+                _row["points"] = ValueParsers.ReadDouble(value);
                 OnPropertyChanged("Points");
             }
         }

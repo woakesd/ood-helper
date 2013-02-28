@@ -163,8 +163,9 @@
       <DependentUpon>RenewPart2.xaml</DependentUpon>
     </Compile>
     <Compile Include="Results\CalendarModel.cs" />
-    <Compile Include="Results\CalendarViewModel.cs" />
+    <Compile Include="Results\ResultsViewModel.cs" />
     <Compile Include="Results\ResultModel.cs" />
+    <Compile Include="Converters\ValueParsers.cs" />
     <Compile Include="Rules\RuleSelector.xaml.cs">
       <DependentUpon>RuleSelector.xaml</DependentUpon>
     </Compile>
@@ -259,7 +260,7 @@
     <Compile Include="Maintain\Races.xaml.cs">
       <DependentUpon>Races.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RaceSeriesResult.cs" />
+    <Compile Include="Results\RaceSeriesResult.cs" />
     <Compile Include="SelectClass.xaml.cs">
       <DependentUpon>SelectClass.xaml</DependentUpon>
     </Compile>

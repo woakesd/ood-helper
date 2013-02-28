@@ -29,12 +29,12 @@ namespace OodHelper.Results
         {
             InitializeComponent();
 
-            red.scorer.Calculate(red.Rid);
+            red.Scorer.Calculate(red.Rid);
             RaceDate.Text = "Date of Race: " + red.StartDate.Value.ToShortDateString();
             EventDescription.Text = red.RaceName;
             OodName.Text = "OOD: " + red.Ood;
             Start.Text = "Start: " + red.StartTime.ToString("hh\\:mm");
-            Sct.Text = "SCT: " + Common.HMS(red.scorer.StandardCorrectedTime);
+            Sct.Text = "SCT: " + Common.HMS(red.Scorer.StandardCorrectedTime);
             PrintedDate.Text = string.Format("Printed on {0:dd MMM yyyy} at {0:HH:mm:ss}", DateTime.Now);
 
             Db c = new Db(@"SELECT 0 [order], b.boatname Boat, b.boatclass [Class], b.sailno [Sail No], r.rolling_handicap as Hcap,

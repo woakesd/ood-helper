@@ -19,6 +19,7 @@ using OodHelper.Website;
 using OodHelper.Sun;
 using System.Printing;
 using System.Windows.Xps;
+using OodHelper.Results;
 
 namespace OodHelper
 {

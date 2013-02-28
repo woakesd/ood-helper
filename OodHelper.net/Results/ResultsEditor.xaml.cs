@@ -28,7 +28,7 @@ namespace OodHelper.Results
         private DataTable rd;
         private Hashtable caldata;
 
-        public IRaceScore scorer;
+        public IRaceScore Scorer;
 
         private string mCourse;
         public string Course
@@ -91,23 +91,24 @@ namespace OodHelper.Results
         }
 
         private int? mLaps;
-        public int? Laps
+        public string Laps
         {
             get
             {
-                return mLaps;
+                return mLaps.ToString();
             }
 
             set
             {
-                //if (value != DBNull.Value)
-                mLaps = value;
+                mLaps = ValueParsers.ReadInt(value);
+
                 Db c = new Db(@"UPDATE calendar SET laps_completed = @laps WHERE rid = @rid");
                 Hashtable p = new Hashtable();
                 p["rid"] = Rid;
                 p["laps"] = mLaps;
                 c.ExecuteNonQuery(p);
                 c.Dispose();
+
             }
         }
 
@@ -379,15 +380,27 @@ namespace OodHelper.Results
             mWindDirection = caldata["wind_direction"] as string;
             mLaps = caldata["laps_completed"] as int?;
 
-            if (scorer == null)
+            if (Scorer == null)
             {
-                switch (Handicap)
+                bool _useHybrid = false;
+                if (RaceType == CalendarModel.RaceTypes.Hybrid)
+                    _useHybrid = true;
+
+                switch (RaceType)
                 {
-                    case "r":
-                        scorer = new RollingHandicap();
-                        break;
-                    case "o":
-                        scorer = new OpenHandicap();
+                    case CalendarModel.RaceTypes.AverageLap:
+                    case CalendarModel.RaceTypes.FixedLength:
+                    case CalendarModel.RaceTypes.TimeGate:
+                    case CalendarModel.RaceTypes.Hybrid:
+                        switch (Handicap)
+                        {
+                            case "r":
+                                Scorer = new RollingHandicap(_useHybrid);
+                                break;
+                            case "o":
+                                Scorer = new OpenHandicap(_useHybrid);
+                                break;
+                        }
                         break;
                 }
             }
@@ -790,10 +803,10 @@ namespace OodHelper.Results
 
         public void Calculate()
         {
-            if (scorer != null)
+            if (Scorer != null)
             {
                 BackgroundWorker calc = new BackgroundWorker();
-                calc.DoWork += new DoWorkEventHandler(scorer.Calculate);
+                calc.DoWork += new DoWorkEventHandler(Scorer.Calculate);
                 Working w = new Working(calc);
                 calc.RunWorkerCompleted += new RunWorkerCompletedEventHandler(calc_RunWorkerCompleted);
                 calc.RunWorkerAsync(rid);
