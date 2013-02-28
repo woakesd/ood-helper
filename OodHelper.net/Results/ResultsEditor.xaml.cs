@@ -111,16 +111,9 @@ namespace OodHelper.Results
             }
         }
 
-        public enum RaceTypes { Undefined, FixedLength, AverageLap, Hybrid, TimeGate, SternChase, }
+        public CalendarModel.RaceTypes RaceType { get; private set; }
 
-        public RaceTypes RaceType { get; private set; }
-
-        //
-        // Hybrid race involves
-        //
-        public bool Hybrid { get; private set; }
-
-        public bool LapsEnabled { get { return RaceType != RaceTypes.AverageLap; } }
+        public bool LapsEnabled { get { return RaceType != CalendarModel.RaceTypes.AverageLap; } }
 
         public string RaceClass { get; set; }
 
@@ -128,70 +121,9 @@ namespace OodHelper.Results
 
         public DateTime? StartDate { get; set; }
 
-        public string Ood { get; set; }
-
-        public bool PrintIncludeAllVisible { get; set; }
-        public bool PrintIncludeAll { get; set; }
-        public bool PrintInclude { get; set; }
-        public int PrintIncludeCopies { get; set; }
-        public string PrintIncludeDescription
-        {
-            get
-            {
-                return RaceName;
-            }
-
-            set
-            {
-            }
-        }
-        public int PrintIncludeGroup { get; set; }
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged(string name)
-        {
-            System.ComponentModel.PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new System.ComponentModel.PropertyChangedEventArgs(name));
-            }
-        }
-
-        public bool CalculateEnabled { get; set; }
-        public bool RefreshHandicapsEnabled { get; set; }
-
         public string RaceStart
         {
             get { return StartTime.ToString("hh\\:mm"); }
-        }
-
-        private int rid;
-        public int Rid { get { return rid; } }
-
-        private string eventname;
-
-        public ResultsEditor(int r)
-        {
-            InitializeComponent();
-
-            PrintIncludeCopies = 1;
-            PrintIncludeGroup = 0;
-            rid = r;
-            LoadGrid();
-            SetColumnAttributes();
-        }
-
-        private string mHandicap;
-        public string Handicap
-        {
-            get
-            {
-                return mHandicap;
-            }
-        }
-
-        private bool PreviousCompetitors(int rid)
-        {
-            return false;
         }
 
         public TimeSpan StartTime
@@ -228,6 +160,67 @@ namespace OodHelper.Results
                     }
                 }
             }
+        }
+
+        public string Ood { get; set; }
+
+        public bool PrintIncludeAllVisible { get; set; }
+        public bool PrintIncludeAll { get; set; }
+        public bool PrintInclude { get; set; }
+        public int PrintIncludeCopies { get; set; }
+        public string PrintIncludeDescription
+        {
+            get
+            {
+                return RaceName;
+            }
+
+            set
+            {
+            }
+        }
+        public int PrintIncludeGroup { get; set; }
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged(string name)
+        {
+            System.ComponentModel.PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(name));
+            }
+        }
+
+        public bool CalculateEnabled { get; set; }
+        public bool RefreshHandicapsEnabled { get; set; }
+
+        private int rid;
+        public int Rid { get { return rid; } }
+
+        private string eventname;
+
+        public ResultsEditor(int r)
+        {
+            InitializeComponent();
+
+            PrintIncludeCopies = 1;
+            PrintIncludeGroup = 0;
+            rid = r;
+            LoadGrid();
+            SetColumnAttributes();
+        }
+
+        private string mHandicap;
+        public string Handicap
+        {
+            get
+            {
+                return mHandicap;
+            }
+        }
+
+        private bool PreviousCompetitors(int rid)
+        {
+            return false;
         }
 
         private DateTime? time_limit_fixed;
@@ -351,11 +344,11 @@ namespace OodHelper.Results
             
             if (caldata["racetype"] != DBNull.Value)
             {
-                RaceTypes _racetype;
-                if (Enum.TryParse<RaceTypes>(caldata["racetype"].ToString(), out _racetype))
+                CalendarModel.RaceTypes _racetype;
+                if (Enum.TryParse<CalendarModel.RaceTypes>(caldata["racetype"].ToString(), out _racetype))
                     RaceType = _racetype;
                 else
-                    RaceType = RaceTypes.Undefined;
+                    RaceType = CalendarModel.RaceTypes.Undefined;
             }
 
             CalculateEnabled = false;
@@ -423,31 +416,31 @@ namespace OodHelper.Results
             //
             switch (RaceType)
             {
-                case RaceTypes.AverageLap:
+                case CalendarModel.RaceTypes.AverageLap:
                     rd.Columns["finish_date"].ReadOnly = false;
                     rd.Columns["override_points"].ReadOnly = false;
                     rd.Columns["finish_code"].ReadOnly = false;
                     rd.Columns["laps"].ReadOnly = false;
                     break;
-                case RaceTypes.FixedLength:
+                case CalendarModel.RaceTypes.FixedLength:
                     rd.Columns["finish_date"].ReadOnly = false;
                     rd.Columns["override_points"].ReadOnly = false;
                     rd.Columns["finish_code"].ReadOnly = false;
                     break;
-                case RaceTypes.Hybrid:
+                case CalendarModel.RaceTypes.Hybrid:
                     rd.Columns["finish_date"].ReadOnly = false;
                     rd.Columns["override_points"].ReadOnly = false;
                     rd.Columns["finish_code"].ReadOnly = false;
                     rd.Columns["finish_date_2"].ReadOnly = false;
                     rd.Columns["laps"].ReadOnly = false;
                     break;
-                case RaceTypes.TimeGate:
+                case CalendarModel.RaceTypes.TimeGate:
                     rd.Columns["start_date"].ReadOnly = false;
                     rd.Columns["finish_date"].ReadOnly = false;
                     rd.Columns["override_points"].ReadOnly = false;
                     rd.Columns["finish_code"].ReadOnly = false;
                     break;
-                case RaceTypes.SternChase:
+                case CalendarModel.RaceTypes.SternChase:
                     rd.Columns["place"].ReadOnly = false;
                     break;
             }
@@ -462,7 +455,7 @@ namespace OodHelper.Results
         //
         public bool StartReadOnly
         {
-            get { return RaceType != RaceTypes.TimeGate; }
+            get { return RaceType != CalendarModel.RaceTypes.TimeGate; }
         }
 
         public bool PlaceReadOnly
@@ -479,8 +472,8 @@ namespace OodHelper.Results
             {
                 switch (RaceType)
                 {
-                    case RaceTypes.AverageLap:
-                    case RaceTypes.Hybrid:
+                    case CalendarModel.RaceTypes.AverageLap:
+                    case CalendarModel.RaceTypes.Hybrid:
                         return false;
                     default:
                         return true;
@@ -512,7 +505,7 @@ namespace OodHelper.Results
         {
             get
             {
-                return RaceType == RaceTypes.Hybrid ? Visibility.Visible : Visibility.Hidden;
+                return RaceType == CalendarModel.RaceTypes.Hybrid ? Visibility.Visible : Visibility.Hidden;
             }
         }
 
@@ -534,7 +527,7 @@ namespace OodHelper.Results
         {
             get
             {
-                return RaceType != RaceTypes.Hybrid;
+                return RaceType != CalendarModel.RaceTypes.Hybrid;
             }
         }
 
@@ -547,8 +540,8 @@ namespace OodHelper.Results
             {
                 switch (RaceType)
                 {
-                    case RaceTypes.AverageLap:
-                    case RaceTypes.Hybrid:
+                    case CalendarModel.RaceTypes.AverageLap:
+                    case CalendarModel.RaceTypes.Hybrid:
                         return Visibility.Visible;
                     default:
                         return Visibility.Hidden;
@@ -636,7 +629,7 @@ namespace OodHelper.Results
         void SetColumnAttributes()
         {
             Color x = new Color();
-            x.A = 255;
+            x.A = 224;
             x.R = 224;
             x.B = 224;
             x.G = 224;
@@ -806,11 +799,11 @@ namespace OodHelper.Results
                 calc.RunWorkerAsync(rid);
                 w.ShowDialog();
             }
-            LoadGrid();
         }
 
         void calc_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            LoadGrid();
         }
 
         private void Notes_Click(object sender, RoutedEventArgs e)

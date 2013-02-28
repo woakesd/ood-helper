@@ -162,6 +162,8 @@
     <Compile Include="Membership\RenewPart2.xaml.cs">
       <DependentUpon>RenewPart2.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Results\CalendarModel.cs" />
+    <Compile Include="Results\CalendarViewModel.cs" />
     <Compile Include="Results\ResultModel.cs" />
     <Compile Include="Rules\RuleSelector.xaml.cs">
       <DependentUpon>RuleSelector.xaml</DependentUpon>
