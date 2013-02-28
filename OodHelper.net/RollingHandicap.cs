@@ -24,38 +24,52 @@ namespace OodHelper
                                         && r.Field<string>("finish_code") != "DSQ"
                                         && r.Field<DateTime?>("start_date") != null
                                         && r.Field<DateTime?>("finish_date") != null
+                                        && (!_UseHybrid || r.Field<DateTime?>("finish_date_2") != null && r.Field<int?>("laps") != null)
                                         && (!averageLap || r.Field<int?>("laps") != null)
                                     select r))
             {
-                if (dr["start_date"] != DBNull.Value && dr["finish_date"] != DBNull.Value && (!averageLap || dr["laps"] != DBNull.Value))
+                DateTime? _start = dr["start_date"] as DateTime?;
+                DateTime? _finish = dr["finish_date"] as DateTime?;
+                DateTime? _interim = dr["finish_date_2"] as DateTime?;
+                TimeSpan? _fixedPart = null;
+                TimeSpan? _averageLapPart = null;
+
+                if (_UseHybrid)
                 {
-                    DateTime? s = dr["start_date"] as DateTime?;
-                    DateTime? f = dr["finish_date"] as DateTime?;
-
-                    TimeSpan? e = f - s;
-                    dr["elapsed"] = e.Value.TotalSeconds;
-
-                    int? l = dr["laps"] as int?;
-
-                    int hcap = (int)dr["rolling_handicap"];
-                    int ohp = (int)dr["open_handicap"];
-
-                    //
-                    // if spec is 'a' then this is average lap so corrected times are per lap,
-                    // otherwise assume everyone did same number of laps.
-                    //
-                    if (averageLap)
-                    {
-                        dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap) / l.Value;
-                        dr["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp) / l.Value;
-                    }
-                    else
-                    {
-                        dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap);
-                        dr["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp);
-                    }
-                    dr["place"] = 0;
+                    _fixedPart = _interim - _start;
+                    _averageLapPart = _finish - _interim;
                 }
+
+                TimeSpan? e = _finish - _start;
+                dr["elapsed"] = e.Value.TotalSeconds;
+
+                int? _laps = dr["laps"] as int?;
+
+                int hcap = (int)dr["rolling_handicap"];
+                int ohp = (int)dr["open_handicap"];
+
+                //
+                // if spec is 'a' then this is average lap so corrected times are per lap,
+                // otherwise assume everyone did same number of laps.
+                //
+                if (averageLap)
+                {
+                    dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap) / _laps.Value;
+                    dr["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp) / _laps.Value;
+                }
+                else if (_UseHybrid)
+                {
+                    dr["corrected"] = Math.Round(_fixedPart.Value.TotalSeconds * 1000 / hcap) +
+                        Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / hcap / _laps.Value);
+                    dr["standard_corrected"] = Math.Round(_fixedPart.Value.TotalSeconds * 1000 / ohp) +
+                        Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / ohp / _laps.Value);
+                }
+                else
+                {
+                    dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap);
+                    dr["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp);
+                }
+                dr["place"] = 0;
             }
         }
     }

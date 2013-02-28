@@ -246,9 +246,6 @@ namespace OodHelper
 
         protected virtual void CorrectedTime()
         {
-            Hashtable p = new Hashtable();
-            p["rid"] = rid;
-
             //
             // Select all boats and work out elapsed, corrected and stdcorr
             //
@@ -257,16 +254,27 @@ namespace OodHelper
                                         && r.Field<string>("finish_code") != "DSQ"
                                         && r.Field<DateTime?>("start_date") != null
                                         && r.Field<DateTime?>("finish_date") != null
+                                        && (!_UseHybrid || r.Field<DateTime?>("finish_date_2") != null && r.Field<int?>("laps") != null)
                                         && (!averageLap || r.Field<int?>("laps") != null)
                                     select r))
             {
-                DateTime? s = dr["start_date"] as DateTime?;
-                DateTime? f = dr["finish_date"] as DateTime?;
+                DateTime? _start = dr["start_date"] as DateTime?;
+                DateTime? _finish = dr["finish_date"] as DateTime?;
+                DateTime? _interim = dr["finish_date_2"] as DateTime?;
+                TimeSpan? _fixedPart = null;
+                TimeSpan? _averageLapPart = null;
 
-                TimeSpan? e = f - s;
-                dr["elapsed"] = e.Value.TotalSeconds;
+                if (_UseHybrid)
+                {
+                    _fixedPart = _interim - _start;
+                    _averageLapPart = _finish - _interim;
+                }
 
-                int? l = dr["laps"] as int?;
+                TimeSpan? _elapsed = _finish - _start;
+                dr["elapsed"] = _elapsed.Value.TotalSeconds;
+
+                int? _laps = dr["laps"] as int?;
+                if (_laps.HasValue && _laps.Value == 0) _laps = 1;
 
                 int hcap = (int)dr["open_handicap"];
 
@@ -276,11 +284,15 @@ namespace OodHelper
                 //
                 if (averageLap)
                 {
-                    dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap) / l.Value;
+                    dr["corrected"] = Math.Round(_elapsed.Value.TotalSeconds * 1000 / hcap) / _laps.Value;
                 }
-                else
+                else if (_UseHybrid)
                 {
-                    dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap);
+                    dr["corrected"] = Math.Round(_fixedPart.Value.TotalSeconds * 1000 / hcap) +
+                        Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / hcap / _laps.Value);
+                }
+                {
+                    dr["corrected"] = Math.Round(_elapsed.Value.TotalSeconds * 1000 / hcap);
                 }
                 dr["standard_corrected"] = dr["corrected"];
                 dr["place"] = 0;
@@ -325,7 +337,7 @@ namespace OodHelper
                 for (int i = 0; i < n; i++)
                 {
                     total = total + query.ElementAt(i).Field<double?>("standard_corrected").Value;
-                    //total = total + (double) UpdateUIDelegate.Rows[i]["standard_corrected"];
+                    //total = total + (double) UpdateUIDelegate.Rows[_interim]["standard_corrected"];
                 }
 
                 double averageCorrectedTime = total / n;
@@ -501,7 +513,7 @@ namespace OodHelper
                     {
                         if ((double)dr["standard_corrected"] >= SlowLimit)
                         {
-                            dr["c"] = "s";
+                            dr["c"] = "_start";
                             sperf = true;
                         }
                         else
@@ -571,7 +583,7 @@ namespace OodHelper
                         int newhc = (int)Math.Round((int)dr["rolling_handicap"] + (working - (int)dr["rolling_handicap"]) * 0.15);
 
                         //
-                        // And keep it if it's inside the band.
+                        // And keep it if it'_start inside the band.
                         //
                         if (newhc >= (int)dr["open_handicap"] * 0.95 && newhc <= (int)dr["open_handicap"] * 1.05)
                             dr["new_rolling_handicap"] = newhc;
