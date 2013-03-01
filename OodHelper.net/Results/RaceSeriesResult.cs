@@ -47,20 +47,24 @@ namespace OodHelper.Results
                     CalendarModel.RaceTypes _raceType;
                     if (Enum.TryParse<CalendarModel.RaceTypes>(race["race_type"].ToString(), out _raceType))
                     {
-                        bool _useHybrid = false;
-                        if (_raceType == CalendarModel.RaceTypes.Hybrid)
-                            _useHybrid = true;
-
                         _worker.SetProgress("Calculating " + race["event"] + " - " + race["class"], races.Rows.IndexOf(race));
 
                         IRaceScore scorer = null;
-                        switch (race["handicapping"].ToString().ToUpper())
+                        switch (_raceType)
                         {
-                            case "R":
-                                scorer = new RollingHandicap(_useHybrid);
-                                break;
-                            case "O":
-                                scorer = new OpenHandicap(_useHybrid);
+                            case CalendarModel.RaceTypes.AverageLap:
+                            case CalendarModel.RaceTypes.FixedLength:
+                            case CalendarModel.RaceTypes.TimeGate:
+                            case CalendarModel.RaceTypes.Hybrid:
+                                switch (race["handicapping"].ToString().ToUpper())
+                                {
+                                    case "R":
+                                        scorer = new RollingHandicap();
+                                        break;
+                                    case "O":
+                                        scorer = new OpenHandicap();
+                                        break;
+                                }
                                 break;
                         }
 

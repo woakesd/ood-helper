@@ -382,10 +382,6 @@ namespace OodHelper.Results
 
             if (Scorer == null)
             {
-                bool _useHybrid = false;
-                if (RaceType == CalendarModel.RaceTypes.Hybrid)
-                    _useHybrid = true;
-
                 switch (RaceType)
                 {
                     case CalendarModel.RaceTypes.AverageLap:
@@ -395,10 +391,10 @@ namespace OodHelper.Results
                         switch (Handicap)
                         {
                             case "r":
-                                Scorer = new RollingHandicap(_useHybrid);
+                                Scorer = new RollingHandicap();
                                 break;
                             case "o":
-                                Scorer = new OpenHandicap(_useHybrid);
+                                Scorer = new OpenHandicap();
                                 break;
                         }
                         break;

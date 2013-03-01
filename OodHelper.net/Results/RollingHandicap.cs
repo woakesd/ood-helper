@@ -5,15 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections;
+using OodHelper.Results;
 
 namespace OodHelper
 {
     class RollingHandicap : OpenHandicap
     {
-        public RollingHandicap(bool Hybrid):base(Hybrid)
-        {
-        }
-
         protected override void CorrectedTime()
         {
             //
@@ -24,8 +21,8 @@ namespace OodHelper
                                         && r.Field<string>("finish_code") != "DSQ"
                                         && r.Field<DateTime?>("start_date") != null
                                         && r.Field<DateTime?>("finish_date") != null
-                                        && (!_UseHybrid || r.Field<DateTime?>("finish_date_2") != null && r.Field<int?>("laps") != null)
-                                        && (!averageLap || r.Field<int?>("laps") != null)
+                                        && (RaceType != CalendarModel.RaceTypes.Hybrid || r.Field<DateTime?>("finish_date_2") != null && r.Field<int?>("laps") != null)
+                                        && (RaceType != CalendarModel.RaceTypes.AverageLap || r.Field<int?>("laps") != null)
                                     select r))
             {
                 DateTime? _start = dr["start_date"] as DateTime?;
@@ -34,7 +31,7 @@ namespace OodHelper
                 TimeSpan? _fixedPart = null;
                 TimeSpan? _averageLapPart = null;
 
-                if (_UseHybrid)
+                if (RaceType == CalendarModel.RaceTypes.Hybrid)
                 {
                     _fixedPart = _interim - _start;
                     _averageLapPart = _finish - _interim;
@@ -52,22 +49,23 @@ namespace OodHelper
                 // if spec is 'a' then this is average lap so corrected times are per lap,
                 // otherwise assume everyone did same number of laps.
                 //
-                if (averageLap)
+                switch (RaceType)
                 {
-                    dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap) / _laps.Value;
-                    dr["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp) / _laps.Value;
-                }
-                else if (_UseHybrid)
-                {
-                    dr["corrected"] = Math.Round(_fixedPart.Value.TotalSeconds * 1000 / hcap) +
-                        Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / hcap / _laps.Value);
-                    dr["standard_corrected"] = Math.Round(_fixedPart.Value.TotalSeconds * 1000 / ohp) +
-                        Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / ohp / _laps.Value);
-                }
-                else
-                {
-                    dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap);
-                    dr["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp);
+                    case CalendarModel.RaceTypes.AverageLap:
+                        dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap) / _laps.Value;
+                        dr["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp) / _laps.Value;
+                        break;
+                    case CalendarModel.RaceTypes.Hybrid:
+                        dr["corrected"] = Math.Round(_fixedPart.Value.TotalSeconds * 1000 / hcap) +
+                            Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / hcap / _laps.Value);
+                        dr["standard_corrected"] = Math.Round(_fixedPart.Value.TotalSeconds * 1000 / ohp) +
+                            Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / ohp / _laps.Value);
+                        break;
+                    case CalendarModel.RaceTypes.FixedLength:
+                    case CalendarModel.RaceTypes.TimeGate:
+                        dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap);
+                        dr["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp);
+                        break;
                 }
                 dr["place"] = 0;
             }
