@@ -584,7 +584,7 @@ namespace OodHelper
                         int newhc = (int)Math.Round((int)dr["rolling_handicap"] + (working - (int)dr["rolling_handicap"]) * 0.15);
 
                         //
-                        // And keep it if it'_start inside the band.
+                        // And keep it if it's inside the band.
                         //
                         if (newhc >= (int)dr["open_handicap"] * 0.95 && newhc <= (int)dr["open_handicap"] * 1.05)
                             dr["new_rolling_handicap"] = newhc;
