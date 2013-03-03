@@ -84,7 +84,7 @@ namespace OodHelper.Website
             msql.Clear();
             msql.Append("INSERT INTO `calendar_new` (`rid`,`start_date`,`time_limit_type`,`time_limit_fixed`,");
             msql.Append("`time_limit_delta`,`extension`,`class`,`event`,`price_code`,`course`,`ood`,`venue`,`racetype`,");
-            msql.Append(",`handicapping`,`visitors`,`flag`,`memo`,`is_race`,`raced`,`approved`,`course_choice`,");
+            msql.Append("`handicapping`,`visitors`,`flag`,`memo`,`is_race`,`raced`,`approved`,`course_choice`,");
             msql.Append("`laps_completed`,`wind_speed`,`wind_direction`,`standard_corrected_time`,`result_calculated`) VALUES ");
 
             c = new Db(@"SELECT rid, start_date, time_limit_type, time_limit_fixed,
