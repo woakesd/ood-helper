@@ -157,7 +157,7 @@ CREATE TABLE [races] (
 , [start_date] datetime NULL
 , [finish_code] nvarchar(5) NULL
 , [finish_date] datetime NULL
-, [finish_date_2] datetime NULL
+, [interim_date] datetime NULL
 , [last_edit] datetime NULL
 , [laps] int NULL
 , [place] int NULL

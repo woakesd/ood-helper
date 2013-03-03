@@ -402,7 +402,7 @@ namespace OodHelper.Results
             }
 
             rddb = new Db("SELECT r.rid, r.bid, boatname, boatclass, sailno, r.start_date, " +
-                    "r.finish_code, r.finish_date, r.finish_date_2, r.laps, r.override_points, r.elapsed, r.standard_corrected, r.corrected, r.place, " +
+                    "r.finish_code, r.finish_date, r.interim_date, r.laps, r.override_points, r.elapsed, r.standard_corrected, r.corrected, r.place, " +
                     "r.points, r.open_handicap, r.rolling_handicap, r.achieved_handicap, " +
                     "r.new_rolling_handicap, r.handicap_status, r.c, r.a, r.performance_index " +
                     "FROM races r INNER JOIN boats ON boats.bid = r.bid " +
@@ -440,7 +440,7 @@ namespace OodHelper.Results
                     rd.Columns["finish_date"].ReadOnly = false;
                     rd.Columns["override_points"].ReadOnly = false;
                     rd.Columns["finish_code"].ReadOnly = false;
-                    rd.Columns["finish_date_2"].ReadOnly = false;
+                    rd.Columns["interim_date"].ReadOnly = false;
                     rd.Columns["laps"].ReadOnly = false;
                     break;
                 case CalendarModel.RaceTypes.TimeGate:

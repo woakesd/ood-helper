@@ -253,13 +253,13 @@ namespace OodHelper
                                         && r.Field<string>("finish_code") != "DSQ"
                                         && r.Field<DateTime?>("start_date") != null
                                         && r.Field<DateTime?>("finish_date") != null
-                                        && (RaceType != CalendarModel.RaceTypes.Hybrid || r.Field<DateTime?>("finish_date_2") != null && r.Field<int?>("laps") != null)
+                                        && (RaceType != CalendarModel.RaceTypes.Hybrid || r.Field<DateTime?>("interim_date") != null && r.Field<int?>("laps") != null)
                                         && (RaceType != CalendarModel.RaceTypes.AverageLap || r.Field<int?>("laps") != null)
                                     select r))
             {
                 DateTime? _start = dr["start_date"] as DateTime?;
                 DateTime? _finish = dr["finish_date"] as DateTime?;
-                DateTime? _interim = dr["finish_date_2"] as DateTime?;
+                DateTime? _interim = dr["interim_date"] as DateTime?;
                 TimeSpan? _fixedPart = null;
                 TimeSpan? _averageLapPart = null;
 

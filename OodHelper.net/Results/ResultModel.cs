@@ -101,12 +101,12 @@ namespace OodHelper.Results
         {
             get
             {
-                return ReadDate(_row["finish_date_2"]);
+                return ReadDate(_row["interim_date"]);
             }
 
             set
             {
-                SetFinishDate(value, _row["finish_date_2"]);
+                SetFinishDate(value, _row["interim_date"]);
                 OnPropertyChanged("InterimTime");
                 OnPropertyChanged("InterimDate");
             }
@@ -147,12 +147,12 @@ namespace OodHelper.Results
         {
             get
             {
-                return ReadTime(_row["finish_date_2"]);
+                return ReadTime(_row["interim_date"]);
             }
 
             set
             {
-                SetFinishTime(value, "finish_date_2");
+                SetFinishTime(value, "interim_date");
                 OnPropertyChanged("InterimTime");
                 OnPropertyChanged("InterimDate");
             }

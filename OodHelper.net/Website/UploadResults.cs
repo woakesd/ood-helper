@@ -178,11 +178,11 @@ namespace OodHelper.Website
             mcom.ExecuteNonQuery();
 
             msql.Clear();
-            msql.Append("INSERT INTO `races_new` (rid,bid,start_date,finish_code,finish_date,finish_date_2,last_edit,laps,place,points,override_points,");
+            msql.Append("INSERT INTO `races_new` (rid,bid,start_date,finish_code,finish_date,interim_date,last_edit,laps,place,points,override_points,");
             msql.Append("elapsed,corrected,standard_corrected,handicap_status,open_handicap,rolling_handicap,achieved_handicap,");
             msql.Append("new_rolling_handicap,performance_index,a,c) VALUES ");
 
-            c = new Db(@"SELECT rid,bid,start_date,finish_code,finish_date,finish_date_2,last_edit,laps,place,points,override_points,
+            c = new Db(@"SELECT rid,bid,start_date,finish_code,finish_date,interim_date,last_edit,laps,place,points,override_points,
                         elapsed,corrected,standard_corrected,handicap_status,open_handicap,rolling_handicap,achieved_handicap,
                         new_rolling_handicap,performance_index,a,c
                         FROM races 
