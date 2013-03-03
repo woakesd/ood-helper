@@ -17,6 +17,7 @@ namespace OodHelper.Maintain
 
         public PersonModel(int id)
         {
+            WebService.People _ppl = new WebService.People(id);
             Db get = new Db("SELECT id, main_id, firstname, surname, address1, address2, address3, address4, " +
                 "postcode, hometel, mobile, worktel, email, club, member, manmemo, cp, papernewsletter, handbookexclude " +
                 "FROM people " +
