@@ -27,7 +27,7 @@ namespace OodHelper.Maintain
             {
                 PersonModel m = DataContext as PersonModel;
                 if (m != null)
-                    return m.Id.HasValue ? m.Id.Value : 0;
+                    return m.Id;
                 return 0;
             }
         }

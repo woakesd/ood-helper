@@ -4,39 +4,95 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using System.Net.Http;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
+using System.Threading.Tasks;
 
 namespace OodHelper.WebService
 {
     [DataContract]
     public class People
     {
-        public People(int id)
+        static private HttpClient GetClient()
         {
-            GetPerson(id);
-        }
-
-        public string JSON { get; set; }
-        public async void GetPerson(int id)
-        {
-            HttpClientHandler _handler = new HttpClientHandler();
+            WebRequestHandler _handler = new WebRequestHandler();
             _handler.Credentials = new System.Net.NetworkCredential("pedb", "jugeit");
+            _handler.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(ValidateServerCertificate);
 
-            HttpClient _client = new HttpClient(_handler, true);
-
-            Uri _uri = new Uri(string.Format("http://peycrace.info/results/people/id/{0}", id));
-
-            DataContractJsonSerializer _serial = new DataContractJsonSerializer(typeof(People[]));
-            string JSON = await _client.GetStringAsync(_uri);
-            object x = _serial.ReadObject(GenerateStreamFromString(JSON));
+            return new HttpClient(_handler, true);
         }
 
-        private Stream GenerateStreamFromString(string value)
+        static string Base = "https://peycrace.info/results";
+
+        static public People[] GetPerson(int id)
         {
-            return new MemoryStream(UTF8Encoding.Default.GetBytes(value ?? ""));
+            HttpClient _client = GetClient();
+
+            Uri _uri = new Uri(string.Format("{0}/people/{1}", Base, id));
+
+            Task<Stream> _streamTask = _client.GetStreamAsync(_uri);
+            while (!_streamTask.IsCompleted)
+                _streamTask.Wait(10);
+
+            return ReadPeople(_streamTask.Result);
         }
 
+        private static People[] ReadPeople(Stream _stream)
+        {
+            DataContractJsonSerializer _serial = new DataContractJsonSerializer(typeof(People[]));
+            MemoryStream _ms = _stream as MemoryStream;
+            if (_ms != null)
+            {
+                string res = Encoding.UTF8.GetString(_ms.ToArray());
+            }
+            return _serial.ReadObject(_stream) as People[];
+        }
+
+        public People[] UpdatePeople()
+        {
+            HttpClient _client = GetClient();
+
+            Uri _uri = new Uri(string.Format("{0}/people/{1}", Base, id));
+
+            DataContractJsonSerializer _serial = new DataContractJsonSerializer(typeof(People));
+            string _encoded = string.Empty;
+            using (MemoryStream _ms = new MemoryStream())
+            {
+                _serial.WriteObject(_ms, this);
+                _encoded = Encoding.UTF8.GetString(_ms.ToArray());
+            }
+            HttpContent _content = new StringContent(_encoded, Encoding.UTF8, "application/json");
+            Task<HttpResponseMessage> _streamTask = _client.PutAsync(_uri, _content);
+            while (!_streamTask.IsCompleted)
+                _streamTask.Wait(10);
+
+            Task<Stream> _jsonStreamTask = _streamTask.Result.Content.ReadAsStreamAsync();
+            while (!_jsonStreamTask.IsCompleted)
+                _jsonStreamTask.Wait(10);
+
+            return ReadPeople(_jsonStreamTask.Result);
+        }
+
+        public static bool ValidateServerCertificate(
+              object sender,
+              X509Certificate certificate,
+              X509Chain chain,
+              SslPolicyErrors sslPolicyErrors)
+        {
+            //
+            // potentially this is weak. I'm using a self signed certificate on the web site so cant validate the chain...
+            //
+            return true;
+        }
+
+
+
+        [DataMember]
+        public int id { get; set; }
+        [DataMember]
+        public int? sid { get; set; }
         [DataMember]
         public string firstname { get; set; }
         [DataMember]
@@ -64,32 +120,28 @@ namespace OodHelper.WebService
         [DataMember]
         public string member { get; set; }
         [DataMember]
-        public int? cp { get; set; }
+        public bool? cp { get; set; }
         [DataMember]
-        public int? s { get; set; }
-        [DataMember]
-        public int id { get; set; }
+        public bool? s { get; set; }
         [DataMember]
         public string manmemo { get; set; }
         [DataMember]
-        public int? sid { get; set; }
-        [DataMember]
         public string check { get; set; }
         [DataMember]
-        public int? novice { get; set; }
+        public bool? novice { get; set; }
         [DataMember]
         public Guid? uid { get; set; }
         [DataMember]
-        public int? papernewsletter { get; set; }
+        public bool? papernewsletter { get; set; }
         [DataMember]
-        public int? handbookexclude { get; set; }
+        public bool? handbookexclude { get; set; }
         [DataMember]
-        public int? delete { get; set; }
+        public bool? delete { get; set; }
         [DataMember]
-        public int? updated { get; set; }
+        public bool? updated { get; set; }
         [DataMember]
         public string crewon { get; set; }
         [DataMember]
-        public int? old_member { get; set; }
+        public bool? old_member { get; set; }
     }
 }

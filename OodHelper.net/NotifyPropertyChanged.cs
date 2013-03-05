@@ -9,7 +9,6 @@ namespace OodHelper
 {
     public class NotifyPropertyChanged : INotifyPropertyChanged
     {
-        //private Hashtable _values;
         public Hashtable Values { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
