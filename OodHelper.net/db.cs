@@ -404,8 +404,8 @@ CREATE TABLE [portsmouth_numbers] (
                     FROM information_schema.columns
                     WHERE table_name = @table
                     AND column_name = @column";
-                cmd.Parameters.Add("table", table);
-                cmd.Parameters.Add("column", column);
+                cmd.Parameters.AddWithValue("table", table);
+                cmd.Parameters.AddWithValue("column", column);
                 long nextid = (long)cmd.ExecuteScalar();
                 return (int)nextid;
             }

@@ -286,7 +286,7 @@ VALUES (@id, @class_name, @no_of_crew, @rig, @spinnaker, @engine, @keel, @number
             {
                 scmd.CommandText = "INSERT INTO updates (upload, dummy) VALUES (@dt, 2)";
                 scmd.Parameters.Clear();
-                scmd.Parameters.Add("dt", mtable.Rows[0][0]);
+                scmd.Parameters.AddWithValue("dt", mtable.Rows[0][0]);
                 scmd.ExecuteNonQuery();
             }
 
