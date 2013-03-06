@@ -107,7 +107,7 @@ namespace OodHelper.Website
             {
                 foreach (DataColumn rc in rset.Columns)
                 {
-                    ins.Parameters.Add(rc.ColumnName, rrow[rc.ColumnName]);
+                    ins.Parameters.AddWithValue(rc.ColumnName, rrow[rc.ColumnName]);
                 }
                 SqlCeParameter p1 = ins.Parameters[1];
                 ins.ExecuteNonQuery();
