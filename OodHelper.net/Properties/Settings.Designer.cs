@@ -44,5 +44,41 @@ namespace OodHelper.Properties {
                 return ((string)(this["SettingsConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ResultsWebServiceBaseURL {
+            get {
+                return ((string)(this["ResultsWebServiceBaseURL"]));
+            }
+            set {
+                this["ResultsWebServiceBaseURL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ResultsWebServiceBaseUsername {
+            get {
+                return ((string)(this["ResultsWebServiceBaseUsername"]));
+            }
+            set {
+                this["ResultsWebServiceBaseUsername"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ResultsWebServiceBasePassword {
+            get {
+                return ((string)(this["ResultsWebServiceBasePassword"]));
+            }
+            set {
+                this["ResultsWebServiceBasePassword"] = value;
+            }
+        }
     }
 }

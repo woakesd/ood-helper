@@ -15,22 +15,31 @@ namespace OodHelper.WebService
     [DataContract]
     public class People
     {
+        static People()
+        {
+            BaseURL = Properties.Settings.Default.ResultsWebServiceBaseURL;
+            BaseUsername = Properties.Settings.Default.ResultsWebServiceBaseUsername;
+            BasePassword = Properties.Settings.Default.ResultsWebServiceBasePassword;
+        }
+
         static private HttpClient GetClient()
         {
             WebRequestHandler _handler = new WebRequestHandler();
-            _handler.Credentials = new System.Net.NetworkCredential("pedb", "uFet1asc");
+            _handler.Credentials = new System.Net.NetworkCredential(BaseUsername, BasePassword);
             _handler.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(ValidateServerCertificate);
 
             return new HttpClient(_handler, true);
         }
 
-        static string Base = "https://peycrace.info/results";
+        protected static string BaseURL;
+        protected static string BaseUsername;
+        protected static string BasePassword;
 
         static public People GetPerson(int id)
         {
             HttpClient _client = GetClient();
 
-            Uri _uri = new Uri(string.Format("{0}/people/{1}", Base, id));
+            Uri _uri = new Uri(string.Format("{0}/people/{1}", BaseURL, id));
 
             Task<Stream> _streamTask = _client.GetStreamAsync(_uri);
             while (!_streamTask.IsCompleted)
@@ -41,7 +50,7 @@ namespace OodHelper.WebService
 
         private static People ReadPeople(Stream _stream)
         {
-            DataContractJsonSerializer _serial = new DataContractJsonSerializer(typeof(People[]));
+            DataContractJsonSerializer _serial = new DataContractJsonSerializer(typeof(People));
             MemoryStream _ms = _stream as MemoryStream;
             if (_ms != null)
             {
@@ -54,7 +63,7 @@ namespace OodHelper.WebService
         {
             HttpClient _client = GetClient();
 
-            Uri _uri = new Uri(string.Format("{0}/people/{1}", Base, id));
+            Uri _uri = new Uri(string.Format("{0}/people/{1}", BaseURL, id));
 
             DataContractJsonSerializer _serial = new DataContractJsonSerializer(typeof(People));
             string _encoded = string.Empty;
@@ -79,7 +88,7 @@ namespace OodHelper.WebService
         {
             HttpClient _client = GetClient();
 
-            Uri _uri = new Uri(string.Format("{0}/people", Base));
+            Uri _uri = new Uri(string.Format("{0}/people", BaseURL));
 
             DataContractJsonSerializer _serial = new DataContractJsonSerializer(typeof(People));
             string _encoded = string.Empty;
@@ -104,7 +113,7 @@ namespace OodHelper.WebService
         {
             HttpClient _client = GetClient();
 
-            Uri _uri = new Uri(string.Format("{0}/people/{1}", Base, Id));
+            Uri _uri = new Uri(string.Format("{0}/people/{1}", BaseURL, Id));
 
             Task<HttpResponseMessage> _deleteTask = _client.DeleteAsync(_uri);
 
