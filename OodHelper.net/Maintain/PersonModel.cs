@@ -19,9 +19,12 @@ namespace OodHelper.Maintain
 
         public PersonModel(int id)
         {
-            WebService.People[] _people = WebService.People.GetPerson(id);
-            if (_people != null && _people.Length > 0)
-                Person = _people[0];
+            if (id != 0)
+            {
+                Person = WebService.People.GetPerson(id);
+                if (Person == null)
+                    Person = new WebService.People();
+            }
             else
                 Person = new WebService.People();
         }
@@ -289,7 +292,9 @@ namespace OodHelper.Maintain
 
             if (errors.ToString() == string.Empty)
             {
-                if (Id != 0)
+                if (Id == 0)
+                    Person.InsertPeople();
+                else
                     Person.UpdatePeople();
                 //Db save;
                 //if (Id == 0)

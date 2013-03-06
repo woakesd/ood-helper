@@ -18,7 +18,7 @@ namespace OodHelper.WebService
         static private HttpClient GetClient()
         {
             WebRequestHandler _handler = new WebRequestHandler();
-            _handler.Credentials = new System.Net.NetworkCredential("pedb", "jugeit");
+            _handler.Credentials = new System.Net.NetworkCredential("pedb", "uFet1asc");
             _handler.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(ValidateServerCertificate);
 
             return new HttpClient(_handler, true);
@@ -26,7 +26,7 @@ namespace OodHelper.WebService
 
         static string Base = "https://peycrace.info/results";
 
-        static public People[] GetPerson(int id)
+        static public People GetPerson(int id)
         {
             HttpClient _client = GetClient();
 
@@ -39,7 +39,7 @@ namespace OodHelper.WebService
             return ReadPeople(_streamTask.Result);
         }
 
-        private static People[] ReadPeople(Stream _stream)
+        private static People ReadPeople(Stream _stream)
         {
             DataContractJsonSerializer _serial = new DataContractJsonSerializer(typeof(People[]));
             MemoryStream _ms = _stream as MemoryStream;
@@ -47,10 +47,10 @@ namespace OodHelper.WebService
             {
                 string res = Encoding.UTF8.GetString(_ms.ToArray());
             }
-            return _serial.ReadObject(_stream) as People[];
+            return _serial.ReadObject(_stream) as People;
         }
 
-        public People[] UpdatePeople()
+        public People UpdatePeople()
         {
             HttpClient _client = GetClient();
 
@@ -73,6 +73,43 @@ namespace OodHelper.WebService
                 _jsonStreamTask.Wait(10);
 
             return ReadPeople(_jsonStreamTask.Result);
+        }
+
+        public People InsertPeople()
+        {
+            HttpClient _client = GetClient();
+
+            Uri _uri = new Uri(string.Format("{0}/people", Base));
+
+            DataContractJsonSerializer _serial = new DataContractJsonSerializer(typeof(People));
+            string _encoded = string.Empty;
+            using (MemoryStream _ms = new MemoryStream())
+            {
+                _serial.WriteObject(_ms, this);
+                _encoded = Encoding.UTF8.GetString(_ms.ToArray());
+            }
+            HttpContent _content = new StringContent(_encoded, Encoding.UTF8, "application/json");
+            Task<HttpResponseMessage> _streamTask = _client.PostAsync(_uri, _content);
+            while (!_streamTask.IsCompleted)
+                _streamTask.Wait(10);
+
+            Task<Stream> _jsonStreamTask = _streamTask.Result.Content.ReadAsStreamAsync();
+            while (!_jsonStreamTask.IsCompleted)
+                _jsonStreamTask.Wait(10);
+
+            return ReadPeople(_jsonStreamTask.Result);
+        }
+
+        public static void DeletePeople(int Id)
+        {
+            HttpClient _client = GetClient();
+
+            Uri _uri = new Uri(string.Format("{0}/people/{1}", Base, Id));
+
+            Task<HttpResponseMessage> _deleteTask = _client.DeleteAsync(_uri);
+
+            while (!_deleteTask.IsCompleted)
+                _deleteTask.Wait(10);
         }
 
         public static bool ValidateServerCertificate(
