@@ -80,5 +80,15 @@ namespace OodHelper.Properties {
                 this["ResultsWebServiceBasePassword"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=|DataDirectory|\\data\\Settings.sdf")]
+        public string SettingsConnectionString1 {
+            get {
+                return ((string)(this["SettingsConnectionString1"]));
+            }
+        }
     }
 }

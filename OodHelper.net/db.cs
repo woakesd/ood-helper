@@ -444,15 +444,13 @@ CREATE TABLE [portsmouth_numbers] (
 
         public static void ReseedDatabase()
         {
-            Object o;
-            int b, t;
-            if ((o = DbSettings.GetSetting("bottomseed")) != null)
-                b = (int)o;
-            else
+            string o;
+            int b = 1, t;
+            if ((o = DbSettings.GetSetting("bottomseed")) != string.Empty && !Int32.TryParse(o, out b))
                 b = 1;
-            if ((o = DbSettings.GetSetting("topseed")) != null)
+
+            if ((o = DbSettings.GetSetting("topseed")) != string.Empty && !Int32.TryParse(o, out t))
             {
-                t = (int)o;
                 ReseedTable("boats", "bid", b, t);
                 ReseedTable("people", "id", b, t);
                 ReseedTable("calendar", "rid");

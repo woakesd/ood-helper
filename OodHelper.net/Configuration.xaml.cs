@@ -18,29 +18,29 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for Configuration.xaml
     /// </summary>
-    public partial class Configuration : Window
+    public partial class Configure : Window
     {
-        public Configuration()
+        public Configure()
         {
             InitializeComponent();
 
             //
             // init seed values
             //
-            Object o;
-            if ((o = DbSettings.GetSetting(DbSettings.settBottomSeed)) != null)
-                BottomSeed.Text = o.ToString();
+            string o;
+            if ((o = DbSettings.GetSetting(DbSettings.settBottomSeed)) != string.Empty)
+                BottomSeed.Text = o;
             else
                 BottomSeed.Text = "1";
             if ((o = DbSettings.GetSetting(DbSettings.settTopSeed)) != null)
-                TopSeed.Text = o.ToString();
+                TopSeed.Text = o;
             else
                 TopSeed.Text = "1999";
 
             //
             // init mysql connection values
             //
-            string myconstring = (string)DbSettings.GetSetting(DbSettings.settMysql);
+            string myconstring = DbSettings.GetSetting(DbSettings.settMysql);
             MySqlConnectionStringBuilder mcsb = new MySqlConnectionStringBuilder(myconstring);
             Server.Text = mcsb.Server;
             Username.Text = mcsb.UserID;
@@ -60,7 +60,7 @@ namespace OodHelper
             //
             // init default discard profile
             //
-            DefaultDiscardProfile.Text = (string)DbSettings.GetSetting(DbSettings.settDefaultDiscardProfile);
+            DefaultDiscardProfile.Text = DbSettings.GetSetting(DbSettings.settDefaultDiscardProfile);
             if (DefaultDiscardProfile.Text == string.Empty)
                 DefaultDiscardProfile.Text = "0,1";
         }
@@ -95,12 +95,12 @@ namespace OodHelper
             int b = 0, t = 0;
 
             if (Int32.TryParse(BottomSeed.Text, out b) && b != 0)
-                DbSettings.AddSetting(DbSettings.settBottomSeed, b);
+                DbSettings.AddSetting(DbSettings.settBottomSeed, BottomSeed.Text);
             else
                 DbSettings.DeleteSetting(DbSettings.settBottomSeed);
 
             if (Int32.TryParse(TopSeed.Text, out t) && t != 0)
-                DbSettings.AddSetting(DbSettings.settTopSeed, t);
+                DbSettings.AddSetting(DbSettings.settTopSeed, TopSeed.Text);
             else
                 DbSettings.DeleteSetting(DbSettings.settTopSeed);
 
