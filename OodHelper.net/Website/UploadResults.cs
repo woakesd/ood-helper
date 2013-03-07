@@ -48,11 +48,11 @@ namespace OodHelper.Website
             mcom.ExecuteNonQuery();
 
             StringBuilder msql = new StringBuilder("INSERT INTO `boats` (`boatname`,`boatclass`,`sailno`,`dngy`,`h`,`bid`,");
-            msql.Append("`distance`,`crewname`,`ohp`,`ohstat`,`chp`,`rhp`,`ihp`,`csf`,`eng`,`kl`,`deviations`,`subscriptn`,`p`,`s`,");
+            msql.Append("`distance`,`crewname`,`ohp`,`ohstat`,`rhp`,`csf`,`eng`,`kl`,`deviations`,`subscriptn`,`p`,`s`,");
             msql.Append("`boatmemo`,`id`,`beaten`,`berth`,`hired`,`uid`) VALUES ");
 
             Db c = new Db(@"SELECT boatname, boatclass, sailno, dinghy dngy, hulltype h, bid,
-                    distance, crewname, open_handicap ohp, handicap_status ohstat, null chp, rolling_handicap rhp, null ihp, crew_skill_factor csf, engine_propeller eng, keel kl,
+                    distance, crewname, open_handicap ohp, handicap_status ohstat, rolling_handicap rhp, crew_skill_factor csf, engine_propeller eng, keel kl,
                     deviations, subscription subscriptn, p, s, boatmemo, id, beaten, berth, hired, uid
                     FROM boats");
             DataTable d = c.GetData(null);
