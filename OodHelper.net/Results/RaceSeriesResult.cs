@@ -123,7 +123,7 @@ namespace OodHelper.Results
                     string defaultDiscards = SeriesDiscards;
                     if (defaultDiscards == string.Empty || defaultDiscards == null)
                     {
-                        defaultDiscards = (string)DbSettings.GetSetting(DbSettings.settDefaultDiscardProfile);
+                        defaultDiscards = (string)Settings.GetSetting(Settings.settDefaultDiscardProfile);
                         if (defaultDiscards == string.Empty || defaultDiscards == null)
                             defaultDiscards = "0,1";
                     }

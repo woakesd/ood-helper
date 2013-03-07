@@ -68,7 +68,7 @@ namespace OodHelper.Maintain
         {
             if (Id == 0)
             {
-                object o = DbSettings.GetSetting("topseed");
+                object o = Settings.GetSetting("topseed");
                 if (o != null)
                 {
                     int topseed, nextval;

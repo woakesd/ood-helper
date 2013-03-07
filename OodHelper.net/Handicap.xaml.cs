@@ -21,7 +21,6 @@ namespace OodHelper
     {
         public Guid Id { get; set; }
         HandicapRecord hcap;
-        HandicapLinq hl = new HandicapLinq();
 
         public Handicap(Guid i)
         {
@@ -29,7 +28,7 @@ namespace OodHelper
             Id = i;
             if (Id != Guid.Empty)
             {
-                hcap = hl.portsmouth_numbers.Single(c => c.id == Id);
+                hcap = new HandicapRecord(Id);
             }
             else
             {

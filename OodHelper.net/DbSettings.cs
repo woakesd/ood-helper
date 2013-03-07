@@ -10,7 +10,7 @@ using System.Runtime.Serialization.Formatters;
 
 namespace OodHelper
 {
-    static public class DbSettings
+    static public class Settings
     {
         public const string settDefaultDiscardProfile = "DefaultDiscardProfile";
         public const string settMysql = "mysql";
