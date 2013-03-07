@@ -484,7 +484,7 @@
     <Compile Include="Maintain\PersonView.xaml.cs">
       <DependentUpon>PersonView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DbSettings.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="OodHelperWindow.xaml.cs">
       <DependentUpon>OodHelperWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
