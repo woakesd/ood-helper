@@ -17,9 +17,9 @@ namespace OodHelper.WebService
     {
         static People()
         {
-            BaseURL = Properties.Settings.Default.ResultsWebServiceBaseURL;
-            BaseUsername = Properties.Settings.Default.ResultsWebServiceBaseUsername;
-            BasePassword = Properties.Settings.Default.ResultsWebServiceBasePassword;
+            BaseURL = Settings.GetSetting(Settings.ResultsWebServiceBaseURL);
+            BaseUsername = Settings.GetSetting(Settings.ResultsWebServiceBaseUsername);
+            BasePassword = Settings.GetSetting(Settings.ResultsWebServiceBasePassword);
         }
 
         static private HttpClient GetClient()
@@ -35,6 +35,19 @@ namespace OodHelper.WebService
         protected static string BaseUsername;
         protected static string BasePassword;
 
+        static public People[] GetPeople()
+        {
+            HttpClient _client = GetClient();
+
+            Uri _uri = new Uri(string.Format("{0}/people", BaseURL));
+
+            Task<Stream> _streamTask = _client.GetStreamAsync(_uri);
+            while (!_streamTask.IsCompleted)
+                _streamTask.Wait(10);
+
+            return ReadPeople<People[]>(_streamTask.Result);
+        }
+
         static public People GetPerson(int id)
         {
             HttpClient _client = GetClient();
@@ -45,18 +58,26 @@ namespace OodHelper.WebService
             while (!_streamTask.IsCompleted)
                 _streamTask.Wait(10);
 
-            return ReadPeople(_streamTask.Result);
+            return ReadPeople<People>(_streamTask.Result);
         }
 
-        private static People ReadPeople(Stream _stream)
+        private static ObjectType ReadPeople<ObjectType>(Stream JsonStream)
         {
-            DataContractJsonSerializer _serial = new DataContractJsonSerializer(typeof(People));
-            MemoryStream _ms = _stream as MemoryStream;
+            DataContractJsonSerializer _serial = new DataContractJsonSerializer(typeof(ObjectType));
+            MemoryStream _ms = JsonStream as MemoryStream;
             if (_ms != null)
             {
                 string res = Encoding.UTF8.GetString(_ms.ToArray());
             }
-            return _serial.ReadObject(_stream) as People;
+            try
+            {
+                ObjectType _return = (ObjectType)_serial.ReadObject(JsonStream);
+                return _return;
+            }
+            catch (Exception)
+            {
+            }
+            return default(ObjectType);
         }
 
         public People UpdatePeople()
@@ -81,7 +102,7 @@ namespace OodHelper.WebService
             while (!_jsonStreamTask.IsCompleted)
                 _jsonStreamTask.Wait(10);
 
-            return ReadPeople(_jsonStreamTask.Result);
+            return ReadPeople<People>(_jsonStreamTask.Result);
         }
 
         public People InsertPeople()
@@ -106,7 +127,7 @@ namespace OodHelper.WebService
             while (!_jsonStreamTask.IsCompleted)
                 _jsonStreamTask.Wait(10);
 
-            return ReadPeople(_jsonStreamTask.Result);
+            return ReadPeople<People>(_jsonStreamTask.Result);
         }
 
         public static void DeletePeople(int Id)
@@ -132,8 +153,6 @@ namespace OodHelper.WebService
             //
             return true;
         }
-
-
 
         [DataMember]
         public int id { get; set; }

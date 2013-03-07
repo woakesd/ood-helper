@@ -57,7 +57,7 @@ namespace OodHelper.Maintain
             SelectMode = selectMode;
         }
 
-        private delegate void DSetGridSource(DataTable ppl);
+        private delegate void DSetGridSource(WebService.People[] Persons);
         private DSetGridSource dSetGridSource;
         Working w;
 
@@ -68,19 +68,21 @@ namespace OodHelper.Maintain
             PeopleData.ItemsSource = null;
             Task.Factory.StartNew(() =>
             {
-                Db c = new Db("SELECT * " +
-                    "FROM people " +
-                    "ORDER BY surname, firstname");
-                DataTable ppl = c.GetData(null);
-                c.Dispose();
-                Dispatcher.Invoke(dSetGridSource, ppl);
+                //Db c = new Db("SELECT * " +
+                //    "FROM people " +
+                //    "ORDER BY surname, firstname");
+                //DataTable ppl = c.GetData(null);
+                //c.Dispose();
+                //Dispatcher.Invoke(dSetGridSource, ppl);
+                WebService.People[] _ppl = WebService.People.GetPeople();
+                Dispatcher.Invoke(dSetGridSource, new object[] { _ppl });
             });
         }
 
-        private void SetGridSource(DataTable ppl)
+        private void SetGridSource(WebService.People[] Persons)
         {
-            PeopleData.ItemsSource = ppl.DefaultView;
-            if (Peoplename.Text != string.Empty) FilterPeople();
+            PeopleData.ItemsSource = Persons;
+            //if (Peoplename.Text != string.Empty) FilterPeople();
             if (Id != null)
             {
                 foreach (DataRowView vr in PeopleData.Items)
@@ -116,10 +118,10 @@ namespace OodHelper.Maintain
         {
             if (PeopleData.SelectedItem != null)
             {
-                DataRowView i = (DataRowView) PeopleData.SelectedItem;
-                if ((int)i.Row["id"] == (int)i.Row["main_id"])
+                WebService.People i = PeopleData.SelectedItem as WebService.People;
+                if (i.id == i.sid)
                 {
-                    PersonView p = new PersonView((int)i.Row["id"]);
+                    PersonView p = new PersonView(i.id);
                     if (p.ShowDialog().Value)
                     {
                         LoadGrid();
@@ -127,7 +129,7 @@ namespace OodHelper.Maintain
                 }
                 else
                 {
-                    FamilyMember f = new FamilyMember((int)i.Row["id"], (int)i.Row["main_id"]);
+                    FamilyMember f = new FamilyMember(i.id, i.sid.Value);
                     if (f.ShowDialog().Value)
                     {
                         LoadGrid();
@@ -226,8 +228,8 @@ namespace OodHelper.Maintain
         {
             if (PeopleData.SelectedItem != null)
             {
-                DataRowView i = (DataRowView)PeopleData.SelectedItem;
-                if ((int)i.Row["id"] == (int)i.Row["main_id"])
+                WebService.People i = PeopleData.SelectedItem as WebService.People;
+                if (i.id == i.sid)
                     AddFamilyMember.IsEnabled = true;
                 else
                     AddFamilyMember.IsEnabled = false;

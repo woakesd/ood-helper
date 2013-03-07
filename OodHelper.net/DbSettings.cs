@@ -16,6 +16,9 @@ namespace OodHelper
         public const string settMysql = "mysql";
         public const string settBottomSeed = "bottomseed";
         public const string settTopSeed = "topseed";
+        public const string ResultsWebServiceBaseURL = "ResultsWebServiceBaseURL";
+        public const string ResultsWebServiceBaseUsername = "ResultsWebServiceBaseUsername";
+        public const string ResultsWebServiceBasePassword = "ResultsWebServiceBasePassword";
         //public const string
 
         private static string CustomSettings = "./OodHelper.net.custom.config";

@@ -15,30 +15,35 @@ namespace OodHelper.Maintain
             MainId = main_id;
         }
 
-        private WebService.People Person { get; set; }
+        private WebService.People PersonRecord { get; set; }
+
+        public PersonModel(WebService.People Person)
+        {
+            PersonRecord = Person;
+        }
 
         public PersonModel(int id)
         {
             if (id != 0)
             {
-                Person = WebService.People.GetPerson(id);
-                if (Person == null)
-                    Person = new WebService.People();
+                PersonRecord = WebService.People.GetPerson(id);
+                if (PersonRecord == null)
+                    PersonRecord = new WebService.People();
             }
             else
-                Person = new WebService.People();
+                PersonRecord = new WebService.People();
         }
 
         public string FirstName
         {
             get
             {
-                return Person.firstname;
+                return PersonRecord.firstname;
             }
 
             set
             {
-                Person.firstname = value;
+                PersonRecord.firstname = value;
                 OnPropertyChanged("FirstName");
             }
         }
@@ -47,12 +52,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return Person.surname;
+                return PersonRecord.surname;
             }
 
             set
             {
-                Person.surname = value;
+                PersonRecord.surname = value;
                 OnPropertyChanged("Surname");
             }
         }
@@ -61,12 +66,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return Person.address1;
+                return PersonRecord.address1;
             }
 
             set
             {
-                Person.address1 = value;
+                PersonRecord.address1 = value;
                 OnPropertyChanged("Address1");
             }
         }
@@ -75,12 +80,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return Person.address2;
+                return PersonRecord.address2;
             }
 
             set
             {
-                Person.address2 = value; OnPropertyChanged("Address2");
+                PersonRecord.address2 = value; OnPropertyChanged("Address2");
             }
         }
 
@@ -88,12 +93,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return Person.address3;
+                return PersonRecord.address3;
             }
 
             set
             {
-                Person.address3 = value; OnPropertyChanged("Address3");
+                PersonRecord.address3 = value; OnPropertyChanged("Address3");
             }
         }
 
@@ -101,12 +106,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return Person.address4;
+                return PersonRecord.address4;
             }
 
             set
             {
-                Person.address4 = value; OnPropertyChanged("Address4");
+                PersonRecord.address4 = value; OnPropertyChanged("Address4");
             }
         }
 
@@ -114,12 +119,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return Person.postcode;
+                return PersonRecord.postcode;
             }
 
             set
             {
-                Person.postcode = value; OnPropertyChanged("Postcode");
+                PersonRecord.postcode = value; OnPropertyChanged("Postcode");
             }
         }
 
@@ -127,12 +132,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return Person.hometel;
+                return PersonRecord.hometel;
             }
 
             set
             {
-                Person.hometel = value; OnPropertyChanged("HomePhone");
+                PersonRecord.hometel = value; OnPropertyChanged("HomePhone");
             }
         }
 
@@ -140,12 +145,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return Person.mobile;
+                return PersonRecord.mobile;
             }
 
             set
             {
-                Person.mobile = value; OnPropertyChanged("MobilePhone");
+                PersonRecord.mobile = value; OnPropertyChanged("MobilePhone");
             }
         }
 
@@ -153,12 +158,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return Person.worktel;
+                return PersonRecord.worktel;
             }
 
             set
             {
-                Person.worktel = value; OnPropertyChanged("WorkPhone");
+                PersonRecord.worktel = value; OnPropertyChanged("WorkPhone");
             }
         }
 
@@ -166,12 +171,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return Person.email;
+                return PersonRecord.email;
             }
 
             set
             {
-                Person.email = value; OnPropertyChanged("Email");
+                PersonRecord.email = value; OnPropertyChanged("Email");
             }
         }
 
@@ -179,12 +184,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return Person.club;
+                return PersonRecord.club;
             }
 
             set
             {
-                Person.club = value; OnPropertyChanged("Club");
+                PersonRecord.club = value; OnPropertyChanged("Club");
             }
         }
 
@@ -192,12 +197,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return Person.member;
+                return PersonRecord.member;
             }
 
             set
             {
-                Person.member = value; OnPropertyChanged("Membership");
+                PersonRecord.member = value; OnPropertyChanged("Membership");
             }
         }
 
@@ -205,12 +210,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return Person.manmemo;
+                return PersonRecord.manmemo;
             }
 
             set
             {
-                Person.manmemo = value; OnPropertyChanged("Notes");
+                PersonRecord.manmemo = value; OnPropertyChanged("Notes");
             }
         }
 
@@ -219,12 +224,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return Person.cp;
+                return PersonRecord.cp;
             }
 
             set
             {
-                Person.cp = value;
+                PersonRecord.cp = value;
                 OnPropertyChanged("Paid");
             }
         }
@@ -233,12 +238,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return Person.papernewsletter;
+                return PersonRecord.papernewsletter;
             }
 
             set
             {
-                Person.papernewsletter = value;
+                PersonRecord.papernewsletter = value;
                 OnPropertyChanged("PaperNewsletter");
             }
         }
@@ -247,26 +252,26 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return Person.handbookexclude;
+                return PersonRecord.handbookexclude;
             }
 
             set
             {
-                Person.handbookexclude = value;
+                PersonRecord.handbookexclude = value;
                 OnPropertyChanged("HandbookExclude");
             }
         }
 
         public int Id
         {
-            get { return Person.id; }
-            private set { Person.id = value; OnPropertyChanged("Id"); }
+            get { return PersonRecord.id; }
+            private set { PersonRecord.id = value; OnPropertyChanged("Id"); }
         }
 
         public int? MainId
         {
-            get { return Person.sid; }
-            private set { Person.sid = value; OnPropertyChanged("MainId"); }
+            get { return PersonRecord.sid; }
+            private set { PersonRecord.sid = value; OnPropertyChanged("MainId"); }
         }
 
         public DataView Crewing
@@ -293,9 +298,9 @@ namespace OodHelper.Maintain
             if (errors.ToString() == string.Empty)
             {
                 if (Id == 0)
-                    Person.InsertPeople();
+                    PersonRecord.InsertPeople();
                 else
-                    Person.UpdatePeople();
+                    PersonRecord.UpdatePeople();
                 //Db save;
                 //if (Id == 0)
                 //{
