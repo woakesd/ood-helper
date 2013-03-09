@@ -134,7 +134,7 @@ namespace OodHelper
 
         private void People_Click(object sender, RoutedEventArgs e)
         {
-            People p = new People();
+            PeopleList p = new PeopleList();
             p.ShowDialog();
             p.HorizontalAlignment = HorizontalAlignment.Stretch;
             p.VerticalAlignment = VerticalAlignment.Stretch;

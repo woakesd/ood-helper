@@ -4,48 +4,38 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using System.Net.Http;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 
 namespace OodHelper.WebService
 {
     [DataContract]
-    public class People
+    public class People : ServiceEntity
     {
-        static People()
-        {
-            BaseURL = Settings.GetSetting(Settings.ResultsWebServiceBaseURL);
-            BaseUsername = Settings.GetSetting(Settings.ResultsWebServiceBaseUsername);
-            BasePassword = Settings.GetSetting(Settings.ResultsWebServiceBasePassword);
-        }
-
-        static private HttpClient GetClient()
-        {
-            WebRequestHandler _handler = new WebRequestHandler();
-            _handler.Credentials = new System.Net.NetworkCredential(BaseUsername, BasePassword);
-            _handler.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(ValidateServerCertificate);
-
-            return new HttpClient(_handler, true);
-        }
-
-        protected static string BaseURL;
-        protected static string BaseUsername;
-        protected static string BasePassword;
-
-        static public People[] GetPeople()
+        static public People[] GetPeople(int Page = 1)
         {
             HttpClient _client = GetClient();
 
-            Uri _uri = new Uri(string.Format("{0}/people", BaseURL));
+            Uri _uri = new Uri(string.Format("{0}/people/page/{1}", BaseURL, Page));
 
             Task<Stream> _streamTask = _client.GetStreamAsync(_uri);
             while (!_streamTask.IsCompleted)
                 _streamTask.Wait(10);
 
-            return ReadPeople<People[]>(_streamTask.Result);
+            return ReadEntity<People[]>(_streamTask.Result);
+        }
+
+        static public People[] GetPeople(string Filter, int Page = 1)
+        {
+            HttpClient _client = GetClient();
+
+            Uri _uri = new Uri(string.Format("{0}/people/filter/{1}/page/{2}", BaseURL, Filter, Page));
+
+            Task<Stream> _streamTask = _client.GetStreamAsync(_uri);
+            while (!_streamTask.IsCompleted)
+                _streamTask.Wait(10);
+
+            return ReadEntity<People[]>(_streamTask.Result);
         }
 
         static public People GetPerson(int id)
@@ -58,26 +48,7 @@ namespace OodHelper.WebService
             while (!_streamTask.IsCompleted)
                 _streamTask.Wait(10);
 
-            return ReadPeople<People>(_streamTask.Result);
-        }
-
-        private static ObjectType ReadPeople<ObjectType>(Stream JsonStream)
-        {
-            DataContractJsonSerializer _serial = new DataContractJsonSerializer(typeof(ObjectType));
-            MemoryStream _ms = JsonStream as MemoryStream;
-            if (_ms != null)
-            {
-                string res = Encoding.UTF8.GetString(_ms.ToArray());
-            }
-            try
-            {
-                ObjectType _return = (ObjectType)_serial.ReadObject(JsonStream);
-                return _return;
-            }
-            catch (Exception)
-            {
-            }
-            return default(ObjectType);
+            return ReadEntity<People>(_streamTask.Result);
         }
 
         public People UpdatePeople()
@@ -86,13 +57,8 @@ namespace OodHelper.WebService
 
             Uri _uri = new Uri(string.Format("{0}/people/{1}", BaseURL, id));
 
-            DataContractJsonSerializer _serial = new DataContractJsonSerializer(typeof(People));
-            string _encoded = string.Empty;
-            using (MemoryStream _ms = new MemoryStream())
-            {
-                _serial.WriteObject(_ms, this);
-                _encoded = Encoding.UTF8.GetString(_ms.ToArray());
-            }
+            string _encoded = WriteEntity<People>(this);
+
             HttpContent _content = new StringContent(_encoded, Encoding.UTF8, "application/json");
             Task<HttpResponseMessage> _streamTask = _client.PutAsync(_uri, _content);
             while (!_streamTask.IsCompleted)
@@ -102,7 +68,7 @@ namespace OodHelper.WebService
             while (!_jsonStreamTask.IsCompleted)
                 _jsonStreamTask.Wait(10);
 
-            return ReadPeople<People>(_jsonStreamTask.Result);
+            return ReadEntity<People>(_jsonStreamTask.Result);
         }
 
         public People InsertPeople()
@@ -111,13 +77,8 @@ namespace OodHelper.WebService
 
             Uri _uri = new Uri(string.Format("{0}/people", BaseURL));
 
-            DataContractJsonSerializer _serial = new DataContractJsonSerializer(typeof(People));
-            string _encoded = string.Empty;
-            using (MemoryStream _ms = new MemoryStream())
-            {
-                _serial.WriteObject(_ms, this);
-                _encoded = Encoding.UTF8.GetString(_ms.ToArray());
-            }
+            string _encoded = WriteEntity<People>(this);
+
             HttpContent _content = new StringContent(_encoded, Encoding.UTF8, "application/json");
             Task<HttpResponseMessage> _streamTask = _client.PostAsync(_uri, _content);
             while (!_streamTask.IsCompleted)
@@ -127,7 +88,7 @@ namespace OodHelper.WebService
             while (!_jsonStreamTask.IsCompleted)
                 _jsonStreamTask.Wait(10);
 
-            return ReadPeople<People>(_jsonStreamTask.Result);
+            return ReadEntity<People>(_jsonStreamTask.Result);
         }
 
         public static void DeletePeople(int Id)
@@ -140,18 +101,6 @@ namespace OodHelper.WebService
 
             while (!_deleteTask.IsCompleted)
                 _deleteTask.Wait(10);
-        }
-
-        public static bool ValidateServerCertificate(
-              object sender,
-              X509Certificate certificate,
-              X509Chain chain,
-              SslPolicyErrors sslPolicyErrors)
-        {
-            //
-            // potentially this is weak. I'm using a self signed certificate on the web site so cant validate the chain...
-            //
-            return true;
         }
 
         [DataMember]

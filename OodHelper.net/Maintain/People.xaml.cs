@@ -19,12 +19,11 @@ namespace OodHelper.Maintain
     /// <summary>
     /// Interaction logic for Boats.xaml
     /// </summary>
-    public partial class People : Window, INotifyPropertyChanged
+    public partial class PeopleList : Window, INotifyPropertyChanged
     {
-        public People()
+        public PeopleList()
         {
             InitializeComponent();
-            dSetGridSource = SetGridSource;
             SelectMode = false;
             DataContext = this;
         }
@@ -45,44 +44,26 @@ namespace OodHelper.Maintain
             }
         }
 
-        public People(int? id)
+        public PeopleList(int? id)
             : this()
         {
             Id = id;
         }
 
-        public People(bool selectMode, int? id)
+        public PeopleList(bool selectMode, int? id)
             : this(id)
         {
             SelectMode = selectMode;
         }
 
-        private delegate void DSetGridSource(WebService.People[] Persons);
-        private DSetGridSource dSetGridSource;
-        Working w;
-
         private void LoadGrid()
         {
-            w = new Working();
-            w.Show();
-            PeopleData.ItemsSource = null;
-            Task.Factory.StartNew(() =>
-            {
-                //Db c = new Db("SELECT * " +
-                //    "FROM people " +
-                //    "ORDER BY surname, firstname");
-                //DataTable ppl = c.GetData(null);
-                //c.Dispose();
-                //Dispatcher.Invoke(dSetGridSource, ppl);
-                WebService.People[] _ppl = WebService.People.GetPeople();
-                Dispatcher.Invoke(dSetGridSource, new object[] { _ppl });
-            });
+            FilterPeople();
         }
 
         private void SetGridSource(WebService.People[] Persons)
         {
             PeopleData.ItemsSource = Persons;
-            //if (Peoplename.Text != string.Empty) FilterPeople();
             if (Id != null)
             {
                 foreach (DataRowView vr in PeopleData.Items)
@@ -96,7 +77,6 @@ namespace OodHelper.Maintain
                     }
                 }
             }
-            w.Close();
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
@@ -196,27 +176,16 @@ namespace OodHelper.Maintain
         {
             try
             {
+                WebService.People[] _ppl;
                 if (Peoplename.Text != string.Empty)
                 {
-                    ((DataView)PeopleData.ItemsSource).RowFilter =
-                        "firstname LIKE '%" + Peoplename.Text + "%'" +
-                        " or surname LIKE '%" + Peoplename.Text + "%'" +
-                        " or address1 LIKE '%" + Peoplename.Text + "%'" +
-                        " or address2 LIKE '%" + Peoplename.Text + "%'" +
-                        " or address3 LIKE '%" + Peoplename.Text + "%'" +
-                        " or address4 LIKE '%" + Peoplename.Text + "%'" +
-                        " or postcode LIKE '%" + Peoplename.Text + "%'" +
-                        " or hometel LIKE '%" + Peoplename.Text + "%'" +
-                        " or worktel LIKE '%" + Peoplename.Text + "%'" +
-                        " or mobile LIKE '%" + Peoplename.Text + "%'" +
-                        " or email LIKE '%" + Peoplename.Text + "%'" +
-                        " or club LIKE '%" + Peoplename.Text + "%'" +
-                        " or member LIKE '%" + Peoplename.Text + "%'";
+                    _ppl = WebService.People.GetPeople(Peoplename.Text);
                 }
                 else
                 {
-                    ((DataView)PeopleData.ItemsSource).RowFilter = null;
+                    _ppl = WebService.People.GetPeople();
                 }
+                SetGridSource(_ppl);
             }
             catch (Exception ex)
             {
