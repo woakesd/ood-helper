@@ -24,7 +24,7 @@
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,170,0,0" Name="MemClass">
             <TextBlock FontFamily="Trebuchet MS" FontSize="16" Padding="2" Foreground="White" Width="100" Text="{Binding MembershipClass}" VerticalAlignment="Top" Name="TMembershipClass" />
             <TextBlock FontFamily="Trebuchet MS" Margin="8,0,0,0" FontSize="16" Foreground="White" Text="Expiry " VerticalAlignment="Top" />
-            <TextBlock FontFamily="Trebuchet MS" FontSize="16" Foreground="White" Name="ExpiryDate" Text="31/03/2013" VerticalAlignment="Top" />
+            <TextBlock FontFamily="Trebuchet MS" FontSize="16" Foreground="White" Name="ExpiryDate" Text="31/03/2014" VerticalAlignment="Top" />
         </StackPanel>
     </Grid>
 </UserControl>
