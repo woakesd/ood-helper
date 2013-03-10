@@ -102,7 +102,7 @@ CREATE TABLE [calendar] (
 , [racetype] nvarchar(20) NULL
 , [handicapping] nvarchar(1) NULL
 , [visitors] int NULL
-, [flag] nvarchar(10) NULL
+, [flag] nvarchar(20) NULL
 , [memo] ntext NULL
 , [is_race] bit NULL
 , [raced] bit NULL
