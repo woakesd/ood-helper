@@ -108,11 +108,38 @@ namespace OodHelper.Results
                 p["laps"] = mLaps;
                 c.ExecuteNonQuery(p);
                 c.Dispose();
-
             }
         }
 
-        public CalendarModel.RaceTypes RaceType { get; set; }
+        private CalendarModel.RaceTypes _raceType;
+        public CalendarModel.RaceTypes RaceType
+        {
+            get
+            {
+                return _raceType;
+            }
+            set
+            {
+                _raceType = value;
+
+                Db c = new Db(@"UPDATE calendar SET racetype = @racetype WHERE rid = @rid");
+                Hashtable p = new Hashtable();
+                p["rid"] = Rid;
+                p["racetype"] = _raceType.ToString();
+                c.ExecuteNonQuery(p);
+                c.Dispose();
+                OnPropertyChanged("RaceType");
+                OnPropertyChanged("DisplayInterimTime");
+                OnPropertyChanged("LapsEnabled");
+                OnPropertyChanged("StartReadOnly");
+                OnPropertyChanged("LapsReadOnly");
+                OnPropertyChanged("LapsVisible");
+                OnPropertyChanged("InterimReadOnly");
+
+                SetEditableColumns();
+                CreateScorer();
+            }
+        }
 
         public bool LapsEnabled { get { return RaceType != CalendarModel.RaceTypes.AverageLap; } }
 
@@ -345,11 +372,8 @@ namespace OodHelper.Results
             
             if (caldata["racetype"] != DBNull.Value)
             {
-                CalendarModel.RaceTypes _racetype;
-                if (Enum.TryParse<CalendarModel.RaceTypes>(caldata["racetype"].ToString(), out _racetype))
-                    RaceType = _racetype;
-                else
-                    RaceType = CalendarModel.RaceTypes.Undefined;
+                if (!Enum.TryParse<CalendarModel.RaceTypes>(caldata["racetype"].ToString(), out _raceType))
+                    _raceType = CalendarModel.RaceTypes.Undefined;
             }
 
             CalculateEnabled = false;
@@ -380,26 +404,7 @@ namespace OodHelper.Results
             mWindDirection = caldata["wind_direction"] as string;
             mLaps = caldata["laps_completed"] as int?;
 
-            if (Scorer == null)
-            {
-                switch (RaceType)
-                {
-                    case CalendarModel.RaceTypes.AverageLap:
-                    case CalendarModel.RaceTypes.FixedLength:
-                    case CalendarModel.RaceTypes.TimeGate:
-                    case CalendarModel.RaceTypes.Hybrid:
-                        switch (Handicap)
-                        {
-                            case "r":
-                                Scorer = new RollingHandicap();
-                                break;
-                            case "o":
-                                Scorer = new OpenHandicap();
-                                break;
-                        }
-                        break;
-                }
-            }
+            CreateScorer();
 
             rddb = new Db("SELECT r.rid, r.bid, boatname, boatclass, sailno, r.start_date, " +
                     "r.finish_code, r.finish_date, r.interim_date, r.laps, r.override_points, r.elapsed, r.standard_corrected, r.corrected, r.place, " +
@@ -411,6 +416,37 @@ namespace OodHelper.Results
             rd = rddb.GetData(p);
             rd.RowChanged += new DataRowChangeEventHandler(rd_RowChanged);
 
+            SetEditableColumns();
+
+            Races.ItemsSource = (from DataRow r in rd.Rows
+                                          select new ResultModel(r, StartDate.Value, LimitDate)).ToList<ResultModel>();
+            this.DataContext = this;
+        }
+
+        private void CreateScorer()
+        {
+            Scorer = null;
+            switch (RaceType)
+            {
+                case CalendarModel.RaceTypes.AverageLap:
+                case CalendarModel.RaceTypes.FixedLength:
+                case CalendarModel.RaceTypes.TimeGate:
+                case CalendarModel.RaceTypes.Hybrid:
+                    switch (Handicap)
+                    {
+                        case "r":
+                            Scorer = new RollingHandicap();
+                            break;
+                        case "o":
+                            Scorer = new OpenHandicap();
+                            break;
+                    }
+                    break;
+            }
+        }
+
+        private void SetEditableColumns()
+        {
             //
             // Set the columns which are to be editable as not being read only 
             // in the dataset.
@@ -453,10 +489,6 @@ namespace OodHelper.Results
                     rd.Columns["place"].ReadOnly = false;
                     break;
             }
-
-            Races.ItemsSource = (from DataRow r in rd.Rows
-                                          select new ResultModel(r, StartDate.Value, LimitDate)).ToList<ResultModel>();
-            this.DataContext = this;
         }
 
         //
