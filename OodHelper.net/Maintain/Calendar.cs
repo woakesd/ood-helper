@@ -2,16 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data.Linq.Mapping;
 using System.Linq;
 using System.Text;
 
 namespace OodHelper.Maintain
 {
-    [Table(Name = "calendar")]
     public class Calendar : NotifyPropertyChanged
     {
-        [Column(IsPrimaryKey = true)]
         public int rid
         {
             get { return mRid; }
@@ -19,7 +16,6 @@ namespace OodHelper.Maintain
         }
         private int mRid;
 
-        [Column]
         public DateTime? start_date
         {
             set
@@ -91,10 +87,8 @@ namespace OodHelper.Maintain
             }
         }
 
-        [Column]
         public string time_limit_type { get; set; }
 
-        [Column]
         public DateTime? time_limit_fixed
         {
             set
@@ -153,7 +147,6 @@ namespace OodHelper.Maintain
             }
         }
 
-        [Column]
         public int? time_limit_delta
         {
             get
@@ -213,7 +206,7 @@ namespace OodHelper.Maintain
                 }
             }
         }
-        [Column]
+
         public int? extension;
         public string Extension
         {
@@ -260,37 +253,36 @@ namespace OodHelper.Maintain
                 }
             }
         }
-        [Column(Name = "class")]
         public string calendar_class { get { return mcalendar_class; } set { mcalendar_class = value; OnPropertyChanged("calendar_class"); } }
         private string mcalendar_class;
-        [Column(Name = "event")]
+        
         public string calendar_event { get { return mcalendar_event; } set { mcalendar_event = value; OnPropertyChanged("calendar_event"); } }
         private string mcalendar_event;
-        [Column]
+
         public string price_code { get; set; }
-        [Column]
+        
         public string course { get; set; }
-        [Column]
+        
         public string ood { get; set; }
-        [Column]
+        
         public string venue { get; set; }
-        [Column]
+        
         public string racetype { get; set; }
-        [Column]
+        
         public string handicapping { get; set; }
-        [Column]
+        
         public int? visitors { get; set; }
-        [Column]
+        
         public string flag { get; set; }
-        [Column]
+        
         public string memo { get; set; }
-        [Column]
+        
         public bool? is_race { get; set; }
-        [Column]
+        
         public bool? raced { get; set; }
-        [Column]
+        
         public bool? approved { get; set; }
-        [Column]
+        
         public double? standard_corrected_time;
         public string SCT
         {
@@ -304,7 +296,7 @@ namespace OodHelper.Maintain
                 return string.Empty;
             }
         }
-        [Column]
+        
         public DateTime? result_calculated { get; set; }
     }
 }

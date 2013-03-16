@@ -38,7 +38,7 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <Label Name="raceName" Grid.ColumnSpan="6">Label</Label>
+            <Label Name="raceName" Grid.ColumnSpan="4">Label</Label>
             <Label Name="startLabel" Grid.Row="1" HorizontalAlignment="Right">Start</Label>
             <TextBox HorizontalAlignment="Left" Margin="2" Grid.Row="1" Grid.Column="1" Width="40" MaxLength="5" Text="{Binding Path=StartTime,Converter={StaticResource ResourceKey=TimeSpanHMConverter}}"/>
             <Label Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right" Name="timeLimitLabel">Time Limit</Label>
@@ -55,6 +55,14 @@
             <TextBox Margin="2" Grid.Row="2" Grid.Column="5" Width="80" MaxLength="10" Text="{Binding Path=WindSpeed}"/>
             <Label Grid.Row="2" Grid.Column="6" HorizontalAlignment="Right">Laps</Label>
             <TextBox Margin="2" Grid.Row="2" Grid.Column="7" Width="40" HorizontalAlignment="Left" IsEnabled="{Binding Path=LapsEnabled}" Text="{Binding Path=Laps}" MaxLength="3" />
+            <Label Grid.Row="0" Grid.Column="4" HorizontalAlignment="Right">Race Type</Label>
+            <ComboBox Grid.Column="5" Grid.Row="0" Grid.ColumnSpan="3" SelectedValue="{Binding RaceType}" SelectedValuePath="Tag">
+                <ComboBoxItem Tag="FixedLength">Fixed Length</ComboBoxItem>
+                <ComboBoxItem Tag="AverageLap">Average Lap</ComboBoxItem>
+                <ComboBoxItem Tag="Hybrid">Hybrid Fixed/Average</ComboBoxItem>
+                <ComboBoxItem Tag="TimeGate">Time Gate</ComboBoxItem>
+                <ComboBoxItem Tag="SternChase">Stern Chase</ComboBoxItem>
+            </ComboBox>
             <StackPanel Grid.RowSpan="3" Grid.Row="0" Grid.Column="8" VerticalAlignment="Center" Orientation="Horizontal" Margin="20,0,5,0">
                 <Button Name="Notes" Margin="15" Click="Notes_Click" HorizontalContentAlignment="Left">
                     <StackPanel Orientation="Horizontal">

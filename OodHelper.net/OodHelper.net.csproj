@@ -172,7 +172,6 @@
     <Compile Include="Membership\CardPage.xaml.cs">
       <DependentUpon>CardPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Maintain\Results.cs" />
     <Compile Include="Membership\RenewPart1.xaml.cs">
       <DependentUpon>RenewPart1.xaml</DependentUpon>
     </Compile>

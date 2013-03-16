@@ -40,23 +40,50 @@ namespace OodHelper.Maintain
                 InitializeComponent();
                 if (rid != 0)
                 {
-                    Results ld = new Results();
-                    raceData = ld.Calendar.Single(c => c.rid == r);
-
-                    switch (raceData.time_limit_type)
+                    using (Db _conn = new Db("SELECT * FROM calendar WHERE rid = @rid"))
                     {
-                        case "F":
-                            timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
-                            timeFixedRadio.IsChecked = true;
-                            break;
-                        case "D":
-                            timeLimitFixed.Visibility = System.Windows.Visibility.Collapsed;
-                            timeDeltaRadio.IsChecked = true;
-                            break;
-                        default:
-                            timeLimitFixed.Visibility = System.Windows.Visibility.Collapsed;
-                            timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
-                            break;
+                        Hashtable _para = new Hashtable();
+                        _para["rid"] = rid;
+                        Hashtable _data = _conn.GetHashtable(_para);
+                        raceData = new Calendar()
+                        {
+                            calendar_event = _data["event"] as string,
+                            calendar_class = _data["class"] as string,
+                            flag = _data["flag"] as string,
+                            course = _data["course"] as string,
+                            start_date = _data["start_date"] as DateTime?,
+                            time_limit_type = _data["time_limit_type"] as string,
+                            time_limit_fixed = _data["time_limit_fixed"] as DateTime?,
+                            time_limit_delta = _data["time_limit_delta"] as int?,
+                            extension = _data["extension"] as int?,
+                            ood = _data["ood"] as string,
+                            venue = _data["venue"] as string,
+                            standard_corrected_time = _data["standard_corrected_time"] as double?,
+                            price_code =_data["price_code"] as string,
+                            handicapping = _data["handicapping"] as string,
+                            racetype = _data["racetype"] as string,
+                            visitors = _data["visitors"] as int?,
+                            raced = _data["raced"] as bool?,
+                            approved = _data["approved"] as bool?,
+                            is_race = _data["is_race"] as bool?,
+                        };
+                        //raceData = ld.Calendar.Single(c => c.rid == r);
+
+                        switch (raceData.time_limit_type)
+                        {
+                            case "F":
+                                timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
+                                timeFixedRadio.IsChecked = true;
+                                break;
+                            case "D":
+                                timeLimitFixed.Visibility = System.Windows.Visibility.Collapsed;
+                                timeDeltaRadio.IsChecked = true;
+                                break;
+                            default:
+                                timeLimitFixed.Visibility = System.Windows.Visibility.Collapsed;
+                                timeLimitDelta.Visibility = System.Windows.Visibility.Collapsed;
+                                break;
+                        }
                     }
                 }
                 else

@@ -112,7 +112,7 @@ namespace OodHelper.Results
             }
         }
 
-        public CalendarModel.RaceTypes RaceType { get; private set; }
+        public CalendarModel.RaceTypes RaceType { get; set; }
 
         public bool LapsEnabled { get { return RaceType != CalendarModel.RaceTypes.AverageLap; } }
 
