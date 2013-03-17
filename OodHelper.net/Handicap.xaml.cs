@@ -21,7 +21,6 @@ namespace OodHelper
     {
         public Guid Id { get; set; }
         HandicapRecord hcap;
-        HandicapLinq hl = new HandicapLinq();
 
         public Handicap(Guid i)
         {
@@ -29,7 +28,37 @@ namespace OodHelper
             Id = i;
             if (Id != Guid.Empty)
             {
-                hcap = hl.portsmouth_numbers.Single(c => c.id == Id);
+                Db hdb = new Db(@"SELECT [id]
+                        , [class_name]
+                        , [no_of_crew]
+                        , [rig]
+                        , [spinnaker]
+                        , [engine]
+                        , [keel]
+                        , [number]
+                        , [status]
+                        , [notes]
+                    FROM portsmouth_numbers
+                    WHERE id == @id");
+                Hashtable _para = new Hashtable();
+                _para["id"] = Id;
+                Hashtable _data = hdb.GetHashtable(_para);
+                if (_data.Count > 0)
+                {
+                    hcap = new HandicapRecord()
+                    {
+                        class_name = _data["class_name"] as string,
+                        no_of_crew = _data["no_of_crew"] as int?,
+                        rig = _data["rig"] as string,
+                        spinnaker = _data["spinnaker"] as string,
+                        engine = _data["engine"] as string,
+                        keel = _data["keel"] as string,
+                        number = _data["number"] as int?,
+                        status = _data["status"] as string,
+                        notes = _data["notes"] as string,
+                        id = Id,
+                    };
+                }
             }
             else
             {

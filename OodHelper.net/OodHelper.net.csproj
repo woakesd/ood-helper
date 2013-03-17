@@ -232,7 +232,6 @@
     <Compile Include="Handicap.xaml.cs">
       <DependentUpon>Handicap.xaml</DependentUpon>
     </Compile>
-    <Compile Include="HandicapLinq.cs" />
     <Compile Include="HandicapRecord.cs" />
     <Compile Include="Handicaps.xaml.cs">
       <DependentUpon>Handicaps.xaml</DependentUpon>
