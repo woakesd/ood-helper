@@ -1,42 +1,58 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Data.Linq.Mapping;
 using System.Text;
 
 namespace OodHelper
 {
-    [Table(Name = "portsmouth_numbers")]
     public class HandicapRecord
     {
-        [Column(IsPrimaryKey = true, IsDbGenerated = false)]
+        public HandicapRecord()
+        {
+        }
+
+        public HandicapRecord(Guid Id)
+        {
+            id = Id;
+            using (Db _conn = new Db("SELECT class_name, no_of_crew, rig, spinnaker, engine, keel, number, status, notes FROM portsmouth_numbers WHERE id = @id"))
+            {
+                Hashtable _para = new Hashtable();
+                _para["id"] = id;
+                Hashtable _data = _conn.GetHashtable(_para);
+
+                if (_data.Count > 0)
+                {
+                    class_name = _data["class_name"] as string;
+                    no_of_crew = _data["no_of_crew"] as int?;
+                    rig = _data["rig"] as string;
+                    spinnaker = _data["spinnaker"] as string;
+                    engine = _data["engine"] as string;
+                    keel = _data["keel"] as string;
+                    number = _data["number"] as int?;
+                    status = _data["status"] as string;
+                    notes = _data["notes"] as string;
+                }
+            }
+        }
         public Guid id { get; set; }
 
-        [Column(CanBeNull = false)]
         public string class_name { get; set; }
 
-        [Column]
         public int? no_of_crew { get; set; }
 
-        [Column]
         public string rig { get; set; }
 
-        [Column]
         public string spinnaker { get; set; }
 
-        [Column]
         public string engine { get; set; }
 
-        [Column]
         public string keel { get; set; }
 
-        [Column(CanBeNull = false)]
         public int? number { get; set; }
 
-        [Column]
         public string status { get; set; }
 
-        [Column]
         public string notes { get; set; }
     }
 }
