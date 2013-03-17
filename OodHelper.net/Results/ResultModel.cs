@@ -201,7 +201,7 @@ namespace OodHelper.Results
                 if (Double.TryParse(value, out tmp))
                     _row["override_points"] = tmp;
                 else
-                    _row["override_points"] = null;
+                    _row["override_points"] = DBNull.Value;
 
                 OnPropertyChanged("OverridePoints");
             }
@@ -215,7 +215,11 @@ namespace OodHelper.Results
             }
             set
             {
-                _row["laps"] = ValueParsers.ReadInt(value);
+                int? _tmp = ValueParsers.ReadInt(value);
+                if (_tmp.HasValue)
+                    _row["laps"] = _tmp;
+                else
+                    _row["laps"] = DBNull.Value;
                 OnPropertyChanged("Laps");
             }
         }

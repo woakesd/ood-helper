@@ -16,7 +16,7 @@ namespace OodHelper
         {
             ErrorLogger.LogException(e.Exception);
             System.Windows.MessageBox.Show(e.Exception.Message, "Error",
-                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+            System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
         }
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)

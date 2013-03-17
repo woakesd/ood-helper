@@ -25,7 +25,7 @@ namespace OodHelper.Results
     public partial class ResultsEditor : UserControl, IPrintSelectItem
     {
         private Db rddb;
-        private DataTable rd;
+        private DataTable RaceDataTable;
         private Hashtable caldata;
 
         public IRaceScore Scorer;
@@ -108,11 +108,45 @@ namespace OodHelper.Results
                 p["laps"] = mLaps;
                 c.ExecuteNonQuery(p);
                 c.Dispose();
-
             }
         }
 
-        public CalendarModel.RaceTypes RaceType { get; set; }
+        private CalendarModel.RaceTypes _raceType;
+        public CalendarModel.RaceTypes RaceType
+        {
+            get
+            {
+                return _raceType;
+            }
+            set
+            {
+                _raceType = value;
+
+                Db c = new Db(@"UPDATE calendar SET racetype = @racetype WHERE rid = @rid");
+                Hashtable p = new Hashtable();
+                p["rid"] = Rid;
+                p["racetype"] = _raceType.ToString();
+                c.ExecuteNonQuery(p);
+                c.Dispose();
+                OnPropertyChanged("RaceType");
+                OnPropertyChanged("StartReadOnly");
+                OnPropertyChanged("StartTimeVisible");
+                OnPropertyChanged("StartDateVisible");
+                OnPropertyChanged("InterimReadOnly");
+                OnPropertyChanged("InterimTimeVisible");
+                OnPropertyChanged("InterimDateVisible");
+                OnPropertyChanged("FinishReadOnly");
+                OnPropertyChanged("FinishTimeVisible");
+                OnPropertyChanged("FinishDateVisible");
+                OnPropertyChanged("LapsEnabled");
+                OnPropertyChanged("LapsReadOnly");
+                OnPropertyChanged("LapsVisible");
+
+                SetEditableColumns();
+                CreateScorer();
+                SetColumnAttributes();
+            }
+        }
 
         public bool LapsEnabled { get { return RaceType != CalendarModel.RaceTypes.AverageLap; } }
 
@@ -345,11 +379,8 @@ namespace OodHelper.Results
             
             if (caldata["racetype"] != DBNull.Value)
             {
-                CalendarModel.RaceTypes _racetype;
-                if (Enum.TryParse<CalendarModel.RaceTypes>(caldata["racetype"].ToString(), out _racetype))
-                    RaceType = _racetype;
-                else
-                    RaceType = CalendarModel.RaceTypes.Undefined;
+                if (!Enum.TryParse<CalendarModel.RaceTypes>(caldata["racetype"].ToString(), out _raceType))
+                    _raceType = CalendarModel.RaceTypes.Undefined;
             }
 
             CalculateEnabled = false;
@@ -380,26 +411,7 @@ namespace OodHelper.Results
             mWindDirection = caldata["wind_direction"] as string;
             mLaps = caldata["laps_completed"] as int?;
 
-            if (Scorer == null)
-            {
-                switch (RaceType)
-                {
-                    case CalendarModel.RaceTypes.AverageLap:
-                    case CalendarModel.RaceTypes.FixedLength:
-                    case CalendarModel.RaceTypes.TimeGate:
-                    case CalendarModel.RaceTypes.Hybrid:
-                        switch (Handicap)
-                        {
-                            case "r":
-                                Scorer = new RollingHandicap();
-                                break;
-                            case "o":
-                                Scorer = new OpenHandicap();
-                                break;
-                        }
-                        break;
-                }
-            }
+            CreateScorer();
 
             rddb = new Db("SELECT r.rid, r.bid, boatname, boatclass, sailno, r.start_date, " +
                     "r.finish_code, r.finish_date, r.interim_date, r.laps, r.override_points, r.elapsed, r.standard_corrected, r.corrected, r.place, " +
@@ -408,14 +420,45 @@ namespace OodHelper.Results
                     "FROM races r INNER JOIN boats ON boats.bid = r.bid " +
                     "WHERE r.rid = @rid " +
                     "ORDER BY place");
-            rd = rddb.GetData(p);
-            rd.RowChanged += new DataRowChangeEventHandler(rd_RowChanged);
+            RaceDataTable = rddb.GetData(p);
+            RaceDataTable.RowChanged += new DataRowChangeEventHandler(rd_RowChanged);
 
+            SetEditableColumns();
+
+            Races.ItemsSource = (from DataRow r in RaceDataTable.Rows
+                                          select new ResultModel(r, StartDate.Value, LimitDate)).ToList<ResultModel>();
+            this.DataContext = this;
+        }
+
+        private void CreateScorer()
+        {
+            Scorer = null;
+            switch (RaceType)
+            {
+                case CalendarModel.RaceTypes.AverageLap:
+                case CalendarModel.RaceTypes.FixedLength:
+                case CalendarModel.RaceTypes.TimeGate:
+                case CalendarModel.RaceTypes.Hybrid:
+                    switch (Handicap)
+                    {
+                        case "r":
+                            Scorer = new RollingHandicap();
+                            break;
+                        case "o":
+                            Scorer = new OpenHandicap();
+                            break;
+                    }
+                    break;
+            }
+        }
+
+        private void SetEditableColumns()
+        {
             //
             // Set the columns which are to be editable as not being read only 
             // in the dataset.
             //
-            foreach (DataColumn col in rd.Columns)
+            foreach (DataColumn col in RaceDataTable.Columns)
             {
                 col.ReadOnly = true;
             }
@@ -426,45 +469,33 @@ namespace OodHelper.Results
             switch (RaceType)
             {
                 case CalendarModel.RaceTypes.AverageLap:
-                    rd.Columns["finish_date"].ReadOnly = false;
-                    rd.Columns["override_points"].ReadOnly = false;
-                    rd.Columns["finish_code"].ReadOnly = false;
-                    rd.Columns["laps"].ReadOnly = false;
+                    RaceDataTable.Columns["finish_date"].ReadOnly = false;
+                    RaceDataTable.Columns["override_points"].ReadOnly = false;
+                    RaceDataTable.Columns["finish_code"].ReadOnly = false;
+                    RaceDataTable.Columns["laps"].ReadOnly = false;
                     break;
                 case CalendarModel.RaceTypes.FixedLength:
-                    rd.Columns["finish_date"].ReadOnly = false;
-                    rd.Columns["override_points"].ReadOnly = false;
-                    rd.Columns["finish_code"].ReadOnly = false;
+                    RaceDataTable.Columns["finish_date"].ReadOnly = false;
+                    RaceDataTable.Columns["override_points"].ReadOnly = false;
+                    RaceDataTable.Columns["finish_code"].ReadOnly = false;
                     break;
                 case CalendarModel.RaceTypes.Hybrid:
-                    rd.Columns["finish_date"].ReadOnly = false;
-                    rd.Columns["override_points"].ReadOnly = false;
-                    rd.Columns["finish_code"].ReadOnly = false;
-                    rd.Columns["interim_date"].ReadOnly = false;
-                    rd.Columns["laps"].ReadOnly = false;
+                    RaceDataTable.Columns["finish_date"].ReadOnly = false;
+                    RaceDataTable.Columns["override_points"].ReadOnly = false;
+                    RaceDataTable.Columns["finish_code"].ReadOnly = false;
+                    RaceDataTable.Columns["interim_date"].ReadOnly = false;
+                    RaceDataTable.Columns["laps"].ReadOnly = false;
                     break;
                 case CalendarModel.RaceTypes.TimeGate:
-                    rd.Columns["start_date"].ReadOnly = false;
-                    rd.Columns["finish_date"].ReadOnly = false;
-                    rd.Columns["override_points"].ReadOnly = false;
-                    rd.Columns["finish_code"].ReadOnly = false;
+                    RaceDataTable.Columns["start_date"].ReadOnly = false;
+                    RaceDataTable.Columns["finish_date"].ReadOnly = false;
+                    RaceDataTable.Columns["override_points"].ReadOnly = false;
+                    RaceDataTable.Columns["finish_code"].ReadOnly = false;
                     break;
                 case CalendarModel.RaceTypes.SternChase:
-                    rd.Columns["place"].ReadOnly = false;
+                    RaceDataTable.Columns["place"].ReadOnly = false;
                     break;
             }
-
-            Races.ItemsSource = (from DataRow r in rd.Rows
-                                          select new ResultModel(r, StartDate.Value, LimitDate)).ToList<ResultModel>();
-            this.DataContext = this;
-        }
-
-        //
-        // Start time entry for boats is read only apart from for Time Gate races.
-        //
-        public bool StartReadOnly
-        {
-            get { return RaceType != CalendarModel.RaceTypes.TimeGate; }
         }
 
         public bool PlaceReadOnly
@@ -472,8 +503,122 @@ namespace OodHelper.Results
             get { return true; }
         }
 
+        public bool DisplayDate
+        {
+            //
+            // If time limit date is not the same day as start date then we show
+            // start and finish dates as well as time.
+            //
+            get
+            {
+                return StartDate.Value.Date != LimitDate.Date;
+            }
+        }
+
         //
-        // Number of laps box for each boat is read only apart from Average Lap and Hybrid races.
+        // Start only enterable for Stern Chase and Time Gate races.
+        //
+        public bool StartReadOnly
+        {
+            get
+            {
+                switch (RaceType)
+                {
+                    case CalendarModel.RaceTypes.SternChase:
+                    case CalendarModel.RaceTypes.TimeGate:
+                        return false;
+                }
+                return true;
+            }
+        }
+
+        public Visibility StartTimeVisible
+        {
+            get
+            {
+                if (!StartReadOnly)
+                        return Visibility.Visible;
+                return Visibility.Collapsed;
+            }
+        }
+
+        public Visibility StartDateVisible
+        {
+            get
+            {
+                if (DisplayDate && !StartReadOnly)
+                    return Visibility.Visible;
+                return Visibility.Collapsed;
+            }
+        }
+
+        public bool FinishReadOnly
+        {
+            get
+            {
+                switch (RaceType)
+                {
+                    case CalendarModel.RaceTypes.SternChase:
+                        return true;
+                }
+                return false;
+            }
+        }
+
+        public Visibility FinishTimeVisible
+        {
+            get
+            {
+                if (!FinishReadOnly)
+                    return Visibility.Visible;
+                return Visibility.Collapsed;
+            }
+        }
+
+        public Visibility FinishDateVisible
+        {
+            get
+            {
+                if (DisplayDate && !FinishReadOnly)
+                    return Visibility.Visible;
+                return Visibility.Collapsed;
+            }
+        }
+
+        //
+        // Interim only writeable if race type is hybrid race
+        //
+        public bool InterimReadOnly
+        {
+            get
+            {
+                return RaceType != CalendarModel.RaceTypes.Hybrid;
+            }
+        }
+
+        public Visibility InterimTimeVisible
+        {
+            get
+            {
+                if (!InterimReadOnly)
+                    return Visibility.Visible;
+                return Visibility.Collapsed;
+            }
+        }
+
+        public Visibility InterimDateVisible
+        {
+            get
+            {
+                if (DisplayDate && !InterimReadOnly)
+                    return Visibility.Visible;
+                else
+                    return Visibility.Collapsed;
+            }
+        }
+
+        //
+        // Laps entry for boats only visible for average lap and hybrid races
         //
         public bool LapsReadOnly
         {
@@ -490,71 +635,13 @@ namespace OodHelper.Results
             }
         }
 
-        public Visibility DisplayDate
-        {
-            //
-            // If time limit date is not the same day as start date then we show
-            // start and finish dates as well as time.
-            //
-            get
-            {
-                return (StartDate.Value.Date != LimitDate.Date) ? Visibility.Visible : Visibility.Hidden;
-            }
-        }
-
-        public bool FinishReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        public Visibility DisplayInterimTime
-        {
-            get
-            {
-                return RaceType == CalendarModel.RaceTypes.Hybrid ? Visibility.Visible : Visibility.Hidden;
-            }
-        }
-
-        public Visibility DisplayInterimDate
-        {
-            get
-            {
-                if (DisplayDate == Visibility.Visible)
-                    return DisplayInterimTime;
-                else
-                    return DisplayDate;
-            }
-        }
-
-        //
-        // Interim only writeable if race type is hybrid race
-        //
-        public bool InterimReadOnly
-        {
-            get
-            {
-                return RaceType != CalendarModel.RaceTypes.Hybrid;
-            }
-        }
-
-        //
-        // Laps entry for boats only visible for average lap and hybrid races
-        //
         public Visibility LapsVisible
         {
             get
             {
-                switch (RaceType)
-                {
-                    case CalendarModel.RaceTypes.AverageLap:
-                    case CalendarModel.RaceTypes.Hybrid:
-                        return Visibility.Visible;
-                    default:
-                        return Visibility.Hidden;
-                }
+                if (!LapsReadOnly)
+                    return Visibility.Visible;
+                return Visibility.Hidden;
             }
         }
 
@@ -562,13 +649,10 @@ namespace OodHelper.Results
         {
             get
             {
-                switch (Handicap)
-                {
-                    case "o":
-                        return Visibility.Visible;
-                    default:
-                        return Visibility.Collapsed;
-                }
+                if (RaceType != CalendarModel.RaceTypes.SternChase && Handicap == "o")
+                    return Visibility.Visible;
+                else
+                    return Visibility.Collapsed;
             }
         }
 
@@ -576,13 +660,10 @@ namespace OodHelper.Results
         {
             get
             {
-                switch (Handicap)
-                {
-                    case "r":
-                        return Visibility.Visible;
-                    default:
-                        return Visibility.Collapsed;
-                }
+                if (RaceType != CalendarModel.RaceTypes.SternChase && Handicap == "r")
+                    return Visibility.Visible;
+                else
+                    return Visibility.Collapsed;
             }
         }
 
@@ -590,13 +671,10 @@ namespace OodHelper.Results
         {
             get
             {
-                switch (Handicap)
-                {
-                    case "o":
-                        return Visibility.Visible;
-                    default:
-                        return Visibility.Collapsed;
-                }
+                if (Handicap == "o")
+                    return Visibility.Visible;
+                else
+                    return Visibility.Collapsed;
             }
         }
 
@@ -604,13 +682,10 @@ namespace OodHelper.Results
         {
             get
             {
-                switch (Handicap)
-                {
-                    case "r":
-                        return Visibility.Visible;
-                    default:
-                        return Visibility.Collapsed;
-                }
+                if (Handicap == "r")
+                    return Visibility.Visible;
+                else
+                    return Visibility.Collapsed;
             }
         }
 
@@ -637,20 +712,19 @@ namespace OodHelper.Results
 
         void SetColumnAttributes()
         {
-            Color x = new Color();
-            x.A = 224;
-            x.R = 224;
-            x.B = 224;
-            x.G = 224;
-            SolidColorBrush vlg = new SolidColorBrush(x);
             foreach (DataGridColumn c in Races.Columns)
             {
-                
-                if (c.IsReadOnly)
+                Color _veryLightGray = new Color();
+                _veryLightGray.A = 255;
+                _veryLightGray.R = 224;
+                _veryLightGray.G = 224;
+                _veryLightGray.B = 224;
+                SolidColorBrush _veryLightGrayBrush = new SolidColorBrush(_veryLightGray);
+                if (false && c.IsReadOnly)
                 {
-                    c.CellStyle = new System.Windows.Style();
-                    c.CellStyle.Setters.Add(new Setter(DataGridCell.BackgroundProperty, vlg));
-                    c.CellStyle.Setters.Add(new Setter(DataGridCell.ForegroundProperty, Brushes.Black));
+                    if (!c.IsSealed)
+                        c.CellStyle = new System.Windows.Style();
+                        c.CellStyle.Setters.Add(new Setter(DataGridCell.BackgroundProperty, _veryLightGrayBrush));
                 }
             }
         }
