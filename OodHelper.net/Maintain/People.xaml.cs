@@ -21,11 +21,20 @@ namespace OodHelper.Maintain
     /// </summary>
     public partial class PeopleList : Window, INotifyPropertyChanged
     {
+        private const int PAGESIZE = 20;
+
         public PeopleList()
         {
             InitializeComponent();
             SelectMode = false;
+            GetTotalPages();
             DataContext = this;
+        }
+
+        private void GetTotalPages()
+        {
+            WebService.EntityCount _totalPeople = WebService.EntityCount.GetCount("people", Peoplename.Text != string.Empty ? Peoplename.Text : null);
+            TotalPages = _totalPeople.count / PAGESIZE + (_totalPeople.count % PAGESIZE > 0 ? 1 : 0);
         }
 
         public int? Id { get; private set; }
@@ -90,6 +99,14 @@ namespace OodHelper.Maintain
             if (p.ShowDialog().Value)
             {
                 LoadGrid();
+            }
+        }
+
+        public bool NextPageEnabled
+        {
+            get
+            {
+                return _page < TotalPages;
             }
         }
 
@@ -170,11 +187,13 @@ namespace OodHelper.Maintain
         void Peoplename_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (t == null)
+            {
                 t = new System.Timers.Timer(500);
+                t.Elapsed += new System.Timers.ElapsedEventHandler(t_Elapsed);
+            }
             else
                 t.Stop();
             t.AutoReset = false;
-            t.Elapsed += new System.Timers.ElapsedEventHandler(t_Elapsed);
             t.Start();
         }
 
@@ -182,6 +201,11 @@ namespace OodHelper.Maintain
         {
             try
             {
+                this.Page = 1;
+                this.TotalPages = 0;
+                OnPropertyChanged("PreviousPageEnabled");
+                OnPropertyChanged("NextPageEnabled");
+
                 Dispatcher.Invoke(new dFilterPeople(FilterPeople), null);
             }
             catch (Exception ex)
@@ -215,6 +239,7 @@ namespace OodHelper.Maintain
                 if (Peoplename.Text != string.Empty)
                 {
                     _ppl = WebService.People.GetPeople(Peoplename.Text, Page);
+                    GetTotalPages();
                 }
                 else
                 {
@@ -227,6 +252,8 @@ namespace OodHelper.Maintain
                 string x = ex.Message;
             }
         }
+
+        public int TotalPages { get; set; }
 
         private void ContextMenu_Opened(object sender, RoutedEventArgs e)
         {
