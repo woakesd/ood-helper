@@ -154,6 +154,7 @@
     <Compile Include="About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GuidExtension.cs" />
     <Compile Include="Helpers\VisualHelper.cs" />
     <Compile Include="Maintain\BoatModel.cs" />
     <Compile Include="Maintain\BoatView.xaml.cs">
