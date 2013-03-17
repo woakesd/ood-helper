@@ -13,7 +13,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
-using System.Data.Linq.Mapping;
 using System.Linq;
 using OodHelper.Helpers;
 
