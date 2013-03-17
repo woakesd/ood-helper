@@ -49,7 +49,6 @@ namespace OodHelper.Maintain
         {
             Id = id;
         }
-
         public PeopleList(bool selectMode, int? id)
             : this(id)
         {
@@ -92,6 +91,27 @@ namespace OodHelper.Maintain
             {
                 LoadGrid();
             }
+        }
+
+        private void NextPage(object sender, RoutedEventArgs e)
+        {
+            Page++;
+            FilterPeople();
+        }
+
+        public bool PreviousPageEnabled
+        {
+            get
+            {
+                return _page > 1;
+            }
+        }
+
+        private void PreviousPage(object sender, RoutedEventArgs e)
+        {
+            if (Page > 1)
+                Page--;
+            FilterPeople();
         }
 
         private void Edit_Click(object sender, RoutedEventArgs e)
@@ -172,6 +192,21 @@ namespace OodHelper.Maintain
 
         public delegate void dFilterPeople();
 
+        private int _page = 1;
+        public int Page
+        {
+            get
+            {
+                return _page;
+            }
+            set
+            {
+                _page = value;
+                OnPropertyChanged("PreviousPageEnabled");
+                OnPropertyChanged("NextPageEnabled");
+            }
+        }
+
         public void FilterPeople()
         {
             try
@@ -179,11 +214,11 @@ namespace OodHelper.Maintain
                 WebService.People[] _ppl;
                 if (Peoplename.Text != string.Empty)
                 {
-                    _ppl = WebService.People.GetPeople(Peoplename.Text);
+                    _ppl = WebService.People.GetPeople(Peoplename.Text, Page);
                 }
                 else
                 {
-                    _ppl = WebService.People.GetPeople();
+                    _ppl = WebService.People.GetPeople(Page);
                 }
                 SetGridSource(_ppl);
             }
@@ -338,6 +373,11 @@ namespace OodHelper.Maintain
                 System.Windows.MessageBox.Show(exp.Message, "Error", System.Windows.MessageBoxButton.OK,
                     System.Windows.MessageBoxImage.Error);
             }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
