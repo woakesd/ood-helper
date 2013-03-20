@@ -42,6 +42,28 @@ namespace OodHelper
                 cmd.ExecuteNonQuery();
                 con.Close();
             }
+            else
+            {
+                //
+                // Check if we need to upgrade the db
+                //
+                using (SqlCeConnection con = new SqlCeConnection(Properties.Settings.Default.SettingsConnectionString))
+                {
+                    try
+                    {
+                        con.Open();
+                    }
+                    catch
+                    {
+                        SqlCeEngine _eng = new SqlCeEngine(Properties.Settings.Default.SettingsConnectionString);
+                        _eng.Upgrade();
+                    }
+                    finally
+                    {
+                        con.Close();
+                    }
+                }
+            }
         }
 
         public static void AddSetting(string name, object value)
