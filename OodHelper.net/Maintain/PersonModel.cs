@@ -263,7 +263,13 @@ namespace OodHelper.Maintain
 
         public int Id
         {
-            get { return (int) Values["id"]; }
+            get
+            {
+                if (Values["id"] != null)
+                    return (int)Values["id"];
+                else 
+                    return 0;
+            }
             private set { Values["id"] = value; OnPropertyChanged("Id"); }
         }
 
@@ -291,13 +297,13 @@ namespace OodHelper.Maintain
         public string CommitChanges()
         {
             StringBuilder errors = new StringBuilder(string.Empty);
-            if (Surname.Trim() == string.Empty)
+            if (Surname == null || Surname.Trim() == string.Empty)
                 errors.Append("Surname required\n");
 
             if (errors.ToString() == string.Empty)
             {
                 Db save;
-                if (Id == null)
+                if (Id == 0)
                 {
                     save = new Db("INSERT INTO people " +
                         "(main_id, firstname, surname, address1, address2, address3, address4, postcode, " +

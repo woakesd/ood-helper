@@ -449,7 +449,7 @@ CREATE TABLE [portsmouth_numbers] (
             if ((o = Settings.GetSetting("bottomseed")) != string.Empty && !Int32.TryParse(o, out b))
                 b = 1;
 
-            if ((o = Settings.GetSetting("topseed")) != string.Empty && !Int32.TryParse(o, out t))
+            if ((o = Settings.GetSetting("topseed")) != string.Empty && Int32.TryParse(o, out t))
             {
                 ReseedTable("boats", "bid", b, t);
                 ReseedTable("people", "id", b, t);

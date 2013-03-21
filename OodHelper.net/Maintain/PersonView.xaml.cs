@@ -68,11 +68,11 @@ namespace OodHelper.Maintain
         {
             if (Id == 0)
             {
-                object o = Settings.GetSetting("topseed");
+                string o = Settings.GetSetting("topseed");
                 if (o != null)
                 {
                     int topseed, nextval;
-                    topseed = (int)o;
+                    topseed = Int32.Parse(o);
 
                     Db seed = new Db(string.Empty);
                     nextval = seed.GetNextIdentity("people", "id");
