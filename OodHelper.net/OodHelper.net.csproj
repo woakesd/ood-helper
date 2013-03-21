@@ -510,7 +510,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.cs" />
-    <Compile Include="db.cs" />
+    <Compile Include="Db.cs" />
     <Compile Include="Results\OpenHandicap.cs" />
     <Compile Include="PrintPreview.xaml.cs">
       <DependentUpon>PrintPreview.xaml</DependentUpon>
