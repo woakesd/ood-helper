@@ -192,6 +192,7 @@
     </Compile>
     <Compile Include="LoadTide\ReadFormat11.cs" />
     <Compile Include="LoadTide\TideData.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Sun\DoSunSetRise.xaml.cs">
       <DependentUpon>DoSunSetRise.xaml</DependentUpon>
     </Compile>

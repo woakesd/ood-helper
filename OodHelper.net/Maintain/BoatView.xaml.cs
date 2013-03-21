@@ -75,7 +75,7 @@ namespace OodHelper.Maintain
         {
             if (Bid == 0)
             {
-                object o = DbSettings.GetSetting("topseed");
+                object o = Settings.GetSetting("topseed");
                 if (o != null)
                 {
                     int topseed, nextval;
@@ -97,7 +97,7 @@ namespace OodHelper.Maintain
 
         private void SelectPerson_Click(object sender, RoutedEventArgs e)
         {
-            People ppl = new People(true, 0);
+            PeopleList ppl = new PeopleList(true, 0);
             if (ppl.ShowDialog() == true)
             {
                 BoatModel dc = DataContext as BoatModel;

@@ -54,7 +54,7 @@ namespace OodHelper.LoadTide
 
         private void ReadDB_Click(object sender, RoutedEventArgs e)
         {
-            string mysql = (string)DbSettings.GetSetting("mysql");
+            string mysql = (string)Settings.GetSetting("mysql");
             MySqlConnectionStringBuilder mcsb = new MySqlConnectionStringBuilder(mysql);
             mysql = mcsb.ConnectionString;
             using (MySqlConnection mcon = new MySqlConnection(mysql))

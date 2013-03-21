@@ -180,7 +180,7 @@ namespace OodHelper
 
         private void Configuration_Click(object sender, RoutedEventArgs e)
         {
-            Configuration f = new Configuration();
+            Configure f = new Configure();
             f.ShowDialog();
         }
 

@@ -81,7 +81,7 @@ namespace OodHelper.Website
 
                 w.ReportProgress(0, "Connecting to Website");
 
-                string mysql = (string)DbSettings.GetSetting("mysql");
+                string mysql = (string)Settings.GetSetting("mysql");
                 MySqlConnectionStringBuilder mcsb = new MySqlConnectionStringBuilder(mysql);
                 mysql = mcsb.ConnectionString;
                 mcon = new MySqlConnection(mysql);
@@ -116,7 +116,8 @@ namespace OodHelper.Website
                 msql.Append("(");
                 for (int j = 0; j < d.Columns.Count; j++)
                 {
-                    switch (d.Columns[j].DataType.ToString())
+                    string _colType = d.Columns[j].DataType.ToString();
+                    switch (_colType)
                     {
                         case "System.String":
                             if (dr[j] != DBNull.Value)

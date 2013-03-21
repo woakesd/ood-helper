@@ -25,7 +25,7 @@ namespace OodHelper.Maintain
             {
                 PersonModel m = DataContext as PersonModel;
                 if (m != null)
-                    return m.Id.HasValue ? m.Id.Value : 0;
+                    return m.Id;
                 return 0;
             }
         }
@@ -34,7 +34,7 @@ namespace OodHelper.Maintain
         {
             if (Id == 0)
             {
-                object o = DbSettings.GetSetting("topseed");
+                object o = Settings.GetSetting("topseed");
                 if (o != null)
                 {
                     int topseed, nextval;
@@ -59,7 +59,7 @@ namespace OodHelper.Maintain
             get {
                 PersonModel m = DataContext as PersonModel;
                 if (m != null)
-                    return m.Id.HasValue ? m.Id.Value : 0;
+                    return m.Id;
                 return 0;
             }
         }
