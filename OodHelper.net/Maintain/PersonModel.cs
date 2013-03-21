@@ -261,9 +261,9 @@ namespace OodHelper.Maintain
             }
         }
 
-        public int? Id
+        public int Id
         {
-            get { return Values["id"] as int?; }
+            get { return (int) Values["id"]; }
             private set { Values["id"] = value; OnPropertyChanged("Id"); }
         }
 

@@ -47,6 +47,21 @@ namespace OodHelper
             FrameworkElement.DataContextProperty.OverrideMetadata(typeof(DataGrid),
                 new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits,
                     new PropertyChangedCallback(OnDataContextChanged)));
+
+            if (System.IO.File.Exists(@".\data\settings.sdf"))
+            {
+                object bottomSeed = DbSettings.GetSetting(DbSettings.settBottomSeed);
+                object topSeed = DbSettings.GetSetting(DbSettings.settTopSeed);
+                object mysql = DbSettings.GetSetting(DbSettings.settMysql);
+                object defaultDiscardProfile = DbSettings.GetSetting(DbSettings.settDefaultDiscardProfile);
+
+                Settings.AddSetting(Settings.settBottomSeed, bottomSeed.ToString());
+                Settings.AddSetting(Settings.settTopSeed, topSeed.ToString());
+                Settings.AddSetting(Settings.settMysql, mysql.ToString());
+                Settings.AddSetting(Settings.settDefaultDiscardProfile, defaultDiscardProfile.ToString());
+
+                System.IO.File.Delete(@".\data\settings.sdf");
+            }
         }
     }
 }
