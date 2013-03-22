@@ -81,7 +81,7 @@ namespace OodHelper.Website
 
                 w.ReportProgress(0, "Connecting to Website");
 
-                string mysql = (string)Settings.GetSetting("mysql");
+                string mysql = Settings.Mysql;
                 MySqlConnectionStringBuilder mcsb = new MySqlConnectionStringBuilder(mysql);
                 mysql = mcsb.ConnectionString;
                 mcon = new MySqlConnection(mysql);

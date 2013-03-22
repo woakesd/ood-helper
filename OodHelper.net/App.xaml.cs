@@ -55,10 +55,10 @@ namespace OodHelper
                 object mysql = DbSettings.GetSetting(DbSettings.settMysql);
                 object defaultDiscardProfile = DbSettings.GetSetting(DbSettings.settDefaultDiscardProfile);
 
-                Settings.AddSetting(Settings.settBottomSeed, bottomSeed.ToString());
-                Settings.AddSetting(Settings.settTopSeed, topSeed.ToString());
-                Settings.AddSetting(Settings.settMysql, mysql.ToString());
-                Settings.AddSetting(Settings.settDefaultDiscardProfile, defaultDiscardProfile.ToString());
+                Settings.BottomSeed = (int)bottomSeed;
+                Settings.TopSeed = (int)topSeed;
+                Settings.Mysql = mysql.ToString();
+                Settings.DefaultDiscardProfile = defaultDiscardProfile.ToString();
 
                 System.IO.File.Delete(@".\data\settings.sdf");
             }

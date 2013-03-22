@@ -12,10 +12,10 @@ namespace OodHelper
 {
     static public class Settings
     {
-        public const string settDefaultDiscardProfile = "DefaultDiscardProfile";
-        public const string settMysql = "mysql";
-        public const string settBottomSeed = "bottomseed";
-        public const string settTopSeed = "topseed";
+        private const string settDefaultDiscardProfile = "DefaultDiscardProfile";
+        private const string settMysql = "mysql";
+        private const string settBottomSeed = "bottomseed";
+        private const string settTopSeed = "topseed";
         public const string ResultsWebServiceBaseURL = "ResultsWebServiceBaseURL";
         public const string ResultsWebServiceBaseUsername = "ResultsWebServiceBaseUsername";
         public const string ResultsWebServiceBasePassword = "ResultsWebServiceBasePassword";
@@ -31,13 +31,73 @@ namespace OodHelper
             Config = ConfigurationManager.OpenMappedExeConfiguration(_myMap, ConfigurationUserLevel.None);
         }
 
-        public static void DeleteSetting(string name)
+        private const int _bottomSeedDefault = 1000;
+
+        public static int BottomSeed
+        {
+            get
+            {
+                int _tmp = 0;
+                if (Int32.TryParse(GetSetting(settBottomSeed), out _tmp))
+                    return _tmp;
+                return _bottomSeedDefault;
+            }
+            set
+            {
+                AddSetting(settBottomSeed, value.ToString());
+            }
+        }
+
+        private const int _topSeedDefault = 1999;
+
+        public static int TopSeed
+        {
+            get
+            {
+                int _tmp = 0;
+                if (Int32.TryParse(GetSetting(settTopSeed), out _tmp))
+                    return _tmp;
+                return _topSeedDefault;
+            }
+            set
+            {
+                AddSetting(settTopSeed, value.ToString());
+            }
+        }
+
+        public static string Mysql
+        {
+            get
+            {
+                return GetSetting(settMysql);
+            }
+
+            set
+            {
+                AddSetting(settMysql, value);
+            }
+        }
+
+        public static string DefaultDiscardProfile
+        {
+            get
+            {
+                return GetSetting(settDefaultDiscardProfile);
+            }
+
+            set
+            {
+                AddSetting(settDefaultDiscardProfile, value);
+            }
+        }
+
+        private static void DeleteSetting(string name)
         {
             CreateSettingsDb();
             Config.AppSettings.Settings.Remove(name);
         }
 
-        public static void AddSetting(string name, string value)
+        private static void AddSetting(string name, string value)
         {
             CreateSettingsDb();
             bool _saveNeeded = false;
@@ -62,7 +122,7 @@ namespace OodHelper
             Config.Save(ConfigurationSaveMode.Minimal, true);
         }
 
-        public static string GetSetting(string name)
+        private static string GetSetting(string name)
         {
             CreateSettingsDb();
             if (Config.AppSettings.Settings[name] != null)
