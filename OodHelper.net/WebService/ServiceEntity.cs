@@ -17,9 +17,9 @@ namespace OodHelper.WebService
     {
         static ServiceEntity()
         {
-            BaseURL = Settings.GetSetting(Settings.ResultsWebServiceBaseURL);
-            BaseUsername = Settings.GetSetting(Settings.ResultsWebServiceBaseUsername);
-            BasePassword = Settings.GetSetting(Settings.ResultsWebServiceBasePassword);
+            BaseURL = Settings.ResultsWebServiceBaseURL;
+            BaseUsername = Settings.ResultsWebServiceBaseUsername;
+            BasePassword = Settings.ResultsWebServiceBasePassword;
         }
 
         static protected HttpClient GetClient()

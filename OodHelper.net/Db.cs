@@ -446,23 +446,13 @@ CREATE TABLE [portsmouth_numbers] (
         {
             string o;
             int b = 1, t;
-            if ((o = Settings.GetSetting("bottomseed")) != string.Empty && !Int32.TryParse(o, out b))
-                b = 1;
+            b = Settings.BottomSeed;
+            t = Settings.TopSeed;
 
-            if ((o = Settings.GetSetting("topseed")) != string.Empty && !Int32.TryParse(o, out t))
-            {
-                ReseedTable("boats", "bid", b, t);
-                ReseedTable("people", "id", b, t);
-                ReseedTable("calendar", "rid");
-                ReseedTable("series", "sid");
-            }
-            else
-            {
-                ReseedTable("boats", "bid");
-                ReseedTable("people", "id");
-                ReseedTable("calendar", "rid");
-                ReseedTable("series", "sid");
-            }
+            ReseedTable("boats", "bid", b, t);
+            ReseedTable("people", "id", b, t);
+            ReseedTable("calendar", "rid");
+            ReseedTable("series", "sid");
         }
 
         private static void ReseedTable(string tname, string ident, int b, int t)

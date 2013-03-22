@@ -149,8 +149,10 @@ namespace OodHelper.Maintain
                 else
                 {
                     decimal schr;
-                    if (Decimal.TryParse(value, out schr))
+                    if (Decimal.TryParse(value, out schr) && schr < 10 && schr >= 0)
+                    {
                         Values["small_cat_handicap_rating"] = schr;
+                    }
                 }
                 OnPropertyChanged("SmallCatHandicapRating");
             }

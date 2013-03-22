@@ -292,7 +292,7 @@ namespace OodHelper.Maintain
         public string CommitChanges()
         {
             StringBuilder errors = new StringBuilder(string.Empty);
-            if (Surname.Trim() == string.Empty)
+            if (Surname == null || Surname.Trim() == string.Empty)
                 errors.Append("Surname required\n");
 
             if (errors.ToString() == string.Empty)

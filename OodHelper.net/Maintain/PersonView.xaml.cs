@@ -68,22 +68,18 @@ namespace OodHelper.Maintain
         {
             if (Id == 0)
             {
-                object o = Settings.GetSetting("topseed");
-                if (o != null)
+                int topseed, nextval;
+                topseed = Settings.TopSeed;
+
+                Db seed = new Db(string.Empty);
+                nextval = seed.GetNextIdentity("people", "id");
+
+                if (nextval > topseed)
                 {
-                    int topseed, nextval;
-                    topseed = (int)o;
-
-                    Db seed = new Db(string.Empty);
-                    nextval = seed.GetNextIdentity("people", "id");
-
-                    if (nextval > topseed)
-                    {
-                        MessageBox.Show("You need to get a new set of seed values", "Cannot add a new person",
-                            MessageBoxButton.OK, MessageBoxImage.Error);
-                        this.DialogResult = false;
-                        this.Close();
-                    }
+                    MessageBox.Show("You need to get a new set of seed values", "Cannot add a new person",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    this.DialogResult = false;
+                    this.Close();
                 }
             }
         }
