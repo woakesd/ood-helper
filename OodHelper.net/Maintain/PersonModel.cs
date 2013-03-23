@@ -26,7 +26,7 @@ namespace OodHelper.Maintain
         {
             if (id != 0)
             {
-                PersonRecord = WebService.People.GetPerson(id);
+                PersonRecord = WebService.People.GetByKey(id);
                 if (PersonRecord == null)
                     PersonRecord = new WebService.People();
             }
@@ -298,9 +298,9 @@ namespace OodHelper.Maintain
             if (errors.ToString() == string.Empty)
             {
                 if (Id == 0)
-                    PersonRecord.InsertPeople();
+                    PersonRecord.Insert();
                 else
-                    PersonRecord.UpdatePeople();
+                    PersonRecord.Update();
                 //Db save;
                 //if (Id == 0)
                 //{

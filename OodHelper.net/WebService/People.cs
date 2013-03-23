@@ -12,7 +12,7 @@ namespace OodHelper.WebService
     [DataContract]
     public class People : ServiceEntity
     {
-        static public People[] GetPeople(int Page = 1)
+        static public People[] Get(int Page = 1)
         {
             HttpClient _client = GetClient();
 
@@ -25,7 +25,7 @@ namespace OodHelper.WebService
             return ReadEntity<People[]>(_streamTask.Result);
         }
 
-        static public People[] GetPeople(string Filter, int Page = 1)
+        static public People[] Get(string Filter, int Page = 1)
         {
             HttpClient _client = GetClient();
 
@@ -38,7 +38,7 @@ namespace OodHelper.WebService
             return ReadEntity<People[]>(_streamTask.Result);
         }
 
-        static public People GetPerson(int id)
+        static public People GetByKey(int id)
         {
             HttpClient _client = GetClient();
 
@@ -51,7 +51,7 @@ namespace OodHelper.WebService
             return ReadEntity<People>(_streamTask.Result);
         }
 
-        public People UpdatePeople()
+        public People Update()
         {
             HttpClient _client = GetClient();
 
@@ -71,7 +71,7 @@ namespace OodHelper.WebService
             return ReadEntity<People>(_jsonStreamTask.Result);
         }
 
-        public People InsertPeople()
+        public People Insert()
         {
             HttpClient _client = GetClient();
 
@@ -91,7 +91,7 @@ namespace OodHelper.WebService
             return ReadEntity<People>(_jsonStreamTask.Result);
         }
 
-        public static void DeletePeople(int Id)
+        public static void Delete(int Id)
         {
             HttpClient _client = GetClient();
 

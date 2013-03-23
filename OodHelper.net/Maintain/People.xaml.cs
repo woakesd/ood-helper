@@ -169,7 +169,7 @@ namespace OodHelper.Maintain
                     if (result == MessageBoxResult.Cancel) break;
                     if (result == MessageBoxResult.Yes)
                     {
-                        WebService.People.DeletePeople((int)i.Row["id"]);
+                        WebService.People.Delete((int)i.Row["id"]);
                         //Db del = new Db("DELETE FROM people " +
                         //    "WHERE id = @id");
                         //Hashtable d = new Hashtable();
@@ -238,12 +238,12 @@ namespace OodHelper.Maintain
                 WebService.People[] _ppl;
                 if (Peoplename.Text != string.Empty)
                 {
-                    _ppl = WebService.People.GetPeople(Peoplename.Text, Page);
+                    _ppl = WebService.People.Get(Peoplename.Text, Page);
                     GetTotalPages();
                 }
                 else
                 {
-                    _ppl = WebService.People.GetPeople(Page);
+                    _ppl = WebService.People.Get(Page);
                 }
                 SetGridSource(_ppl);
             }
