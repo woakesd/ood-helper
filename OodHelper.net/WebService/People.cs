@@ -10,32 +10,17 @@ namespace OodHelper.WebService
 {
     public partial class People : ServiceEntity
     {
-        static private async Task<People[]> GetTask(int Page)
+        static public People[] Get(int Page = 1)
         {
             HttpClient _client = GetClient();
 
             Uri _uri = new Uri(string.Format("{0}/people/page/{1}", BaseURL, Page));
 
             Task<Stream> _streamTask = _client.GetStreamAsync(_uri);
-            await _streamTask;
+            while (!_streamTask.IsCompleted)
+                _streamTask.Wait(10);
 
             return ReadEntity<People[]>(_streamTask.Result);
-        }
-
-        static public People[] Get(int Page = 1)
-        {
-            Task<People[]> _task = GetTask(Page);
-            return _task.Result;
-
-            //HttpClient _client = GetClient();
-
-            //Uri _uri = new Uri(string.Format("{0}/people/page/{1}", BaseURL, Page));
-
-            //Task<Stream> _streamTask = _client.GetStreamAsync(_uri);
-            //while (!_streamTask.IsCompleted)
-            //    _streamTask.Wait(10);
-
-            //return ReadEntity<People[]>(_streamTask.Result);
         }
 
         static public People[] Get(string Filter, int Page = 1)
