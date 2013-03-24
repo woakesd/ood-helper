@@ -22,13 +22,20 @@ namespace OodHelper.WebService
             BasePassword = Settings.ResultsWebServiceBasePassword;
         }
 
+        static private HttpClient Client = null;
+
         static protected HttpClient GetClient()
         {
-            WebRequestHandler _handler = new WebRequestHandler();
-            _handler.Credentials = new System.Net.NetworkCredential(BaseUsername, BasePassword);
-            _handler.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(ValidateServerCertificate);
+            if (Client == null)
+            {
+                WebRequestHandler _handler = new WebRequestHandler();
+                _handler.Credentials = new System.Net.NetworkCredential(BaseUsername, BasePassword);
+                _handler.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(ValidateServerCertificate);
+                _handler.PreAuthenticate = true;
 
-            return new HttpClient(_handler, true);
+                Client = new HttpClient(_handler, true);
+            }
+            return Client;
         }
 
         public static bool ValidateServerCertificate(
