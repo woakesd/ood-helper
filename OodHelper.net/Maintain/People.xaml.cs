@@ -160,16 +160,14 @@ namespace OodHelper.Maintain
             if (PeopleData.SelectedItem != null)
             {
                 bool change = false;
-                foreach (DataRowView i in PeopleData.SelectedItems)
+                foreach (WebService.People i in PeopleData.SelectedItems)
                 {
-                    string name = i.Row["firstname"].ToString() + " " +
-                        i.Row["surname"].ToString();
-                    MessageBoxResult result = MessageBox.Show("Are you sure you want to delete " + name + "?",
+                    MessageBoxResult result = MessageBox.Show(string.Format("Are you sure you want to delete {0} {1}?", i.firstname, i.surname),
                         "Confirm Delete", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                     if (result == MessageBoxResult.Cancel) break;
                     if (result == MessageBoxResult.Yes)
                     {
-                        WebService.People.Delete((int)i.Row["id"]);
+                        WebService.People.Delete(i.id);
                         //Db del = new Db("DELETE FROM people " +
                         //    "WHERE id = @id");
                         //Hashtable d = new Hashtable();

@@ -298,43 +298,16 @@ namespace OodHelper.Maintain
             if (errors.ToString() == string.Empty)
             {
                 if (Id == 0)
-                    PersonRecord.Insert();
+                {
+                    PersonRecord = PersonRecord.Insert();
+                    if (PersonRecord.sid == null)
+                    {
+                        PersonRecord.sid = PersonRecord.id;
+                        PersonRecord.Update();
+                    }
+                }
                 else
                     PersonRecord.Update();
-                //Db save;
-                //if (Id == 0)
-                //{
-                //    save = new Db("INSERT INTO people " +
-                //        "(main_id, firstname, surname, address1, address2, address3, address4, postcode, " +
-                //        "hometel, mobile, worktel, email, club, member, manmemo, cp, papernewsletter, handbookexclude) " +
-                //        "VALUES (@main_id, @firstname, @surname, @address1, @address2, @address3, @address4, @postcode, " +
-                //        "@hometel, @mobile, @worktel, @email, @club, @member, @manmemo, @cp, @papernewsletter, @handbookexclude )");
-                //    Id = save.GetNextIdentity("people", "id");
-                //    if (!MainId.HasValue || MainId.Value == 0)
-                //        MainId = Id;
-                //}
-                //else
-                //    save = new Db("UPDATE people " +
-                //            "SET firstname = @firstname, " +
-                //            "surname = @surname, " +
-                //            "address1 = @address1, " +
-                //            "address2 = @address2, " +
-                //            "address3 = @address3, " +
-                //            "address4 = @address4, " +
-                //            "postcode = @postcode, " +
-                //            "hometel = @hometel, " +
-                //            "mobile = @mobile, " +
-                //            "worktel = @worktel, " +
-                //            "email = @email, " +
-                //            "club = @club, " +
-                //            "member = @member, " +
-                //            "manmemo = @manmemo, " +
-                //            "cp = @cp, " +
-                //            "papernewsletter = @papernewsletter, " +
-                //            "handbookexclude = @handbookexclude " +
-                //            "WHERE id = @id");
-
-                //save.ExecuteNonQuery(Values);
                 return string.Empty;
             }
             else
