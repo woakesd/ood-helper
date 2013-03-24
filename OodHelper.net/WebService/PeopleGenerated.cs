@@ -69,31 +69,41 @@ namespace OodHelper.WebService
 
         static public People[] Get(int Page = 1)
         {
-            HttpClient _client = GetClient();
+            return GetPeopleAsync(Page).Result;
+        }
 
+        static private async Task<People[]> GetPeopleAsync(int Page)
+        {
+            HttpClient _client = GetClient();
             Uri _uri = new Uri(string.Format("{0}/people/page/{1}", BaseURL, Page));
 
-            Task<Stream> _streamTask = _client.GetStreamAsync(_uri);
-            while (!_streamTask.IsCompleted)
-                _streamTask.Wait(10);
+            Stream _stream = await _client.GetStreamAsync(_uri).ConfigureAwait(false);
 
-            return ReadEntity<People[]>(_streamTask.Result);
+            return ReadEntity<People[]>(_stream);
         }
 
         static public People GetByKey(int id)
+        {
+            return GetByKeyAsync(id).Result;
+        }
+
+        static private async Task<People> GetByKeyAsync(int id)
         {
             HttpClient _client = GetClient();
 
             Uri _uri = new Uri(string.Format("{0}/people/{1}", BaseURL, id));
 
-            Task<Stream> _streamTask = _client.GetStreamAsync(_uri);
-            while (!_streamTask.IsCompleted)
-                _streamTask.Wait(10);
+            Stream _stream = await _client.GetStreamAsync(_uri).ConfigureAwait(false);
 
-            return ReadEntity<People>(_streamTask.Result);
+            return ReadEntity<People>(_stream);
         }
 
         public People Update()
+        {
+            return UpdateAsync().Result;
+        }
+
+        private async Task<People> UpdateAsync()
         {
             HttpClient _client = GetClient();
 
@@ -102,18 +112,19 @@ namespace OodHelper.WebService
             string _encoded = WriteEntity<People>(this);
 
             HttpContent _content = new StringContent(_encoded, Encoding.UTF8, "application/json");
-            Task<HttpResponseMessage> _streamTask = _client.PutAsync(_uri, _content);
-            while (!_streamTask.IsCompleted)
-                _streamTask.Wait(10);
+            HttpResponseMessage _stream = await _client.PutAsync(_uri, _content).ConfigureAwait(false);
 
-            Task<Stream> _jsonStreamTask = _streamTask.Result.Content.ReadAsStreamAsync();
-            while (!_jsonStreamTask.IsCompleted)
-                _jsonStreamTask.Wait(10);
+            Stream _jsonStream = await _stream.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            return ReadEntity<People>(_jsonStreamTask.Result);
+            return ReadEntity<People>(_jsonStream);
         }
 
         public People Insert()
+        {
+            return InsertAsync().Result;
+        }
+
+        private async Task<People> InsertAsync()
         {
             HttpClient _client = GetClient();
 
@@ -122,27 +133,26 @@ namespace OodHelper.WebService
             string _encoded = WriteEntity<People>(this);
 
             HttpContent _content = new StringContent(_encoded, Encoding.UTF8, "application/json");
-            Task<HttpResponseMessage> _streamTask = _client.PostAsync(_uri, _content);
-            while (!_streamTask.IsCompleted)
-                _streamTask.Wait(10);
 
-            Task<Stream> _jsonStreamTask = _streamTask.Result.Content.ReadAsStreamAsync();
-            while (!_jsonStreamTask.IsCompleted)
-                _jsonStreamTask.Wait(10);
+            HttpResponseMessage _streamTask = await _client.PostAsync(_uri, _content).ConfigureAwait(false);
 
-            return ReadEntity<People>(_jsonStreamTask.Result);
+            Stream _jsonStream = await _streamTask.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+            return ReadEntity<People>(_jsonStream);
         }
 
-        public static void Delete(int Id)
+        public void Delete()
+        {
+            DeleteAsync();
+        }
+
+        private async void DeleteAsync()
         {
             HttpClient _client = GetClient();
 
-            Uri _uri = new Uri(string.Format("{0}/people/{1}", BaseURL, Id));
+            Uri _uri = new Uri(string.Format("{0}/people/{1}", BaseURL, id));
 
-            Task<HttpResponseMessage> _deleteTask = _client.DeleteAsync(_uri);
-
-            while (!_deleteTask.IsCompleted)
-                _deleteTask.Wait(10);
+            HttpResponseMessage _delete = await _client.DeleteAsync(_uri).ConfigureAwait(false);
         }
     }
 }
