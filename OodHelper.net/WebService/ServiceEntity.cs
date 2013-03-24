@@ -53,14 +53,14 @@ namespace OodHelper.WebService
         protected static TEntity ReadEntity<TEntity>(Stream JsonStream)
         {
             DataContractJsonSerializer _serial = new DataContractJsonSerializer(typeof(TEntity));
-            MemoryStream _ms = JsonStream as MemoryStream;
-            if (_ms != null)
-            {
-                string res = Encoding.UTF8.GetString(_ms.ToArray());
-            }
+            
+            MemoryStream _ms = new MemoryStream();
+            JsonStream.CopyTo(_ms);
+            string res = Encoding.UTF8.GetString(_ms.ToArray());
+            _ms.Position = 0;
             try
             {
-                TEntity _return = (TEntity)_serial.ReadObject(JsonStream);
+                TEntity _return = (TEntity)_serial.ReadObject(_ms);
                 return _return;
             }
             catch (Exception ex)
