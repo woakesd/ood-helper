@@ -5,7 +5,6 @@ using System.Configuration;
 using System.IO;
 using System.Text;
 using System.Data;
-using System.Data.SqlServerCe;
 using System.Runtime.Serialization.Formatters;
 
 namespace OodHelper
