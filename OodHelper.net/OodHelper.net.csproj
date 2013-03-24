@@ -206,6 +206,7 @@
       <DependentUpon>DoSunSetRise.xaml</DependentUpon>
     </Compile>
     <Compile Include="NotifyPropertyChanged.cs" />
+    <Compile Include="WebService\BoatsGenerated.cs" />
     <Compile Include="WebService\EntityCount.cs" />
     <Compile Include="WebService\People.cs" />
     <Compile Include="WebService\PeopleGenerated.cs" />
