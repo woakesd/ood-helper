@@ -167,12 +167,8 @@ namespace OodHelper.Maintain
                     if (result == MessageBoxResult.Cancel) break;
                     if (result == MessageBoxResult.Yes)
                     {
-                        WebService.People.Delete(i.id);
-                        //Db del = new Db("DELETE FROM people " +
-                        //    "WHERE id = @id");
-                        //Hashtable d = new Hashtable();
-                        //d["id"] = (int)i.Row["id"];
-                        //del.ExecuteNonQuery(d);
+                        i.Delete();
+
                         change = true;
                     }
                 }
