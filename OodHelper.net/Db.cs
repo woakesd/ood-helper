@@ -11,7 +11,7 @@ namespace OodHelper
     class Db : IDisposable
     {
         private static string DatabaseName = "OodHelper-net";
-        private static string DatabaseFolder = string.Format(@"{0}data", AppDomain.CurrentDomain.BaseDirectory);
+        private static string DatabaseFolder = string.Format(@"{0}\{1}data", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "OodHelper.net");
         private static string DataFileName = string.Format(@"{0}\{1}.mdf", DatabaseFolder, DatabaseName);
         private static string LogFileName = string.Format(@"{0}\{1}.ldf", DatabaseFolder, DatabaseName);
         private static string _DatabaseConstr = string.Format(@"Data Source=(LocalDB)\v11.0;AttachDBFileName={0};Initial Catalog={1};Integrated Security=True;", DataFileName, DatabaseName);
@@ -82,6 +82,7 @@ namespace OodHelper
 
         public static void CreateDb()
         {
+            var x = AppDomain.CurrentDomain.FriendlyName;
             string constr = Db.DatabaseConstr;
 
             if (!Directory.Exists(DatabaseFolder))
