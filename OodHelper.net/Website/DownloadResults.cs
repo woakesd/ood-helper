@@ -5,7 +5,7 @@ using System.Linq;
 using System.Data;
 using System.Text;
 using MySql.Data.MySqlClient;
-using System.Data.SqlServerCe;
+using System.Data.SqlClient;
 using System.ComponentModel;
 
 namespace OodHelper.Website
@@ -40,17 +40,18 @@ namespace OodHelper.Website
             DataTable mtable = new DataTable();
             myadp.Fill(mtable);
 
-            SqlCeCommand scmd = new SqlCeCommand();
+            SqlCommand scmd = new SqlCommand();
             scmd.Connection = scon;
+            scmd.Transaction = strn;
 
             scmd.CommandText = "DELETE FROM boats";
             scmd.ExecuteNonQuery();
 
-            SqlCeCommand ins = new SqlCeCommand("INSERT INTO [boats] " +
+            SqlCommand ins = new SqlCommand("INSERT INTO [boats] " +
                 "([bid], [id], [boatname], [boatclass], [sailno], [dinghy], [hulltype], [distance], [crewname], [open_handicap], [handicap_status], [rolling_handicap], [crew_skill_factor], [engine_propeller], [keel], [deviations], [subscription], [berth], [boatmemo], [hired], [p], [s], [beaten],[uid]) " +
                 "VALUES " +
                 "(@bid, @id, @boatname, @boatclass, @sailno, @dngy, @h, @distance, @crewname, @ohp, @ohstat, @rhp, @csf, @eng, @kl, @deviations, @subscriptn, @berth, @boatmemo, @hired, @p, @s, @beaten, @uid)"
-                , scon);
+                , scon, strn);
 
             scmd.CommandText = "SET IDENTITY_INSERT boats ON";
             scmd.ExecuteNonQuery();

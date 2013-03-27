@@ -4,7 +4,7 @@ using System.Linq;
 using System.Data;
 using System.Text;
 using MySql.Data.MySqlClient;
-using System.Data.SqlServerCe;
+using System.Data.SqlClient;
 using System.ComponentModel;
 
 namespace OodHelper.Website
@@ -44,7 +44,8 @@ namespace OodHelper.Website
                 RemoteDate = mtable.Rows[0][0] as DateTime?;
             }
 
-            SqlCeDataAdapter sqadp = new SqlCeDataAdapter("SELECT MAX(upload) FROM updates", scon);
+            SqlDataAdapter sqadp = new SqlDataAdapter(new SqlCommand("SELECT MAX(upload) FROM updates", scon, strn));
+
             DataTable stable = new DataTable();
             sqadp.Fill(stable);
 

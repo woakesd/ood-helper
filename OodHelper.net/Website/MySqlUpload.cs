@@ -5,7 +5,6 @@ using System.Linq;
 using System.Data;
 using System.Text;
 using MySql.Data.MySqlClient;
-using System.Data.SqlServerCe;
 using System.ComponentModel;
 
 namespace OodHelper.Website

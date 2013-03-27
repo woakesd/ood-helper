@@ -4,34 +4,80 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Data;
-using System.Data.SqlServerCe;
+using System.Data.SqlClient;
 
 namespace OodHelper
 {
     class Db : IDisposable
     {
-        private static string DatabaseFolder = string.Format(@"{0}\data", AppDomain.CurrentDomain.BaseDirectory);
-        private static string DatabaseName = string.Format(@"{0}\oodhelper.sdf", DatabaseFolder);
-        private static string _DatabaseConstr = string.Format(@"Data Source={0}", DatabaseName);
+        private static string DatabaseName = "OodHelper-net";
+        private static string DatabaseFolder = string.Format(@"{0}data", AppDomain.CurrentDomain.BaseDirectory);
+        private static string DataFileName = string.Format(@"{0}\{1}.mdf", DatabaseFolder, DatabaseName);
+        private static string LogFileName = string.Format(@"{0}\{1}.ldf", DatabaseFolder, DatabaseName);
+        private static string _DatabaseConstr = string.Format(@"Data Source=(LocalDB)\v11.0;AttachDBFileName={0};Initial Catalog={1};Integrated Security=True;", DataFileName, DatabaseName);
 
         public static string DatabaseConstr { get { return _DatabaseConstr; } }
         
         public Db(string connectionString, string sql)
         {
-            mCon = new SqlCeConnection();
+            mCon = new SqlConnection();
             mCon.ConnectionString = connectionString;
-            mCmd = new SqlCeCommand(sql, mCon);
+            mCmd = new SqlCommand(sql, mCon);
         }
 
         public Db(string sql)
         {
-            mCon = new SqlCeConnection();
+            mCon = new SqlConnection();
             mCon.ConnectionString = DatabaseConstr;
-            if (!File.Exists(DatabaseName))
+            if (!File.Exists(DataFileName))
             {
                 Db.CreateDb();
             }
-            mCmd = new SqlCeCommand(sql, mCon);
+            mCmd = new SqlCommand(sql, mCon);
+        }
+
+        public static bool CreateDatabase(string dbName, string dbFileName)
+        {
+            try
+            {
+                string connectionString = String.Format(@"Data Source=(LocalDB)\v11.0;Initial Catalog=master;Integrated Security=True");
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    SqlCommand cmd = connection.CreateCommand();
+
+                    cmd.CommandText = String.Format("CREATE DATABASE [{0}] ON (NAME = N'{0}', FILENAME = '{1}')", dbName, dbFileName);
+                    cmd.ExecuteNonQuery();
+                }
+
+                if (File.Exists(dbFileName)) return true;
+                else return false;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public static bool DetachDatabase(string dbName)
+        {
+            try
+            {
+                string connectionString = String.Format(@"Data Source=(LocalDB)\v11.0;Initial Catalog=master;Integrated Security=True");
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = String.Format("exec sp_detach_db '{0}'", dbName);
+                    cmd.ExecuteNonQuery();
+
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public static void CreateDb()
@@ -41,20 +87,21 @@ namespace OodHelper
             if (!Directory.Exists(DatabaseFolder))
                 Directory.CreateDirectory(DatabaseFolder);
 
-            if (File.Exists(DatabaseName))
+            if (File.Exists(DataFileName))
             {
-                File.Move(DatabaseName, DatabaseFolder + @"\oodhelper-" + DateTime.Now.Ticks.ToString() + ".sdf");
+                DetachDatabase(DatabaseName);
+                string _backupDb = string.Format(@"\{0}-{1}", DatabaseName, DateTime.Now.Ticks.ToString());
+                File.Move(DataFileName, DatabaseFolder + _backupDb + ".mdf");
+                File.Move(LogFileName, DatabaseFolder + _backupDb + ".ldf");
             }
 
-            SqlCeEngine ce = new SqlCeEngine(constr);
-            ce.CreateDatabase();
-            ce.Dispose();
+            CreateDatabase(DatabaseName, DataFileName);
 
-            SqlCeConnection con = new SqlCeConnection(constr);
+            SqlConnection con = new SqlConnection(constr);
             try
             {
                 con.Open();
-                SqlCeCommand cmd = con.CreateCommand();
+                SqlCommand cmd = con.CreateCommand();
                 cmd.CommandText = @"
 CREATE TABLE [boats] (
   [bid] int NOT NULL IDENTITY (1,1)
@@ -290,9 +337,9 @@ CREATE TABLE [portsmouth_numbers] (
             }
         }
 
-        private SqlCeDataAdapter mAdapt;
-        private SqlCeConnection mCon;
-        private SqlCeCommand mCmd;
+        private SqlDataAdapter mAdapt;
+        private SqlConnection mCon;
+        private SqlCommand mCmd;
 
         public IDbConnection Connection
         {
@@ -306,7 +353,7 @@ CREATE TABLE [portsmouth_numbers] (
         {
             DataTable d = new DataTable();
             addCommandParameters(p);
-            mAdapt = new SqlCeDataAdapter(mCmd);
+            mAdapt = new SqlDataAdapter(mCmd);
             mCon.Open();
             try
             {
@@ -331,9 +378,9 @@ CREATE TABLE [portsmouth_numbers] (
                 foreach (string k in p.Keys)
                 {
                     if (p[k] == null || (p[k]).GetType() == typeof(string) && p[k] as string == string.Empty)
-                        mCmd.Parameters.Add(new SqlCeParameter(k, DBNull.Value));
+                        mCmd.Parameters.Add(new SqlParameter(k, DBNull.Value));
                     else
-                        mCmd.Parameters.Add(new SqlCeParameter(k, p[k]));
+                        mCmd.Parameters.Add(new SqlParameter(k, p[k]));
                 }
             }
         }
@@ -342,7 +389,7 @@ CREATE TABLE [portsmouth_numbers] (
         {
             DataTable d = new DataTable();
             addCommandParameters(p);
-            mAdapt = new SqlCeDataAdapter(mCmd);
+            mAdapt = new SqlDataAdapter(mCmd);
             mCon.Open();
             try
             {
@@ -365,7 +412,7 @@ CREATE TABLE [portsmouth_numbers] (
         public void Fill(DataTable d, Hashtable p)
         {
             addCommandParameters(p);
-            mAdapt = new SqlCeDataAdapter(mCmd);
+            mAdapt = new SqlDataAdapter(mCmd);
             mCon.Open();
             try
             {
@@ -381,7 +428,7 @@ CREATE TABLE [portsmouth_numbers] (
         {
             DataTable t = new DataTable();
             addCommandParameters(p);
-            mAdapt = new SqlCeDataAdapter(mCmd);
+            mAdapt = new SqlDataAdapter(mCmd);
             mCon.Open();
             try
             {
@@ -399,7 +446,7 @@ CREATE TABLE [portsmouth_numbers] (
             mCon.Open();
             try
             {
-                SqlCeCommand cmd = mCon.CreateCommand();
+                SqlCommand cmd = mCon.CreateCommand();
                 cmd.CommandText = @"SELECT autoinc_next
                     FROM information_schema.columns
                     WHERE table_name = @table
@@ -426,18 +473,12 @@ CREATE TABLE [portsmouth_numbers] (
         {
             try
             {
-                Properties.Settings s = new Properties.Settings();
-                SqlCeEngine ce = new SqlCeEngine();
-                ce.LocalConnectionString = DatabaseConstr;
-                ce.Compact(DatabaseConstr);
-                ce.Dispose();
-
                 //
                 // After compacting we need to adjust seed values on identity columns
                 //
                 ReseedDatabase();
             }
-            catch (SqlCeException)
+            catch (SqlException)
             {
             }
         }
