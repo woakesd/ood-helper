@@ -116,217 +116,314 @@ namespace OodHelper
                 con.Open();
                 SqlCommand cmd = con.CreateCommand();
                 cmd.CommandText = @"
-CREATE TABLE [boats] (
-  [bid] int NOT NULL IDENTITY (1,1)
-, [id] int NULL
-, [boatname] nvarchar(20) NULL
-, [boatclass] nvarchar(20) NULL
-, [sailno] nvarchar(8) NULL
-, [dinghy] bit NULL
-, [hulltype] nvarchar(1) NULL
-, [distance] int NULL
-, [crewname] nvarchar(30) NULL
-, [open_handicap] int NULL
-, [handicap_status] nvarchar(2) NULL
-, [rolling_handicap] int NULL
-, [crew_skill_factor] int NULL
-, [small_cat_handicap_rating] numeric(4,3) NULL
-, [engine_propeller] nvarchar(3) NULL
-, [keel] nvarchar(2) NULL
-, [deviations] nvarchar(30) NULL
-, [subscription] nvarchar(26) NULL
-, [boatmemo] ntext NULL
-, [berth] nvarchar(6) NULL
-, [hired] bit NULL
-, [p] nvarchar(1) NULL
-, [s] bit NULL
-, [beaten] int NULL
-, [uid] uniqueidentifier NULL
-)";
-                cmd.ExecuteNonQuery();
+/****** Object:  Table [dbo].[boat_crew]    Script Date: 28/03/2013 05:54:33 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[boat_crew](
+	[id] [int] NOT NULL,
+	[bid] [int] NOT NULL,
+ CONSTRAINT [PK_boat_crew] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC,
+	[bid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
 
-                cmd.CommandText = @"
-CREATE TABLE [calendar] (
-  [rid] int NOT NULL IDENTITY (1,1)
-, [start_date] datetime NULL
-, [time_limit_type] nvarchar(1) NULL
-, [time_limit_fixed] datetime NULL
-, [time_limit_delta] int NULL
-, [extension] int NULL
-, [class] nvarchar(20) NULL
-, [event] nvarchar(34) NULL
-, [price_code] nvarchar(1) NULL
-, [course] nvarchar(9) NULL
-, [ood] nvarchar(30) NULL
-, [venue] nvarchar(11) NULL
-, [racetype] nvarchar(20) NULL
-, [handicapping] nvarchar(1) NULL
-, [visitors] int NULL
-, [flag] nvarchar(20) NULL
-, [memo] ntext NULL
-, [is_race] bit NULL
-, [raced] bit NULL
-, [approved] bit NULL
-, [course_choice] nvarchar(10) NULL
-, [laps_completed] int NULL
-, [wind_speed] nvarchar(10) NULL
-, [wind_direction] nvarchar(10) NULL
-, [standard_corrected_time] float NULL
-, [result_calculated] datetime NULL
-)";
-                cmd.ExecuteNonQuery();
+GO
+/****** Object:  Table [dbo].[boats]    Script Date: 28/03/2013 05:54:33 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[boats](
+	[bid] [int] IDENTITY(1,1) NOT NULL,
+	[id] [int] NULL,
+	[boatname] [nvarchar](20) NULL,
+	[boatclass] [nvarchar](20) NULL,
+	[sailno] [nvarchar](8) NULL,
+	[dinghy] [bit] NULL,
+	[hulltype] [nvarchar](1) NULL,
+	[distance] [int] NULL,
+	[crewname] [nvarchar](30) NULL,
+	[open_handicap] [int] NULL,
+	[handicap_status] [nvarchar](2) NULL,
+	[rolling_handicap] [int] NULL,
+	[crew_skill_factor] [int] NULL,
+	[small_cat_handicap_rating] [numeric](4, 3) NULL,
+	[engine_propeller] [nvarchar](3) NULL,
+	[keel] [nvarchar](2) NULL,
+	[deviations] [nvarchar](30) NULL,
+	[subscription] [nvarchar](26) NULL,
+	[boatmemo] [ntext] NULL,
+	[berth] [nvarchar](6) NULL,
+	[hired] [bit] NULL,
+	[p] [nvarchar](1) NULL,
+	[s] [bit] NULL,
+	[beaten] [int] NULL,
+	[uid] [uniqueidentifier] NULL,
+ CONSTRAINT [PK_boats] PRIMARY KEY CLUSTERED 
+(
+	[bid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
-                cmd.CommandText = @"
-CREATE TABLE [calendar_series_join] (
-  [sid] int NOT NULL
-, [rid] int NOT NULL
-)";
-                cmd.ExecuteNonQuery();
+GO
+/****** Object:  Table [dbo].[calendar]    Script Date: 28/03/2013 05:54:33 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[calendar](
+	[rid] [int] IDENTITY(1,1) NOT NULL,
+	[start_date] [datetime] NULL,
+	[time_limit_type] [nvarchar](1) NULL,
+	[time_limit_fixed] [datetime] NULL,
+	[time_limit_delta] [int] NULL,
+	[extension] [int] NULL,
+	[class] [nvarchar](20) NULL,
+	[event] [nvarchar](34) NULL,
+	[price_code] [nvarchar](1) NULL,
+	[course] [nvarchar](9) NULL,
+	[ood] [nvarchar](30) NULL,
+	[venue] [nvarchar](11) NULL,
+	[racetype] [nvarchar](20) NULL,
+	[handicapping] [nvarchar](1) NULL,
+	[visitors] [int] NULL,
+	[flag] [nvarchar](20) NULL,
+	[memo] [ntext] NULL,
+	[is_race] [bit] NULL,
+	[raced] [bit] NULL,
+	[approved] [bit] NULL,
+	[course_choice] [nvarchar](10) NULL,
+	[laps_completed] [int] NULL,
+	[wind_speed] [nvarchar](10) NULL,
+	[wind_direction] [nvarchar](10) NULL,
+	[standard_corrected_time] [float] NULL,
+	[result_calculated] [datetime] NULL,
+ CONSTRAINT [PK_calendar] PRIMARY KEY CLUSTERED 
+(
+	[rid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
-                cmd.CommandText = @"
-CREATE TABLE [people] (
-  [id] int NOT NULL IDENTITY (1,1)
-, [main_id] int NULL
-, [firstname] nvarchar(20) NULL
-, [surname] nvarchar(28) NULL
-, [address1] nvarchar(30) NULL
-, [address2] nvarchar(30) NULL
-, [address3] nvarchar(30) NULL
-, [address4] nvarchar(30) NULL
-, [postcode] nvarchar(9) NULL
-, [hometel] nvarchar(20) NULL
-, [worktel] nvarchar(20) NULL
-, [mobile] nvarchar(20) NULL
-, [email] nvarchar(45) NULL
-, [club] nvarchar(10) NULL
-, [member] nvarchar(6) NULL
-, [manmemo] ntext NULL
-, [cp] bit NULL
-, [s] bit NULL
-, [novice] bit NULL
-, [uid] uniqueidentifier NULL
-, [papernewsletter] bit NULL
-, [handbookexclude] bit NULL
-)";
-                cmd.ExecuteNonQuery();
+GO
+/****** Object:  Table [dbo].[calendar_series_join]    Script Date: 28/03/2013 05:54:33 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[calendar_series_join](
+	[sid] [int] NOT NULL,
+	[rid] [int] NOT NULL,
+ CONSTRAINT [PK_calendar_series_join] PRIMARY KEY CLUSTERED 
+(
+	[sid] ASC,
+	[rid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
 
-                cmd.CommandText = @"
-CREATE TABLE [races] (
-  [rid] int NOT NULL
-, [bid] int NOT NULL
-, [start_date] datetime NULL
-, [finish_code] nvarchar(5) NULL
-, [finish_date] datetime NULL
-, [interim_date] datetime NULL
-, [last_edit] datetime NULL
-, [laps] int NULL
-, [place] int NULL
-, [points] float NULL
-, [override_points] float NULL
-, [elapsed] int NULL
-, [corrected] float NULL
-, [standard_corrected] float NULL
-, [handicap_status] nvarchar(2) NULL
-, [open_handicap] int NULL
-, [rolling_handicap] int NULL
-, [achieved_handicap] int NULL
-, [new_rolling_handicap] int NULL
-, [performance_index] int NULL
-, [a] nvarchar(1) NULL
-, [c] nvarchar(1) NULL
-)";
-                cmd.ExecuteNonQuery();
+GO
+/****** Object:  Table [dbo].[people]    Script Date: 28/03/2013 05:54:33 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[people](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[main_id] [int] NULL,
+	[firstname] [nvarchar](20) NULL,
+	[surname] [nvarchar](28) NULL,
+	[address1] [nvarchar](30) NULL,
+	[address2] [nvarchar](30) NULL,
+	[address3] [nvarchar](30) NULL,
+	[address4] [nvarchar](30) NULL,
+	[postcode] [nvarchar](9) NULL,
+	[hometel] [nvarchar](20) NULL,
+	[worktel] [nvarchar](20) NULL,
+	[mobile] [nvarchar](20) NULL,
+	[email] [nvarchar](45) NULL,
+	[club] [nvarchar](10) NULL,
+	[member] [nvarchar](6) NULL,
+	[manmemo] [ntext] NULL,
+	[cp] [bit] NULL,
+	[s] [bit] NULL,
+	[novice] [bit] NULL,
+	[uid] [uniqueidentifier] NULL,
+	[papernewsletter] [bit] NULL,
+	[handbookexclude] [bit] NULL,
+ CONSTRAINT [PK_people] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
-                cmd.CommandText = @"
-CREATE TABLE [series] (
-  [sid] int NOT NULL IDENTITY (1,1)
-, [sname] nvarchar(255) NOT NULL
-, [discards] nvarchar(255) NULL
-)";
-                cmd.ExecuteNonQuery();
+GO
+/****** Object:  Table [dbo].[portsmouth_numbers]    Script Date: 28/03/2013 05:54:33 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[portsmouth_numbers](
+	[id] [uniqueidentifier] NOT NULL,
+	[class_name] [nvarchar](100) NULL,
+	[no_of_crew] [int] NULL,
+	[rig] [nvarchar](1) NULL,
+	[spinnaker] [nvarchar](1) NULL,
+	[engine] [nvarchar](3) NULL,
+	[keel] [nvarchar](1) NULL,
+	[number] [int] NULL,
+	[status] [nvarchar](1) NULL,
+	[notes] [ntext] NULL,
+ CONSTRAINT [PK_portsmouth_numbers] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
-                cmd.CommandText = @"
-CREATE TABLE [series_results] (
-  [sid] int not null
-, [bid] int not null
-, [division] nvarchar(20) not null
-, [entered] int null
-, [gross] float null
-, [nett] float null
-, [place] int
-)";
-                cmd.ExecuteNonQuery();
+GO
+/****** Object:  Table [dbo].[races]    Script Date: 28/03/2013 05:54:33 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[races](
+	[rid] [int] NOT NULL,
+	[bid] [int] NOT NULL,
+	[start_date] [datetime] NULL,
+	[finish_code] [nvarchar](5) NULL,
+	[finish_date] [datetime] NULL,
+	[interim_date] [datetime] NULL,
+	[last_edit] [datetime] NULL,
+	[laps] [int] NULL,
+	[place] [int] NULL,
+	[points] [float] NULL,
+	[override_points] [float] NULL,
+	[elapsed] [int] NULL,
+	[corrected] [float] NULL,
+	[standard_corrected] [float] NULL,
+	[handicap_status] [nvarchar](2) NULL,
+	[open_handicap] [int] NULL,
+	[rolling_handicap] [int] NULL,
+	[achieved_handicap] [int] NULL,
+	[new_rolling_handicap] [int] NULL,
+	[performance_index] [int] NULL,
+	[a] [nvarchar](1) NULL,
+	[c] [nvarchar](1) NULL,
+ CONSTRAINT [PK_races] PRIMARY KEY NONCLUSTERED 
+(
+	[rid] ASC,
+	[bid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
 
-                cmd.CommandText = @"
-CREATE TABLE [updates] (
-  [dummy] int
-, [upload] DATETIME NULL
-)";
-                cmd.ExecuteNonQuery();
+GO
+/****** Object:  Table [dbo].[select_rules]    Script Date: 28/03/2013 05:54:33 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[select_rules](
+	[id] [uniqueidentifier] NOT NULL,
+	[name] [nvarchar](255) NULL,
+	[parent] [uniqueidentifier] NULL,
+	[application] [int] NULL,
+	[field] [nvarchar](255) NULL,
+	[condition] [int] NULL,
+	[string_value] [nvarchar](255) NULL,
+	[number_bound1] [numeric](18, 4) NULL,
+	[number_bound2] [numeric](18, 4) NULL,
+ CONSTRAINT [PK_select_rule] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
 
-                cmd.CommandText = @"
-CREATE TABLE [select_rules] (
-  [id] uniqueidentifier NOT NULL
-, [name] nvarchar(255) NULL
-, [parent] uniqueidentifier NULL
-, [application] int NULL
-, [field] nvarchar(255) NULL
-, [condition] int NULL
-, [string_value] nvarchar(255) NULL
-, [number_bound1] numeric(18,4) NULL
-, [number_bound2] numeric(18,4) NULL
-)";
-                cmd.ExecuteNonQuery();
+GO
+/****** Object:  Table [dbo].[series]    Script Date: 28/03/2013 05:54:33 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[series](
+	[sid] [int] IDENTITY(1,1) NOT NULL,
+	[sname] [nvarchar](255) NOT NULL,
+	[discards] [nvarchar](255) NULL,
+ CONSTRAINT [PK_series] PRIMARY KEY CLUSTERED 
+(
+	[sid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
 
-                cmd.CommandText = @"
-CREATE TABLE [boat_crew] (
-  [id] int NOT NULL
-, [bid] int NOT NULL
-)";
-                cmd.ExecuteNonQuery();
+GO
+/****** Object:  Table [dbo].[series_results]    Script Date: 28/03/2013 05:54:33 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[series_results](
+	[sid] [int] NOT NULL,
+	[bid] [int] NOT NULL,
+	[division] [nvarchar](20) NOT NULL,
+	[entered] [int] NULL,
+	[gross] [float] NULL,
+	[nett] [float] NULL,
+	[place] [int] NULL,
+ CONSTRAINT [PK_series_results] PRIMARY KEY CLUSTERED 
+(
+	[sid] ASC,
+	[division] ASC,
+	[bid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
 
-                cmd.CommandText = @"
-CREATE TABLE [portsmouth_numbers] (
-  [id] uniqueidentifier NOT NULL
-, [class_name] nvarchar(100) NULL
-, [no_of_crew] int NULL
-, [rig] nvarchar(1) NULL
-, [spinnaker] nvarchar(1) NULL
-, [engine] nvarchar(3) NULL
-, [keel] nvarchar(1) NULL
-, [number] int NULL
-, [status] nvarchar(1) NULL
-, [notes] ntext NULL
-)";
-                cmd.ExecuteNonQuery();
+GO
+/****** Object:  Table [dbo].[updates]    Script Date: 28/03/2013 05:54:33 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[updates](
+	[dummy] [int] NULL,
+	[upload] [datetime] NULL
+) ON [PRIMARY]
 
-                cmd.CommandText = @"ALTER TABLE [boats] ADD CONSTRAINT [PK_boats] PRIMARY KEY ([bid])";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"ALTER TABLE [calendar] ADD CONSTRAINT [PK_calendar] PRIMARY KEY ([rid])";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"ALTER TABLE [calendar_series_join] ADD CONSTRAINT [PK_calendar_series_join] PRIMARY KEY ([sid],[rid])";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"ALTER TABLE [people] ADD CONSTRAINT [PK_people] PRIMARY KEY ([id])";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"ALTER TABLE [races] ADD CONSTRAINT [PK_races] PRIMARY KEY ([rid],[bid])";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"ALTER TABLE [series] ADD CONSTRAINT [PK_series] PRIMARY KEY ([sid])";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"CREATE INDEX [IX_date] ON [calendar] ([start_date] ASC)";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"CREATE INDEX [IX_bid] ON [races] ([bid] ASC)";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"CREATE INDEX [IX_rid] ON [races] ([rid] ASC)";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"ALTER TABLE [series_results] ADD CONSTRAINT [PK_series_results] PRIMARY KEY ([sid],[division],[bid])";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"ALTER TABLE [select_rules] ADD CONSTRAINT [PK_select_rule] PRIMARY KEY ([id])";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"CREATE INDEX [IX_select_rule_parent] ON [select_rules] ([parent] ASC)";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"ALTER TABLE [boat_crew] ADD CONSTRAINT [PK_boat_crew] PRIMARY KEY ([id],[bid])";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"ALTER TABLE [portsmouth_numbers] ADD CONSTRAINT [PK_portsmouth_numbers] PRIMARY KEY ([id])";
+GO
+ALTER TABLE [dbo].[boats]  WITH CHECK ADD  CONSTRAINT [FK_boats_people] FOREIGN KEY([id])
+REFERENCES [dbo].[people] ([id])
+ON UPDATE CASCADE
+ON DELETE SET NULL
+GO
+ALTER TABLE [dbo].[boats] CHECK CONSTRAINT [FK_boats_people]
+GO
+ALTER TABLE [dbo].[calendar_series_join]  WITH CHECK ADD  CONSTRAINT [FK_calendar_series_join_calendar] FOREIGN KEY([sid])
+REFERENCES [dbo].[calendar] ([rid])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[calendar_series_join] CHECK CONSTRAINT [FK_calendar_series_join_calendar]
+GO
+ALTER TABLE [dbo].[calendar_series_join]  WITH CHECK ADD  CONSTRAINT [FK_calendar_series_join_series] FOREIGN KEY([sid])
+REFERENCES [dbo].[series] ([sid])
+GO
+ALTER TABLE [dbo].[calendar_series_join] CHECK CONSTRAINT [FK_calendar_series_join_series]
+GO
+ALTER TABLE [dbo].[races]  WITH CHECK ADD  CONSTRAINT [FK_races_boats] FOREIGN KEY([bid])
+REFERENCES [dbo].[boats] ([bid])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_boats]
+GO
+ALTER TABLE [dbo].[races]  WITH CHECK ADD  CONSTRAINT [FK_races_calendar] FOREIGN KEY([rid])
+REFERENCES [dbo].[calendar] ([rid])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar]
+GO
+";
                 cmd.ExecuteNonQuery();
             }
             finally
