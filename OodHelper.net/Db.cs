@@ -5,19 +5,31 @@ using System.IO;
 using System.Text;
 using System.Data;
 using System.Data.SqlClient;
+using System.Reflection;
 
 namespace OodHelper
 {
     class Db : IDisposable
     {
-        private static string DatabaseName = "OodHelper-net";
-        private static string DatabaseFolder = string.Format(@"{0}\{1}data", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "OodHelper.net");
-        private static string DataFileName = string.Format(@"{0}\{1}.mdf", DatabaseFolder, DatabaseName);
-        private static string LogFileName = string.Format(@"{0}\{1}.ldf", DatabaseFolder, DatabaseName);
-        private static string _DatabaseConstr = string.Format(@"Data Source=(LocalDB)\v11.0;AttachDBFileName={0};Initial Catalog={1};Integrated Security=True;", DataFileName, DatabaseName);
+        private static string DatabaseName = "OodHelper";
+        private static string DatabaseFolder;
+        private static string DataFileName;
+        private static string LogFileName;
+        private static string _DatabaseConstr;
 
         public static string DatabaseConstr { get { return _DatabaseConstr; } }
-        
+
+        static Db()
+        {
+            Assembly _ass = Assembly.GetAssembly(typeof(App));
+            AssemblyName _an = _ass.GetName();
+            DatabaseFolder = string.Format(@"{0}\{1}\data", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), _an.Name);
+
+            DataFileName = string.Format(@"{0}\{1}.mdf", DatabaseFolder, DatabaseName);
+            LogFileName = string.Format(@"{0}\{1}.ldf", DatabaseFolder, DatabaseName);
+            _DatabaseConstr = string.Format(@"Data Source=(LocalDB)\v11.0;Initial Catalog={1};Integrated Security=True;", DataFileName, DatabaseName);
+        }
+
         public Db(string connectionString, string sql)
         {
             mCon = new SqlConnection();
@@ -82,7 +94,7 @@ namespace OodHelper
 
         public static void CreateDb()
         {
-            var x = AppDomain.CurrentDomain.FriendlyName;
+
             string constr = Db.DatabaseConstr;
 
             if (!Directory.Exists(DatabaseFolder))
@@ -328,7 +340,7 @@ CREATE TABLE [portsmouth_numbers] (
             try
             {
                 addCommandParameters(p);
-                mCon.Open();    
+                mCon.Open();
                 return mCmd.ExecuteNonQuery();
             }
             finally

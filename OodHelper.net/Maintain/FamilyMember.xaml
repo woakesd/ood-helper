@@ -31,7 +31,7 @@
             <Label Content="Crews on" />
             <Button Name="Edit" Click="Edit_Click" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Width="80">
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="/OodHelper.net;component/Images/Add.png" />
+                    <Image Source="/OodHelper;component/Images/Add.png" />
                     <TextBlock Text="Edit" Margin="5,0" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>

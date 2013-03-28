@@ -18,7 +18,7 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper.net;component/Images/Printer.png"/>
+                        <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper;component/Images/Printer.png"/>
                         <Label Grid.Column="1">Print</Label>
                     </Grid>
                 </Button>
@@ -28,7 +28,7 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper.net;component/Images/Cancel.png"/>
+                        <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper;component/Images/Cancel.png"/>
                         <Label Grid.Column="1">Close</Label>
                     </Grid>
                 </Button>

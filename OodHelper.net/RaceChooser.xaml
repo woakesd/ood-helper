@@ -22,19 +22,19 @@
             <ToolBar>
                 <Button Name="buttonResults" Click="buttonResults_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/OodHelper.net;component/Images/Results.png"/>
+                        <Image Source="/OodHelper;component/Images/Results.png"/>
                         <Label>Results</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="buttonToday" Click="buttonToday_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/OodHelper.net;component/Images/Results.png"/>
+                        <Image Source="/OodHelper;component/Images/Results.png"/>
                         <Label>Today</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="CloseButton" Click="Close_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Height="24" Width="24" Source="/OodHelper.net;component/Images/Cancel.png"/>
+                        <Image Height="24" Width="24" Source="/OodHelper;component/Images/Cancel.png"/>
                         <Label>Close</Label>
                     </StackPanel>
                 </Button>

@@ -26,13 +26,13 @@
                 </Grid.ColumnDefinitions>
                 <Button Name="CancelButton" IsCancel="True" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Width="80">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/OodHelper.net;component/Images/Cancel.png" />
+                        <Image Source="/OodHelper;component/Images/Cancel.png" />
                         <TextBlock Text="Cancel" Margin="5,0"/>
                     </StackPanel>
                 </Button>
                 <Button Name="OKButton" IsDefault="True" Click="OK_Click" Grid.Column="1" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Width="80">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/OodHelper.net;component/Images/Ok.png" />
+                        <Image Source="/OodHelper;component/Images/Ok.png" />
                         <TextBlock Text="OK" Margin="5,0"/>
                     </StackPanel>
                 </Button>
