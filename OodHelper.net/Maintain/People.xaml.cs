@@ -395,10 +395,5 @@ namespace OodHelper.Maintain
                     System.Windows.MessageBoxImage.Error);
             }
         }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

@@ -86,7 +86,7 @@
         </Grid>
         <DockPanel Grid.Row="1" Grid.ColumnSpan="2" Name="racesDockPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <DataGrid SelectionMode="Single" Name="Races" CanUserDeleteRows="False" AutoGenerateColumns="False" SelectionUnit="Cell" 
-                      CanUserResizeRows="False" CanUserAddRows="False" IsReadOnly="False">
+                      CanUserResizeRows="False" CanUserAddRows="False" IsReadOnly="False" Margin="0,3,0,-3">
                 <DataGrid.Resources>
                     <Style x:Key="Editable" TargetType="DataGridCell">
                         <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridCell_PreviewMouseLeftButtonDown" />

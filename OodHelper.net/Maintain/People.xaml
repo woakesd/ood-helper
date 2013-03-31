@@ -80,27 +80,37 @@
             <TextBlock VerticalAlignment="Center" Margin="4,0">Press F3 to search</TextBlock>
         </StackPanel>
         <DockPanel Grid.Row="2" >
-            <DataGrid Name="PeopleData" IsReadOnly="True" AutoGenerateColumns="False">
+            <DataGrid SelectionMode="Single" SelectionUnit="Cell" Name="PeopleData" AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True">
+                <DataGrid.Resources>
+                    <Style x:Key="ReadOnly" TargetType="DataGridCell">
+                        <Setter Property="Background" Value="#fff0f0f0"/>
+                        <Setter Property="Foreground" Value="Black"/>
+                    </Style>
+                    <Style x:Key="Editable" TargetType="DataGridCell">
+                        <Setter Property="Background" Value="White"/>
+                        <Setter Property="Foreground" Value="Black"/>
+                    </Style>
+                </DataGrid.Resources>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding id}" Header="Id"/>
-                    <DataGridTextColumn Binding="{Binding sid}" Header="Family Id"/>
-                    <DataGridTextColumn Binding="{Binding firstname}" Header="Forename"/>
-                    <DataGridTextColumn Binding="{Binding surname}" Header="Surname"/>
-                    <DataGridTextColumn Binding="{Binding address1}" Header="Address 1"/>
-                    <DataGridTextColumn Binding="{Binding address2}" Header="Address 2"/>
-                    <DataGridTextColumn Binding="{Binding address3}" Header="Address 3"/>
-                    <DataGridTextColumn Binding="{Binding address4}" Header="Address 4"/>
-                    <DataGridTextColumn Binding="{Binding postcode}" Header="Postcode"/>
-                    <DataGridTextColumn Binding="{Binding hometel}" Header="Home Phone"/>
-                    <DataGridTextColumn Binding="{Binding worktel}" Header="Work Phone"/>
-                    <DataGridTextColumn Binding="{Binding mobile}" Header="Mobile"/>
-                    <DataGridTextColumn Binding="{Binding email}" Header="Email"/>
-                    <DataGridTextColumn Binding="{Binding club}" Header="Club"/>
-                    <DataGridTextColumn Binding="{Binding member}" Header="Member"/>
-                    <DataGridCheckBoxColumn Binding="{Binding cp}" Header="Paid Up"/>
-                    <DataGridCheckBoxColumn Binding="{Binding novice}" Header="Novice"/>
-                    <DataGridCheckBoxColumn Binding="{Binding papernewsletter}" Header="Paper newletter"/>
-                    <DataGridCheckBoxColumn Binding="{Binding handbookexclude}" Header="Handbook Exclude"/>
+                    <DataGridTextColumn Binding="{Binding id}" Header="Id" CellStyle="{StaticResource ReadOnly}" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding sid}" Header="Family Id" />
+                    <DataGridTextColumn Binding="{Binding firstname}" Header="Forename" />
+                    <DataGridTextColumn Binding="{Binding surname}" Header="Surname" />
+                    <DataGridTextColumn Binding="{Binding address1}" Header="Address 1" />
+                    <DataGridTextColumn Binding="{Binding address2}" Header="Address 2" />
+                    <DataGridTextColumn Binding="{Binding address3}" Header="Address 3" />
+                    <DataGridTextColumn Binding="{Binding address4}" Header="Address 4" />
+                    <DataGridTextColumn Binding="{Binding postcode}" Header="Postcode" />
+                    <DataGridTextColumn Binding="{Binding hometel}" Header="Home Phone" />
+                    <DataGridTextColumn Binding="{Binding worktel}" Header="Work Phone" />
+                    <DataGridTextColumn Binding="{Binding mobile}" Header="Mobile" />
+                    <DataGridTextColumn Binding="{Binding email}" Header="Email" />
+                    <DataGridTextColumn Binding="{Binding club}" Header="Club" />
+                    <DataGridTextColumn Binding="{Binding member}" Header="Member" />
+                    <DataGridCheckBoxColumn Binding="{Binding cp}" Header="Paid Up" CellStyle="{StaticResource Editable}"  />
+                    <DataGridCheckBoxColumn Binding="{Binding novice}" Header="Novice" CellStyle="{StaticResource Editable}" />
+                    <DataGridCheckBoxColumn Binding="{Binding papernewsletter}" Header="Paper newletter" CellStyle="{StaticResource Editable}"  />
+                    <DataGridCheckBoxColumn Binding="{Binding handbookexclude}" Header="Handbook Exclude" CellStyle="{StaticResource Editable}"  />
                 </DataGrid.Columns>
                 <DataGrid.ContextMenu>
                     <ContextMenu Opened="ContextMenu_Opened">

@@ -784,23 +784,6 @@ namespace OodHelper.Results
                     cell.IsSelected = true;
                     Races.BeginEdit();
                 }
-                /*DataGrid dataGrid = FindVisualParent<DataGrid>(cell);
-                if (dataGrid != null)
-                {
-                    if (dataGrid.SelectionUnit != DataGridSelectionUnit.FullRow)
-                    {
-                        if (!cell.IsSelected)
-                            cell.IsSelected = true;
-                    }
-                    else
-                    {
-                        DataGridRow row = FindVisualParent<DataGridRow>(cell);
-                        if (row != null && !row.IsSelected)
-                        {
-                            row.IsSelected = true;
-                        }
-                    }
-                }*/
             }
         }
 
