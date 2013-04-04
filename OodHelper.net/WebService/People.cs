@@ -14,7 +14,7 @@ namespace OodHelper.WebService
         {
             HttpClient _client = GetClient();
 
-            Uri _uri = new Uri(string.Format("{0}/people/filter/{1}/page/{2}", BaseURL, Filter, Page));
+            Uri _uri = new Uri(string.Format("{0}/people/filter:{1}/page:{2}", BaseURL, Filter, Page));
 
             Task<Stream> _streamTask = _client.GetStreamAsync(_uri);
             while (!_streamTask.IsCompleted)

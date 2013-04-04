@@ -75,7 +75,7 @@ namespace OodHelper.WebService
         static private async Task<People[]> GetPeopleAsync(int Page)
         {
             HttpClient _client = GetClient();
-            Uri _uri = new Uri(string.Format("{0}/people/page/{1}", BaseURL, Page));
+            Uri _uri = new Uri(string.Format("{0}/people/page:{1}", BaseURL, Page));
 
             Stream _stream = await _client.GetStreamAsync(_uri).ConfigureAwait(false);
 
