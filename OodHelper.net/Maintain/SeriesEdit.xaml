@@ -4,7 +4,7 @@
         Title="SeriesEdit" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" d:DesignHeight="469" d:DesignWidth="416" SizeToContent="WidthAndHeight">
     <Window.Resources>
         <Style TargetType="{x:Type TextBox}">
-            <Setter Property="Margin" Value="3,0,0,3"/>
+            <Setter Property="Margin" Value="2"/>
         </Style>
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -25,9 +25,9 @@
         </Grid.RowDefinitions>
         <TextBlock Text="Name"/>
         <TextBlock Grid.Row="1" Text="Discard Profile"/>
-        <TextBox Grid.Column="1" Text="{Binding Path=Sname,UpdateSourceTrigger=PropertyChanged}" Width="300"/>
-        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Path=Discards,UpdateSourceTrigger=PropertyChanged}" Width="300"/>
-        <Button VerticalAlignment="Center" Grid.Row="2" Name="EditRaces" Click="EditRaces_Click">
+        <TextBox Grid.Column="1" Text="{Binding Path=Sname,UpdateSourceTrigger=PropertyChanged}" Width="300" />
+        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Path=Discards,UpdateSourceTrigger=PropertyChanged}" Width="300" />
+        <Button VerticalAlignment="Top" Grid.Row="2" Name="EditRaces" Click="EditRaces_Click" Margin="2">
             <StackPanel>
                 <TextBlock Text="Edit"/>
             </StackPanel>
@@ -37,7 +37,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <DataGrid Name="Calendar" MinHeight="120" IsReadOnly="True" AutoGenerateColumns="False" HorizontalAlignment="Stretch">
+            <DataGrid Name="Calendar" Height="300" IsReadOnly="True" AutoGenerateColumns="False" HorizontalAlignment="Stretch" Margin="2" ScrollViewer.CanContentScroll="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Event" Binding="{Binding event}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Class" Binding="{Binding event_class}"></DataGridTextColumn>
