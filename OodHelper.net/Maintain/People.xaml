@@ -1,7 +1,14 @@
 ﻿<Window x:Class="OodHelper.Maintain.People"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Loaded="Window_Loaded" Icon="/OodHelper.net;component/Images/Man.png" Title="People" KeyUp="Window_KeyUp" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" d:DesignHeight="205" d:DesignWidth="664" SizeToContent="WidthAndHeight">
+        Loaded="Window_Loaded" 
+        Icon="/OodHelper.net;component/Images/Man.png" 
+        Title="People" 
+        KeyUp="Window_KeyUp" 
+        mc:Ignorable="d" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        d:DesignHeight="205" d:DesignWidth="664" VerticalAlignment="Center" HorizontalAlignment="Center">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
@@ -64,7 +71,31 @@
             <TextBlock VerticalAlignment="Center" Margin="4,0">Press F3 to search</TextBlock>
         </StackPanel>
         <DockPanel Grid.Row="2" >
-            <DataGrid Name="PeopleData" IsReadOnly="True" >
+            <DataGrid Name="PeopleData" IsReadOnly="True" AutoGenerateColumns="False" >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding id}"/>
+                    <DataGridTextColumn Header="FamilyId" Binding="{Binding main_id}"/>
+                    <DataGridTextColumn Header="First Name" Binding="{Binding firstname}"/>
+                    <DataGridTextColumn Header="Last Name"  Binding="{Binding surname}"/>
+                    <DataGridTextColumn Binding="{Binding address1}"/>
+                    <DataGridTextColumn Binding="{Binding address2}"/>
+                    <DataGridTextColumn Binding="{Binding address3}"/>
+                    <DataGridTextColumn Binding="{Binding address4}"/>
+                    <DataGridTextColumn Binding="{Binding postcode}"/>
+                    <DataGridTextColumn Binding="{Binding hometel}"/>
+                    <DataGridTextColumn Binding="{Binding worktel}"/>
+                    <DataGridTextColumn Binding="{Binding mobile}"/>
+                    <DataGridTextColumn Binding="{Binding email}"/>
+                    <DataGridTextColumn Binding="{Binding club}"/>
+                    <DataGridTextColumn Binding="{Binding member}"/>
+                    <DataGridTextColumn Binding="{Binding manmemo}"/>
+                    <DataGridTextColumn Binding="{Binding cp}"/>
+                    <DataGridTextColumn Binding="{Binding s}"/>
+                    <DataGridTextColumn Binding="{Binding novice}"/>
+                    <DataGridTextColumn Binding="{Binding uid}"/>
+                    <DataGridTextColumn Binding="{Binding papernewsletter}"/>
+                    <DataGridTextColumn Binding="{Binding handbookexclude}"/>
+                </DataGrid.Columns>
                 <DataGrid.ContextMenu>
                     <ContextMenu Opened="ContextMenu_Opened">
                         <MenuItem Header="Edit" Click="Edit_Click">

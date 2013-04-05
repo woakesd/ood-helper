@@ -27,6 +27,8 @@ namespace OodHelper.Maintain
             dSetGridSource = SetGridSource;
             SelectMode = false;
             DataContext = this;
+            Width = System.Windows.SystemParameters.VirtualScreenWidth * 0.8;
+            Height = System.Windows.SystemParameters.VirtualScreenHeight * 0.8;
         }
 
         public int? Id { get; private set; }
@@ -66,33 +68,55 @@ namespace OodHelper.Maintain
             PeopleData.ItemsSource = null;
             if (Peoplename.Text != string.Empty)
             {
-                w = new Working();
-                w.Show();
+                //w = new Working();
+                //w.Show();
                 string Filter = Peoplename.Text;
-                Task.Factory.StartNew(() =>
-                {
-                    Db c = new Db("SELECT * " +
-                        "FROM people " +
-                        "WHERE firstname LIKE @filter " +
-                        "OR surname LIKE @filter " +
-                        "OR address1 LIKE @filter " +
-                        "OR address2 LIKE @filter " +
-                        "OR address3 LIKE @filter " +
-                        "OR address4 LIKE @filter " +
-                        "OR postcode LIKE @filter " +
-                        "OR hometel LIKE @filter " +
-                        "OR worktel LIKE @filter " +
-                        "OR mobile LIKE @filter " +
-                        "OR email LIKE @filter " +
-                        "OR club LIKE @filter " +
-                        "OR member LIKE @filter " + 
-                        "ORDER BY surname, firstname");
+                //Task.Factory.StartNew(() =>
+                //{
+                    Db c = new Db(@"SELECT [id]
+, [main_id]
+, [firstname]
+, [surname]
+, [address1]
+, [address2]
+, [address3]
+, [address4]
+, [postcode]
+, [hometel]
+, [worktel]
+, [mobile]
+, [email]
+, [club]
+, [member]
+, [manmemo]
+, [cp]
+, [s]
+, [novice]
+, [uid]
+, [papernewsletter]
+, [handbookexclude]
+FROM people
+WHERE firstname LIKE @filter
+OR surname LIKE @filter
+OR address1 LIKE @filter
+OR address2 LIKE @filter
+OR address3 LIKE @filter
+OR address4 LIKE @filter
+OR postcode LIKE @filter
+OR hometel LIKE @filter
+OR worktel LIKE @filter
+OR mobile LIKE @filter
+OR email LIKE @filter
+OR club LIKE @filter
+OR member LIKE @filter
+ORDER BY surname, firstname");
                     Hashtable _para = new Hashtable();
-                    _para["filter"] = Filter;
+                    _para["filter"] = string.Format("%{0}%", Filter);
                     DataTable ppl = c.GetData(_para);
                     c.Dispose();
-                    Dispatcher.Invoke(dSetGridSource, ppl);
-                });
+                    SetGridSource(ppl);
+                    //Dispatcher.Invoke(dSetGridSource, ppl);
+                //});
             }
         }
 
@@ -185,11 +209,13 @@ namespace OodHelper.Maintain
         void Peoplename_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (t == null)
+            {
                 t = new System.Timers.Timer(500);
+                t.Elapsed += new System.Timers.ElapsedEventHandler(t_Elapsed);
+            }
             else
                 t.Stop();
             t.AutoReset = false;
-            t.Elapsed += new System.Timers.ElapsedEventHandler(t_Elapsed);
             t.Start();
         }
 
