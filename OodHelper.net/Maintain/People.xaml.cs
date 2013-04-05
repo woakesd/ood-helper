@@ -63,24 +63,42 @@ namespace OodHelper.Maintain
 
         private void LoadGrid()
         {
-            w = new Working();
-            w.Show();
             PeopleData.ItemsSource = null;
-            Task.Factory.StartNew(() =>
+            if (Peoplename.Text != string.Empty)
             {
-                Db c = new Db("SELECT * " +
-                    "FROM people " +
-                    "ORDER BY surname, firstname");
-                DataTable ppl = c.GetData(null);
-                c.Dispose();
-                Dispatcher.Invoke(dSetGridSource, ppl);
-            });
+                w = new Working();
+                w.Show();
+                string Filter = Peoplename.Text;
+                Task.Factory.StartNew(() =>
+                {
+                    Db c = new Db("SELECT * " +
+                        "FROM people " +
+                        "WHERE firstname LIKE @filter " +
+                        "OR surname LIKE @filter " +
+                        "OR address1 LIKE @filter " +
+                        "OR address2 LIKE @filter " +
+                        "OR address3 LIKE @filter " +
+                        "OR address4 LIKE @filter " +
+                        "OR postcode LIKE @filter " +
+                        "OR hometel LIKE @filter " +
+                        "OR worktel LIKE @filter " +
+                        "OR mobile LIKE @filter " +
+                        "OR email LIKE @filter " +
+                        "OR club LIKE @filter " +
+                        "OR member LIKE @filter " + 
+                        "ORDER BY surname, firstname");
+                    Hashtable _para = new Hashtable();
+                    _para["filter"] = Filter;
+                    DataTable ppl = c.GetData(_para);
+                    c.Dispose();
+                    Dispatcher.Invoke(dSetGridSource, ppl);
+                });
+            }
         }
 
         private void SetGridSource(DataTable ppl)
         {
             PeopleData.ItemsSource = ppl.DefaultView;
-            if (Peoplename.Text != string.Empty) FilterPeople();
             if (Id != null)
             {
                 foreach (DataRowView vr in PeopleData.Items)
@@ -193,27 +211,7 @@ namespace OodHelper.Maintain
         {
             try
             {
-                if (Peoplename.Text != string.Empty)
-                {
-                    ((DataView)PeopleData.ItemsSource).RowFilter =
-                        "firstname LIKE '%" + Peoplename.Text + "%'" +
-                        " or surname LIKE '%" + Peoplename.Text + "%'" +
-                        " or address1 LIKE '%" + Peoplename.Text + "%'" +
-                        " or address2 LIKE '%" + Peoplename.Text + "%'" +
-                        " or address3 LIKE '%" + Peoplename.Text + "%'" +
-                        " or address4 LIKE '%" + Peoplename.Text + "%'" +
-                        " or postcode LIKE '%" + Peoplename.Text + "%'" +
-                        " or hometel LIKE '%" + Peoplename.Text + "%'" +
-                        " or worktel LIKE '%" + Peoplename.Text + "%'" +
-                        " or mobile LIKE '%" + Peoplename.Text + "%'" +
-                        " or email LIKE '%" + Peoplename.Text + "%'" +
-                        " or club LIKE '%" + Peoplename.Text + "%'" +
-                        " or member LIKE '%" + Peoplename.Text + "%'";
-                }
-                else
-                {
-                    ((DataView)PeopleData.ItemsSource).RowFilter = null;
-                }
+                LoadGrid();
             }
             catch (Exception ex)
             {
