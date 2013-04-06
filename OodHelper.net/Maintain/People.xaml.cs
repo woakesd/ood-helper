@@ -183,10 +183,10 @@ ORDER BY surname, firstname");
         {
             if (PeopleData.SelectedItem != null)
             {
-                WebService.People i = PeopleData.SelectedItem as WebService.People;
-                if (i.id == i.sid)
+                DataRowView i = PeopleData.SelectedItem as DataRowView;
+                if (i["id"] == i["main_id"])
                 {
-                    PersonView p = new PersonView(i.id);
+                    PersonView p = new PersonView((int)i["id"]);
                     if (p.ShowDialog().Value)
                     {
                         LoadGrid();
@@ -194,7 +194,7 @@ ORDER BY surname, firstname");
                 }
                 else
                 {
-                    FamilyMember f = new FamilyMember(i.id, i.sid.Value);
+                    FamilyMember f = new FamilyMember((int)i["id"], (int)i["main_id"]);
                     if (f.ShowDialog().Value)
                     {
                         LoadGrid();
@@ -286,8 +286,8 @@ ORDER BY surname, firstname");
         {
             if (PeopleData.SelectedItem != null)
             {
-                WebService.People i = PeopleData.SelectedItem as WebService.People;
-                if (i.id == i.sid)
+                DataRowView i = PeopleData.SelectedItem as DataRowView;
+                if (i["id"] == i["main_id"])
                     AddFamilyMember.IsEnabled = true;
                 else
                     AddFamilyMember.IsEnabled = false;
