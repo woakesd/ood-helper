@@ -27,14 +27,10 @@ namespace OodHelper.Maintain
         {
             InitializeComponent();
             SelectMode = false;
-            GetTotalPages();
             DataContext = this;
-        }
-
-        private void GetTotalPages()
-        {
-            WebService.EntityCount _totalPeople = WebService.EntityCount.GetCount("people", Peoplename.Text != string.Empty ? Peoplename.Text : null);
-            TotalPages = _totalPeople.count / PAGESIZE + (_totalPeople.count % PAGESIZE > 0 ? 1 : 0);
+            Width = System.Windows.SystemParameters.VirtualScreenWidth * 0.8;
+            Height = System.Windows.SystemParameters.VirtualScreenHeight * 0.8;
+            WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
         }
 
         public int? Id { get; private set; }
@@ -66,12 +62,64 @@ namespace OodHelper.Maintain
 
         private void LoadGrid()
         {
-            FilterPeople();
+            PeopleData.ItemsSource = null;
+            if (Peoplename.Text != string.Empty)
+            {
+                //w = new Working();
+                //w.Show();
+                string Filter = Peoplename.Text;
+                //Task.Factory.StartNew(() =>
+                //{
+                    Db c = new Db(@"SELECT [id]
+, [main_id]
+, [firstname]
+, [surname]
+, [address1]
+, [address2]
+, [address3]
+, [address4]
+, [postcode]
+, [hometel]
+, [worktel]
+, [mobile]
+, [email]
+, [club]
+, [member]
+, [manmemo]
+, [cp]
+, [s]
+, [novice]
+, [uid]
+, [papernewsletter]
+, [handbookexclude]
+FROM people
+WHERE firstname LIKE @filter
+OR surname LIKE @filter
+OR address1 LIKE @filter
+OR address2 LIKE @filter
+OR address3 LIKE @filter
+OR address4 LIKE @filter
+OR postcode LIKE @filter
+OR hometel LIKE @filter
+OR worktel LIKE @filter
+OR mobile LIKE @filter
+OR email LIKE @filter
+OR club LIKE @filter
+OR member LIKE @filter
+ORDER BY surname, firstname");
+                    Hashtable _para = new Hashtable();
+                    _para["filter"] = string.Format("%{0}%", Filter);
+                    DataTable ppl = c.GetData(_para);
+                    c.Dispose();
+                    SetGridSource(ppl);
+                    //Dispatcher.Invoke(dSetGridSource, ppl);
+                //});
+            }
         }
 
-        private void SetGridSource(WebService.People[] Persons)
+        private void SetGridSource(DataTable ppl)
         {
-            PeopleData.ItemsSource = Persons;
+            PeopleData.ItemsSource = ppl.DefaultView;
             if (Id != null)
             {
                 foreach (DataRowView vr in PeopleData.Items)
@@ -195,11 +243,6 @@ namespace OodHelper.Maintain
         {
             try
             {
-                this.Page = 1;
-                this.TotalPages = 0;
-                OnPropertyChanged("PreviousPageEnabled");
-                OnPropertyChanged("NextPageEnabled");
-
                 Dispatcher.Invoke(new dFilterPeople(FilterPeople), null);
             }
             catch (Exception ex)
@@ -229,17 +272,7 @@ namespace OodHelper.Maintain
         {
             try
             {
-                WebService.People[] _ppl;
-                if (Peoplename.Text != string.Empty)
-                {
-                    _ppl = WebService.People.Get(Peoplename.Text, Page);
-                    GetTotalPages();
-                }
-                else
-                {
-                    _ppl = WebService.People.Get(Page);
-                }
-                SetGridSource(_ppl);
+                LoadGrid();
             }
             catch (Exception ex)
             {
