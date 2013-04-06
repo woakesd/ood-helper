@@ -29,6 +29,7 @@ namespace OodHelper.Maintain
             DataContext = this;
             Width = System.Windows.SystemParameters.VirtualScreenWidth * 0.8;
             Height = System.Windows.SystemParameters.VirtualScreenHeight * 0.8;
+            WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
         }
 
         public int? Id { get; private set; }
