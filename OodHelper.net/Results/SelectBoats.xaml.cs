@@ -102,41 +102,6 @@ namespace OodHelper.Results
                     }
                 }
             }
-
-            BoatsSql = new StringBuilder(@"SELECT * FROM boats ");
-            bool yachts = false;
-            bool dinghies = false;
-
-            for (int i = 0; i < reds.Length; i++)
-            {
-                if (reds[i].RaceClass.IndexOf("Yacht") >= 0)
-                    yachts = true;
-
-                if (reds[i].RaceClass.IndexOf("Division") >= 0)
-                    yachts = true;
-
-                if (reds[i].RaceClass.IndexOf("Dinghy") >= 0)
-                    dinghies = true;
-
-                if (reds[i].RaceClass.IndexOf("All") >= 0)
-                {
-                    yachts = true;
-                    dinghies = true;
-                }
-            }
-
-            if (!dinghies && yachts)
-                BoatsSql.Append(@"WHERE dinghy = 0 ");
-            else if (dinghies && !yachts)
-                BoatsSql.Append(@"WHERE dinghy = 1 ");
-
-            BoatsSql.Append(@"ORDER BY boatname");
-
-            Db c = new Db(BoatsSql.ToString());
-            DataTable dt = c.GetData(null);
-
-            Boats.ItemsSource = dt.DefaultView;
-            Boats.IsReadOnly = true;
         }
 
         class FleetChanger : ICommand
@@ -195,11 +160,13 @@ namespace OodHelper.Results
         void Boatname_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (t == null)
+            {
                 t = new System.Timers.Timer(500);
+                t.Elapsed += new System.Timers.ElapsedEventHandler(t_Elapsed);
+            }
             else
                 t.Stop();
             t.AutoReset = false;
-            t.Elapsed += new System.Timers.ElapsedEventHandler(t_Elapsed);
             t.Start();
         }
 
@@ -219,18 +186,62 @@ namespace OodHelper.Results
 
         public void FilterBoats()
         {
-            try
+            if (Boatname.Text.Trim() != string.Empty)
             {
-                ((DataView)Boats.ItemsSource).RowFilter =
-                    "boatname LIKE '%" + Boatname.Text.Replace("'","''") + "%'" +
-                    "or sailno LIKE '%" + Boatname.Text.Replace("'", "''") + "%'" +
-                    "or boatclass LIKE '%" + Boatname.Text.Replace("'", "''") + "%'"
-                    ;
+                try
+                {
+                    BoatsSql = new StringBuilder(@"SELECT bid, boatname, boatclass, sailno, dinghy, handicap_status, open_handicap, rolling_handicap, firstname + ' ' + surname name
+FROM boats
+LEFT JOIN people ON boats.id = people.id ");
+                    bool yachts = false;
+                    bool dinghies = false;
+
+                    for (int i = 0; i < reds.Length; i++)
+                    {
+                        if (reds[i].RaceClass.IndexOf("Yacht") >= 0)
+                            yachts = true;
+
+                        if (reds[i].RaceClass.IndexOf("Division") >= 0)
+                            yachts = true;
+
+                        if (reds[i].RaceClass.IndexOf("Dinghy") >= 0)
+                            dinghies = true;
+
+                        if (reds[i].RaceClass.IndexOf("All") >= 0)
+                        {
+                            yachts = true;
+                            dinghies = true;
+                        }
+                    }
+
+                    BoatsSql.Append(@"WHERE (boatname LIKE @filter
+OR sailno LIKE @filter
+OR boatclass LIKE @filter
+OR firstname LIKE @filter
+OR surname LIKE @filter) ");
+
+                    if (!dinghies && yachts)
+                        BoatsSql.Append(@"AND dinghy = 0 ");
+                    else if (dinghies && !yachts)
+                        BoatsSql.Append(@"AND dinghy = 1 ");
+
+                    BoatsSql.Append(@"ORDER BY boatname");
+
+                    Db c = new Db(BoatsSql.ToString());
+                    Hashtable _para = new Hashtable();
+                    _para["filter"] = string.Format("%{0}%", Boatname.Text.Trim());
+                    DataTable dt = c.GetData(_para);
+
+                    Boats.ItemsSource = dt.DefaultView;
+                    Boats.IsReadOnly = true;
+                }
+                catch (Exception ex)
+                {
+                    string x = ex.Message;
+                }
             }
-            catch (Exception ex)
-            {
-                string x = ex.Message;
-            }
+            else
+                Boats.ItemsSource = null;
         }
 
         void Boats_MouseDoubleClick(object sender, MouseButtonEventArgs e)
