@@ -187,6 +187,7 @@
     <Compile Include="Membership\RenewPart2.xaml.cs">
       <DependentUpon>RenewPart2.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RelayCommand.cs" />
     <Compile Include="Results\CalendarModel.cs" />
     <Compile Include="Results\ResultsViewModel.cs" />
     <Compile Include="Results\ResultModel.cs" />
@@ -205,6 +206,7 @@
       <DependentUpon>DoSunSetRise.xaml</DependentUpon>
     </Compile>
     <Compile Include="NotifyPropertyChanged.cs" />
+    <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="WebService\BoatsGenerated.cs" />
     <Compile Include="WebService\EntityCount.cs" />
     <Compile Include="WebService\People.cs" />
