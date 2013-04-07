@@ -63,7 +63,7 @@ namespace OodHelper.WebService
                 TEntity _return = (TEntity)_serial.ReadObject(_ms);
                 return _return;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
             return default(TEntity);
