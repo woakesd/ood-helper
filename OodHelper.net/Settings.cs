@@ -6,6 +6,7 @@ using System.IO;
 using System.Text;
 using System.Data;
 using System.Runtime.Serialization.Formatters;
+using System.Reflection;
 
 namespace OodHelper
 {
@@ -20,8 +21,15 @@ namespace OodHelper
         private const string settResultsWebServiceBaseUsername = "ResultsWebServiceBaseUsername";
         private const string settResultsWebServiceBasePassword = "ResultsWebServiceBasePassword";
 
-        private static string CustomSettings = "./OodHelper.net.custom.config";
+        private static string CustomSettings;
         private static Configuration Config;
+
+        static Settings()
+        {
+            Assembly _ass = Assembly.GetAssembly(typeof(App));
+            AssemblyName _an = _ass.GetName();
+            CustomSettings = string.Format(@"{0}\{1}\OodHelper.net.custom.config", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), _an.Name);
+        }
 
         public static string ResultsWebServiceBaseURL
         {

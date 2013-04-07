@@ -642,8 +642,7 @@ GO
             {
                 seedvalue = 1;
             }
-            s = new Db("ALTER TABLE " + tname + " " +
-                "ALTER COLUMN " + ident + " IDENTITY(" + seedvalue.ToString() + ",1)");
+            s = new Db(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1})", tname, seedvalue));
             s.ExecuteNonQuery(null);
         }
     }
