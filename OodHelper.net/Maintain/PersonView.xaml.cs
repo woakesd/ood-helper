@@ -72,7 +72,7 @@ namespace OodHelper.Maintain
                 topseed = Settings.TopSeed;
 
                 Db seed = new Db(string.Empty);
-                nextval = seed.GetNextIdentity("people", "id");
+                nextval = seed.GetNextIdentity("people");
 
                 if (nextval > topseed)
                 {

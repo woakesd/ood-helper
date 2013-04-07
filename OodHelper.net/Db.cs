@@ -551,20 +551,17 @@ GO
             return t;
         }
 
-        public int GetNextIdentity(string table, string column)
+        public int GetNextIdentity(string table)
         {
             mCon.Open();
             try
             {
                 SqlCommand cmd = mCon.CreateCommand();
-                cmd.CommandText = @"SELECT autoinc_next
-                    FROM information_schema.columns
-                    WHERE table_name = @table
-                    AND column_name = @column";
+                cmd.CommandText = @"SELECT IDENT_CURRENT(@table)";
                 cmd.Parameters.AddWithValue("table", table);
-                cmd.Parameters.AddWithValue("column", column);
-                long nextid = (long)cmd.ExecuteScalar();
-                return (int)nextid;
+                
+                decimal _nextId = (decimal) cmd.ExecuteScalar();
+                return (int)_nextId + 1;
             }
             finally
             {
@@ -626,8 +623,7 @@ GO
                 {
                     seedvalue = b;
                 }
-                s = new Db("ALTER TABLE " + tname + " " +
-                    "ALTER COLUMN " + ident + " IDENTITY(" + seedvalue.ToString() + ",1)");
+                s = new Db(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1})", tname, seedvalue));
                 s.ExecuteNonQuery(null);
             }
         }

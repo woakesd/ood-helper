@@ -184,7 +184,7 @@ ORDER BY surname, firstname");
             if (PeopleData.SelectedItem != null)
             {
                 DataRowView i = PeopleData.SelectedItem as DataRowView;
-                if (i["id"] == i["main_id"])
+                if ((int)i["id"] == (int)i["main_id"])
                 {
                     PersonView p = new PersonView((int)i["id"]);
                     if (p.ShowDialog().Value)
@@ -208,15 +208,18 @@ ORDER BY surname, firstname");
             if (PeopleData.SelectedItem != null)
             {
                 bool change = false;
-                foreach (WebService.People i in PeopleData.SelectedItems)
+                foreach (DataRowView i in PeopleData.SelectedItems)
                 {
-                    MessageBoxResult result = MessageBox.Show(string.Format("Are you sure you want to delete {0} {1}?", i.firstname, i.surname),
+                    MessageBoxResult result = MessageBox.Show(string.Format("Are you sure you want to delete {0} {1}?", i["firstname"], i["surname"]),
                         "Confirm Delete", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                     if (result == MessageBoxResult.Cancel) break;
                     if (result == MessageBoxResult.Yes)
                     {
-                        i.Delete();
-
+                        Db del = new Db("DELETE FROM people " +
+                            "WHERE id = @id");
+                        Hashtable d = new Hashtable();
+                        d["id"] = (int)i.Row["id"];
+                        del.ExecuteNonQuery(d);
                         change = true;
                     }
                 }
@@ -287,7 +290,7 @@ ORDER BY surname, firstname");
             if (PeopleData.SelectedItem != null)
             {
                 DataRowView i = PeopleData.SelectedItem as DataRowView;
-                if (i["id"] == i["main_id"])
+                if ((int)i["id"] == (int)i["main_id"])
                     AddFamilyMember.IsEnabled = true;
                 else
                     AddFamilyMember.IsEnabled = false;
