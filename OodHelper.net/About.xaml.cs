@@ -9,7 +9,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace OodHelper
 {
@@ -21,12 +20,13 @@ namespace OodHelper
         public About()
         {
             InitializeComponent();
-            //aboutBlock.Text = "Revision: " + SvnRevision.Rev + "\n" +
-            //    "Revision Range: " + SvnRevision.Range + "\n" +
-            //    "Commit Date: " + SvnRevision.Date + "\n" +
-            //    "Build Date: " + SvnRevision.BuildDate + "\n" +
-            //    "Commit Status: " + SvnRevision.LocalMods + "\n" +
-            //    "OOD Helper by David Woakes";
+            string _rev;
+            if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
+                _rev = System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+            else
+                _rev = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+            aboutBlock.Text = string.Format("Revision: {0}\nOOD Helper by David Woakes", _rev);
         }
     }
 }
