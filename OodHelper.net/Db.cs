@@ -595,7 +595,6 @@ GO
 
         public static void ReseedDatabase()
         {
-            string o;
             int b = 1, t;
             b = Settings.BottomSeed;
             t = Settings.TopSeed;
