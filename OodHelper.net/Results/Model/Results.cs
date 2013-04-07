@@ -14,7 +14,7 @@ namespace OodHelper.Results.Model
         public string WindSpeed { get; set; }
         public string WindDirection { get; set; }
         public int? Laps { get; set; }
-        public CalendarModel.RaceTypes RaceType { get; set; }
+        public Calendar.RaceTypes RaceType { get; set; }
         public string RaceClass { get; set; }
         public string RaceName { get; set; }
         public DateTime? StartDate { get; set; }
