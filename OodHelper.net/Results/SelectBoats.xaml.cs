@@ -55,7 +55,7 @@ namespace OodHelper.Results
                 ti.Content = sbt[i];
                 Fleets.Items.Add(ti);
 
-                IList<ResultModel> d = reds[i].Races.ItemsSource as IList<ResultModel>;
+                IList<Entry> d = reds[i].Races.ItemsSource as IList<Entry>;
                 DataTable bts = new DataTable();
                 bts.TableName = "boats";
                 bts.Columns.Add(new DataColumn("bid", typeof(int)));
@@ -68,7 +68,7 @@ namespace OodHelper.Results
                 bts.Columns.Add(new DataColumn("handicap_status"));
                 bts.Columns.Add(new DataColumn("open_handicap", typeof(int)));
                 bts.Columns.Add(new DataColumn("rolling_handicap", typeof(int)));
-                foreach (ResultModel r in d)
+                foreach (Entry r in d)
                 {
                     DataRow gr = bts.NewRow();
                     gr["bid"] = r.Bid;
@@ -340,7 +340,7 @@ OR surname LIKE @filter) ");
             this.DialogResult = true;
             for (int i = 0; i < sbt.Length; i++)
             {
-                IList<ResultModel> rd = reds[i].Races.ItemsSource as IList<ResultModel>;
+                IList<Entry> rd = reds[i].Races.ItemsSource as IList<Entry>;
                 a["rid"] = sbt[i].RaceId;
                 DataTable sb = ((DataView)sbt[i].Boats.ItemsSource).Table;
                 Hashtable selectedBids = new Hashtable();
@@ -365,7 +365,7 @@ OR surname LIKE @filter) ");
                 // For each boat in the race edit control check to see if it is in selected boats,
                 // if not then delete it.
                 //
-                foreach (ResultModel r in rd)
+                foreach (Entry r in rd)
                 {
                     a["bid"] = r.Bid;
                     if (!selectedBids.ContainsKey(r.Bid.ToString()))

@@ -188,10 +188,10 @@
       <DependentUpon>RenewPart2.xaml</DependentUpon>
     </Compile>
     <Compile Include="RelayCommand.cs" />
-    <Compile Include="Results\Model\CalendarModel.cs" />
-    <Compile Include="Results\Model\Results.cs" />
-    <Compile Include="Results\ViewModel\ResultsViewModel.cs" />
-    <Compile Include="Results\ResultModel.cs" />
+    <Compile Include="Results\Model\Calendar.cs" />
+    <Compile Include="Results\Model\Race.cs" />
+    <Compile Include="Results\Model\Entry.cs" />
+    <Compile Include="Results\ViewModel\ResultsEditorViewModel.cs" />
     <Compile Include="Converters\ValueParsers.cs" />
     <Compile Include="Results\View\ResultsEditorView.xaml.cs">
       <DependentUpon>ResultsEditorView.xaml</DependentUpon>
@@ -352,6 +352,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Membership\RenewPart2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Results\ResultsResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

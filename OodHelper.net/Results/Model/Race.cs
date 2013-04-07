@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace OodHelper.Results.Model
 {
-    class RaceResults
+    public class Race
     {
         readonly int _rid;
 
-        public string Course { get; set; }
+        public string Course { get ; set; }
         public string WindSpeed { get; set; }
         public string WindDirection { get; set; }
         public int? Laps { get; set; }
@@ -23,9 +23,13 @@ namespace OodHelper.Results.Model
         public TimeSpan? TimeLimit { get; set; }
         public TimeSpan Extension { get; set; }
 
-        public RaceResults(int Rid)
+        public IList<Entry> Entries { get; set; }
+        public Calendar Calendar { get; set; }
+
+        public Race(int Rid)
         {
             _rid = Rid;
+            Calendar = new Calendar(Rid);
         }
     }
 }

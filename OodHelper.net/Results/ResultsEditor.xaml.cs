@@ -424,7 +424,7 @@ namespace OodHelper.Results
             SetEditableColumns();
 
             Races.ItemsSource = (from DataRow r in RaceDataTable.Rows
-                                          select new ResultModel(r, StartDate.Value, LimitDate)).ToList<ResultModel>();
+                                          select new Entry(r, StartDate.Value, LimitDate)).ToList<Entry>();
             this.DataContext = this;
         }
 

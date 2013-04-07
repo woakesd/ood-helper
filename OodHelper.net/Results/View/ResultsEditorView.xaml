@@ -33,11 +33,11 @@
             </Grid.RowDefinitions>
             <Label Name="raceName" Grid.ColumnSpan="4">Label</Label>
             <Label Name="startLabel" Grid.Row="1" HorizontalAlignment="Right">Start</Label>
-            <TextBox HorizontalAlignment="Left" Margin="2" Grid.Row="1" Grid.Column="1" Width="40" MaxLength="5" Text="{Binding Path=StartTime,Converter={StaticResource ResourceKey=TimeSpanHMConverter}}"/>
+            <TextBox HorizontalAlignment="Left" Margin="2" Grid.Row="1" Grid.Column="1" Width="40" MaxLength="5" Text="{Binding Path=StartTime}"/>
             <Label Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right" Name="timeLimitLabel">Time Limit</Label>
-            <TextBox HorizontalAlignment="left" Margin="2" Grid.Row="1" Grid.Column="3" Name="timeLimit" Width="40" MaxLength="5" Text="{Binding Path=TimeLimit,Converter={StaticResource ResourceKey=TimeSpanHMConverter}}"/>
+            <TextBox HorizontalAlignment="left" Margin="2" Grid.Row="1" Grid.Column="3" Name="timeLimit" Width="40" MaxLength="5" Text="{Binding Path=TimeLimit}"/>
             <Label Grid.Row="1" Grid.Column="4" HorizontalAlignment="Right" Name="extensionLabel" >Extension</Label>
-            <TextBox HorizontalAlignment="left" Margin="2" Grid.Row="1" Grid.Column="5" Name="extensionTB" Text="{Binding Path=Extension,Converter={StaticResource ResourceKey=TimeSpanHMConverter}}" Width="40" MaxLength="5" />
+            <TextBox HorizontalAlignment="left" Margin="2" Grid.Row="1" Grid.Column="5" Name="extensionTB" Text="{Binding Path=Extension}" Width="40" MaxLength="5" />
             <Label Grid.Row="1" Grid.Column="6" HorizontalAlignment="Right">SCT</Label>
             <TextBox Margin="2" Grid.Row="1" Grid.Column="7" Name="sct" Width="60" IsReadOnly="True" MaxLength="11" />
             <Label Grid.Row="2">Course</Label>
@@ -78,8 +78,8 @@
             </StackPanel>
         </Grid>
         <DockPanel Grid.Row="1" Grid.ColumnSpan="2" Name="racesDockPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <DataGrid SelectionMode="Single" Name="Races" CanUserDeleteRows="False" AutoGenerateColumns="False" SelectionUnit="Cell" 
-                      CanUserResizeRows="False" CanUserAddRows="False" IsReadOnly="False">
+            <DataGrid SelectionMode="Single" CanUserDeleteRows="False" AutoGenerateColumns="False" SelectionUnit="Cell" 
+                      CanUserResizeRows="False" CanUserAddRows="False" IsReadOnly="False" ItemsSource="{Binding Entries}">
                 <DataGrid.Resources>
                     <Style x:Key="Editable" TargetType="DataGridCell">
                         <Setter Property="Background" Value="White"/>

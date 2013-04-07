@@ -24,68 +24,69 @@ namespace OodHelper.Results
     /// </summary>
     public partial class RaceResults : UserControl
     {
-        private ResultsEditor[] reds;
+        private ViewModel.ResultsEditorViewModel[] reds;
 
         public RaceResults(int[] rids)
         {
             InitializeComponent();
 
-            reds = new ResultsEditor[rids.Length];
+            reds = new ViewModel.ResultsEditorViewModel[rids.Length];
 
             bool askAutoPopulate = true, doAutoPopulate = false;
             for (int i = 0; i < rids.Length; i++)
             {
-                ResultsEditor r = new ResultsEditor(rids[i]);
-                if (!r.Races.HasItems && r.CountAutoPopulateData() > 0)
-                {
-                    if (askAutoPopulate)
-                    {
-                        askAutoPopulate = false;
-                        if (MessageBox.Show("Would you like to copy competitors from previous race?",
-                            "Auto populate", MessageBoxButton.YesNo,
-                            MessageBoxImage.Question, MessageBoxResult.Yes) == MessageBoxResult.Yes)
-                        {
-                            doAutoPopulate = true;
-                        }
-                    }
-                    if (doAutoPopulate)
-                    {
-                        r.DoAutoPopulate();
-                    }
-                }
+                Model.Race _race = new Model.Race(rids[i]);
+                ViewModel.ResultsEditorViewModel r = new ViewModel.ResultsEditorViewModel(_race);
+                //if (_race.Entries.Count == 0) // && r.CountAutoPopulateData() > 0)
+                //{
+                //    if (askAutoPopulate)
+                //    {
+                //        askAutoPopulate = false;
+                //        if (MessageBox.Show("Would you like to copy competitors from previous race?",
+                //            "Auto populate", MessageBoxButton.YesNo,
+                //            MessageBoxImage.Question, MessageBoxResult.Yes) == MessageBoxResult.Yes)
+                //        {
+                //            doAutoPopulate = true;
+                //        }
+                //    }
+                //    if (doAutoPopulate)
+                //    {
+                //        r.DoAutoPopulate();
+                //    }
+                //}
                 reds[i] = r;
                 TabItem t = new TabItem();
-                t.Header = r.RaceName;
+                t.Header = r.DisplayName;
                 t.Content = r;
                 raceTabControl.Items.Add(t);
-                r.ContextMenu = new ContextMenu();
+                //r.ContextMenu = new ContextMenu();
             }
 
-            for (int i = 0; i < rids.Length; i++)
-            {
-                ResultsEditor from = (ResultsEditor)((TabItem)raceTabControl.Items[i]).Content;
-                ContextMenu m = from.ContextMenu;
-                MenuItem editBoat = new MenuItem();
-                editBoat.Header = "Edit Boat";
-                editBoat.Command = new EditBoatCmd();
-                editBoat.CommandParameter = from;
-                m.Items.Add(editBoat);
-                if (rids.Length > 1)
-                {
-                    for (int j = 0; j < rids.Length; j++)
-                    {
-                        ResultsEditor to = (ResultsEditor)((TabItem)raceTabControl.Items[j]).Content;
-                        if (i != j)
-                        {
-                            MenuItem mi = new MenuItem();
-                            mi.Header = "Move to " + to.RaceName;
-                            mi.Command = new FleetChanger(this, from.Rid, to.Rid);
-                            mi.CommandParameter = from.Races;
-                            m.Items.Add(mi);
-                        }
-                    }
-                }
-            }
+            //for (int i = 0; i < rids.Length; i++)
+            //{
+            //    ResultsEditor from = (ResultsEditor)((TabItem)raceTabControl.Items[i]).Content;
+            //    ContextMenu m = from.ContextMenu;
+            //    MenuItem editBoat = new MenuItem();
+            //    editBoat.Header = "Edit Boat";
+            //    editBoat.Command = new EditBoatCmd();
+            //    editBoat.CommandParameter = from;
+            //    m.Items.Add(editBoat);
+            //    if (rids.Length > 1)
+            //    {
+            //        for (int j = 0; j < rids.Length; j++)
+            //        {
+            //            ResultsEditor to = (ResultsEditor)((TabItem)raceTabControl.Items[j]).Content;
+            //            if (i != j)
+            //            {
+            //                MenuItem mi = new MenuItem();
+            //                mi.Header = "Move to " + to.DisplayName;
+            //                mi.Command = new FleetChanger(this, from.Rid, to.Rid);
+            //                mi.CommandParameter = from.Races;
+            //                m.Items.Add(mi);
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         class EditBoatCmd : ICommand
@@ -114,7 +115,7 @@ namespace OodHelper.Results
 
                 foreach (DataGridCellInfo inf in rr.Races.SelectedCells)
                 {
-                    ResultModel rv = inf.Item as ResultModel;
+                    Entry rv = inf.Item as Entry;
                     int bid = rv.Bid;
                     BoatView edit = new BoatView(bid);
                     if (edit.ShowDialog().Value)
@@ -188,13 +189,13 @@ namespace OodHelper.Results
                     p["start_date"] = rstart;
                     foreach (DataGridCellInfo inf in races.SelectedCells)
                     {
-                        ResultModel drv = inf.Item as ResultModel;
+                        Entry drv = inf.Item as Entry;
                         p["bid"] = drv.Bid;
                         c.ExecuteNonQuery(p);
                     }
 
-                    for (int i = 0; i < rr.reds.Length; i++)
-                        rr.reds[i].LoadGrid();
+                    //for (int i = 0; i < rr.reds.Length; i++)
+                    //    rr.reds[i].LoadGrid();
                 }
             }
 
@@ -220,13 +221,13 @@ namespace OodHelper.Results
                             w.SetRange(0, reds.Length);
                             for (int i = 0; i < reds.Length; i++)
                             {
-                                ResultsEditor red = reds[i];
+                                ViewModel.ResultsEditorViewModel red = reds[i];
                                 if (red.PrintInclude)
                                 {
                                     string msg = null;
                                     Dispatcher.Invoke(new Action(delegate()
                                     {
-                                        msg = string.Format("Printing {0}", red.RaceName);
+                                        msg = string.Format("Printing {0}", red.DisplayName);
                                     }));
                                     w.SetProgress(msg, i + 1);
                                     System.Threading.Thread.Sleep(50);
@@ -238,10 +239,10 @@ namespace OodHelper.Results
                                         switch (red.Handicap)
                                         {
                                             case "o":
-                                                p = (Page)new OpenHandicapResultsPage(red);
+                                                //p = (Page)new OpenHandicapResultsPage(red);
                                                 break;
                                             case "r":
-                                                p = (Page)new RollingHandicapResultsPage(red);
+                                                //p = (Page)new RollingHandicapResultsPage(red);
                                                 break;
                                         }
                                         rp = p as IResultsPage;
@@ -282,12 +283,12 @@ namespace OodHelper.Results
 
         private void ChooseBoats_Click(object sender, RoutedEventArgs e)
         {
-            SelectBoats dlg = new SelectBoats(reds);
-            if (dlg.ShowDialog() == true)
-            {
-                for (int i = 0; i < reds.Length; i++)
-                    reds[i].LoadGrid();
-            }
+            //SelectBoats dlg = new SelectBoats(reds);
+            //if (dlg.ShowDialog() == true)
+            //{
+            //    for (int i = 0; i < reds.Length; i++)
+            //        reds[i].LoadGrid();
+            //}
         }
     }
 }
