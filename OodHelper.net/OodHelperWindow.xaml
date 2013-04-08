@@ -7,7 +7,6 @@
         BorderThickness="0" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="731">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <ResourceDictionary x:Key="Results" Source="Results\ResultsResources.xaml"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
