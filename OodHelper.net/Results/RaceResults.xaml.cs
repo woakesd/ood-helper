@@ -236,12 +236,12 @@ namespace OodHelper.Results
                                         Page p = null;
                                         IResultsPage rp = null;
 
-                                        switch (red.Handicap)
+                                        switch (red.Handicapping)
                                         {
-                                            case "o":
+                                            case Model.Calendar.Handicappings.o:
                                                 //p = (Page)new OpenHandicapResultsPage(red);
                                                 break;
-                                            case "r":
+                                            case Model.Calendar.Handicappings.r:
                                                 //p = (Page)new RollingHandicapResultsPage(red);
                                                 break;
                                         }

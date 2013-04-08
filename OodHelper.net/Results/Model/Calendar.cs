@@ -12,7 +12,7 @@ namespace OodHelper.Results.Model
 
         public Calendar(int RaceId)
         {
-            this.Rid = RaceId;
+            this.rid = RaceId;
             using (Db _conn = new Db(@"SELECT [rid]
       ,[start_date]
       ,[time_limit_type]
@@ -82,13 +82,13 @@ namespace OodHelper.Results.Model
             }
         }
 
+        public int rid { get; set; }
+
+        public string eventName { get { return Data["event"] as string; } }
+
         public enum RaceTypes { Undefined, FixedLength, AverageLap, Hybrid, TimeGate, SternChase, }
 
-        public int Rid { get; set; }
-
-        public string Event { get { return Data["event"] as string; } }
-
-        public RaceTypes RaceType
+        public RaceTypes racetype
         {
             get
             {
@@ -102,31 +102,52 @@ namespace OodHelper.Results.Model
             }
             set
             {
-                Data["racetype"] = value;
+                if (value != RaceTypes.Undefined)
+                    Data["racetype"] = value.ToString();
+                else
+                    Data["handicapping"] = null;
             }
         }
 
-        public string EventClass { get { return Data["class"] as string; } }
+        public string eventClass { get { return Data["class"] as string; } }
 
-        public string Course { get { return Data["course"] as string; } set { Data["course"] = value; } }
+        public string course { get { return Data["course"] as string; } set { Data["course"] = value; } }
 
-        public string WindSpeed { get { return Data["wind_speed"] as string; } set { Data["wind_speed"] = value; } }
+        public string wind_speed { get { return Data["wind_speed"] as string; } set { Data["wind_speed"] = value; } }
 
-        public string WindDirection { get { return Data["wind_direction"] as string; } set { Data["wind_direction"] = value; } }
+        public string wind_direction { get { return Data["wind_direction"] as string; } set { Data["wind_direction"] = value; } }
 
-        public int? Laps { get { return Data["laps"] as int?; } set { Data["laps"] = value; } }
+        public int? laps { get { return Data["laps"] as int?; } set { Data["laps"] = value; } }
 
-        public string Ood { get { return Data["ood"] as string; } set { Data["ood"] = value; } }
+        public string ood { get { return Data["ood"] as string; } set { Data["ood"] = value; } }
 
-        public DateTime? StartDate { get { return Data["start_date"] as DateTime?; } set { Data["start_date"] = value; } }
+        public DateTime? start_date { get { return Data["start_date"] as DateTime?; } set { Data["start_date"] = value; } }
 
-        public string Handicap { get; set; }
+        public enum Handicappings { Undefined, o, r, }
 
-        public int? Extension { get; set; }
+        public Handicappings handicapping
+        {
+            get
+            {
+                Handicappings _tmp = Handicappings.Undefined;
+                if (!Enum.TryParse<Handicappings>(Data["handicapping"].ToString(), out _tmp))
+                    ;
+                return _tmp;
+            }
+            set
+            {
+                if (value != Handicappings.Undefined)
+                    Data["handicapping"] = value.ToString();
+                else
+                    Data["handicapping"] = null;
+            }
+        }
 
-        public enum TimeLimitTypes { Undefined, Fixed, Delta, }
+        public int? extension { get { return Data["extension"] as int?; } set { Data["extension"] = value; } }
 
-        public TimeLimitTypes TimeLimitType
+        public enum TimeLimitTypes { Undefined, F, D, }
+
+        public TimeLimitTypes time_limit_type
         {
             get
             {
@@ -138,11 +159,17 @@ namespace OodHelper.Results.Model
                 }
                 return _tmp;
             }
-            set { Data["time_limit_type"] = value; }
+            set
+            {
+                if (value != TimeLimitTypes.Undefined)
+                    Data["time_limit_type"] = value.ToString();
+                else
+                    Data["time_limit_type"] = null;
+            }
         }
 
-        public DateTime? TimeLimitFixed { get { return Data["time_limit_fixed"] as DateTime?; } set { Data["time_limit_fixed"] = value; } }
+        public DateTime? time_limit_fixed { get { return Data["time_limit_fixed"] as DateTime?; } set { Data["time_limit_fixed"] = value; } }
 
-        public int? TimeLimitDelta { get; set; }
+        public int? time_limit_delta { get { return Data["time_limit_delta"] as int?; } set { Data["time_limit_delta"] = value; } }
     }
 }
