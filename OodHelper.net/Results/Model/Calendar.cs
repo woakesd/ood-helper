@@ -10,6 +10,11 @@ namespace OodHelper.Results.Model
     {
         private Hashtable Data;
 
+        public Calendar(Hashtable EventData)
+        {
+            Data = EventData;
+        }
+
         public Calendar(int RaceId)
         {
             this.rid = RaceId;
@@ -50,7 +55,12 @@ namespace OodHelper.Results.Model
 
         public void Update()
         {
-            using (Db _conn = new Db(@"UPDATE [calendar]
+            if (rid == 0)
+            {
+            }
+            else
+            {
+                using (Db _conn = new Db(@"UPDATE [calendar]
    SET [start_date] = @start_date
       ,[time_limit_type] = @time_limit_type
       ,[time_limit_fixed] = @time_limit_fixed
@@ -77,8 +87,9 @@ namespace OodHelper.Results.Model
       ,[standard_corrected_time] = @standard_corrected_time
       ,[result_calculated] = @result_calculated
  WHERE [rid] = @rid"))
-            {
-                _conn.ExecuteNonQuery(Data);
+                {
+                    _conn.ExecuteNonQuery(Data);
+                }
             }
         }
 

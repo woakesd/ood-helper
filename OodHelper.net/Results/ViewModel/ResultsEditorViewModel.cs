@@ -16,6 +16,28 @@ namespace OodHelper.Results.ViewModel
         public Calendar.RaceTypes RaceType { get { return _result.Calendar.racetype; } set { _result.Calendar.racetype = value; } }
         public Calendar.Handicappings Handicapping { get { return _result.Calendar.handicapping; } set { _result.Calendar.handicapping = value; } }
 
+        public DateTime StartDate
+        {
+            get
+            {
+                if (_result.Calendar.start_date.HasValue)
+                    return _result.Calendar.start_date.Value.Date;
+                return DateTime.Today;
+            }
+
+            set
+            {
+                TimeSpan _tmp;
+                if (_result.Calendar.start_date.HasValue)
+                    _tmp = _result.Calendar.start_date.Value.TimeOfDay;
+                else
+                    _tmp = TimeSpan.Zero;
+                _result.Calendar.start_date = value + _tmp;
+            }
+        }
+
+        readonly TimeSpan TwentyFourHours = new TimeSpan(1, 0, 0, 0);
+
         public string StartTime
         {
             get
@@ -30,7 +52,14 @@ namespace OodHelper.Results.ViewModel
                 TimeSpan _tmp;
                 if (TimeSpan.TryParseExact(value, "hh\\:mm", null, out _tmp) || TimeSpan.TryParseExact(value, "hh\\ mm", null, out _tmp))
                 {
-                    _result.Calendar.start_date = _result.Calendar.start_date.Value.Date + _tmp;
+                    if (_tmp <= TwentyFourHours)
+                    {
+                        _result.Calendar.start_date = _result.Calendar.start_date.Value.Date + _tmp;
+                        base.OnPropertyChanged("StartTime");
+                        base.OnPropertyChanged("StartDate");
+                    }
+                    else
+                        throw new ArgumentOutOfRangeException("Start time must be < 24:00");
                 }
             }
         }
@@ -53,13 +82,19 @@ namespace OodHelper.Results.ViewModel
                 {
                     if (_result.Calendar.time_limit_type == Calendar.TimeLimitTypes.F)
                     {
-                        if (_result.Calendar.time_limit_fixed.HasValue)
-                            _result.Calendar.time_limit_fixed = _result.Calendar.time_limit_fixed.Value.Date + _tmp;
-                        else if (_result.Calendar.start_date.HasValue)
-                            _result.Calendar.time_limit_fixed = _result.Calendar.start_date.Value.Date + _tmp;
+                        if (_tmp < TwentyFourHours)
+                        {
+                            if (_result.Calendar.time_limit_fixed.HasValue)
+                                _result.Calendar.time_limit_fixed = _result.Calendar.time_limit_fixed.Value.Date + _tmp;
+                            else if (_result.Calendar.start_date.HasValue)
+                                _result.Calendar.time_limit_fixed = _result.Calendar.start_date.Value.Date + _tmp;
+                        }
+                        else
+                            throw new ArgumentOutOfRangeException("Fixed time limit must be < 24:00");
                     }
                     else if (_result.Calendar.time_limit_type == Calendar.TimeLimitTypes.D)
                         _result.Calendar.time_limit_delta = (int)_tmp.TotalSeconds;
+                    base.OnPropertyChanged("TimeLimit");
                 }
             }
         }
@@ -79,6 +114,7 @@ namespace OodHelper.Results.ViewModel
                 if (TimeSpan.TryParseExact(value, "hh\\:mm", null, out _tmp) || TimeSpan.TryParseExact(value, "hh\\ mm", null, out _tmp))
                 {
                     _result.Calendar.extension = (int)_tmp.TotalSeconds;
+                    base.OnPropertyChanged("Extension");
                 }
             }
         }
