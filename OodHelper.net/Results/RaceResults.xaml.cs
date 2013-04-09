@@ -238,10 +238,10 @@ namespace OodHelper.Results
 
                                         switch (red.Handicapping)
                                         {
-                                            case Model.Calendar.Handicappings.o:
+                                            case Model.CalendarEvent.Handicappings.o:
                                                 //p = (Page)new OpenHandicapResultsPage(red);
                                                 break;
-                                            case Model.Calendar.Handicappings.r:
+                                            case Model.CalendarEvent.Handicappings.r:
                                                 //p = (Page)new RollingHandicapResultsPage(red);
                                                 break;
                                         }

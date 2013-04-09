@@ -21,8 +21,8 @@ namespace OodHelper
                                         && r.Field<string>("finish_code") != "DSQ"
                                         && r.Field<DateTime?>("start_date") != null
                                         && r.Field<DateTime?>("finish_date") != null
-                                        && (RaceType != Results.Model.Calendar.RaceTypes.Hybrid || r.Field<DateTime?>("interim_date") != null && r.Field<int?>("laps") != null)
-                                        && (RaceType != Results.Model.Calendar.RaceTypes.AverageLap || r.Field<int?>("laps") != null)
+                                        && (RaceType != Results.Model.CalendarEvent.RaceTypes.Hybrid || r.Field<DateTime?>("interim_date") != null && r.Field<int?>("laps") != null)
+                                        && (RaceType != Results.Model.CalendarEvent.RaceTypes.AverageLap || r.Field<int?>("laps") != null)
                                     select r))
             {
                 DateTime? _start = dr["start_date"] as DateTime?;
@@ -31,7 +31,7 @@ namespace OodHelper
                 TimeSpan? _fixedPart = null;
                 TimeSpan? _averageLapPart = null;
 
-                if (RaceType == Results.Model.Calendar.RaceTypes.Hybrid)
+                if (RaceType == Results.Model.CalendarEvent.RaceTypes.Hybrid)
                 {
                     _fixedPart = _interim - _start;
                     _averageLapPart = _finish - _interim;
@@ -51,18 +51,18 @@ namespace OodHelper
                 //
                 switch (RaceType)
                 {
-                    case Results.Model.Calendar.RaceTypes.AverageLap:
+                    case Results.Model.CalendarEvent.RaceTypes.AverageLap:
                         dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap) / _laps.Value;
                         dr["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp) / _laps.Value;
                         break;
-                    case Results.Model.Calendar.RaceTypes.Hybrid:
+                    case Results.Model.CalendarEvent.RaceTypes.Hybrid:
                         dr["corrected"] = Math.Round(_fixedPart.Value.TotalSeconds * 1000 / hcap) +
                             Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / hcap) / _laps.Value;
                         dr["standard_corrected"] = Math.Round(_fixedPart.Value.TotalSeconds * 1000 / ohp) +
                             Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / ohp) / _laps.Value;
                         break;
-                    case Results.Model.Calendar.RaceTypes.FixedLength:
-                    case Results.Model.Calendar.RaceTypes.TimeGate:
+                    case Results.Model.CalendarEvent.RaceTypes.FixedLength:
+                    case Results.Model.CalendarEvent.RaceTypes.TimeGate:
                         dr["corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / hcap);
                         dr["standard_corrected"] = Math.Round(e.Value.TotalSeconds * 1000 / ohp);
                         break;

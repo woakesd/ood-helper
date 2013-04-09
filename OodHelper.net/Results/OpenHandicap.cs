@@ -16,7 +16,7 @@ namespace OodHelper
         private double slowLim;
         private double fastLim;
         private DateTime rdate;
-        public Results.Model.Calendar.RaceTypes RaceType { get; private set; }
+        public Results.Model.CalendarEvent.RaceTypes RaceType { get; private set; }
         public int rid { get; private set; }
 
         public int Finishers { get; private set; }
@@ -70,11 +70,11 @@ namespace OodHelper
                 END, extension");
                 Hashtable res = c.GetHashtable(p);
 
-                Results.Model.Calendar.RaceTypes _racetype;
-                if (Enum.TryParse<Results.Model.Calendar.RaceTypes>(res["racetype"].ToString(), out _racetype))
+                Results.Model.CalendarEvent.RaceTypes _racetype;
+                if (Enum.TryParse<Results.Model.CalendarEvent.RaceTypes>(res["racetype"].ToString(), out _racetype))
                     RaceType = _racetype;
                 else
-                    RaceType = Results.Model.Calendar.RaceTypes.Undefined;
+                    RaceType = Results.Model.CalendarEvent.RaceTypes.Undefined;
 
                 rdate = (DateTime)res["start_date"];
 
@@ -218,7 +218,7 @@ namespace OodHelper
                 //
                 // if average lap and user enters a finish time and no laps then default to 1.
                 //
-                if (RaceType == Results.Model.Calendar.RaceTypes.AverageLap && r["laps"] == DBNull.Value && r["finish_date"] != DBNull.Value)
+                if (RaceType == Results.Model.CalendarEvent.RaceTypes.AverageLap && r["laps"] == DBNull.Value && r["finish_date"] != DBNull.Value)
                     r["laps"] = 1;
             }
         }
@@ -253,8 +253,8 @@ namespace OodHelper
                                         && r.Field<string>("finish_code") != "DSQ"
                                         && r.Field<DateTime?>("start_date") != null
                                         && r.Field<DateTime?>("finish_date") != null
-                                        && (RaceType != Results.Model.Calendar.RaceTypes.Hybrid || r.Field<DateTime?>("interim_date") != null && r.Field<int?>("laps") != null)
-                                        && (RaceType != Results.Model.Calendar.RaceTypes.AverageLap || r.Field<int?>("laps") != null)
+                                        && (RaceType != Results.Model.CalendarEvent.RaceTypes.Hybrid || r.Field<DateTime?>("interim_date") != null && r.Field<int?>("laps") != null)
+                                        && (RaceType != Results.Model.CalendarEvent.RaceTypes.AverageLap || r.Field<int?>("laps") != null)
                                     select r))
             {
                 DateTime? _start = dr["start_date"] as DateTime?;
@@ -263,7 +263,7 @@ namespace OodHelper
                 TimeSpan? _fixedPart = null;
                 TimeSpan? _averageLapPart = null;
 
-                if (RaceType == Results.Model.Calendar.RaceTypes.Hybrid)
+                if (RaceType == Results.Model.CalendarEvent.RaceTypes.Hybrid)
                 {
                     _fixedPart = _interim - _start;
                     _averageLapPart = _finish - _interim;
@@ -283,15 +283,15 @@ namespace OodHelper
                 //
                 switch (RaceType)
                 {
-                    case Results.Model.Calendar.RaceTypes.AverageLap:
+                    case Results.Model.CalendarEvent.RaceTypes.AverageLap:
                         dr["corrected"] = Math.Round(_elapsed.Value.TotalSeconds * 1000 / hcap) / _laps.Value;
                         break;
-                    case Results.Model.Calendar.RaceTypes.Hybrid:
+                    case Results.Model.CalendarEvent.RaceTypes.Hybrid:
                         dr["corrected"] = Math.Round(_fixedPart.Value.TotalSeconds * 1000 / hcap) +
                             Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / hcap) / _laps.Value;
                         break;
-                    case Results.Model.Calendar.RaceTypes.FixedLength:
-                    case Results.Model.Calendar.RaceTypes.TimeGate:
+                    case Results.Model.CalendarEvent.RaceTypes.FixedLength:
+                    case Results.Model.CalendarEvent.RaceTypes.TimeGate:
                         dr["corrected"] = Math.Round(_elapsed.Value.TotalSeconds * 1000 / hcap);
                         break;
                 }

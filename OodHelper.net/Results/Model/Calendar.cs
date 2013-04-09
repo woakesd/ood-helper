@@ -6,16 +6,11 @@ using System.Text;
 
 namespace OodHelper.Results.Model
 {
-    public class Calendar
+    public class CalendarEvent : OodHelper.Results.Model.ICalendarEvent
     {
         private Hashtable Data;
 
-        public Calendar(Hashtable EventData)
-        {
-            Data = EventData;
-        }
-
-        public Calendar(int RaceId)
+        public CalendarEvent(int RaceId)
         {
             this.rid = RaceId;
             using (Db _conn = new Db(@"SELECT [rid]

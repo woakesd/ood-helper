@@ -111,8 +111,8 @@ namespace OodHelper.Results
             }
         }
 
-        private Model.Calendar.RaceTypes _raceType;
-        public Model.Calendar.RaceTypes RaceType
+        private Model.CalendarEvent.RaceTypes _raceType;
+        public Model.CalendarEvent.RaceTypes RaceType
         {
             get
             {
@@ -147,7 +147,7 @@ namespace OodHelper.Results
             }
         }
 
-        public bool LapsEnabled { get { return RaceType != Model.Calendar.RaceTypes.AverageLap; } }
+        public bool LapsEnabled { get { return RaceType != Model.CalendarEvent.RaceTypes.AverageLap; } }
 
         public string RaceClass { get; set; }
 
@@ -377,8 +377,8 @@ namespace OodHelper.Results
             
             if (caldata["racetype"] != DBNull.Value)
             {
-                if (!Enum.TryParse<Model.Calendar.RaceTypes>(caldata["racetype"].ToString(), out _raceType))
-                    _raceType = Model.Calendar.RaceTypes.Undefined;
+                if (!Enum.TryParse<Model.CalendarEvent.RaceTypes>(caldata["racetype"].ToString(), out _raceType))
+                    _raceType = Model.CalendarEvent.RaceTypes.Undefined;
             }
 
             CalculateEnabled = false;
@@ -433,10 +433,10 @@ namespace OodHelper.Results
             Scorer = null;
             switch (RaceType)
             {
-                case Model.Calendar.RaceTypes.AverageLap:
-                case Model.Calendar.RaceTypes.FixedLength:
-                case Model.Calendar.RaceTypes.TimeGate:
-                case Model.Calendar.RaceTypes.Hybrid:
+                case Model.CalendarEvent.RaceTypes.AverageLap:
+                case Model.CalendarEvent.RaceTypes.FixedLength:
+                case Model.CalendarEvent.RaceTypes.TimeGate:
+                case Model.CalendarEvent.RaceTypes.Hybrid:
                     switch (Handicap)
                     {
                         case "r":
@@ -466,31 +466,31 @@ namespace OodHelper.Results
             //
             switch (RaceType)
             {
-                case Model.Calendar.RaceTypes.AverageLap:
+                case Model.CalendarEvent.RaceTypes.AverageLap:
                     RaceDataTable.Columns["finish_date"].ReadOnly = false;
                     RaceDataTable.Columns["override_points"].ReadOnly = false;
                     RaceDataTable.Columns["finish_code"].ReadOnly = false;
                     RaceDataTable.Columns["laps"].ReadOnly = false;
                     break;
-                case Model.Calendar.RaceTypes.FixedLength:
+                case Model.CalendarEvent.RaceTypes.FixedLength:
                     RaceDataTable.Columns["finish_date"].ReadOnly = false;
                     RaceDataTable.Columns["override_points"].ReadOnly = false;
                     RaceDataTable.Columns["finish_code"].ReadOnly = false;
                     break;
-                case Model.Calendar.RaceTypes.Hybrid:
+                case Model.CalendarEvent.RaceTypes.Hybrid:
                     RaceDataTable.Columns["finish_date"].ReadOnly = false;
                     RaceDataTable.Columns["override_points"].ReadOnly = false;
                     RaceDataTable.Columns["finish_code"].ReadOnly = false;
                     RaceDataTable.Columns["interim_date"].ReadOnly = false;
                     RaceDataTable.Columns["laps"].ReadOnly = false;
                     break;
-                case Model.Calendar.RaceTypes.TimeGate:
+                case Model.CalendarEvent.RaceTypes.TimeGate:
                     RaceDataTable.Columns["start_date"].ReadOnly = false;
                     RaceDataTable.Columns["finish_date"].ReadOnly = false;
                     RaceDataTable.Columns["override_points"].ReadOnly = false;
                     RaceDataTable.Columns["finish_code"].ReadOnly = false;
                     break;
-                case Model.Calendar.RaceTypes.SternChase:
+                case Model.CalendarEvent.RaceTypes.SternChase:
                     RaceDataTable.Columns["place"].ReadOnly = false;
                     break;
             }
@@ -522,8 +522,8 @@ namespace OodHelper.Results
             {
                 switch (RaceType)
                 {
-                    case Model.Calendar.RaceTypes.SternChase:
-                    case Model.Calendar.RaceTypes.TimeGate:
+                    case Model.CalendarEvent.RaceTypes.SternChase:
+                    case Model.CalendarEvent.RaceTypes.TimeGate:
                         return false;
                 }
                 return true;
@@ -556,7 +556,7 @@ namespace OodHelper.Results
             {
                 switch (RaceType)
                 {
-                    case Model.Calendar.RaceTypes.SternChase:
+                    case Model.CalendarEvent.RaceTypes.SternChase:
                         return true;
                 }
                 return false;
@@ -590,7 +590,7 @@ namespace OodHelper.Results
         {
             get
             {
-                return RaceType != Model.Calendar.RaceTypes.Hybrid;
+                return RaceType != Model.CalendarEvent.RaceTypes.Hybrid;
             }
         }
 
@@ -624,8 +624,8 @@ namespace OodHelper.Results
             {
                 switch (RaceType)
                 {
-                    case Model.Calendar.RaceTypes.AverageLap:
-                    case Model.Calendar.RaceTypes.Hybrid:
+                    case Model.CalendarEvent.RaceTypes.AverageLap:
+                    case Model.CalendarEvent.RaceTypes.Hybrid:
                         return false;
                     default:
                         return true;
@@ -647,7 +647,7 @@ namespace OodHelper.Results
         {
             get
             {
-                if (RaceType != Model.Calendar.RaceTypes.SternChase && Handicap == "o")
+                if (RaceType != Model.CalendarEvent.RaceTypes.SternChase && Handicap == "o")
                     return Visibility.Visible;
                 else
                     return Visibility.Collapsed;
@@ -658,7 +658,7 @@ namespace OodHelper.Results
         {
             get
             {
-                if (RaceType != Model.Calendar.RaceTypes.SternChase && Handicap == "r")
+                if (RaceType != Model.CalendarEvent.RaceTypes.SternChase && Handicap == "r")
                     return Visibility.Visible;
                 else
                     return Visibility.Collapsed;

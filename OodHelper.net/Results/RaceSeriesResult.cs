@@ -44,18 +44,18 @@ namespace OodHelper.Results
 
                 foreach (DataRow race in races.Rows)
                 {
-                    Model.Calendar.RaceTypes _raceType;
-                    if (Enum.TryParse<Model.Calendar.RaceTypes>(race["race_type"].ToString(), out _raceType))
+                    Model.CalendarEvent.RaceTypes _raceType;
+                    if (Enum.TryParse<Model.CalendarEvent.RaceTypes>(race["race_type"].ToString(), out _raceType))
                     {
                         _worker.SetProgress("Calculating " + race["event"] + " - " + race["class"], races.Rows.IndexOf(race));
 
                         IRaceScore scorer = null;
                         switch (_raceType)
                         {
-                            case Model.Calendar.RaceTypes.AverageLap:
-                            case Model.Calendar.RaceTypes.FixedLength:
-                            case Model.Calendar.RaceTypes.TimeGate:
-                            case Model.Calendar.RaceTypes.Hybrid:
+                            case Model.CalendarEvent.RaceTypes.AverageLap:
+                            case Model.CalendarEvent.RaceTypes.FixedLength:
+                            case Model.CalendarEvent.RaceTypes.TimeGate:
+                            case Model.CalendarEvent.RaceTypes.Hybrid:
                                 switch (race["handicapping"].ToString().ToUpper())
                                 {
                                     case "R":

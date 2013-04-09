@@ -8,7 +8,7 @@ using OodHelper.Converters;
 
 namespace OodHelper.Results
 {
-    public class Entry : NotifyPropertyChanged
+    public class Entry : NotifyPropertyChanged, OodHelper.Results.Model.IEntry
     {
         private DataRow _row;
         public Entry(DataRow result, DateTime StartDate, DateTime LimitDate)

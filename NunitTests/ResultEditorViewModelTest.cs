@@ -9,7 +9,7 @@ namespace NunitTests
     [TestFixture]
     public class ResultEditorViewModelTest
     {
-        private OodHelper.Results.Model.Calendar CalendarEvent;
+        private OodHelper.Results.Model.CalendarEvent CalendarEvent;
         private OodHelper.Results.ViewModel.ResultsEditorViewModel EditorViewModel;
 
         /// <summary>
@@ -19,7 +19,7 @@ namespace NunitTests
         public void SetUpTest()
         {
             OodHelper.Results.Model.Race _r = new OodHelper.Results.Model.Race(-1);
-            CalendarEvent = new OodHelper.Results.Model.Calendar(new Hashtable());
+            CalendarEvent = new OodHelper.Results.Model.CalendarEvent(new Hashtable());
 
             EditorViewModel = new OodHelper.Results.ViewModel.ResultsEditorViewModel(_r);
         }

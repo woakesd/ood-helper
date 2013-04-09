@@ -11,28 +11,28 @@ namespace OodHelper.Results.ViewModel
     {
         readonly OodHelper.Results.Model.Race _result;
 
-        public IList<Entry> Entries { get { return _result.Entries; } }
-        public override string DisplayName { get { return string.Format("{0} - {1}", _result.Calendar.eventName, _result.Calendar.eventClass); } }
-        public Calendar.RaceTypes RaceType { get { return _result.Calendar.racetype; } set { _result.Calendar.racetype = value; } }
-        public Calendar.Handicappings Handicapping { get { return _result.Calendar.handicapping; } set { _result.Calendar.handicapping = value; } }
+        public IList<IEntry> Entries { get { return _result.Entries; } }
+        public override string DisplayName { get { return string.Format("{0} - {1}", _result.Event.eventName, _result.Event.eventClass); } }
+        public CalendarEvent.RaceTypes RaceType { get { return _result.Event.racetype; } set { _result.Event.racetype = value; } }
+        public CalendarEvent.Handicappings Handicapping { get { return _result.Event.handicapping; } set { _result.Event.handicapping = value; } }
 
         public DateTime StartDate
         {
             get
             {
-                if (_result.Calendar.start_date.HasValue)
-                    return _result.Calendar.start_date.Value.Date;
+                if (_result.Event.start_date.HasValue)
+                    return _result.Event.start_date.Value.Date;
                 return DateTime.Today;
             }
 
             set
             {
                 TimeSpan _tmp;
-                if (_result.Calendar.start_date.HasValue)
-                    _tmp = _result.Calendar.start_date.Value.TimeOfDay;
+                if (_result.Event.start_date.HasValue)
+                    _tmp = _result.Event.start_date.Value.TimeOfDay;
                 else
                     _tmp = TimeSpan.Zero;
-                _result.Calendar.start_date = value + _tmp;
+                _result.Event.start_date = value + _tmp;
             }
         }
 
@@ -42,8 +42,8 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                if (_result.Calendar.start_date.HasValue)
-                    return _result.Calendar.start_date.Value.ToString("HH:mm");
+                if (_result.Event.start_date.HasValue)
+                    return _result.Event.start_date.Value.ToString("HH:mm");
                 return string.Empty;
             }
 
@@ -54,7 +54,7 @@ namespace OodHelper.Results.ViewModel
                 {
                     if (_tmp <= TwentyFourHours)
                     {
-                        _result.Calendar.start_date = _result.Calendar.start_date.Value.Date + _tmp;
+                        _result.Event.start_date = _result.Event.start_date.Value.Date + _tmp;
                         base.OnPropertyChanged("StartTime");
                         base.OnPropertyChanged("StartDate");
                     }
@@ -68,10 +68,10 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                if (_result.Calendar.time_limit_type == Calendar.TimeLimitTypes.F && _result.Calendar.time_limit_fixed.HasValue)
-                    return _result.Calendar.time_limit_fixed.Value.ToString("HH:mm");
-                else if (_result.Calendar.time_limit_type == Calendar.TimeLimitTypes.D && _result.Calendar.time_limit_delta.HasValue)
-                    return new TimeSpan(0, 0, _result.Calendar.time_limit_delta.Value).ToString("hh\\:mm");
+                if (_result.Event.time_limit_type == CalendarEvent.TimeLimitTypes.F && _result.Event.time_limit_fixed.HasValue)
+                    return _result.Event.time_limit_fixed.Value.ToString("HH:mm");
+                else if (_result.Event.time_limit_type == CalendarEvent.TimeLimitTypes.D && _result.Event.time_limit_delta.HasValue)
+                    return new TimeSpan(0, 0, _result.Event.time_limit_delta.Value).ToString("hh\\:mm");
                 return string.Empty;
             }
 
@@ -80,20 +80,20 @@ namespace OodHelper.Results.ViewModel
                 TimeSpan _tmp;
                 if (TimeSpan.TryParseExact(value, "hh\\:mm", null, out _tmp) || TimeSpan.TryParseExact(value, "hh\\ mm", null, out _tmp))
                 {
-                    if (_result.Calendar.time_limit_type == Calendar.TimeLimitTypes.F)
+                    if (_result.Event.time_limit_type == CalendarEvent.TimeLimitTypes.F)
                     {
                         if (_tmp < TwentyFourHours)
                         {
-                            if (_result.Calendar.time_limit_fixed.HasValue)
-                                _result.Calendar.time_limit_fixed = _result.Calendar.time_limit_fixed.Value.Date + _tmp;
-                            else if (_result.Calendar.start_date.HasValue)
-                                _result.Calendar.time_limit_fixed = _result.Calendar.start_date.Value.Date + _tmp;
+                            if (_result.Event.time_limit_fixed.HasValue)
+                                _result.Event.time_limit_fixed = _result.Event.time_limit_fixed.Value.Date + _tmp;
+                            else if (_result.Event.start_date.HasValue)
+                                _result.Event.time_limit_fixed = _result.Event.start_date.Value.Date + _tmp;
                         }
                         else
                             throw new ArgumentOutOfRangeException("Fixed time limit must be < 24:00");
                     }
-                    else if (_result.Calendar.time_limit_type == Calendar.TimeLimitTypes.D)
-                        _result.Calendar.time_limit_delta = (int)_tmp.TotalSeconds;
+                    else if (_result.Event.time_limit_type == CalendarEvent.TimeLimitTypes.D)
+                        _result.Event.time_limit_delta = (int)_tmp.TotalSeconds;
                     base.OnPropertyChanged("TimeLimit");
                 }
             }
@@ -103,8 +103,8 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                if (_result.Calendar.extension.HasValue)
-                    return new TimeSpan(0, 0, _result.Calendar.extension.Value).ToString("hh\\:mm");
+                if (_result.Event.extension.HasValue)
+                    return new TimeSpan(0, 0, _result.Event.extension.Value).ToString("hh\\:mm");
                 return string.Empty;
             }
 
@@ -113,7 +113,7 @@ namespace OodHelper.Results.ViewModel
                 TimeSpan _tmp;
                 if (TimeSpan.TryParseExact(value, "hh\\:mm", null, out _tmp) || TimeSpan.TryParseExact(value, "hh\\ mm", null, out _tmp))
                 {
-                    _result.Calendar.extension = (int)_tmp.TotalSeconds;
+                    _result.Event.extension = (int)_tmp.TotalSeconds;
                     base.OnPropertyChanged("Extension");
                 }
             }
