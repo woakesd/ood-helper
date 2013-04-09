@@ -9,7 +9,7 @@ namespace NunitTests
     [TestFixture]
     public class ResultEditorViewModelTest
     {
-        private OodHelper.Results.Model.CalendarEvent CalendarEvent;
+        private OodHelper.Results.Model.Race Race;
         private OodHelper.Results.ViewModel.ResultsEditorViewModel EditorViewModel;
 
         /// <summary>
@@ -18,10 +18,11 @@ namespace NunitTests
         [TestFixtureSetUp]
         public void SetUpTest()
         {
-            OodHelper.Results.Model.Race _r = new OodHelper.Results.Model.Race(-1);
-            CalendarEvent = new OodHelper.Results.Model.CalendarEvent(new Hashtable());
+            Race = new OodHelper.Results.Model.Race();
+            Race.Event = null;  //
+            Race.Entries = null;
 
-            EditorViewModel = new OodHelper.Results.ViewModel.ResultsEditorViewModel(_r);
+            EditorViewModel = new OodHelper.Results.ViewModel.ResultsEditorViewModel(Race);
         }
 
         [TestFixtureTearDown]

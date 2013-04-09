@@ -13,6 +13,10 @@ namespace OodHelper.Results.Model
         public IList<IEntry> Entries { get; set; }
         public ICalendarEvent Event { get; set; }
 
+        public Race()
+        {
+        }
+
         public Race(int Rid)
         {
             _rid = Rid;
