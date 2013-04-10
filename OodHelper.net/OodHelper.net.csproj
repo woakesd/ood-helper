@@ -233,7 +233,6 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Maintain\Calendar.cs" />
-    <Compile Include="Converters\CodeConverter.cs" />
     <Compile Include="Configuration.xaml.cs">
       <DependentUpon>Configuration.xaml</DependentUpon>
     </Compile>
@@ -241,9 +240,6 @@
     <Compile Include="ResultPrintSelector.xaml.cs">
       <DependentUpon>ResultPrintSelector.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\DateTimeConverter.cs" />
-    <Compile Include="Converters\DateTimeTimeConverter.cs" />
-    <Compile Include="Converters\DoubleConverter.cs" />
     <Compile Include="EntrySheet.xaml.cs">
       <DependentUpon>EntrySheet.xaml</DependentUpon>
     </Compile>
@@ -258,8 +254,6 @@
     <Compile Include="Handicaps.xaml.cs">
       <DependentUpon>Handicaps.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\IntConverter.cs" />
-    <Compile Include="Converters\MyBooleanToVisibilityConverter.cs" />
     <Compile Include="RaceNotes.xaml.cs">
       <DependentUpon>RaceNotes.xaml</DependentUpon>
     </Compile>
@@ -301,8 +295,6 @@
     <Compile Include="SelectClass.xaml.cs">
       <DependentUpon>SelectClass.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\DoubleTimeSpan.cs" />
-    <Compile Include="Converters\IntTimeSpan.cs" />
     <Compile Include="PNImport.xaml.cs">
       <DependentUpon>PNImport.xaml</DependentUpon>
     </Compile>
@@ -315,9 +307,7 @@
     <Compile Include="SeriesEntry.cs" />
     <Compile Include="SeriesEvent.cs" />
     <Compile Include="SeriesResult.cs" />
-    <Compile Include="Converters\StringConverter.cs" />
     <Compile Include="Sun\Sun.cs" />
-    <Compile Include="Converters\TimeSpanHMConverter.cs" />
     <Compile Include="Working.xaml.cs">
       <DependentUpon>Working.xaml</DependentUpon>
     </Compile>
@@ -626,9 +616,7 @@
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Images\Results.png" />
   </ItemGroup>

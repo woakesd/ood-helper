@@ -128,12 +128,12 @@ namespace OodHelper.Results
 
             DataGridTextColumn col = (DataGridTextColumn)Results.Columns[rd.Columns["Elapsed"].Ordinal];
             Binding b = (Binding)col.Binding;
-            b.Converter = new IntTimeSpan();
+            b.StringFormat = "hh':'mm':'ss'.'ff";
             col.Binding = b;
 
             col = (DataGridTextColumn)Results.Columns[rd.Columns["Corrected"].Ordinal];
             b = (Binding)col.Binding;
-            b.Converter = new DoubleTimeSpan();
+            b.StringFormat = "hh':'mm':'ss'.'ff";
             col.Binding = b;
 
             col = (DataGridTextColumn)Results.Columns[rd.Columns["%"].Ordinal];

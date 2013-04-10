@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\ValueParserTests.cs" />
-    <Compile Include="ResultEditorViewModelTest.cs" />
+    <Compile Include="Results\ViewModel\ResultEditorViewModelTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
