@@ -76,8 +76,8 @@ namespace OodHelper.Results.ViewModel
 
             set
             {
-                TimeSpan _tmp;
-                if (TimeSpan.TryParseExact(value, "hh\\:mm", null, out _tmp) || TimeSpan.TryParseExact(value, "hh\\ mm", null, out _tmp))
+                TimeSpan? _tmp;
+                if ((_tmp = Converters.ValueParser.ReadTimeSpan(value)) != null)
                 {
                     if (_result.Event.time_limit_type == CalendarEvent.TimeLimitTypes.F)
                     {
@@ -90,7 +90,7 @@ namespace OodHelper.Results.ViewModel
                         }
                     }
                     else if (_result.Event.time_limit_type == CalendarEvent.TimeLimitTypes.D)
-                        _result.Event.time_limit_delta = (int)_tmp.TotalSeconds;
+                        _result.Event.time_limit_delta = (int)_tmp.Value.TotalSeconds;
                     base.OnPropertyChanged("TimeLimit");
                 }
             }
