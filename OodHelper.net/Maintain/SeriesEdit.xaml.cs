@@ -104,7 +104,7 @@ namespace OodHelper.Maintain
             if (dc.Sid == 0)
             {
                 c = new Db("INSERT INTO series (sname, discards) VALUES (@sname, @discards)");
-                dc.Sid = c.GetNextIdentity("series", "sid");
+                dc.Sid = c.GetNextIdentity("series");
             }
             else
             {

@@ -289,7 +289,7 @@ namespace OodHelper.Maintain
                             "VALUES (@id, @boatname, @boatclass, @sailno, @dinghy, @hulltype, @open_handicap, " +
                             "@handicap_status, @rolling_handicap, @small_cat_handicap_rating, " +
                             "@engine_propeller, @keel, @deviations, @boatmemo)");
-                    Bid = save.GetNextIdentity("boats", "bid");
+                    Bid = save.GetNextIdentity("boats");
                 }
                 else
                     save = new Db("UPDATE boats " +

@@ -207,7 +207,7 @@ namespace OodHelper.Maintain
                 save = new Db("INSERT INTO calendar " +
                         "([start_date], [time_limit_type], [time_limit_delta], [time_limit_fixed], [class], [event], [price_code], [course], [ood], [venue], [racetype], [handicapping], [visitors], [flag], [extension], [memo], [raced], [approved], [is_race]) " +
                         "VALUES (@start_date, @time_limit_type, @time_limit_delta, @time_limit_fixed, @class, @event, @price_code, @course, @ood, @venue, @racetype, @handicapping, @visitors, @flag, @extension, @memo, @raced, @approved, @is_race)");
-                rid = save.GetNextIdentity("calendar", "rid");
+                rid = save.GetNextIdentity("calendar");
             }
             else
                 save = new Db("UPDATE calendar " +
