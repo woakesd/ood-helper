@@ -27,18 +27,13 @@
             </ToolBar>
         </ToolBarTray>
         <ListBox Grid.Row="1" Name="Races">
-            <ListBox.Resources>
-                <local:IntConverter x:Key="IntConverter"/>
-                <local:MyBooleanToVisibilityConverter x:Key="MyBooleanToVisibilityConverter"/>
-                <local:MyDateTimeConverter x:Key="MyDateTimeConverter"/>
-            </ListBox.Resources>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Margin="2">
-                        <CheckBox VerticalAlignment="Center" Click="Include_All_Click" Visibility="{Binding Path=PrintIncludeAllVisible,Converter={StaticResource ResourceKey=MyBooleanToVisibilityConverter}}" IsChecked="{Binding Path=PrintIncludeAll}" Margin="4,0"/>
+                        <CheckBox VerticalAlignment="Center" Click="Include_All_Click" Visibility="{Binding Path=PrintIncludeAllVisible}" IsChecked="{Binding Path=PrintIncludeAll}" Margin="4,0"/>
                         <CheckBox VerticalAlignment="Center" Click="Include_Click" IsChecked="{Binding Path=PrintInclude}" Margin="4,0"/>
                         <TextBlock VerticalAlignment="Center" Text="Copies" Margin="4,0,0,0"/>
-                        <TextBox VerticalAlignment="Center" Text="{Binding Path=PrintIncludeCopies,Converter={StaticResource ResourceKey=IntConverter}}" Margin="2,0,4,0"/>
+                        <TextBox VerticalAlignment="Center" Text="{Binding Path=PrintIncludeCopies}" Margin="2,0,4,0"/>
                         <TextBlock VerticalAlignment="Center" Text="{Binding Path=PrintIncludeDescription}" Margin="4,0"/>
                     </StackPanel>
                 </DataTemplate>

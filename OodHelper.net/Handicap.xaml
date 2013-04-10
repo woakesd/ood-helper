@@ -3,10 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:OodHelper.Converters"
         Title="Handicap" Height="304" Width="300">
-    <Window.Resources>
-        <local:IntConverter x:Key="IntConverter" />
-        <local:StringConverter x:Key="StringConverter" />
-    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
