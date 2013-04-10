@@ -177,5 +177,7 @@ namespace OodHelper.Results.Model
         public DateTime? time_limit_fixed { get { return Data["time_limit_fixed"] as DateTime?; } set { Data["time_limit_fixed"] = value; } }
 
         public int? time_limit_delta { get { return Data["time_limit_delta"] as int?; } set { Data["time_limit_delta"] = value; } }
+
+        public double? standard_corrected_time { get { return Data["standard_corrected_time"] as double?; } set { Data["standard_corrected_time"] = value; } }
     }
 }

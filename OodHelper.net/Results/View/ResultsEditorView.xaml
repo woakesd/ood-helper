@@ -39,7 +39,7 @@
             <Label Grid.Row="1" Grid.Column="4" HorizontalAlignment="Right">Extension</Label>
             <TextBox HorizontalAlignment="left" Margin="2" Grid.Row="1" Grid.Column="5" Text="{Binding Path=Extension}" Width="40" MaxLength="5" />
             <Label Grid.Row="1" Grid.Column="6" HorizontalAlignment="Right">SCT</Label>
-            <TextBox Margin="2" Grid.Row="1" Grid.Column="7" Width="60" IsReadOnly="True" MaxLength="11" Text="{Binding standard_corrected_time}" />
+            <TextBox Margin="2" Grid.Row="1" Grid.Column="7" Width="60" IsReadOnly="True" MaxLength="11" Text="{Binding StandardCorrectedTime,Mode=OneWay}" />
             <Label Grid.Row="2">Course</Label>
             <TextBox Margin="2" Grid.Row="2" Grid.Column="1" Width="80" MaxLength="10" Text="{Binding Path=Course}"/>
             <Label Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right">Wind Direction</Label>
@@ -57,19 +57,19 @@
                 <ComboBoxItem Tag="SternChase">Stern Chase</ComboBoxItem>
             </ComboBox>
             <StackPanel Grid.RowSpan="3" Grid.Row="0" Grid.Column="8" VerticalAlignment="Center" Orientation="Horizontal" Margin="20,0,5,0">
-                <Button Margin="15" HorizontalContentAlignment="Left">
+                <Button Margin="15" HorizontalContentAlignment="Left" Command="{Binding Path=Notes}">
                     <StackPanel Orientation="Horizontal">
                         <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper;component/Images/Document.png"/>
                         <Label Grid.Column="1">Notes</Label>
                     </StackPanel>
                 </Button>
-                <Button VerticalAlignment="Center" Margin="5" IsEnabled="{Binding Path=CalculateEnabled}">
+                <Button VerticalAlignment="Center" Margin="5" IsEnabled="{Binding Path=CalculateEnabled}" Command="{Binding Path=Calculate}">
                     <StackPanel Orientation="Horizontal">
                         <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper;component/Images/Calc.png"/>
                         <Label Grid.Column="1">Calculate</Label>
                     </StackPanel>
                 </Button>
-                <Button VerticalAlignment="Center" Margin="5" IsEnabled="{Binding Path=RefreshHandicapsEnabled}">
+                <Button VerticalAlignment="Center" Margin="5" IsEnabled="{Binding Path=RefreshHandicapsEnabled}" Command="{Binding Path=RefreshHandicaps}">
                     <StackPanel Orientation="Horizontal">
                         <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper;component/Images/Calc.png"/>
                         <Label Grid.Column="1">Refresh Hcaps</Label>

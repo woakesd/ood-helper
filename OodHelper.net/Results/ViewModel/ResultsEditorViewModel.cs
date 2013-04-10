@@ -123,6 +123,55 @@ namespace OodHelper.Results.ViewModel
             _result = Result;
         }
 
+        public string StandardCorrectedTime
+        {
+            get
+            {
+                if (_result.Event.standard_corrected_time.HasValue)
+                {
+                    long _sct = (long)Math.Round(_result.Event.standard_corrected_time.Value * 1000 * 1000 * 10);
+                    TimeSpan _tmp = new TimeSpan(_sct);
+                    return _tmp.ToString("hh':'mm':'ss");
+                }
+                return null;
+            }
+        }
+
+        public string Course
+        {
+            get { return _result.Event.course; }
+            set { _result.Event.course = value; OnPropertyChanged("Course"); }
+        }
+
+        public string WindSpeed
+        {
+            get { return _result.Event.wind_speed; }
+            set { _result.Event.wind_speed = value; OnPropertyChanged("WindSpeed"); }
+        }
+
+        public string WindDirection
+        {
+            get { return _result.Event.wind_direction; }
+            set { _result.Event.wind_direction = value; OnPropertyChanged("WindDirection"); }
+        }
+
+        public string Laps
+        {
+            get {
+                return _result.Event.laps.ToString();
+            }
+
+            set
+            {
+                int? _tmp;
+                if ((_tmp = Converters.ValueParser.ReadInt(value)) != null)
+                {
+                    _result.Event.laps = _tmp.Value;
+                    OnPropertyChanged("Laps");
+                }
+            }
+        }
+
         #region IPrintSelectItem
         public new void OnPropertyChanged(string name)
         {

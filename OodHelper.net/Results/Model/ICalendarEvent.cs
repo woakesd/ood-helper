@@ -19,5 +19,6 @@ namespace OodHelper.Results.Model
         void Update();
         string wind_direction { get; set; }
         string wind_speed { get; set; }
+        double? standard_corrected_time { get; set; }
     }
 }

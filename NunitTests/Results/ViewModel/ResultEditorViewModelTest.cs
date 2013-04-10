@@ -148,5 +148,81 @@ namespace NunitTests.Results.ViewModel
 
             ValidateOnPropertyChangedRaised("Extension");
         }
+
+        [Test]
+        public void StandardCorrectedTimeTest()
+        {
+            Mock<ICalendarEvent> _event = new Mock<ICalendarEvent>();
+            _event.SetupProperty(d => d.standard_corrected_time);
+
+            Race _race = new OodHelper.Results.Model.Race(_event.Object, null);
+
+            _event.Object.standard_corrected_time = 668.0;
+            
+            ResultsEditorViewModel EditorViewModel = new OodHelper.Results.ViewModel.ResultsEditorViewModel(_race);
+
+            Expect(EditorViewModel.StandardCorrectedTime, Is.EqualTo("00:11:08"), "SCT set to 668s");
+
+            _event.Object.standard_corrected_time = 5438.0;
+
+            Expect(EditorViewModel.StandardCorrectedTime, Is.EqualTo("01:30:38"), "SCT set to 5438s");
+        }
+
+        [Test]
+        public void WindDirectionTest()
+        {
+            Mock<ICalendarEvent> _event = new Mock<ICalendarEvent>();
+            _event.SetupProperty(d => d.wind_direction);
+
+            Race _race = new OodHelper.Results.Model.Race(_event.Object, null);
+
+            ResultsEditorViewModel EditorViewModel = new OodHelper.Results.ViewModel.ResultsEditorViewModel(_race);
+            EditorViewModel.PropertyChanged += EditorViewModel_PropertyChanged;
+
+            EditorViewModel.WindDirection = "NE";
+            Expect(EditorViewModel.WindDirection, Is.EqualTo("NE"), "Wind direction set to NE");
+            Expect(_event.Object.wind_direction, Is.EqualTo("NE"), "Wind direction set to NE");
+
+            ValidateOnPropertyChangedRaised("WindDirection");
+        }
+
+        [Test]
+        public void WindSpeedTest()
+        {
+            Mock<ICalendarEvent> _event = new Mock<ICalendarEvent>();
+            _event.SetupProperty(d => d.wind_speed);
+
+            Race _race = new OodHelper.Results.Model.Race(_event.Object, null);
+
+            ResultsEditorViewModel EditorViewModel = new OodHelper.Results.ViewModel.ResultsEditorViewModel(_race);
+            EditorViewModel.PropertyChanged += EditorViewModel_PropertyChanged;
+
+            EditorViewModel.WindSpeed = "20kts";
+            Expect(EditorViewModel.WindSpeed, Is.EqualTo("20kts"), "Wind speed set to 20kts");
+            Expect(_event.Object.wind_speed, Is.EqualTo("20kts"), "Wind speed set to 20kts");
+
+            ValidateOnPropertyChangedRaised("WindSpeed");
+        }
+
+        [Test]
+        public void LapsTest()
+        {
+            Mock<ICalendarEvent> _event = new Mock<ICalendarEvent>();
+            _event.SetupProperty(d => d.laps);
+
+            Race _race = new OodHelper.Results.Model.Race(_event.Object, null);
+
+            ResultsEditorViewModel EditorViewModel = new OodHelper.Results.ViewModel.ResultsEditorViewModel(_race);
+            EditorViewModel.PropertyChanged += EditorViewModel_PropertyChanged;
+
+            EditorViewModel.Laps = "X";
+            Expect(_propertyChangeCounts.ContainsKey("Laps"), Is.False, string.Format("{0} onPropertyChanged raised when set to X", "Laps"));
+
+            EditorViewModel.Laps = "3";
+            Expect(EditorViewModel.Laps, Is.EqualTo("3"), "Laps set to 3");
+            Expect(_event.Object.laps, Is.EqualTo(3), "Laps underlying set to 3");
+
+            ValidateOnPropertyChangedRaised("Laps");
+        }
     }
 }
