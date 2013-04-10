@@ -51,7 +51,7 @@ namespace OodHelper.Results.ViewModel
             set
             {
                 TimeSpan? _tmp;
-                if ((_tmp = Converters.ValueParsers.ReadTimeSpan(value)).HasValue)
+                if ((_tmp = Converters.ValueParser.ReadTimeSpan(value)).HasValue)
                 {
                     if (_tmp.Value <= TwentyFourHours)
                     {

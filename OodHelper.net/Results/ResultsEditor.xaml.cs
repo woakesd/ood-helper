@@ -100,7 +100,7 @@ namespace OodHelper.Results
 
             set
             {
-                mLaps = ValueParsers.ReadInt(value);
+                mLaps = ValueParser.ReadInt(value);
 
                 Db c = new Db(@"UPDATE calendar SET laps_completed = @laps WHERE rid = @rid");
                 Hashtable p = new Hashtable();

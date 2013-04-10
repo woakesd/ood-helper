@@ -215,7 +215,7 @@ namespace OodHelper.Results
             }
             set
             {
-                int? _tmp = ValueParsers.ReadInt(value);
+                int? _tmp = ValueParser.ReadInt(value);
                 if (_tmp.HasValue)
                     _row["laps"] = _tmp;
                 else
@@ -289,7 +289,7 @@ namespace OodHelper.Results
             }
             set
             {
-                _row["place"] = ValueParsers.ReadInt(value);
+                _row["place"] = ValueParser.ReadInt(value);
                 OnPropertyChanged("Place");
             }
         }
@@ -302,7 +302,7 @@ namespace OodHelper.Results
             }
             set
             {
-                _row["points"] = ValueParsers.ReadDouble(value);
+                _row["points"] = ValueParser.ReadDouble(value);
                 OnPropertyChanged("Points");
             }
         }
