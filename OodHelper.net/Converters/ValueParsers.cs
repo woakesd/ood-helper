@@ -24,5 +24,15 @@ namespace OodHelper.Converters
             else
                 return null;
         }
+
+        public static TimeSpan? ReadTimeSpan(string Value)
+        {
+            TimeSpan _tmp;
+
+            if (!(TimeSpan.TryParseExact(Value, new [] { "hh':'mm", "h':'mm", "hh' 'mm", "h' 'mm", "hhmm", "hmm" }, null, out _tmp)))
+                return null;
+            
+            return (Nullable<TimeSpan>)_tmp;
+        }
     }
 }

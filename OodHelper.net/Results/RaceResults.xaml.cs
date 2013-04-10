@@ -35,7 +35,8 @@ namespace OodHelper.Results
             bool askAutoPopulate = true, doAutoPopulate = false;
             for (int i = 0; i < rids.Length; i++)
             {
-                Model.Race _race = new Model.Race(rids[i]);
+                Model.CalendarEvent _event = new Model.CalendarEvent(rids[i]);
+                Model.Race _race = new Model.Race(_event, null);
                 ViewModel.ResultsEditorViewModel r = new ViewModel.ResultsEditorViewModel(_race);
                 //if (_race.Entries.Count == 0) // && r.CountAutoPopulateData() > 0)
                 //{

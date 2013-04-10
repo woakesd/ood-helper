@@ -8,19 +8,13 @@ namespace OodHelper.Results.Model
 {
     public class Race
     {
-        readonly int _rid;
-
-        public IList<IEntry> Entries { get; set; }
+        public IList<IEntry> EventEntries { get; set; }
         public ICalendarEvent Event { get; set; }
 
-        public Race()
+        public Race(ICalendarEvent Calendar, IList<IEntry> Entries)
         {
-        }
-
-        public Race(int Rid)
-        {
-            _rid = Rid;
-            Event = new CalendarEvent(Rid);
+            Event = Calendar;
+            EventEntries = Entries;
         }
     }
 }

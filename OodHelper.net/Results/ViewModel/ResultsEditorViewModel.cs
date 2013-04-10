@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
 using OodHelper.ViewModel;
 using OodHelper.Results.Model;
 
@@ -11,7 +12,7 @@ namespace OodHelper.Results.ViewModel
     {
         readonly OodHelper.Results.Model.Race _result;
 
-        public IList<IEntry> Entries { get { return _result.Entries; } }
+        public IList<IEntry> Entries { get { return _result.EventEntries; } }
         public override string DisplayName { get { return string.Format("{0} - {1}", _result.Event.eventName, _result.Event.eventClass); } }
         public CalendarEvent.RaceTypes RaceType { get { return _result.Event.racetype; } set { _result.Event.racetype = value; } }
         public CalendarEvent.Handicappings Handicapping { get { return _result.Event.handicapping; } set { _result.Event.handicapping = value; } }
@@ -49,17 +50,15 @@ namespace OodHelper.Results.ViewModel
 
             set
             {
-                TimeSpan _tmp;
-                if (TimeSpan.TryParseExact(value, "hh\\:mm", null, out _tmp) || TimeSpan.TryParseExact(value, "hh\\ mm", null, out _tmp))
+                TimeSpan? _tmp;
+                if ((_tmp = Converters.ValueParsers.ReadTimeSpan(value)).HasValue)
                 {
-                    if (_tmp <= TwentyFourHours)
+                    if (_tmp.Value <= TwentyFourHours)
                     {
-                        _result.Event.start_date = _result.Event.start_date.Value.Date + _tmp;
+                        _result.Event.start_date = _result.Event.start_date.Value.Date + _tmp.Value;
                         base.OnPropertyChanged("StartTime");
                         base.OnPropertyChanged("StartDate");
                     }
-                    else
-                        throw new ArgumentOutOfRangeException("Start time must be < 24:00");
                 }
             }
         }
@@ -89,8 +88,6 @@ namespace OodHelper.Results.ViewModel
                             else if (_result.Event.start_date.HasValue)
                                 _result.Event.time_limit_fixed = _result.Event.start_date.Value.Date + _tmp;
                         }
-                        else
-                            throw new ArgumentOutOfRangeException("Fixed time limit must be < 24:00");
                     }
                     else if (_result.Event.time_limit_type == CalendarEvent.TimeLimitTypes.D)
                         _result.Event.time_limit_delta = (int)_tmp.TotalSeconds;
