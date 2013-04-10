@@ -107,10 +107,10 @@ namespace OodHelper.Results.ViewModel
 
             set
             {
-                TimeSpan _tmp;
-                if (TimeSpan.TryParseExact(value, "hh\\:mm", null, out _tmp) || TimeSpan.TryParseExact(value, "hh\\ mm", null, out _tmp))
+                TimeSpan? _tmp;
+                if ((_tmp = Converters.ValueParser.ReadTimeSpan(value)) != null)
                 {
-                    _result.Event.extension = (int)_tmp.TotalSeconds;
+                    _result.Event.extension = (int)_tmp.Value.TotalSeconds;
                     base.OnPropertyChanged("Extension");
                 }
             }

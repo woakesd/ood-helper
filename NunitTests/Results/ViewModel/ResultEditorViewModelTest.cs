@@ -124,6 +124,29 @@ namespace NunitTests.Results.ViewModel
             Expect(EditorViewModel.TimeLimit, Is.EqualTo(_nowTest.TimeOfDay.ToString("hh':'mm")), "Fixed Time limit now time");
             EditorViewModel.TimeLimit = "16:00";
             Expect(EditorViewModel.TimeLimit, Is.EqualTo("16:00"), "Event Fixed time limit 16:00");
+
+            ValidateOnPropertyChangedRaised("TimeLimit");
+        }
+
+        [Test]
+        public void ExtensionTest()
+        {
+            Mock<ICalendarEvent> _event = new Mock<ICalendarEvent>();
+            _event.SetupProperty(d => d.extension);
+
+            Race _race = new OodHelper.Results.Model.Race(_event.Object, null);
+
+            ResultsEditorViewModel EditorViewModel = new OodHelper.Results.ViewModel.ResultsEditorViewModel(_race);
+            EditorViewModel.PropertyChanged += EditorViewModel_PropertyChanged;
+
+            _event.Object.extension = 900;
+            Expect(EditorViewModel.Extension, Is.EqualTo("00:15"), "Extension read 00:15");
+
+            EditorViewModel.Extension = "0:20";
+            Expect(EditorViewModel.Extension, Is.EqualTo("00:20"), "Extension set 00:20");
+            Expect(_event.Object.extension, Is.EqualTo(20 * 60), "Extension converted to seconds 00:20");
+
+            ValidateOnPropertyChangedRaised("Extension");
         }
     }
 }
