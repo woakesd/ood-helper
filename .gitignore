@@ -110,4 +110,4 @@ UpgradeLog*.XML
 #
 # My ignores
 #
-
+NunitTests/OodHelper.VisualState.xml
