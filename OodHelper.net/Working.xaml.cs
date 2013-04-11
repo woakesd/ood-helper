@@ -54,21 +54,19 @@ namespace OodHelper
             Message.Text = e.UserState as string;
         }
 
-        private delegate void myDelegate();
-
         public void SetProgress(string message, int value)
         {
-            Dispatcher.Invoke((myDelegate)delegate() { Progress.Value = value; Message.Text = message; });
+            Dispatcher.Invoke(delegate() { Progress.Value = value; Message.Text = message; });
         }
 
         public void SetRange(int min, int max)
         {
-            Dispatcher.Invoke((myDelegate)delegate() { Progress.Minimum = min; Progress.Maximum = max; if (min < max) Progress.IsIndeterminate = false; });
+            Dispatcher.Invoke(delegate() { Progress.Minimum = min; Progress.Maximum = max; if (min < max) Progress.IsIndeterminate = false; });
         }
 
         public void CloseWindow()
         {
-            Dispatcher.Invoke((myDelegate)delegate() { Close(); });
+            Dispatcher.Invoke(delegate() { Close(); });
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

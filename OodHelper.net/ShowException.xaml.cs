@@ -22,7 +22,8 @@ namespace OodHelper
         public ShowException(Exception Except)
         {
             DataContext = Except;
-            Owner = App.Current.MainWindow;
+            if (App.Current.MainWindow != this && App.Current.MainWindow.IsArrangeValid)
+                Owner = App.Current.MainWindow;
             InitializeComponent();
         }
     }

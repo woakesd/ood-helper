@@ -9,13 +9,10 @@ using System.Reflection;
 
 namespace OodHelper
 {
-    class DbInstances
-    {
-        public static IList<Db> DbConnections = new List<Db>();
-    }
-
     class Db : IDisposable
     {
+        private const string MasterConnection = @"Data Source=(LocalDB)\v11.0;Initial Catalog=master;Integrated Security=True";
+
         private static string DatabaseName = "OodHelper";
         private static string DatabaseFolder;
         private static string DataFileName;
@@ -56,24 +53,53 @@ namespace OodHelper
             }
         }
 
-        public Db(string connectionString, string sql)
+        public static void SetMultiUser(string DbName)
         {
-            DbInstances.DbConnections.Add(this);
-            mCon = new SqlConnection();
-            mCon.ConnectionString = connectionString;
-            mCmd = new SqlCommand(sql, mCon);
+            using (SqlConnection _conn = new SqlConnection(MasterConnection))
+            {
+                try
+                {
+                    _conn.Open();
+                    SqlCommand _cmd = _conn.CreateCommand();
+                    _cmd.CommandText = string.Format("ALTER DATABASE [{0}] SET MULTI_USER", DbName);
+                    _cmd.ExecuteNonQuery();
+
+                }
+                finally
+                {
+                    _conn.Close();
+                }
+            }
         }
 
-        public Db(string sql)
+        public Db(string SqlCommand) : this()
         {
-            DbInstances.DbConnections.Add(this);
+            Sql = SqlCommand;
+            throw new Exception("Help");
+        }
+
+        public Db()
+        {
             mCon = new SqlConnection();
             mCon.ConnectionString = DatabaseConstr;
             if (!File.Exists(DataFileName))
             {
                 Db.CreateDb();
             }
-            mCmd = new SqlCommand(sql, mCon);
+        }
+
+        public string Sql
+        {
+            set
+            {
+                mCmd = mCon.CreateCommand();
+                mCmd.CommandText = value;
+            }
+
+            get
+            {
+                return mCmd.CommandText;
+            }
         }
 
         public static bool CreateDatabase(string dbName, string dbFileName)
@@ -103,8 +129,6 @@ namespace OodHelper
             }
         }
 
-        private static string MasterConnection = @"Data Source=(LocalDB)\v11.0;Initial Catalog=master;Integrated Security=True";
-
         public static void BackupDatabase(string DbName, string Location)
         {
             using (var connection = new SqlConnection(MasterConnection))
@@ -124,6 +148,7 @@ RESTORE VERIFYONLY FROM  DISK = N'{1}\{0}.bak' WITH  FILE = @backupSetId,  NOUNL
                 {
                     ShowException _show = new ShowException(ex);
                     _show.ShowDialog();
+                    throw;
                 }
                 finally
                 {
@@ -541,15 +566,6 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
             }
         }
 
-        public void Dispose()
-        {
-            DbInstances.DbConnections.Remove(this);
-
-            if (mCon != null) mCon.Dispose();
-            if (mCmd != null) mCmd.Dispose();
-            if (mAdapt != null) mAdapt.Dispose();
-        }
-
         public static void Compact()
         {
             try
@@ -618,6 +634,12 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
             }
             s = new Db(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1})", tname, seedvalue));
             s.ExecuteNonQuery(null);
+        }
+
+        public void Dispose()
+        {
+            if (mCmd != null) mCmd.Dispose();
+            if (mCon != null) mCon.Dispose();
         }
     }
 }

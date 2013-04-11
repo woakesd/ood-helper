@@ -15,7 +15,7 @@
         <TextBlock Margin="3" HorizontalAlignment="Stretch" Text="{Binding Message}" FontWeight="Bold"/>
         </ScrollViewer>
         <ScrollViewer Grid.Row="1" Grid.Column="0" CanContentScroll="True" IsEnabled="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <TextBlock Margin="3" Text="{Binding StackTrace}"/>
+            <TextBox IsReadOnly="True" Margin="3" Text="{Binding StackTrace,Mode=OneWay}"/>
         </ScrollViewer>
         <Button Grid.Row="2" Grid.Column="0" Margin="3" IsDefault="True" IsCancel="True">Ok</Button>
     </Grid>

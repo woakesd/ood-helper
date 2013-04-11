@@ -12,13 +12,6 @@ namespace OodHelper
     /// </summary>
     public partial class App : Application
     {
-        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-        {
-            ErrorLogger.LogException(e.Exception);
-            System.Windows.MessageBox.Show(e.Exception.Message, "Error",
-            System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
-        }
-
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             DataGrid d = sender as DataGrid;
@@ -33,6 +26,7 @@ namespace OodHelper
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
             //
             // This ensures that the SQL Server DB is created.
             //
@@ -46,6 +40,14 @@ namespace OodHelper
             FrameworkElement.DataContextProperty.OverrideMetadata(typeof(DataGrid),
                 new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits,
                     new PropertyChangedCallback(OnDataContextChanged)));
+        }
+
+        void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            ErrorLogger.LogException(e.Exception);
+            ShowException _show = new ShowException(e.Exception);
+            _show.ShowDialog();
+            App.Current.Shutdown();
         }
     }
 }
