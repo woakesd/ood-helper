@@ -203,6 +203,9 @@
     </Compile>
     <Compile Include="LoadTide\ReadFormat11.cs" />
     <Compile Include="LoadTide\TideData.cs" />
+    <Compile Include="ShowException.xaml.cs">
+      <DependentUpon>ShowException.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Sun\DoSunSetRise.xaml.cs">
       <DependentUpon>DoSunSetRise.xaml</DependentUpon>
     </Compile>
@@ -506,6 +509,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SeriesDisplayByClass.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ShowException.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -266,7 +266,7 @@ namespace OodHelper
                     ORDER BY order1, order2");
                 DataTable data = d.GetData(null);
 
-                Working w = new Working();
+                Working w = new Working(this);
                 int pages = (int)Math.Floor(data.Rows.Count / 10.0);
                 if (data.Rows.Count > pages * 10) pages++;
                 w.SetRange(0, pages + 1);

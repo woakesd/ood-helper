@@ -25,6 +25,7 @@ namespace OodHelper.Maintain
 
         public PeopleList()
         {
+            Owner = App.Current.MainWindow;
             InitializeComponent();
             SelectMode = false;
             DataContext = this;
@@ -362,7 +363,7 @@ ORDER BY surname, firstname");
                     PeopleData.SelectedItems.CopyTo(pd, 0);
                     BackgroundWorker bw = new BackgroundWorker();
                     bw.DoWork += new DoWorkEventHandler(bw_DoSetNotPaid);
-                    SetNotPaid = new Working(bw);
+                    SetNotPaid = new Working(this, bw);
                     bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_SetNotPaidCompleted);
                     bw.RunWorkerAsync();
                     SetNotPaid.ShowDialog();
@@ -388,7 +389,7 @@ ORDER BY surname, firstname");
                     PeopleData.SelectedItems.CopyTo(pd, 0);
                     BackgroundWorker bw = new BackgroundWorker();
                     bw.DoWork += new DoWorkEventHandler(bw_DoSetNotPaid);
-                    SetNotPaid = new Working(bw);
+                    SetNotPaid = new Working(this, bw);
                     bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_SetNotPaidCompleted);
                     bw.RunWorkerAsync();
                     SetNotPaid.ShowDialog();

@@ -38,6 +38,7 @@ namespace OodHelper.Website
             MySqlDataAdapter myadp = new MySqlDataAdapter("SELECT MAX(upload) FROM updates", mcon);
             DataTable mtable = new DataTable();
             myadp.Fill(mtable);
+            myadp.Dispose();
 
             if (mtable.Rows.Count > 0)
             {
@@ -48,6 +49,7 @@ namespace OodHelper.Website
 
             DataTable stable = new DataTable();
             sqadp.Fill(stable);
+            sqadp.Dispose();
 
             if (mtable.Rows.Count > 0)
             {

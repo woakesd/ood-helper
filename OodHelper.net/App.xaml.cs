@@ -34,7 +34,7 @@ namespace OodHelper
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             //
-            // This ensures that the SQL Server Compact DB is created.
+            // This ensures that the SQL Server DB is created.
             //
             Db C = new Db("SELECT 1");
             C.Dispose();

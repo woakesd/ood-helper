@@ -19,18 +19,18 @@ namespace OodHelper
     /// </summary>
     public partial class Working : Window
     {
-        public Working()
+        public Working(Window Parent)
         {
-            Window c = Application.Current.MainWindow;
+            Owner = Application.Current.MainWindow;
             InitializeComponent();
-            Left = c.Left + c.ActualWidth / 2 - Width / 2;
-            Top = c.Top + c.ActualHeight / 2 - Height / 2;
+            Left = Owner.Left + Owner.ActualWidth / 2 - Width / 2;
+            Top = Owner.Top + Owner.ActualHeight / 2 - Height / 2;
             Progress.IsIndeterminate = true;
         }
 
         private BackgroundWorker worker { get; set; }
 
-        public Working(BackgroundWorker w) : this()
+        public Working(Window Parent, BackgroundWorker w) : this(Parent)
         {
             CancelButton.Visibility = Visibility.Visible;
             worker = w;

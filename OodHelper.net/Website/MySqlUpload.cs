@@ -23,7 +23,7 @@ namespace OodHelper.Website
         {
             upload = new BackgroundWorker();
             upload.DoWork += new DoWorkEventHandler(Process);
-            p = new Working(upload);
+            p = new Working(App.Current.MainWindow, upload);
             upload.RunWorkerCompleted += new RunWorkerCompletedEventHandler(upload_RunWorkerCompleted);
         }
 

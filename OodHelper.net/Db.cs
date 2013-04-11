@@ -9,6 +9,11 @@ using System.Reflection;
 
 namespace OodHelper
 {
+    class DbInstances
+    {
+        public static IList<Db> DbConnections = new List<Db>();
+    }
+
     class Db : IDisposable
     {
         private static string DatabaseName = "OodHelper";
@@ -30,8 +35,30 @@ namespace OodHelper
             _DatabaseConstr = string.Format(@"Data Source=(LocalDB)\v11.0;Initial Catalog={1};Integrated Security=True;", DataFileName, DatabaseName);
         }
 
+        public static void SetSingleUser(string DbName)
+        {
+            using (SqlConnection _conn = new SqlConnection(MasterConnection))
+            {
+                try
+                {
+                    _conn.Open();
+                    SqlCommand _cmd = _conn.CreateCommand();
+                    _cmd.CommandText = string.Format("ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE", DbName);
+                    _cmd.ExecuteNonQuery();
+                    _cmd.CommandText = string.Format("ALTER DATABASE [{0}] SET SINGLE_USER", DbName);
+                    _cmd.ExecuteNonQuery();
+
+                }
+                finally
+                {
+                    _conn.Close();
+                }
+            }
+        }
+
         public Db(string connectionString, string sql)
         {
+            DbInstances.DbConnections.Add(this);
             mCon = new SqlConnection();
             mCon.ConnectionString = connectionString;
             mCmd = new SqlCommand(sql, mCon);
@@ -39,6 +66,7 @@ namespace OodHelper
 
         public Db(string sql)
         {
+            DbInstances.DbConnections.Add(this);
             mCon = new SqlConnection();
             mCon.ConnectionString = DatabaseConstr;
             if (!File.Exists(DataFileName))
@@ -52,60 +80,71 @@ namespace OodHelper
         {
             try
             {
-                string connectionString = String.Format(@"Data Source=(LocalDB)\v11.0;Initial Catalog=master;Integrated Security=True");
-                using (var connection = new SqlConnection(connectionString))
+                using (var _conn = new SqlConnection(MasterConnection))
                 {
-                    connection.Open();
-                    SqlCommand cmd = connection.CreateCommand();
+                    _conn.Open();
+                    SqlCommand _cmd = _conn.CreateCommand();
 
-                    cmd.CommandText = String.Format("CREATE DATABASE [{0}] ON (NAME = N'{0}', FILENAME = '{1}')", dbName, dbFileName);
-                    cmd.ExecuteNonQuery();
+                    _cmd.CommandText = string.Format("IF DB_ID('{0}') IS NOT NULL DROP DATABASE [{0}]", dbName);
+                    _cmd.ExecuteNonQuery();
+
+                    _cmd.CommandText = string.Format("CREATE DATABASE [{0}] ON (NAME = N'{0}', FILENAME = '{1}')", dbName, dbFileName);
+                    _cmd.ExecuteNonQuery();
                 }
 
                 if (File.Exists(dbFileName)) return true;
                 else return false;
             }
-            catch
+            catch (Exception ex)
             {
+                ShowException _show = new ShowException(ex);
+                _show.ShowDialog();
                 throw;
             }
         }
 
-        public static bool DetachDatabase(string dbName)
+        private static string MasterConnection = @"Data Source=(LocalDB)\v11.0;Initial Catalog=master;Integrated Security=True";
+
+        public static void BackupDatabase(string DbName, string Location)
         {
-            try
+            using (var connection = new SqlConnection(MasterConnection))
             {
-                string connectionString = String.Format(@"Data Source=(LocalDB)\v11.0;Initial Catalog=master;Integrated Security=True");
-                using (var connection = new SqlConnection(connectionString))
+                try
                 {
                     connection.Open();
                     SqlCommand cmd = connection.CreateCommand();
-                    cmd.CommandText = String.Format("exec sp_detach_db '{0}'", dbName);
+                    cmd.CommandText = String.Format(@"BACKUP DATABASE [{0}] TO  DISK = N'{1}\{0}.bak' WITH NOFORMAT, INIT,  NAME = N'{0}-Full Database Backup', SKIP, NOREWIND, NOUNLOAD;
+declare @backupSetId as int
+select @backupSetId = position from msdb..backupset where database_name=N'{0}' and backup_set_id=(select max(backup_set_id) from msdb..backupset where database_name=N'{0}' )
+if @backupSetId is null begin raiserror(N'Verify failed. Backup information for database ''{0}'' not found.', 16, 1) end
+RESTORE VERIFYONLY FROM  DISK = N'{1}\{0}.bak' WITH  FILE = @backupSetId,  NOUNLOAD,  NOREWIND;", DbName, Location);
                     cmd.ExecuteNonQuery();
-
-                    return true;
                 }
-            }
-            catch
-            {
-                return false;
+                catch (Exception ex)
+                {
+                    ShowException _show = new ShowException(ex);
+                    _show.ShowDialog();
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
         }
 
         public static void CreateDb()
         {
-
-            string constr = Db.DatabaseConstr;
+            string constr = DatabaseConstr;
 
             if (!Directory.Exists(DatabaseFolder))
                 Directory.CreateDirectory(DatabaseFolder);
 
             if (File.Exists(DataFileName))
             {
-                DetachDatabase(DatabaseName);
-                string _backupDb = string.Format(@"\{0}-{1}", DatabaseName, DateTime.Now.Ticks.ToString());
-                File.Move(DataFileName, DatabaseFolder + _backupDb + ".mdf");
-                File.Move(LogFileName, DatabaseFolder + _backupDb + ".ldf");
+                SetSingleUser(DatabaseName);
+                BackupDatabase(DatabaseName, DatabaseFolder);
+                //File.Move(DataFileName, DatabaseFolder + _backupDb + ".mdf");
+                //File.Move(LogFileName, DatabaseFolder + _backupDb + ".ldf");
             }
 
             CreateDatabase(DatabaseName, DataFileName);
@@ -504,6 +543,8 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
 
         public void Dispose()
         {
+            DbInstances.DbConnections.Remove(this);
+
             if (mCon != null) mCon.Dispose();
             if (mCmd != null) mCmd.Dispose();
             if (mAdapt != null) mAdapt.Dispose();

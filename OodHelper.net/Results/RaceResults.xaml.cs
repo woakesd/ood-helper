@@ -209,7 +209,7 @@ namespace OodHelper.Results
                 PrintDialog pd = new PrintDialog();
                 if (pd.ShowDialog() == true)
                 {
-                    Working w = new Working();
+                    Working w = new Working(App.Current.MainWindow);
                     w.Show();
                     XpsDocumentWriter write = PrintQueue.CreateXpsDocumentWriter(pd.PrintQueue);
                     VisualsToXpsDocument collator = write.CreateVisualsCollator() as VisualsToXpsDocument;

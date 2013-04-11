@@ -877,7 +877,7 @@ namespace OodHelper.Results
             {
                 BackgroundWorker calc = new BackgroundWorker();
                 calc.DoWork += new DoWorkEventHandler(Scorer.Calculate);
-                Working w = new Working(calc);
+                Working w = new Working(App.Current.MainWindow, calc);
                 calc.RunWorkerCompleted += new RunWorkerCompletedEventHandler(calc_RunWorkerCompleted);
                 calc.RunWorkerAsync(rid);
                 w.ShowDialog();
