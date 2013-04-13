@@ -56,7 +56,7 @@ namespace OodHelper.Maintain
 
         private void LoadGrid()
         {
-            w = new Working();
+            w = new Working(this);
             w.Show();
             RaceData.ItemsSource = null;
             Task.Factory.StartNew(() =>

@@ -110,4 +110,5 @@ UpgradeLog*.XML
 #
 # My ignores
 #
-
+NunitTests/OodHelper.VisualState.xml
+OodHelper-Installer/OodHelper-Setup.exe

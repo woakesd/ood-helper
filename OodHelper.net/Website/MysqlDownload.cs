@@ -15,7 +15,7 @@ namespace OodHelper.Website
         {
             BackgroundWorker download = new BackgroundWorker();
             download.DoWork += new DoWorkEventHandler(Process);
-            Working w = new Working(download);
+            Working w = new Working(App.Current.MainWindow, download);
             download.RunWorkerCompleted += new RunWorkerCompletedEventHandler(download_RunWorkerCompleted);
             download.RunWorkerAsync();
             w.ShowDialog();
@@ -87,11 +87,14 @@ namespace OodHelper.Website
                 if (!e.Cancel)
                 {
                     strn.Commit();
-
-                    scon.Close();
-
-                    Db.Compact();
                 }
+                strn.Dispose();
+                scon.Close();
+                scon.Dispose();
+
+                mcon.Close();
+                mcon.Dispose();
+                
                 p.ReportProgress(100, "All done");
             }
             catch (Exception ex)

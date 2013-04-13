@@ -33,7 +33,11 @@ namespace OodHelper.Results
 
         public SelectBoats(ResultsEditor[] raceEdits)
         {
+            Owner = App.Current.MainWindow;
             InitializeComponent();
+            Width = System.Windows.SystemParameters.VirtualScreenWidth * 0.8;
+            Height = System.Windows.SystemParameters.VirtualScreenHeight * 0.8;
+            WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
 
             reds = raceEdits;
             boatClasses = new Hashtable();

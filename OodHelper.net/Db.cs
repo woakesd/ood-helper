@@ -11,6 +11,8 @@ namespace OodHelper
 {
     class Db : IDisposable
     {
+        private const string MasterConnection = @"Data Source=(LocalDB)\v11.0;Initial Catalog=master;Integrated Security=True";
+
         private static string DatabaseName = "OodHelper";
         private static string DatabaseFolder;
         private static string DataFileName;
@@ -30,14 +32,53 @@ namespace OodHelper
             _DatabaseConstr = string.Format(@"Data Source=(LocalDB)\v11.0;Initial Catalog={1};Integrated Security=True;", DataFileName, DatabaseName);
         }
 
-        public Db(string connectionString, string sql)
+        public static void SetSingleUser(string DbName)
         {
-            mCon = new SqlConnection();
-            mCon.ConnectionString = connectionString;
-            mCmd = new SqlCommand(sql, mCon);
+            using (SqlConnection _conn = new SqlConnection(MasterConnection))
+            {
+                try
+                {
+                    _conn.Open();
+                    SqlCommand _cmd = _conn.CreateCommand();
+                    _cmd.CommandText = string.Format("ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE", DbName);
+                    _cmd.ExecuteNonQuery();
+                    _cmd.CommandText = string.Format("ALTER DATABASE [{0}] SET SINGLE_USER", DbName);
+                    _cmd.ExecuteNonQuery();
+
+                }
+                finally
+                {
+                    _conn.Close();
+                }
+            }
         }
 
-        public Db(string sql)
+        public static void SetMultiUser(string DbName)
+        {
+            using (SqlConnection _conn = new SqlConnection(MasterConnection))
+            {
+                try
+                {
+                    _conn.Open();
+                    SqlCommand _cmd = _conn.CreateCommand();
+                    _cmd.CommandText = string.Format("ALTER DATABASE [{0}] SET MULTI_USER", DbName);
+                    _cmd.ExecuteNonQuery();
+
+                }
+                finally
+                {
+                    _conn.Close();
+                }
+            }
+        }
+
+        public Db(string SqlCommand) : this()
+        {
+            Sql = SqlCommand;
+            throw new Exception("Help");
+        }
+
+        public Db()
         {
             mCon = new SqlConnection();
             mCon.ConnectionString = DatabaseConstr;
@@ -45,67 +86,90 @@ namespace OodHelper
             {
                 Db.CreateDb();
             }
-            mCmd = new SqlCommand(sql, mCon);
+        }
+
+        public string Sql
+        {
+            set
+            {
+                mCmd = mCon.CreateCommand();
+                mCmd.CommandText = value;
+            }
+
+            get
+            {
+                return mCmd.CommandText;
+            }
         }
 
         public static bool CreateDatabase(string dbName, string dbFileName)
         {
             try
             {
-                string connectionString = String.Format(@"Data Source=(LocalDB)\v11.0;Initial Catalog=master;Integrated Security=True");
-                using (var connection = new SqlConnection(connectionString))
+                using (var _conn = new SqlConnection(MasterConnection))
                 {
-                    connection.Open();
-                    SqlCommand cmd = connection.CreateCommand();
+                    _conn.Open();
+                    SqlCommand _cmd = _conn.CreateCommand();
 
-                    cmd.CommandText = String.Format("CREATE DATABASE [{0}] ON (NAME = N'{0}', FILENAME = '{1}')", dbName, dbFileName);
-                    cmd.ExecuteNonQuery();
+                    _cmd.CommandText = string.Format("IF DB_ID('{0}') IS NOT NULL DROP DATABASE [{0}]", dbName);
+                    _cmd.ExecuteNonQuery();
+
+                    _cmd.CommandText = string.Format("CREATE DATABASE [{0}] ON (NAME = N'{0}', FILENAME = '{1}')", dbName, dbFileName);
+                    _cmd.ExecuteNonQuery();
                 }
 
                 if (File.Exists(dbFileName)) return true;
                 else return false;
             }
-            catch
+            catch (Exception ex)
             {
+                ShowException _show = new ShowException(ex);
+                _show.ShowDialog();
                 throw;
             }
         }
 
-        public static bool DetachDatabase(string dbName)
+        public static void BackupDatabase(string DbName, string Location)
         {
-            try
+            using (var connection = new SqlConnection(MasterConnection))
             {
-                string connectionString = String.Format(@"Data Source=(LocalDB)\v11.0;Initial Catalog=master;Integrated Security=True");
-                using (var connection = new SqlConnection(connectionString))
+                try
                 {
                     connection.Open();
                     SqlCommand cmd = connection.CreateCommand();
-                    cmd.CommandText = String.Format("exec sp_detach_db '{0}'", dbName);
+                    cmd.CommandText = String.Format(@"BACKUP DATABASE [{0}] TO  DISK = N'{1}\{0}.bak' WITH NOFORMAT, INIT,  NAME = N'{0}-Full Database Backup', SKIP, NOREWIND, NOUNLOAD;
+declare @backupSetId as int
+select @backupSetId = position from msdb..backupset where database_name=N'{0}' and backup_set_id=(select max(backup_set_id) from msdb..backupset where database_name=N'{0}' )
+if @backupSetId is null begin raiserror(N'Verify failed. Backup information for database ''{0}'' not found.', 16, 1) end
+RESTORE VERIFYONLY FROM  DISK = N'{1}\{0}.bak' WITH  FILE = @backupSetId,  NOUNLOAD,  NOREWIND;", DbName, Location);
                     cmd.ExecuteNonQuery();
-
-                    return true;
                 }
-            }
-            catch
-            {
-                return false;
+                catch (Exception ex)
+                {
+                    ShowException _show = new ShowException(ex);
+                    _show.ShowDialog();
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
         }
 
         public static void CreateDb()
         {
-
-            string constr = Db.DatabaseConstr;
+            string constr = DatabaseConstr;
 
             if (!Directory.Exists(DatabaseFolder))
                 Directory.CreateDirectory(DatabaseFolder);
 
             if (File.Exists(DataFileName))
             {
-                DetachDatabase(DatabaseName);
-                string _backupDb = string.Format(@"\{0}-{1}", DatabaseName, DateTime.Now.Ticks.ToString());
-                File.Move(DataFileName, DatabaseFolder + _backupDb + ".mdf");
-                File.Move(LogFileName, DatabaseFolder + _backupDb + ".ldf");
+                SetSingleUser(DatabaseName);
+                BackupDatabase(DatabaseName, DatabaseFolder);
+                //File.Move(DataFileName, DatabaseFolder + _backupDb + ".mdf");
+                //File.Move(LogFileName, DatabaseFolder + _backupDb + ".ldf");
             }
 
             CreateDatabase(DatabaseName, DataFileName);
@@ -116,11 +180,6 @@ namespace OodHelper
                 con.Open();
                 SqlCommand cmd = con.CreateCommand();
                 cmd.CommandText = @"
-/****** Object:  Table [dbo].[boat_crew]    Script Date: 28/03/2013 05:54:33 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [dbo].[boat_crew](
 	[id] [int] NOT NULL,
 	[bid] [int] NOT NULL,
@@ -129,14 +188,8 @@ CREATE TABLE [dbo].[boat_crew](
 	[id] ASC,
 	[bid] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
+) ON [PRIMARY];
 
-GO
-/****** Object:  Table [dbo].[boats]    Script Date: 28/03/2013 05:54:33 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [dbo].[boats](
 	[bid] [int] IDENTITY(1,1) NOT NULL,
 	[id] [int] NULL,
@@ -167,14 +220,8 @@ CREATE TABLE [dbo].[boats](
 (
 	[bid] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
 
-GO
-/****** Object:  Table [dbo].[calendar]    Script Date: 28/03/2013 05:54:33 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [dbo].[calendar](
 	[rid] [int] IDENTITY(1,1) NOT NULL,
 	[start_date] [datetime] NULL,
@@ -206,14 +253,8 @@ CREATE TABLE [dbo].[calendar](
 (
 	[rid] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
 
-GO
-/****** Object:  Table [dbo].[calendar_series_join]    Script Date: 28/03/2013 05:54:33 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [dbo].[calendar_series_join](
 	[sid] [int] NOT NULL,
 	[rid] [int] NOT NULL,
@@ -222,14 +263,8 @@ CREATE TABLE [dbo].[calendar_series_join](
 	[sid] ASC,
 	[rid] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
+) ON [PRIMARY];
 
-GO
-/****** Object:  Table [dbo].[people]    Script Date: 28/03/2013 05:54:33 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [dbo].[people](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[main_id] [int] NULL,
@@ -257,14 +292,8 @@ CREATE TABLE [dbo].[people](
 (
 	[id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
 
-GO
-/****** Object:  Table [dbo].[portsmouth_numbers]    Script Date: 28/03/2013 05:54:33 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [dbo].[portsmouth_numbers](
 	[id] [uniqueidentifier] NOT NULL,
 	[class_name] [nvarchar](100) NULL,
@@ -280,14 +309,8 @@ CREATE TABLE [dbo].[portsmouth_numbers](
 (
 	[id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
 
-GO
-/****** Object:  Table [dbo].[races]    Script Date: 28/03/2013 05:54:33 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [dbo].[races](
 	[rid] [int] NOT NULL,
 	[bid] [int] NOT NULL,
@@ -316,14 +339,8 @@ CREATE TABLE [dbo].[races](
 	[rid] ASC,
 	[bid] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
+) ON [PRIMARY];
 
-GO
-/****** Object:  Table [dbo].[select_rules]    Script Date: 28/03/2013 05:54:33 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [dbo].[select_rules](
 	[id] [uniqueidentifier] NOT NULL,
 	[name] [nvarchar](255) NULL,
@@ -338,14 +355,8 @@ CREATE TABLE [dbo].[select_rules](
 (
 	[id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
+) ON [PRIMARY];
 
-GO
-/****** Object:  Table [dbo].[series]    Script Date: 28/03/2013 05:54:33 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [dbo].[series](
 	[sid] [int] IDENTITY(1,1) NOT NULL,
 	[sname] [nvarchar](255) NOT NULL,
@@ -354,14 +365,8 @@ CREATE TABLE [dbo].[series](
 (
 	[sid] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
+) ON [PRIMARY];
 
-GO
-/****** Object:  Table [dbo].[series_results]    Script Date: 28/03/2013 05:54:33 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [dbo].[series_results](
 	[sid] [int] NOT NULL,
 	[bid] [int] NOT NULL,
@@ -376,53 +381,45 @@ CREATE TABLE [dbo].[series_results](
 	[division] ASC,
 	[bid] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
+) ON [PRIMARY];
 
-GO
-/****** Object:  Table [dbo].[updates]    Script Date: 28/03/2013 05:54:33 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [dbo].[updates](
 	[dummy] [int] NULL,
 	[upload] [datetime] NULL
-) ON [PRIMARY]
+) ON [PRIMARY];
 
-GO
 ALTER TABLE [dbo].[boats]  WITH CHECK ADD  CONSTRAINT [FK_boats_people] FOREIGN KEY([id])
 REFERENCES [dbo].[people] ([id])
 ON UPDATE CASCADE
-ON DELETE SET NULL
-GO
-ALTER TABLE [dbo].[boats] CHECK CONSTRAINT [FK_boats_people]
-GO
+ON DELETE SET NULL;
+
+ALTER TABLE [dbo].[boats] CHECK CONSTRAINT [FK_boats_people];
+
 ALTER TABLE [dbo].[calendar_series_join]  WITH CHECK ADD  CONSTRAINT [FK_calendar_series_join_calendar] FOREIGN KEY([sid])
 REFERENCES [dbo].[calendar] ([rid])
 ON UPDATE CASCADE
-ON DELETE CASCADE
-GO
-ALTER TABLE [dbo].[calendar_series_join] CHECK CONSTRAINT [FK_calendar_series_join_calendar]
-GO
+ON DELETE CASCADE;
+
+ALTER TABLE [dbo].[calendar_series_join] CHECK CONSTRAINT [FK_calendar_series_join_calendar];
+
 ALTER TABLE [dbo].[calendar_series_join]  WITH CHECK ADD  CONSTRAINT [FK_calendar_series_join_series] FOREIGN KEY([sid])
-REFERENCES [dbo].[series] ([sid])
-GO
-ALTER TABLE [dbo].[calendar_series_join] CHECK CONSTRAINT [FK_calendar_series_join_series]
-GO
+REFERENCES [dbo].[series] ([sid]);
+
+ALTER TABLE [dbo].[calendar_series_join] CHECK CONSTRAINT [FK_calendar_series_join_series];
+
 ALTER TABLE [dbo].[races]  WITH CHECK ADD  CONSTRAINT [FK_races_boats] FOREIGN KEY([bid])
 REFERENCES [dbo].[boats] ([bid])
 ON UPDATE CASCADE
-ON DELETE CASCADE
-GO
-ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_boats]
-GO
+ON DELETE CASCADE;
+
+ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_boats];
+
 ALTER TABLE [dbo].[races]  WITH CHECK ADD  CONSTRAINT [FK_races_calendar] FOREIGN KEY([rid])
 REFERENCES [dbo].[calendar] ([rid])
 ON UPDATE CASCADE
-ON DELETE CASCADE
-GO
-ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar]
-GO
+ON DELETE CASCADE;
+
+ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
 ";
                 cmd.ExecuteNonQuery();
             }
@@ -569,13 +566,6 @@ GO
             }
         }
 
-        public void Dispose()
-        {
-            if (mCon != null) mCon.Dispose();
-            if (mCmd != null) mCmd.Dispose();
-            if (mAdapt != null) mAdapt.Dispose();
-        }
-
         public static void Compact()
         {
             try
@@ -644,6 +634,12 @@ GO
             }
             s = new Db(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1})", tname, seedvalue));
             s.ExecuteNonQuery(null);
+        }
+
+        public void Dispose()
+        {
+            if (mCmd != null) mCmd.Dispose();
+            if (mCon != null) mCon.Dispose();
         }
     }
 }

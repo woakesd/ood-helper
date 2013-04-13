@@ -32,7 +32,7 @@ namespace OodHelper
 
         void SeriesChooser_Loaded(object sender, RoutedEventArgs e)
         {
-            w = new Working();
+            w = new Working(this);
             w.Show();
             System.Threading.Tasks.Task.Factory.StartNew(() =>
                 {

@@ -22,6 +22,7 @@ namespace OodHelper.Maintain
     {
         public Boats()
         {
+            Owner = App.Current.MainWindow;
             InitializeComponent();
             Width = System.Windows.SystemParameters.VirtualScreenWidth * 0.8;
             Height = System.Windows.SystemParameters.VirtualScreenHeight * 0.8;

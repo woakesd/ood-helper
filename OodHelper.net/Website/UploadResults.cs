@@ -126,6 +126,7 @@ namespace OodHelper.Website
                         club,member,cp,s,id,manmemo,main_id sid,novice,uid,papernewsletter,handbookexclude
                         FROM people");
             d = c.GetData(null);
+            c.Dispose();
 
             BuildInsertData(d, msql);
 
@@ -154,6 +155,7 @@ namespace OodHelper.Website
 
             c = new Db(@"SELECT id, bid FROM boat_crew");
             d = c.GetData(null);
+            c.Dispose();
 
             BuildInsertData(d, msql);
 
@@ -189,6 +191,7 @@ namespace OodHelper.Website
                         WHERE rid IN (SELECT rid FROM calendar WHERE raced = 1)
                         AND (finish_date IS NOT NULL OR finish_code IS NOT NULL)");
             d = c.GetData(null);
+            c.Dispose();
 
             if (d.Rows.Count > 0)
             {
@@ -220,6 +223,7 @@ namespace OodHelper.Website
 
             c = new Db(@"SELECT sid,sname,discards FROM series");
             d = c.GetData(null);
+            c.Dispose();
 
             BuildInsertData(d, msql);
 
@@ -248,6 +252,7 @@ namespace OodHelper.Website
 
             c = new Db(@"SELECT sid,rid FROM calendar_series_join");
             d = c.GetData(null);
+            c.Dispose();
 
             BuildInsertData(d, msql);
 
@@ -273,6 +278,7 @@ namespace OodHelper.Website
 
             c = new Db(@"SELECT sid,bid,division,entered,gross,nett,place FROM series_results");
             d = c.GetData(null);
+            c.Dispose();
 
             BuildInsertData(d, msql);
 
@@ -303,6 +309,7 @@ namespace OodHelper.Website
             c = new Db(@"SELECT [id], [name], [parent], [application], [field], [condition], [string_value]
 , [number_bound1], [number_bound2] FROM select_rules");
             d = c.GetData(null);
+            c.Dispose();
 
             BuildInsertData(d, msql);
 
@@ -357,6 +364,7 @@ VALUES ");
             Hashtable p = new Hashtable();
             p["dt"] = updateTime;
             c.ExecuteNonQuery(p);
+            c.Dispose();
 
             if (w.CancellationPending)
             {

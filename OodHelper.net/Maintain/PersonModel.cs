@@ -10,41 +10,43 @@ namespace OodHelper.Maintain
 {
     class PersonModel : NotifyPropertyChanged
     {
-        public PersonModel(int id, int main_id) : this(id)
+        public PersonModel(int id, int main_id)
+            : this(id)
         {
             MainId = main_id;
         }
 
-        private WebService.People PersonRecord { get; set; }
-
-        public PersonModel(WebService.People Person)
-        {
-            PersonRecord = Person;
-        }
-
         public PersonModel(int id)
         {
-            if (id != 0)
-            {
-                PersonRecord = WebService.People.GetByKey(id);
-                if (PersonRecord == null)
-                    PersonRecord = new WebService.People();
-            }
+            Db get = new Db("SELECT id, main_id, firstname, surname, address1, address2, address3, address4, " +
+                "postcode, hometel, mobile, worktel, email, club, member, manmemo, cp, papernewsletter, handbookexclude " +
+                "FROM people " +
+                "WHERE id = @id");
+            Hashtable p = new Hashtable();
+            p["id"] = id;
+            DataTable d = get.GetData(p);
+
+            Values = new Hashtable();
+            if (d.Rows.Count > 0)
+                foreach (DataColumn c in d.Columns)
+                    Values[c.ColumnName] = d.Rows[0][c];
             else
-                PersonRecord = new WebService.People();
+            {
+                foreach (DataColumn c in d.Columns)
+                    Values[c.ColumnName] = null;
+            }
         }
 
         public string FirstName
         {
             get
             {
-                return PersonRecord.firstname;
+                return Values["firstname"] as string;
             }
 
             set
             {
-                PersonRecord.firstname = value;
-                OnPropertyChanged("FirstName");
+                Values["firstname"] = value; OnPropertyChanged("FirstName");
             }
         }
 
@@ -52,13 +54,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return PersonRecord.surname;
+                return Values["surname"] as string;
             }
 
             set
             {
-                PersonRecord.surname = value;
-                OnPropertyChanged("Surname");
+                Values["surname"] = value; OnPropertyChanged("Surname");
             }
         }
 
@@ -66,13 +67,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return PersonRecord.address1;
+                return Values["address1"] as string;
             }
 
             set
             {
-                PersonRecord.address1 = value;
-                OnPropertyChanged("Address1");
+                Values["address1"] = value; OnPropertyChanged("Address1");
             }
         }
 
@@ -80,12 +80,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return PersonRecord.address2;
+                return Values["address2"] as string;
             }
 
             set
             {
-                PersonRecord.address2 = value; OnPropertyChanged("Address2");
+                Values["address2"] = value; OnPropertyChanged("Address2");
             }
         }
 
@@ -93,12 +93,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return PersonRecord.address3;
+                return Values["address3"] as string;
             }
 
             set
             {
-                PersonRecord.address3 = value; OnPropertyChanged("Address3");
+                Values["address3"] = value; OnPropertyChanged("Address3");
             }
         }
 
@@ -106,12 +106,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return PersonRecord.address4;
+                return Values["address4"] as string;
             }
 
             set
             {
-                PersonRecord.address4 = value; OnPropertyChanged("Address4");
+                Values["address4"] = value; OnPropertyChanged("Address4");
             }
         }
 
@@ -119,12 +119,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return PersonRecord.postcode;
+                return Values["postcode"] as string;
             }
 
             set
             {
-                PersonRecord.postcode = value; OnPropertyChanged("Postcode");
+                Values["postcode"] = value; OnPropertyChanged("Postcode");
             }
         }
 
@@ -132,12 +132,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return PersonRecord.hometel;
+                return Values["hometel"] as string;
             }
 
             set
             {
-                PersonRecord.hometel = value; OnPropertyChanged("HomePhone");
+                Values["hometel"] = value; OnPropertyChanged("HomePhone");
             }
         }
 
@@ -145,12 +145,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return PersonRecord.mobile;
+                return Values["mobile"] as string;
             }
 
             set
             {
-                PersonRecord.mobile = value; OnPropertyChanged("MobilePhone");
+                Values["mobile"] = value; OnPropertyChanged("MobilePhone");
             }
         }
 
@@ -158,12 +158,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return PersonRecord.worktel;
+                return Values["worktel"] as string;
             }
 
             set
             {
-                PersonRecord.worktel = value; OnPropertyChanged("WorkPhone");
+                Values["worktel"] = value; OnPropertyChanged("WorkPhone");
             }
         }
 
@@ -171,12 +171,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return PersonRecord.email;
+                return Values["email"] as string;
             }
 
             set
             {
-                PersonRecord.email = value; OnPropertyChanged("Email");
+                Values["email"] = value; OnPropertyChanged("Email");
             }
         }
 
@@ -184,12 +184,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return PersonRecord.club;
+                return Values["club"] as string;
             }
 
             set
             {
-                PersonRecord.club = value; OnPropertyChanged("Club");
+                Values["club"] = value; OnPropertyChanged("Club");
             }
         }
 
@@ -197,12 +197,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return PersonRecord.member;
+                return Values["member"] as string;
             }
 
             set
             {
-                PersonRecord.member = value; OnPropertyChanged("Membership");
+                Values["member"] = value; OnPropertyChanged("Membership");
             }
         }
 
@@ -210,12 +210,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return PersonRecord.manmemo;
+                return Values["manmemo"] as string;
             }
 
             set
             {
-                PersonRecord.manmemo = value; OnPropertyChanged("Notes");
+                Values["manmemo"] = value; OnPropertyChanged("Notes");
             }
         }
 
@@ -224,12 +224,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return PersonRecord.cp;
+                return Values["cp"] as bool?;
             }
 
             set
             {
-                PersonRecord.cp = value;
+                Values["cp"] = value;
                 OnPropertyChanged("Paid");
             }
         }
@@ -238,12 +238,12 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return PersonRecord.papernewsletter;
+                return Values["papernewsletter"] as bool?;
             }
 
             set
             {
-                PersonRecord.papernewsletter = value;
+                Values["papernewsletter"] = value;
                 OnPropertyChanged("PaperNewsletter");
             }
         }
@@ -252,26 +252,26 @@ namespace OodHelper.Maintain
         {
             get
             {
-                return PersonRecord.handbookexclude;
+                return Values["handbookexclude"] as bool?;
             }
 
             set
             {
-                PersonRecord.handbookexclude = value;
+                Values["handbookexclude"] = value;
                 OnPropertyChanged("HandbookExclude");
             }
         }
 
         public int Id
         {
-            get { return PersonRecord.id; }
-            private set { PersonRecord.id = value; OnPropertyChanged("Id"); }
+            get { return Values["id"] == null ? 0: (int)Values["id"]; }
+            private set { Values["id"] = value; OnPropertyChanged("Id"); }
         }
 
         public int? MainId
         {
-            get { return PersonRecord.sid; }
-            private set { PersonRecord.sid = value; OnPropertyChanged("MainId"); }
+            get { return Values["main_id"] as int?; }
+            private set { Values["main_id"] = value; OnPropertyChanged("MainId"); }
         }
 
         public DataView Crewing
@@ -292,22 +292,45 @@ namespace OodHelper.Maintain
         public string CommitChanges()
         {
             StringBuilder errors = new StringBuilder(string.Empty);
-            if (Surname == null || Surname.Trim() == string.Empty)
+            if (Surname.Trim() == string.Empty)
                 errors.Append("Surname required\n");
 
             if (errors.ToString() == string.Empty)
             {
+                Db save;
                 if (Id == 0)
                 {
-                    PersonRecord = PersonRecord.Insert();
-                    if (PersonRecord.sid == null)
-                    {
-                        PersonRecord.sid = PersonRecord.id;
-                        PersonRecord.Update();
-                    }
+                    save = new Db("INSERT INTO people " +
+                        "(main_id, firstname, surname, address1, address2, address3, address4, postcode, " +
+                        "hometel, mobile, worktel, email, club, member, manmemo, cp, papernewsletter, handbookexclude) " +
+                        "VALUES (@main_id, @firstname, @surname, @address1, @address2, @address3, @address4, @postcode, " +
+                        "@hometel, @mobile, @worktel, @email, @club, @member, @manmemo, @cp, @papernewsletter, @handbookexclude )");
+                    Id = save.GetNextIdentity("people");
+                    if (!MainId.HasValue || MainId.Value == 0)
+                        MainId = Id;
                 }
                 else
-                    PersonRecord.Update();
+                    save = new Db("UPDATE people " +
+                            "SET firstname = @firstname, " +
+                            "surname = @surname, " +
+                            "address1 = @address1, " +
+                            "address2 = @address2, " +
+                            "address3 = @address3, " +
+                            "address4 = @address4, " +
+                            "postcode = @postcode, " +
+                            "hometel = @hometel, " +
+                            "mobile = @mobile, " +
+                            "worktel = @worktel, " +
+                            "email = @email, " +
+                            "club = @club, " +
+                            "member = @member, " +
+                            "manmemo = @manmemo, " +
+                            "cp = @cp, " +
+                            "papernewsletter = @papernewsletter, " +
+                            "handbookexclude = @handbookexclude " +
+                            "WHERE id = @id");
+
+                save.ExecuteNonQuery(Values);
                 return string.Empty;
             }
             else
