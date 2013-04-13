@@ -75,7 +75,6 @@ namespace OodHelper
         public Db(string SqlCommand) : this()
         {
             Sql = SqlCommand;
-            throw new Exception("Help");
         }
 
         public Db()
