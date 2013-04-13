@@ -194,6 +194,7 @@
     <Compile Include="Results\Model\IEntry.cs" />
     <Compile Include="Results\Model\Race.cs" />
     <Compile Include="Results\Model\Entry.cs" />
+    <Compile Include="Results\ViewModel\ResultEntryViewModel.cs" />
     <Compile Include="Results\ViewModel\ResultsEditorViewModel.cs" />
     <Compile Include="Converters\ValueParser.cs" />
     <Compile Include="Results\View\ResultsEditorView.xaml.cs">
