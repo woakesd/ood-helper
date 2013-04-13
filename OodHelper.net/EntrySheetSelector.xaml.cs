@@ -86,7 +86,7 @@ namespace OodHelper
 
                 if (pd.ShowDialog() == true)
                 {
-                    Working w = new Working();
+                    Working w = new Working(this);
                     w.Show();
                     Size ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
                     XpsDocumentWriter write = PrintQueue.CreateXpsDocumentWriter(pd.PrintQueue);

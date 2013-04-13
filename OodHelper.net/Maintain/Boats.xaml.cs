@@ -22,40 +22,34 @@ namespace OodHelper.Maintain
     {
         public Boats()
         {
+            Owner = App.Current.MainWindow;
             InitializeComponent();
-            dSetGridSource = SetGridSource;
+            Width = System.Windows.SystemParameters.VirtualScreenWidth * 0.8;
+            Height = System.Windows.SystemParameters.VirtualScreenHeight * 0.8;
+            WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
         }
-
-        void Boats_Loaded(object sender, RoutedEventArgs e)
-        {
-            LoadGrid();
-        }
-
-        private delegate void DSetGridSource(DataTable ppl);
-        private DSetGridSource dSetGridSource;
-        Working w;
 
         private void LoadGrid()
         {
-            w = new Working();
-            w.Show();
-            BoatData.ItemsSource = null;
-            Task.Factory.StartNew(() =>
+            DataTable bts;
+            if (Boatname.Text.Trim() != string.Empty)
             {
-                Db c = new Db("SELECT * " +
-                    "FROM boats " +
-                    "ORDER BY boatname");
-                DataTable bts = c.GetData(null);
-                c.Dispose();
-                Dispatcher.Invoke(dSetGridSource, bts);
-            });
-        }
-
-        private void SetGridSource(DataTable bts)
-        {
-            BoatData.ItemsSource = bts.DefaultView;
-            if (Boatname.Text != string.Empty) FilterBoats();
-            w.Close();
+                BoatData.ItemsSource = null;
+                using (Db c = new Db(@"SELECT *
+FROM boats
+WHERE boatname LIKE @filter
+or sailno LIKE @filter
+or boatclass LIKE @filter
+ORDER BY boatname"))
+                {
+                    Hashtable _para = new Hashtable();
+                    _para["filter"] = string.Format("%{0}%", Boatname.Text);
+                    bts = c.GetData(_para);
+                };
+                BoatData.ItemsSource = bts.DefaultView;
+            }
+            else
+                BoatData.ItemsSource = null;
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
@@ -114,17 +108,7 @@ namespace OodHelper.Maintain
 
         public void FilterBoats()
         {
-            try
-            {
-                ((DataView)BoatData.ItemsSource).RowFilter =
-                    "boatname LIKE '%" + Boatname.Text + "%'" +
-                    "or sailno LIKE '%" + Boatname.Text + "%'" +
-                    "or boatclass LIKE '%" + Boatname.Text + "%'";
-            }
-            catch (Exception ex)
-            {
-                string x = ex.Message;
-            }
+            LoadGrid();
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e)

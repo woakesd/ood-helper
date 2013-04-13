@@ -57,9 +57,9 @@ namespace OodHelper
                         break;
                     case CalendarModel.RaceTypes.Hybrid:
                         dr["corrected"] = Math.Round(_fixedPart.Value.TotalSeconds * 1000 / hcap) +
-                            Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / hcap / _laps.Value);
+                            Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / hcap) / _laps.Value;
                         dr["standard_corrected"] = Math.Round(_fixedPart.Value.TotalSeconds * 1000 / ohp) +
-                            Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / ohp / _laps.Value);
+                            Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / ohp) / _laps.Value;
                         break;
                     case CalendarModel.RaceTypes.FixedLength:
                     case CalendarModel.RaceTypes.TimeGate:

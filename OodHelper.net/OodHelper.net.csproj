@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OodHelper</RootNamespace>
-    <AssemblyName>OodHelper.net</AssemblyName>
+    <AssemblyName>OodHelper</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -38,8 +38,8 @@
     <ProductName>OOD Helper</ProductName>
     <PublisherName>David Woakes</PublisherName>
     <SuiteName>OOD Helper</SuiteName>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.0</ApplicationVersion>
+    <ApplicationRevision>8</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -67,20 +67,20 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <OutputPath>bin\x86\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -121,7 +121,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data.Linq" />
-    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />
@@ -188,6 +188,7 @@
     <Compile Include="Membership\RenewPart2.xaml.cs">
       <DependentUpon>RenewPart2.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RelayCommand.cs" />
     <Compile Include="Results\CalendarModel.cs" />
     <Compile Include="Results\ResultsViewModel.cs" />
     <Compile Include="Results\ResultModel.cs" />
@@ -202,15 +203,14 @@
     </Compile>
     <Compile Include="LoadTide\ReadFormat11.cs" />
     <Compile Include="LoadTide\TideData.cs" />
+    <Compile Include="ShowException.xaml.cs">
+      <DependentUpon>ShowException.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Sun\DoSunSetRise.xaml.cs">
       <DependentUpon>DoSunSetRise.xaml</DependentUpon>
     </Compile>
     <Compile Include="NotifyPropertyChanged.cs" />
-    <Compile Include="WebService\BoatsGenerated.cs" />
-    <Compile Include="WebService\EntityCount.cs" />
-    <Compile Include="WebService\People.cs" />
-    <Compile Include="WebService\PeopleGenerated.cs" />
-    <Compile Include="WebService\ServiceEntity.cs" />
+    <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="Website\CheckForUpdates.cs" />
     <Compile Include="Website\UploadSun.cs" />
     <Compile Include="Website\UploadTide.cs" />
@@ -509,6 +509,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SeriesDisplayByClass.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ShowException.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

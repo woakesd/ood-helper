@@ -29,13 +29,13 @@
             <ToolBar>
                 <Button Name="Save" Click="Add_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Add.png" />
+                        <Image Grid.Column="0" Source="/OodHelper;component/Images/Add.png" />
                         <Label Grid.Column="1">Save</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="CloseButton" Click="CloseButton_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Cancel.png" />
+                        <Image Grid.Column="0" Source="/OodHelper;component/Images/Cancel.png" />
                         <Label Grid.Column="1">Cancel</Label>
                     </StackPanel>
                 </Button>

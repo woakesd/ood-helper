@@ -4,269 +4,422 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Data;
-using System.Data.SqlServerCe;
+using System.Data.SqlClient;
+using System.Reflection;
 
 namespace OodHelper
 {
     class Db : IDisposable
     {
-        private static string DatabaseFolder = string.Format(@"{0}\data", AppDomain.CurrentDomain.BaseDirectory);
-        private static string DatabaseName = string.Format(@"{0}\oodhelper.sdf", DatabaseFolder);
-        private static string _DatabaseConstr = string.Format(@"Data Source={0}", DatabaseName);
+        private const string MasterConnection = @"Data Source=(LocalDB)\v11.0;Initial Catalog=master;Integrated Security=True";
+
+        private static string DatabaseName = "OodHelper";
+        private static string DatabaseFolder;
+        private static string DataFileName;
+        private static string LogFileName;
+        private static string _DatabaseConstr;
 
         public static string DatabaseConstr { get { return _DatabaseConstr; } }
-        
-        public Db(string connectionString, string sql)
+
+        static Db()
         {
-            mCon = new SqlCeConnection();
-            mCon.ConnectionString = connectionString;
-            mCmd = new SqlCeCommand(sql, mCon);
+            Assembly _ass = Assembly.GetAssembly(typeof(App));
+            AssemblyName _an = _ass.GetName();
+            DatabaseFolder = string.Format(@"{0}\{1}\data", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), _an.Name);
+
+            DataFileName = string.Format(@"{0}\{1}.mdf", DatabaseFolder, DatabaseName);
+            LogFileName = string.Format(@"{0}\{1}.ldf", DatabaseFolder, DatabaseName);
+            _DatabaseConstr = string.Format(@"Data Source=(LocalDB)\v11.0;Initial Catalog={1};Integrated Security=True;", DataFileName, DatabaseName);
         }
 
-        public Db(string sql)
+        public static void SetSingleUser(string DbName)
         {
-            mCon = new SqlCeConnection();
+            using (SqlConnection _conn = new SqlConnection(MasterConnection))
+            {
+                try
+                {
+                    _conn.Open();
+                    SqlCommand _cmd = _conn.CreateCommand();
+                    _cmd.CommandText = string.Format("ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE", DbName);
+                    _cmd.ExecuteNonQuery();
+                    _cmd.CommandText = string.Format("ALTER DATABASE [{0}] SET SINGLE_USER", DbName);
+                    _cmd.ExecuteNonQuery();
+
+                }
+                finally
+                {
+                    _conn.Close();
+                }
+            }
+        }
+
+        public static void SetMultiUser(string DbName)
+        {
+            using (SqlConnection _conn = new SqlConnection(MasterConnection))
+            {
+                try
+                {
+                    _conn.Open();
+                    SqlCommand _cmd = _conn.CreateCommand();
+                    _cmd.CommandText = string.Format("ALTER DATABASE [{0}] SET MULTI_USER", DbName);
+                    _cmd.ExecuteNonQuery();
+
+                }
+                finally
+                {
+                    _conn.Close();
+                }
+            }
+        }
+
+        public Db(string SqlCommand) : this()
+        {
+            Sql = SqlCommand;
+        }
+
+        public Db()
+        {
+            mCon = new SqlConnection();
             mCon.ConnectionString = DatabaseConstr;
-            if (!File.Exists(DatabaseName))
+            if (!File.Exists(DataFileName))
             {
                 Db.CreateDb();
             }
-            mCmd = new SqlCeCommand(sql, mCon);
+        }
+
+        public string Sql
+        {
+            set
+            {
+                mCmd = mCon.CreateCommand();
+                mCmd.CommandText = value;
+            }
+
+            get
+            {
+                return mCmd.CommandText;
+            }
+        }
+
+        public static bool CreateDatabase(string dbName, string dbFileName)
+        {
+            try
+            {
+                using (var _conn = new SqlConnection(MasterConnection))
+                {
+                    _conn.Open();
+                    SqlCommand _cmd = _conn.CreateCommand();
+
+                    _cmd.CommandText = string.Format("IF DB_ID('{0}') IS NOT NULL DROP DATABASE [{0}]", dbName);
+                    _cmd.ExecuteNonQuery();
+
+                    _cmd.CommandText = string.Format("CREATE DATABASE [{0}] ON (NAME = N'{0}', FILENAME = '{1}')", dbName, dbFileName);
+                    _cmd.ExecuteNonQuery();
+                }
+
+                if (File.Exists(dbFileName)) return true;
+                else return false;
+            }
+            catch (Exception ex)
+            {
+                ShowException _show = new ShowException(ex);
+                _show.ShowDialog();
+                throw;
+            }
+        }
+
+        public static void BackupDatabase(string DbName, string Location)
+        {
+            using (var connection = new SqlConnection(MasterConnection))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = String.Format(@"BACKUP DATABASE [{0}] TO  DISK = N'{1}\{0}.bak' WITH NOFORMAT, INIT,  NAME = N'{0}-Full Database Backup', SKIP, NOREWIND, NOUNLOAD;
+declare @backupSetId as int
+select @backupSetId = position from msdb..backupset where database_name=N'{0}' and backup_set_id=(select max(backup_set_id) from msdb..backupset where database_name=N'{0}' )
+if @backupSetId is null begin raiserror(N'Verify failed. Backup information for database ''{0}'' not found.', 16, 1) end
+RESTORE VERIFYONLY FROM  DISK = N'{1}\{0}.bak' WITH  FILE = @backupSetId,  NOUNLOAD,  NOREWIND;", DbName, Location);
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    ShowException _show = new ShowException(ex);
+                    _show.ShowDialog();
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
         }
 
         public static void CreateDb()
         {
-            string constr = Db.DatabaseConstr;
+            string constr = DatabaseConstr;
 
             if (!Directory.Exists(DatabaseFolder))
                 Directory.CreateDirectory(DatabaseFolder);
 
-            if (File.Exists(DatabaseName))
+            if (File.Exists(DataFileName))
             {
-                File.Move(DatabaseName, DatabaseFolder + @"\oodhelper-" + DateTime.Now.Ticks.ToString() + ".sdf");
+                SetSingleUser(DatabaseName);
+                BackupDatabase(DatabaseName, DatabaseFolder);
+                //File.Move(DataFileName, DatabaseFolder + _backupDb + ".mdf");
+                //File.Move(LogFileName, DatabaseFolder + _backupDb + ".ldf");
             }
 
-            SqlCeEngine ce = new SqlCeEngine(constr);
-            ce.CreateDatabase();
-            ce.Dispose();
+            CreateDatabase(DatabaseName, DataFileName);
 
-            SqlCeConnection con = new SqlCeConnection(constr);
+            SqlConnection con = new SqlConnection(constr);
             try
             {
                 con.Open();
-                SqlCeCommand cmd = con.CreateCommand();
+                SqlCommand cmd = con.CreateCommand();
                 cmd.CommandText = @"
-CREATE TABLE [boats] (
-  [bid] int NOT NULL IDENTITY (1,1)
-, [id] int NULL
-, [boatname] nvarchar(20) NULL
-, [boatclass] nvarchar(20) NULL
-, [sailno] nvarchar(8) NULL
-, [dinghy] bit NULL
-, [hulltype] nvarchar(1) NULL
-, [distance] int NULL
-, [crewname] nvarchar(30) NULL
-, [open_handicap] int NULL
-, [handicap_status] nvarchar(2) NULL
-, [rolling_handicap] int NULL
-, [crew_skill_factor] int NULL
-, [small_cat_handicap_rating] numeric(4,3) NULL
-, [engine_propeller] nvarchar(3) NULL
-, [keel] nvarchar(2) NULL
-, [deviations] nvarchar(30) NULL
-, [subscription] nvarchar(26) NULL
-, [boatmemo] ntext NULL
-, [berth] nvarchar(6) NULL
-, [hired] bit NULL
-, [p] nvarchar(1) NULL
-, [s] bit NULL
-, [beaten] int NULL
-, [uid] uniqueidentifier NULL
-)";
-                cmd.ExecuteNonQuery();
+CREATE TABLE [dbo].[boat_crew](
+	[id] [int] NOT NULL,
+	[bid] [int] NOT NULL,
+ CONSTRAINT [PK_boat_crew] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC,
+	[bid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY];
 
-                cmd.CommandText = @"
-CREATE TABLE [calendar] (
-  [rid] int NOT NULL IDENTITY (1,1)
-, [start_date] datetime NULL
-, [time_limit_type] nvarchar(1) NULL
-, [time_limit_fixed] datetime NULL
-, [time_limit_delta] int NULL
-, [extension] int NULL
-, [class] nvarchar(20) NULL
-, [event] nvarchar(34) NULL
-, [price_code] nvarchar(1) NULL
-, [course] nvarchar(9) NULL
-, [ood] nvarchar(30) NULL
-, [venue] nvarchar(11) NULL
-, [racetype] nvarchar(20) NULL
-, [handicapping] nvarchar(1) NULL
-, [visitors] int NULL
-, [flag] nvarchar(20) NULL
-, [memo] ntext NULL
-, [is_race] bit NULL
-, [raced] bit NULL
-, [approved] bit NULL
-, [course_choice] nvarchar(10) NULL
-, [laps_completed] int NULL
-, [wind_speed] nvarchar(10) NULL
-, [wind_direction] nvarchar(10) NULL
-, [standard_corrected_time] float NULL
-, [result_calculated] datetime NULL
-)";
-                cmd.ExecuteNonQuery();
+CREATE TABLE [dbo].[boats](
+	[bid] [int] IDENTITY(1,1) NOT NULL,
+	[id] [int] NULL,
+	[boatname] [nvarchar](20) NULL,
+	[boatclass] [nvarchar](20) NULL,
+	[sailno] [nvarchar](8) NULL,
+	[dinghy] [bit] NULL,
+	[hulltype] [nvarchar](1) NULL,
+	[distance] [int] NULL,
+	[crewname] [nvarchar](30) NULL,
+	[open_handicap] [int] NULL,
+	[handicap_status] [nvarchar](2) NULL,
+	[rolling_handicap] [int] NULL,
+	[crew_skill_factor] [int] NULL,
+	[small_cat_handicap_rating] [numeric](4, 3) NULL,
+	[engine_propeller] [nvarchar](3) NULL,
+	[keel] [nvarchar](2) NULL,
+	[deviations] [nvarchar](30) NULL,
+	[subscription] [nvarchar](26) NULL,
+	[boatmemo] [ntext] NULL,
+	[berth] [nvarchar](6) NULL,
+	[hired] [bit] NULL,
+	[p] [nvarchar](1) NULL,
+	[s] [bit] NULL,
+	[beaten] [int] NULL,
+	[uid] [uniqueidentifier] NULL,
+ CONSTRAINT [PK_boats] PRIMARY KEY CLUSTERED 
+(
+	[bid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
 
-                cmd.CommandText = @"
-CREATE TABLE [calendar_series_join] (
-  [sid] int NOT NULL
-, [rid] int NOT NULL
-)";
-                cmd.ExecuteNonQuery();
+CREATE TABLE [dbo].[calendar](
+	[rid] [int] IDENTITY(1,1) NOT NULL,
+	[start_date] [datetime] NULL,
+	[time_limit_type] [nvarchar](1) NULL,
+	[time_limit_fixed] [datetime] NULL,
+	[time_limit_delta] [int] NULL,
+	[extension] [int] NULL,
+	[class] [nvarchar](20) NULL,
+	[event] [nvarchar](34) NULL,
+	[price_code] [nvarchar](1) NULL,
+	[course] [nvarchar](9) NULL,
+	[ood] [nvarchar](30) NULL,
+	[venue] [nvarchar](11) NULL,
+	[racetype] [nvarchar](20) NULL,
+	[handicapping] [nvarchar](1) NULL,
+	[visitors] [int] NULL,
+	[flag] [nvarchar](20) NULL,
+	[memo] [ntext] NULL,
+	[is_race] [bit] NULL,
+	[raced] [bit] NULL,
+	[approved] [bit] NULL,
+	[course_choice] [nvarchar](10) NULL,
+	[laps_completed] [int] NULL,
+	[wind_speed] [nvarchar](10) NULL,
+	[wind_direction] [nvarchar](10) NULL,
+	[standard_corrected_time] [float] NULL,
+	[result_calculated] [datetime] NULL,
+ CONSTRAINT [PK_calendar] PRIMARY KEY CLUSTERED 
+(
+	[rid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
 
-                cmd.CommandText = @"
-CREATE TABLE [people] (
-  [id] int NOT NULL IDENTITY (1,1)
-, [main_id] int NULL
-, [firstname] nvarchar(20) NULL
-, [surname] nvarchar(28) NULL
-, [address1] nvarchar(30) NULL
-, [address2] nvarchar(30) NULL
-, [address3] nvarchar(30) NULL
-, [address4] nvarchar(30) NULL
-, [postcode] nvarchar(9) NULL
-, [hometel] nvarchar(20) NULL
-, [worktel] nvarchar(20) NULL
-, [mobile] nvarchar(20) NULL
-, [email] nvarchar(45) NULL
-, [club] nvarchar(10) NULL
-, [member] nvarchar(6) NULL
-, [manmemo] ntext NULL
-, [cp] bit NULL
-, [s] bit NULL
-, [novice] bit NULL
-, [uid] uniqueidentifier NULL
-, [papernewsletter] bit NULL
-, [handbookexclude] bit NULL
-)";
-                cmd.ExecuteNonQuery();
+CREATE TABLE [dbo].[calendar_series_join](
+	[sid] [int] NOT NULL,
+	[rid] [int] NOT NULL,
+ CONSTRAINT [PK_calendar_series_join] PRIMARY KEY CLUSTERED 
+(
+	[sid] ASC,
+	[rid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY];
 
-                cmd.CommandText = @"
-CREATE TABLE [races] (
-  [rid] int NOT NULL
-, [bid] int NOT NULL
-, [start_date] datetime NULL
-, [finish_code] nvarchar(5) NULL
-, [finish_date] datetime NULL
-, [interim_date] datetime NULL
-, [last_edit] datetime NULL
-, [laps] int NULL
-, [place] int NULL
-, [points] float NULL
-, [override_points] float NULL
-, [elapsed] int NULL
-, [corrected] float NULL
-, [standard_corrected] float NULL
-, [handicap_status] nvarchar(2) NULL
-, [open_handicap] int NULL
-, [rolling_handicap] int NULL
-, [achieved_handicap] int NULL
-, [new_rolling_handicap] int NULL
-, [performance_index] int NULL
-, [a] nvarchar(1) NULL
-, [c] nvarchar(1) NULL
-)";
-                cmd.ExecuteNonQuery();
+CREATE TABLE [dbo].[people](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[main_id] [int] NULL,
+	[firstname] [nvarchar](20) NULL,
+	[surname] [nvarchar](28) NULL,
+	[address1] [nvarchar](30) NULL,
+	[address2] [nvarchar](30) NULL,
+	[address3] [nvarchar](30) NULL,
+	[address4] [nvarchar](30) NULL,
+	[postcode] [nvarchar](9) NULL,
+	[hometel] [nvarchar](20) NULL,
+	[worktel] [nvarchar](20) NULL,
+	[mobile] [nvarchar](20) NULL,
+	[email] [nvarchar](45) NULL,
+	[club] [nvarchar](10) NULL,
+	[member] [nvarchar](6) NULL,
+	[manmemo] [ntext] NULL,
+	[cp] [bit] NULL,
+	[s] [bit] NULL,
+	[novice] [bit] NULL,
+	[uid] [uniqueidentifier] NULL,
+	[papernewsletter] [bit] NULL,
+	[handbookexclude] [bit] NULL,
+ CONSTRAINT [PK_people] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
 
-                cmd.CommandText = @"
-CREATE TABLE [series] (
-  [sid] int NOT NULL IDENTITY (1,1)
-, [sname] nvarchar(255) NOT NULL
-, [discards] nvarchar(255) NULL
-)";
-                cmd.ExecuteNonQuery();
+CREATE TABLE [dbo].[portsmouth_numbers](
+	[id] [uniqueidentifier] NOT NULL,
+	[class_name] [nvarchar](100) NULL,
+	[no_of_crew] [int] NULL,
+	[rig] [nvarchar](1) NULL,
+	[spinnaker] [nvarchar](1) NULL,
+	[engine] [nvarchar](3) NULL,
+	[keel] [nvarchar](1) NULL,
+	[number] [int] NULL,
+	[status] [nvarchar](1) NULL,
+	[notes] [ntext] NULL,
+ CONSTRAINT [PK_portsmouth_numbers] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
 
-                cmd.CommandText = @"
-CREATE TABLE [series_results] (
-  [sid] int not null
-, [bid] int not null
-, [division] nvarchar(20) not null
-, [entered] int null
-, [gross] float null
-, [nett] float null
-, [place] int
-)";
-                cmd.ExecuteNonQuery();
+CREATE TABLE [dbo].[races](
+	[rid] [int] NOT NULL,
+	[bid] [int] NOT NULL,
+	[start_date] [datetime] NULL,
+	[finish_code] [nvarchar](5) NULL,
+	[finish_date] [datetime] NULL,
+	[interim_date] [datetime] NULL,
+	[last_edit] [datetime] NULL,
+	[laps] [int] NULL,
+	[place] [int] NULL,
+	[points] [float] NULL,
+	[override_points] [float] NULL,
+	[elapsed] [int] NULL,
+	[corrected] [float] NULL,
+	[standard_corrected] [float] NULL,
+	[handicap_status] [nvarchar](2) NULL,
+	[open_handicap] [int] NULL,
+	[rolling_handicap] [int] NULL,
+	[achieved_handicap] [int] NULL,
+	[new_rolling_handicap] [int] NULL,
+	[performance_index] [int] NULL,
+	[a] [nvarchar](1) NULL,
+	[c] [nvarchar](1) NULL,
+ CONSTRAINT [PK_races] PRIMARY KEY NONCLUSTERED 
+(
+	[rid] ASC,
+	[bid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY];
 
-                cmd.CommandText = @"
-CREATE TABLE [updates] (
-  [dummy] int
-, [upload] DATETIME NULL
-)";
-                cmd.ExecuteNonQuery();
+CREATE TABLE [dbo].[select_rules](
+	[id] [uniqueidentifier] NOT NULL,
+	[name] [nvarchar](255) NULL,
+	[parent] [uniqueidentifier] NULL,
+	[application] [int] NULL,
+	[field] [nvarchar](255) NULL,
+	[condition] [int] NULL,
+	[string_value] [nvarchar](255) NULL,
+	[number_bound1] [numeric](18, 4) NULL,
+	[number_bound2] [numeric](18, 4) NULL,
+ CONSTRAINT [PK_select_rule] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY];
 
-                cmd.CommandText = @"
-CREATE TABLE [select_rules] (
-  [id] uniqueidentifier NOT NULL
-, [name] nvarchar(255) NULL
-, [parent] uniqueidentifier NULL
-, [application] int NULL
-, [field] nvarchar(255) NULL
-, [condition] int NULL
-, [string_value] nvarchar(255) NULL
-, [number_bound1] numeric(18,4) NULL
-, [number_bound2] numeric(18,4) NULL
-)";
-                cmd.ExecuteNonQuery();
+CREATE TABLE [dbo].[series](
+	[sid] [int] IDENTITY(1,1) NOT NULL,
+	[sname] [nvarchar](255) NOT NULL,
+	[discards] [nvarchar](255) NULL,
+ CONSTRAINT [PK_series] PRIMARY KEY CLUSTERED 
+(
+	[sid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY];
 
-                cmd.CommandText = @"
-CREATE TABLE [boat_crew] (
-  [id] int NOT NULL
-, [bid] int NOT NULL
-)";
-                cmd.ExecuteNonQuery();
+CREATE TABLE [dbo].[series_results](
+	[sid] [int] NOT NULL,
+	[bid] [int] NOT NULL,
+	[division] [nvarchar](20) NOT NULL,
+	[entered] [int] NULL,
+	[gross] [float] NULL,
+	[nett] [float] NULL,
+	[place] [int] NULL,
+ CONSTRAINT [PK_series_results] PRIMARY KEY CLUSTERED 
+(
+	[sid] ASC,
+	[division] ASC,
+	[bid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY];
 
-                cmd.CommandText = @"
-CREATE TABLE [portsmouth_numbers] (
-  [id] uniqueidentifier NOT NULL
-, [class_name] nvarchar(100) NULL
-, [no_of_crew] int NULL
-, [rig] nvarchar(1) NULL
-, [spinnaker] nvarchar(1) NULL
-, [engine] nvarchar(3) NULL
-, [keel] nvarchar(1) NULL
-, [number] int NULL
-, [status] nvarchar(1) NULL
-, [notes] ntext NULL
-)";
-                cmd.ExecuteNonQuery();
+CREATE TABLE [dbo].[updates](
+	[dummy] [int] NULL,
+	[upload] [datetime] NULL
+) ON [PRIMARY];
 
-                cmd.CommandText = @"ALTER TABLE [boats] ADD CONSTRAINT [PK_boats] PRIMARY KEY ([bid])";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"ALTER TABLE [calendar] ADD CONSTRAINT [PK_calendar] PRIMARY KEY ([rid])";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"ALTER TABLE [calendar_series_join] ADD CONSTRAINT [PK_calendar_series_join] PRIMARY KEY ([sid],[rid])";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"ALTER TABLE [people] ADD CONSTRAINT [PK_people] PRIMARY KEY ([id])";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"ALTER TABLE [races] ADD CONSTRAINT [PK_races] PRIMARY KEY ([rid],[bid])";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"ALTER TABLE [series] ADD CONSTRAINT [PK_series] PRIMARY KEY ([sid])";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"CREATE INDEX [IX_date] ON [calendar] ([start_date] ASC)";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"CREATE INDEX [IX_bid] ON [races] ([bid] ASC)";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"CREATE INDEX [IX_rid] ON [races] ([rid] ASC)";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"ALTER TABLE [series_results] ADD CONSTRAINT [PK_series_results] PRIMARY KEY ([sid],[division],[bid])";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"ALTER TABLE [select_rules] ADD CONSTRAINT [PK_select_rule] PRIMARY KEY ([id])";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"CREATE INDEX [IX_select_rule_parent] ON [select_rules] ([parent] ASC)";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"ALTER TABLE [boat_crew] ADD CONSTRAINT [PK_boat_crew] PRIMARY KEY ([id],[bid])";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = @"ALTER TABLE [portsmouth_numbers] ADD CONSTRAINT [PK_portsmouth_numbers] PRIMARY KEY ([id])";
+ALTER TABLE [dbo].[boats]  WITH CHECK ADD  CONSTRAINT [FK_boats_people] FOREIGN KEY([id])
+REFERENCES [dbo].[people] ([id])
+ON UPDATE CASCADE
+ON DELETE SET NULL;
+
+ALTER TABLE [dbo].[boats] CHECK CONSTRAINT [FK_boats_people];
+
+ALTER TABLE [dbo].[calendar_series_join]  WITH CHECK ADD  CONSTRAINT [FK_calendar_series_join_calendar] FOREIGN KEY([sid])
+REFERENCES [dbo].[calendar] ([rid])
+ON UPDATE CASCADE
+ON DELETE CASCADE;
+
+ALTER TABLE [dbo].[calendar_series_join] CHECK CONSTRAINT [FK_calendar_series_join_calendar];
+
+ALTER TABLE [dbo].[calendar_series_join]  WITH CHECK ADD  CONSTRAINT [FK_calendar_series_join_series] FOREIGN KEY([sid])
+REFERENCES [dbo].[series] ([sid]);
+
+ALTER TABLE [dbo].[calendar_series_join] CHECK CONSTRAINT [FK_calendar_series_join_series];
+
+ALTER TABLE [dbo].[races]  WITH CHECK ADD  CONSTRAINT [FK_races_boats] FOREIGN KEY([bid])
+REFERENCES [dbo].[boats] ([bid])
+ON UPDATE CASCADE
+ON DELETE CASCADE;
+
+ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_boats];
+
+ALTER TABLE [dbo].[races]  WITH CHECK ADD  CONSTRAINT [FK_races_calendar] FOREIGN KEY([rid])
+REFERENCES [dbo].[calendar] ([rid])
+ON UPDATE CASCADE
+ON DELETE CASCADE;
+
+ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
+";
                 cmd.ExecuteNonQuery();
             }
             finally
@@ -280,7 +433,7 @@ CREATE TABLE [portsmouth_numbers] (
             try
             {
                 addCommandParameters(p);
-                mCon.Open();    
+                mCon.Open();
                 return mCmd.ExecuteNonQuery();
             }
             finally
@@ -290,9 +443,9 @@ CREATE TABLE [portsmouth_numbers] (
             }
         }
 
-        private SqlCeDataAdapter mAdapt;
-        private SqlCeConnection mCon;
-        private SqlCeCommand mCmd;
+        private SqlDataAdapter mAdapt;
+        private SqlConnection mCon;
+        private SqlCommand mCmd;
 
         public IDbConnection Connection
         {
@@ -306,7 +459,7 @@ CREATE TABLE [portsmouth_numbers] (
         {
             DataTable d = new DataTable();
             addCommandParameters(p);
-            mAdapt = new SqlCeDataAdapter(mCmd);
+            mAdapt = new SqlDataAdapter(mCmd);
             mCon.Open();
             try
             {
@@ -331,9 +484,9 @@ CREATE TABLE [portsmouth_numbers] (
                 foreach (string k in p.Keys)
                 {
                     if (p[k] == null || (p[k]).GetType() == typeof(string) && p[k] as string == string.Empty)
-                        mCmd.Parameters.Add(new SqlCeParameter(k, DBNull.Value));
+                        mCmd.Parameters.Add(new SqlParameter(k, DBNull.Value));
                     else
-                        mCmd.Parameters.Add(new SqlCeParameter(k, p[k]));
+                        mCmd.Parameters.Add(new SqlParameter(k, p[k]));
                 }
             }
         }
@@ -342,7 +495,7 @@ CREATE TABLE [portsmouth_numbers] (
         {
             DataTable d = new DataTable();
             addCommandParameters(p);
-            mAdapt = new SqlCeDataAdapter(mCmd);
+            mAdapt = new SqlDataAdapter(mCmd);
             mCon.Open();
             try
             {
@@ -365,7 +518,7 @@ CREATE TABLE [portsmouth_numbers] (
         public void Fill(DataTable d, Hashtable p)
         {
             addCommandParameters(p);
-            mAdapt = new SqlCeDataAdapter(mCmd);
+            mAdapt = new SqlDataAdapter(mCmd);
             mCon.Open();
             try
             {
@@ -381,7 +534,7 @@ CREATE TABLE [portsmouth_numbers] (
         {
             DataTable t = new DataTable();
             addCommandParameters(p);
-            mAdapt = new SqlCeDataAdapter(mCmd);
+            mAdapt = new SqlDataAdapter(mCmd);
             mCon.Open();
             try
             {
@@ -394,20 +547,17 @@ CREATE TABLE [portsmouth_numbers] (
             return t;
         }
 
-        public int GetNextIdentity(string table, string column)
+        public int GetNextIdentity(string table)
         {
             mCon.Open();
             try
             {
-                SqlCeCommand cmd = mCon.CreateCommand();
-                cmd.CommandText = @"SELECT autoinc_next
-                    FROM information_schema.columns
-                    WHERE table_name = @table
-                    AND column_name = @column";
+                SqlCommand cmd = mCon.CreateCommand();
+                cmd.CommandText = @"SELECT IDENT_CURRENT(@table)";
                 cmd.Parameters.AddWithValue("table", table);
-                cmd.Parameters.AddWithValue("column", column);
-                long nextid = (long)cmd.ExecuteScalar();
-                return (int)nextid;
+                
+                decimal _nextId = (decimal) cmd.ExecuteScalar();
+                return (int)_nextId + 1;
             }
             finally
             {
@@ -415,29 +565,16 @@ CREATE TABLE [portsmouth_numbers] (
             }
         }
 
-        public void Dispose()
-        {
-            if (mCon != null) mCon.Dispose();
-            if (mCmd != null) mCmd.Dispose();
-            if (mAdapt != null) mAdapt.Dispose();
-        }
-
         public static void Compact()
         {
             try
             {
-                Properties.Settings s = new Properties.Settings();
-                SqlCeEngine ce = new SqlCeEngine();
-                ce.LocalConnectionString = DatabaseConstr;
-                ce.Compact(DatabaseConstr);
-                ce.Dispose();
-
                 //
                 // After compacting we need to adjust seed values on identity columns
                 //
                 ReseedDatabase();
             }
-            catch (SqlCeException)
+            catch (SqlException)
             {
             }
         }
@@ -475,8 +612,7 @@ CREATE TABLE [portsmouth_numbers] (
                 {
                     seedvalue = b;
                 }
-                s = new Db("ALTER TABLE " + tname + " " +
-                    "ALTER COLUMN " + ident + " IDENTITY(" + seedvalue.ToString() + ",1)");
+                s = new Db(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1})", tname, seedvalue));
                 s.ExecuteNonQuery(null);
             }
         }
@@ -495,9 +631,14 @@ CREATE TABLE [portsmouth_numbers] (
             {
                 seedvalue = 1;
             }
-            s = new Db("ALTER TABLE " + tname + " " +
-                "ALTER COLUMN " + ident + " IDENTITY(" + seedvalue.ToString() + ",1)");
+            s = new Db(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1})", tname, seedvalue));
             s.ExecuteNonQuery(null);
+        }
+
+        public void Dispose()
+        {
+            if (mCmd != null) mCmd.Dispose();
+            if (mCon != null) mCon.Dispose();
         }
     }
 }

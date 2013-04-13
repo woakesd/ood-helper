@@ -2,7 +2,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="SelectBoats" xmlns:my="http://schemas.microsoft.com/wpf/2008/toolkit"
-    ShowInTaskbar="False" WindowState="Maximized" KeyUp="Window_KeyUp" 
+    ShowInTaskbar="False" KeyUp="Window_KeyUp" 
         mc:Ignorable="d" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
@@ -16,31 +16,31 @@
             <ToolBar>
                 <Button Name="SelectBoat" Click="SelectBoat_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/OodHelper.net;component/Images/Arrow2 Right.png"/>
+                        <Image Source="/OodHelper;component/Images/Arrow2 Right.png"/>
                         <Label Content="Select"/>
                     </StackPanel>
                 </Button>
                 <Button Name="DeselectBoat" Click="DeselectBoat_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/OodHelper.net;component/Images/Arrow2 Left.png"/>
+                        <Image Source="/OodHelper;component/Images/Arrow2 Left.png"/>
                         <Label Content="Deselect"/>
                     </StackPanel>
                 </Button>
                 <Button Name="NewBoat" Click="NewBoat_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Add.png" />
+                        <Image Grid.Column="0" Source="/OodHelper;component/Images/Add.png" />
                         <Label Grid.Column="1">New Boat</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="Cancel" Click="Cancel_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Cancel.png" />
+                        <Image Grid.Column="0" Source="/OodHelper;component/Images/Cancel.png" />
                         <Label Grid.Column="1">Cancel</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="Ok" Click="Ok_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Ok.png" />
+                        <Image Grid.Column="0" Source="/OodHelper;component/Images/Ok.png" />
                         <Label Grid.Column="1">OK</Label>
                     </StackPanel>
                 </Button>

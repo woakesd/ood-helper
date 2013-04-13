@@ -7,13 +7,13 @@
       d:DesignHeight="204" d:DesignWidth="324" >
     <Grid >
         <Grid.Background>
-            <ImageBrush ImageSource="/OodHelper.net;component/Images/MemberCardBack.jpg" />
+            <ImageBrush ImageSource="/OodHelper;component/Images/MemberCardBack.jpg" />
         </Grid.Background>
         <TextBlock HorizontalAlignment="Center" Name="textBlock1" VerticalAlignment="Top" Text="Port Edgar Yacht Club" FontSize="24" FontFamily="Trebuchet MS" Margin="0" />
         <TextBlock HorizontalAlignment="Center" Margin="0,30,0,0" Name="textBlock2" Text="South Queensferry, Edinburgh, EH30 9SQ" VerticalAlignment="Top" FontSize="9" FontFamily="Trebuchet MS" />
         <TextBlock HorizontalAlignment="Center" Margin="0,41,0,0" Name="textBlock3" Text="Affliated to the RYA" VerticalAlignment="Top" FontFamily="Trebuchet MS" FontSize="9" />
         <TextBlock HorizontalAlignment="Center" Margin="0,52,0,0" Name="textBlock4" Text="www.peyc.org.uk" VerticalAlignment="Top" FontFamily="Trebuchet MS" FontSize="9" />
-        <Image HorizontalAlignment="Center" Margin="0,70,0,0" Source="/OodHelper.net;component/Images/peyclogo.png" Name="image1" Stretch="Fill" VerticalAlignment="Top" Width="60" Height="30"  />
+        <Image HorizontalAlignment="Center" Margin="0,70,0,0" Source="/OodHelper;component/Images/peyclogo.png" Name="image1" Stretch="Fill" VerticalAlignment="Top" Width="60" Height="30"  />
         <TextBlock FontFamily="Trebuchet MS" FontSize="20" HorizontalAlignment="Center" Width="280" TextAlignment="Center" Margin="0,110,0,0" Foreground="White" Text="{Binding MemberName}" VerticalAlignment="Top" Name="TMemberName" />
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,142,0,0">
             <TextBlock FontFamily="Trebuchet MS" FontSize="16" Foreground="White" Text="Membership No " VerticalAlignment="Top" />

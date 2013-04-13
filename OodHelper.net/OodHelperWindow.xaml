@@ -2,7 +2,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="OodHelper.net" WindowState="Maximized" Closing="Window_Closing" 
+    Title="OodHelper" WindowState="Maximized" Closing="Window_Closing" 
         Loaded="Window_Loaded"
         BorderThickness="0" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="731">
     <Window.Resources>
@@ -21,24 +21,24 @@
             <MenuItem Header="_Edit">
                 <MenuItem Header="_Boats" Name="Boats" Click="Boats_Click">
                     <MenuItem.Icon>
-                        <Image Width="16" Height="16" Margin="1" Source="/OodHelper.net;component/Images/Boat-16.png" />
+                        <Image Width="16" Height="16" Margin="1" Source="/OodHelper;component/Images/Boat-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="_People" Name="People" Click="People_Click" >
                     <MenuItem.Icon>
-                        <Image Width="16" Height="16" Margin="1" Source="/OodHelper.net;component/Images/Man.png" />
+                        <Image Width="16" Height="16" Margin="1" Source="/OodHelper;component/Images/Man.png" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="_Calendar" Name="Calendar" Click="Calendar_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                     <MenuItem.Icon>
-                        <Image Width="16" Height="16" Margin="1" Source="/OodHelper.net;component/Images/Calendar-16.png" />
+                        <Image Width="16" Height="16" Margin="1" Source="/OodHelper;component/Images/Calendar-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="_Series" Click="Series_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                 </MenuItem>
                 <MenuItem Header="_Handicaps" Click="Handicaps_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                     <MenuItem.Icon>
-                        <Image Width="16" Height="16" Margin="1" Source="/OodHelper.net;component/Images/Hand-16.png" />
+                        <Image Width="16" Height="16" Margin="1" Source="/OodHelper;component/Images/Hand-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="_Rule" Click="Rule_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" />
@@ -48,12 +48,12 @@
                 <!--<MenuItem Header="Sun" Name="Sun" Click="Sun_Click" />-->
                 <MenuItem Header="_Configuration" Name="Configuration" Click="Configuration_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                     <MenuItem.Icon>
-                        <Image Width="16" Height="16" Margin="1" Source="/OodHelper.net;component/Images/Spanner-16.png" />
+                        <Image Width="16" Height="16" Margin="1" Source="/OodHelper;component/Images/Spanner-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="_Create Results DB" Name="CreateResultsDB" Click="SqlCe_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                     <MenuItem.Icon>
-                        <Image Source="/OodHelper.net;component/Images/Database-16.png" />
+                        <Image Source="/OodHelper;component/Images/Database-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <!--<MenuItem Header="Print Membership Cards" Name="PrintMembershipCards" Click="PrintMembershipCards_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" />-->
@@ -61,19 +61,19 @@
                 <MenuItem Header="_Export Results" Name="ExportResults" Click="ExportResults_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"/>
                 <MenuItem Header="Logout" Name="Logout" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" Click="Logout_Click">
                     <MenuItem.Icon>
-                        <Image Source="/OodHelper.net;component/Images/Lock-Open-16.png" />
+                        <Image Source="/OodHelper;component/Images/Lock-Open-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Login" Name="Login" Visibility="{Binding Path=HideNonPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" Click="Login_Click">
                     <MenuItem.Icon>
-                        <Image Source="/OodHelper.net;component/Images/Lock-16.png" />
+                        <Image Source="/OodHelper;component/Images/Lock-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_About" Click="About_Click" >
                     <MenuItem.Icon>
-                        <Image Source="/OodHelper.net;component/Images/Info-16.png" />
+                        <Image Source="/OodHelper;component/Images/Info-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
@@ -82,31 +82,31 @@
             <ToolBar Name="mainToolbar" VerticalAlignment="Top">
                 <Button Name="Download" Click="Download_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/OodHelper.net;component/Images/Download.png"/>
+                        <Image Source="/OodHelper;component/Images/Download.png"/>
                         <Label>Download from Web</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="Results" Click="Results_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/OodHelper.net;component/Images/Results.png"/>
+                        <Image Source="/OodHelper;component/Images/Results.png"/>
                         <Label>Results</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="SeriesResults" Click="SeriesResults_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/OodHelper.net;component/Images/Results.png"/>
+                        <Image Source="/OodHelper;component/Images/Results.png"/>
                         <Label>Series Results</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="Upload" Click="Upload_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/OodHelper.net;component/Images/Upload.png" />
+                        <Image Source="/OodHelper;component/Images/Upload.png" />
                         <Label>Upload to Web</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="EntrySheets" Click="EntrySheets_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/OodHelper.net;component/Images/Applications.png"/>
+                        <Image Source="/OodHelper;component/Images/Applications.png"/>
                         <Label>Entry Sheets</Label>
                     </StackPanel>
                 </Button>

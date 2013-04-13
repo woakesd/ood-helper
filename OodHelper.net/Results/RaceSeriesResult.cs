@@ -16,7 +16,7 @@ namespace OodHelper.Results
         public Dictionary<string, SeriesResult> SeriesResults;
         public RaceSeriesResult(int SeriesId, Delegate UpdateUIDelegate)
         {
-            Working _worker = new Working();
+            Working _worker = new Working(App.Current.MainWindow);
             _worker.Show();
 
             Task _task = Task.Factory.StartNew(() =>

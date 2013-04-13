@@ -1,7 +1,15 @@
 ﻿<Window x:Class="OodHelper.Maintain.PeopleList"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Loaded="Window_Loaded" Icon="/OodHelper.net;component/Images/Man.png" Title="People" KeyUp="Window_KeyUp" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" d:DesignHeight="315" d:DesignWidth="1173" SizeToContent="WidthAndHeight">
+        Loaded="Window_Loaded" 
+        Icon="/OodHelper;component/Images/Man.png" 
+        Title="People" 
+        KeyUp="Window_KeyUp" 
+        FocusManager.FocusedElement="{Binding ElementName=Peoplename}"
+        mc:Ignorable="d" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        d:DesignHeight="218" d:DesignWidth="1116" >
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
@@ -15,44 +23,44 @@
             <ToolBar>
                 <Button Name="Add" Click="Add_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Add.png" />
+                        <Image Grid.Column="0" Source="/OodHelper;component/Images/Add.png" />
                         <Label Grid.Column="1">Add</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="Edit" Click="Edit_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Edit.png" />
+                        <Image Grid.Column="0" Source="/OodHelper;component/Images/Edit.png" />
                         <Label Grid.Column="1">Edit</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="Delete" Click="Delete_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Delete.png" />
+                        <Image Grid.Column="0" Source="/OodHelper;component/Images/Delete.png" />
                         <Label Grid.Column="1">Delete</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="SelectButton" Click="SelectButton_Click" 
                         Visibility="{Binding Path=SelectMode,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                     <StackPanel Orientation="Horizontal">
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Add.png" />
+                        <Image Grid.Column="0" Source="/OodHelper;component/Images/Add.png" />
                         <Label Grid.Column="1">Select</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="SetPaidButton" Click="SetPaid_Click" >
                     <StackPanel Orientation="Horizontal">
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Cancel.png" />
+                        <Image Grid.Column="0" Source="/OodHelper;component/Images/Cancel.png" />
                         <Label Grid.Column="1">Set Paidup</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="SetNotPaidButton" Click="SetNotPaid_Click" >
                     <StackPanel Orientation="Horizontal">
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Cancel.png" />
+                        <Image Grid.Column="0" Source="/OodHelper;component/Images/Cancel.png" />
                         <Label Grid.Column="1">Set Not Paidup</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="CloseButton" Click="Close_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Cancel.png" />
+                        <Image Grid.Column="0" Source="/OodHelper;component/Images/Cancel.png" />
                         <Label Grid.Column="1">Close</Label>
                     </StackPanel>
                 </Button>
@@ -63,13 +71,13 @@
                 <ToolBar>
                     <Button Click="PreviousPage" IsEnabled="{Binding PreviousPageEnabled}">
                         <StackPanel Orientation="Horizontal">
-                            <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Delete.png" />
+                            <Image Grid.Column="0" Source="/OodHelper;component/Images/Delete.png" />
                             <Label Grid.Column="1">Previous Page</Label>
                         </StackPanel>
                     </Button>
                     <Button Click="NextPage" IsEnabled="{Binding NextPageEnabled}">
                         <StackPanel Orientation="Horizontal">
-                            <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Add.png" />
+                            <Image Grid.Column="0" Source="/OodHelper;component/Images/Add.png" />
                             <Label Grid.Column="1">Next Page</Label>
                         </StackPanel>
                     </Button>
@@ -80,53 +88,44 @@
             <TextBlock VerticalAlignment="Center" Margin="4,0">Press F3 to search</TextBlock>
         </StackPanel>
         <DockPanel Grid.Row="2" >
-            <DataGrid SelectionMode="Single" SelectionUnit="Cell" Name="PeopleData" AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True">
-                <DataGrid.Resources>
-                    <Style x:Key="ReadOnly" TargetType="DataGridCell">
-                        <Setter Property="Background" Value="#fff0f0f0"/>
-                        <Setter Property="Foreground" Value="Black"/>
-                    </Style>
-                    <Style x:Key="Editable" TargetType="DataGridCell">
-                        <Setter Property="Background" Value="White"/>
-                        <Setter Property="Foreground" Value="Black"/>
-                    </Style>
-                </DataGrid.Resources>
+            <DataGrid Name="PeopleData" IsReadOnly="True" AutoGenerateColumns="False" >
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding id}" Header="Id" CellStyle="{StaticResource ReadOnly}" IsReadOnly="True" />
-                    <DataGridTextColumn Binding="{Binding sid}" Header="Family Id" />
-                    <DataGridTextColumn Binding="{Binding firstname}" Header="Forename" />
-                    <DataGridTextColumn Binding="{Binding surname}" Header="Surname" />
-                    <DataGridTextColumn Binding="{Binding address1}" Header="Address 1" />
-                    <DataGridTextColumn Binding="{Binding address2}" Header="Address 2" />
-                    <DataGridTextColumn Binding="{Binding address3}" Header="Address 3" />
-                    <DataGridTextColumn Binding="{Binding address4}" Header="Address 4" />
-                    <DataGridTextColumn Binding="{Binding postcode}" Header="Postcode" />
-                    <DataGridTextColumn Binding="{Binding hometel}" Header="Home Phone" />
-                    <DataGridTextColumn Binding="{Binding worktel}" Header="Work Phone" />
-                    <DataGridTextColumn Binding="{Binding mobile}" Header="Mobile" />
-                    <DataGridTextColumn Binding="{Binding email}" Header="Email" />
-                    <DataGridTextColumn Binding="{Binding club}" Header="Club" />
-                    <DataGridTextColumn Binding="{Binding member}" Header="Member" />
-                    <DataGridCheckBoxColumn Binding="{Binding cp}" Header="Paid Up" CellStyle="{StaticResource Editable}"  />
-                    <DataGridCheckBoxColumn Binding="{Binding novice}" Header="Novice" CellStyle="{StaticResource Editable}" />
-                    <DataGridCheckBoxColumn Binding="{Binding papernewsletter}" Header="Paper newletter" CellStyle="{StaticResource Editable}"  />
-                    <DataGridCheckBoxColumn Binding="{Binding handbookexclude}" Header="Handbook Exclude" CellStyle="{StaticResource Editable}"  />
+                    <DataGridTextColumn Header="Id" Binding="{Binding id}"/>
+                    <DataGridTextColumn Header="FamilyId" Binding="{Binding main_id}"/>
+                    <DataGridTextColumn Header="First Name" Binding="{Binding firstname}"/>
+                    <DataGridTextColumn Header="Last Name"  Binding="{Binding surname}"/>
+                    <DataGridTextColumn Header="Address" Binding="{Binding address1}"/>
+                    <DataGridTextColumn Binding="{Binding address2}"/>
+                    <DataGridTextColumn Binding="{Binding address3}"/>
+                    <DataGridTextColumn Binding="{Binding address4}"/>
+                    <DataGridTextColumn Header="Postcode" Binding="{Binding postcode}"/>
+                    <DataGridTextColumn Header="Home Phone" Binding="{Binding hometel}"/>
+                    <DataGridTextColumn Header="Work Phone" Binding="{Binding worktel}"/>
+                    <DataGridTextColumn Header="Mobile" Binding="{Binding mobile}"/>
+                    <DataGridTextColumn Header="Email" Binding="{Binding email}"/>
+                    <DataGridTextColumn Header="Club" Binding="{Binding club}"/>
+                    <DataGridTextColumn Header="Member" Binding="{Binding member}"/>
+                    <DataGridTextColumn Header="Notes" Binding="{Binding manmemo}"/>
+                    <DataGridCheckBoxColumn Header="Paid up" Binding="{Binding cp}"/>
+                    <DataGridTextColumn Header="Novice" Binding="{Binding novice}"/>
+                    <DataGridCheckBoxColumn Header="Paper newsletter" Binding="{Binding papernewsletter}"/>
+                    <DataGridCheckBoxColumn Header="Exclude from Handbook" Binding="{Binding handbookexclude}"/>
                 </DataGrid.Columns>
                 <DataGrid.ContextMenu>
                     <ContextMenu Opened="ContextMenu_Opened">
                         <MenuItem Header="Edit" Click="Edit_Click">
                             <MenuItem.Icon>
-                                <Image Source="/OodHelper.net;component/Images/Edit.png" />
+                                <Image Source="/OodHelper;component/Images/Edit.png" />
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="Delete" Click="Delete_Click">
                             <MenuItem.Icon>
-                                <Image Source="/OodHelper.net;component/Images/Delete.png" />
+                                <Image Source="/OodHelper;component/Images/Delete.png" />
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="Add family member" Click="AddFamilyMember_Click" Name="AddFamilyMember">
                             <MenuItem.Icon>
-                                <Image Source="/OodHelper.net;component/Images/Add.png" />
+                                <Image Source="/OodHelper;component/Images/Add.png" />
                             </MenuItem.Icon>
                         </MenuItem>
                     </ContextMenu>

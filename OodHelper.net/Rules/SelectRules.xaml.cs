@@ -37,7 +37,7 @@ namespace OodHelper.Rules
 
         private void LoadGrid()
         {
-            w = new Working();
+            w = new Working(this);
             w.Show();
             BoatData.ItemsSource = null;
             Task.Factory.StartNew(() =>

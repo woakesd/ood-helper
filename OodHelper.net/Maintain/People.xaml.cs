@@ -25,16 +25,13 @@ namespace OodHelper.Maintain
 
         public PeopleList()
         {
+            Owner = App.Current.MainWindow;
             InitializeComponent();
             SelectMode = false;
-            GetTotalPages();
             DataContext = this;
-        }
-
-        private void GetTotalPages()
-        {
-            WebService.EntityCount _totalPeople = WebService.EntityCount.GetCount("people", Peoplename.Text != string.Empty ? Peoplename.Text : null);
-            TotalPages = _totalPeople.count / PAGESIZE + (_totalPeople.count % PAGESIZE > 0 ? 1 : 0);
+            Width = System.Windows.SystemParameters.VirtualScreenWidth * 0.8;
+            Height = System.Windows.SystemParameters.VirtualScreenHeight * 0.8;
+            WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
         }
 
         public int? Id { get; private set; }
@@ -66,12 +63,64 @@ namespace OodHelper.Maintain
 
         private void LoadGrid()
         {
-            FilterPeople();
+            PeopleData.ItemsSource = null;
+            if (Peoplename.Text != string.Empty)
+            {
+                //w = new Working();
+                //w.Show();
+                string Filter = Peoplename.Text;
+                //Task.Factory.StartNew(() =>
+                //{
+                    Db c = new Db(@"SELECT [id]
+, [main_id]
+, [firstname]
+, [surname]
+, [address1]
+, [address2]
+, [address3]
+, [address4]
+, [postcode]
+, [hometel]
+, [worktel]
+, [mobile]
+, [email]
+, [club]
+, [member]
+, [manmemo]
+, [cp]
+, [s]
+, [novice]
+, [uid]
+, [papernewsletter]
+, [handbookexclude]
+FROM people
+WHERE firstname LIKE @filter
+OR surname LIKE @filter
+OR address1 LIKE @filter
+OR address2 LIKE @filter
+OR address3 LIKE @filter
+OR address4 LIKE @filter
+OR postcode LIKE @filter
+OR hometel LIKE @filter
+OR worktel LIKE @filter
+OR mobile LIKE @filter
+OR email LIKE @filter
+OR club LIKE @filter
+OR member LIKE @filter
+ORDER BY surname, firstname");
+                    Hashtable _para = new Hashtable();
+                    _para["filter"] = string.Format("%{0}%", Filter);
+                    DataTable ppl = c.GetData(_para);
+                    c.Dispose();
+                    SetGridSource(ppl);
+                    //Dispatcher.Invoke(dSetGridSource, ppl);
+                //});
+            }
         }
 
-        private void SetGridSource(WebService.People[] Persons)
+        private void SetGridSource(DataTable ppl)
         {
-            PeopleData.ItemsSource = Persons;
+            PeopleData.ItemsSource = ppl.DefaultView;
             if (Id != null)
             {
                 foreach (DataRowView vr in PeopleData.Items)
@@ -135,10 +184,10 @@ namespace OodHelper.Maintain
         {
             if (PeopleData.SelectedItem != null)
             {
-                WebService.People i = PeopleData.SelectedItem as WebService.People;
-                if (i.id == i.sid)
+                DataRowView i = PeopleData.SelectedItem as DataRowView;
+                if ((int)i["id"] == (int)i["main_id"])
                 {
-                    PersonView p = new PersonView(i.id);
+                    PersonView p = new PersonView((int)i["id"]);
                     if (p.ShowDialog().Value)
                     {
                         LoadGrid();
@@ -146,7 +195,7 @@ namespace OodHelper.Maintain
                 }
                 else
                 {
-                    FamilyMember f = new FamilyMember(i.id, i.sid.Value);
+                    FamilyMember f = new FamilyMember((int)i["id"], (int)i["main_id"]);
                     if (f.ShowDialog().Value)
                     {
                         LoadGrid();
@@ -160,15 +209,18 @@ namespace OodHelper.Maintain
             if (PeopleData.SelectedItem != null)
             {
                 bool change = false;
-                foreach (WebService.People i in PeopleData.SelectedItems)
+                foreach (DataRowView i in PeopleData.SelectedItems)
                 {
-                    MessageBoxResult result = MessageBox.Show(string.Format("Are you sure you want to delete {0} {1}?", i.firstname, i.surname),
+                    MessageBoxResult result = MessageBox.Show(string.Format("Are you sure you want to delete {0} {1}?", i["firstname"], i["surname"]),
                         "Confirm Delete", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                     if (result == MessageBoxResult.Cancel) break;
                     if (result == MessageBoxResult.Yes)
                     {
-                        i.Delete();
-
+                        Db del = new Db("DELETE FROM people " +
+                            "WHERE id = @id");
+                        Hashtable d = new Hashtable();
+                        d["id"] = (int)i.Row["id"];
+                        del.ExecuteNonQuery(d);
                         change = true;
                     }
                 }
@@ -195,11 +247,6 @@ namespace OodHelper.Maintain
         {
             try
             {
-                this.Page = 1;
-                this.TotalPages = 0;
-                OnPropertyChanged("PreviousPageEnabled");
-                OnPropertyChanged("NextPageEnabled");
-
                 Dispatcher.Invoke(new dFilterPeople(FilterPeople), null);
             }
             catch (Exception ex)
@@ -229,17 +276,7 @@ namespace OodHelper.Maintain
         {
             try
             {
-                WebService.People[] _ppl;
-                if (Peoplename.Text != string.Empty)
-                {
-                    _ppl = WebService.People.Get(Peoplename.Text, Page);
-                    GetTotalPages();
-                }
-                else
-                {
-                    _ppl = WebService.People.Get(Page);
-                }
-                SetGridSource(_ppl);
+                LoadGrid();
             }
             catch (Exception ex)
             {
@@ -253,8 +290,8 @@ namespace OodHelper.Maintain
         {
             if (PeopleData.SelectedItem != null)
             {
-                WebService.People i = PeopleData.SelectedItem as WebService.People;
-                if (i.id == i.sid)
+                DataRowView i = PeopleData.SelectedItem as DataRowView;
+                if ((int)i["id"] == (int)i["main_id"])
                     AddFamilyMember.IsEnabled = true;
                 else
                     AddFamilyMember.IsEnabled = false;
@@ -326,7 +363,7 @@ namespace OodHelper.Maintain
                     PeopleData.SelectedItems.CopyTo(pd, 0);
                     BackgroundWorker bw = new BackgroundWorker();
                     bw.DoWork += new DoWorkEventHandler(bw_DoSetNotPaid);
-                    SetNotPaid = new Working(bw);
+                    SetNotPaid = new Working(this, bw);
                     bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_SetNotPaidCompleted);
                     bw.RunWorkerAsync();
                     SetNotPaid.ShowDialog();
@@ -352,7 +389,7 @@ namespace OodHelper.Maintain
                     PeopleData.SelectedItems.CopyTo(pd, 0);
                     BackgroundWorker bw = new BackgroundWorker();
                     bw.DoWork += new DoWorkEventHandler(bw_DoSetNotPaid);
-                    SetNotPaid = new Working(bw);
+                    SetNotPaid = new Working(this, bw);
                     bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_SetNotPaidCompleted);
                     bw.RunWorkerAsync();
                     SetNotPaid.ShowDialog();

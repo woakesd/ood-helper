@@ -79,7 +79,7 @@ namespace OodHelper.Maintain
                 topseed = Settings.TopSeed;
 
                 Db seed = new Db(string.Empty);
-                nextval = seed.GetNextIdentity("boats", "bid");
+                nextval = seed.GetNextIdentity("boats");
 
                 if (nextval > topseed)
                 {

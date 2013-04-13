@@ -19,7 +19,7 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Results.png"/>
+                        <Image Grid.Column="0" Source="/OodHelper;component/Images/Results.png"/>
                         <Label Grid.Column="1">Series Result</Label>
                     </Grid>
                 </Button>
@@ -29,7 +29,7 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper.net;component/Images/Cancel.png"/>
+                        <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper;component/Images/Cancel.png"/>
                         <Label Grid.Column="1">Close</Label>
                     </Grid>
                 </Button>

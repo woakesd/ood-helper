@@ -1,7 +1,7 @@
 ﻿<Window x:Class="OodHelper.SelectClass"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        ShowInTaskbar="False" Loaded="Window_Loaded" Icon="/OodHelper.net;component/Images/Man.png" Title="Select Class">
+        ShowInTaskbar="False" Loaded="Window_Loaded" Icon="/OodHelper;component/Images/Man.png" Title="Select Class">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -16,7 +16,7 @@
                             <ColumnDefinition Width="auto" />
                             <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Add.png" />
+                        <Image Grid.Column="0" Source="/OodHelper;component/Images/Add.png" />
                         <Label Grid.Column="1">Select</Label>
                     </Grid>
                 </Button>
@@ -26,7 +26,7 @@
                             <ColumnDefinition Width="auto" />
                             <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="/OodHelper.net;component/Images/Cancel.png" />
+                        <Image Grid.Column="0" Source="/OodHelper;component/Images/Cancel.png" />
                         <Label Grid.Column="1">Cancel</Label>
                     </Grid>
                 </Button>

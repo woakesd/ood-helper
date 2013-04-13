@@ -5,7 +5,6 @@ using System.Linq;
 using System.Data;
 using System.Text;
 using MySql.Data.MySqlClient;
-using System.Data.SqlServerCe;
 using System.ComponentModel;
 
 namespace OodHelper.Website
@@ -24,7 +23,7 @@ namespace OodHelper.Website
         {
             upload = new BackgroundWorker();
             upload.DoWork += new DoWorkEventHandler(Process);
-            p = new Working(upload);
+            p = new Working(App.Current.MainWindow, upload);
             upload.RunWorkerCompleted += new RunWorkerCompletedEventHandler(upload_RunWorkerCompleted);
         }
 

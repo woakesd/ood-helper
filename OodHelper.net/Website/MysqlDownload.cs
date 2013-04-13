@@ -4,7 +4,7 @@ using System.Linq;
 using System.Data;
 using System.Text;
 using MySql.Data.MySqlClient;
-using System.Data.SqlServerCe;
+using System.Data.SqlClient;
 using System.ComponentModel;
 
 namespace OodHelper.Website
@@ -15,14 +15,14 @@ namespace OodHelper.Website
         {
             BackgroundWorker download = new BackgroundWorker();
             download.DoWork += new DoWorkEventHandler(Process);
-            Working w = new Working(download);
+            Working w = new Working(App.Current.MainWindow, download);
             download.RunWorkerCompleted += new RunWorkerCompletedEventHandler(download_RunWorkerCompleted);
             download.RunWorkerAsync();
             w.ShowDialog();
         }
         
-        protected SqlCeConnection scon;
-        protected SqlCeTransaction strn;
+        protected SqlConnection scon;
+        protected SqlTransaction strn;
         protected MySqlConnection mcon;
 
         protected virtual void download_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -63,7 +63,7 @@ namespace OodHelper.Website
             {
                 BackgroundWorker p = sender as BackgroundWorker;
 
-                scon = new SqlCeConnection();
+                scon = new SqlConnection();
                 scon.ConnectionString = Db.DatabaseConstr;
                 scon.Open();
                 strn = scon.BeginTransaction();
@@ -87,11 +87,14 @@ namespace OodHelper.Website
                 if (!e.Cancel)
                 {
                     strn.Commit();
-
-                    scon.Close();
-
-                    Db.Compact();
                 }
+                strn.Dispose();
+                scon.Close();
+                scon.Dispose();
+
+                mcon.Close();
+                mcon.Dispose();
+                
                 p.ReportProgress(100, "All done");
             }
             catch (Exception ex)
@@ -101,7 +104,7 @@ namespace OodHelper.Website
             }
         }
 
-        protected void CopyData(DataTable rset, SqlCeCommand ins)
+        protected void CopyData(DataTable rset, SqlCommand ins)
         {
             foreach (DataRow rrow in rset.Rows)
             {
@@ -109,7 +112,7 @@ namespace OodHelper.Website
                 {
                     ins.Parameters.AddWithValue(rc.ColumnName, rrow[rc.ColumnName]);
                 }
-                SqlCeParameter p1 = ins.Parameters[1];
+                SqlParameter p1 = ins.Parameters[1];
                 ins.ExecuteNonQuery();
                 ins.Parameters.Clear();
             }

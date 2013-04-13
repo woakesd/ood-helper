@@ -288,7 +288,7 @@ namespace OodHelper
                         break;
                     case CalendarModel.RaceTypes.Hybrid:
                         dr["corrected"] = Math.Round(_fixedPart.Value.TotalSeconds * 1000 / hcap) +
-                            Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / hcap / _laps.Value);
+                            Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / hcap) / _laps.Value;
                         break;
                     case CalendarModel.RaceTypes.FixedLength:
                     case CalendarModel.RaceTypes.TimeGate:
@@ -309,10 +309,7 @@ namespace OodHelper
 
             var query = from r in racedata.AsEnumerable()
                         where r.Field<int?>("place") == 0
-                        && (r.Field<string>("handicap_status") == "PY"
-                        || r.Field<string>("handicap_status") == "SY"
-                        || r.Field<string>("handicap_status") == "RN"
-                        || r.Field<string>("handicap_status") == "CN")
+                        && r.Field<string>("handicap_status") != "TN"
                         orderby r.Field<double?>("standard_corrected")
                         select r;
 
