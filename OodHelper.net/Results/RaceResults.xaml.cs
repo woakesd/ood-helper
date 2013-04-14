@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Printing;
 using System.Windows.Xps;
 using OodHelper.Maintain;
+using OodHelper.Results.Model;
 
 namespace OodHelper.Results
 {
@@ -117,7 +118,7 @@ namespace OodHelper.Results
                 foreach (DataGridCellInfo inf in rr.Races.SelectedCells)
                 {
                     Entry rv = inf.Item as Entry;
-                    int bid = rv.Bid;
+                    int bid = rv.bid;
                     BoatView edit = new BoatView(bid);
                     if (edit.ShowDialog().Value)
                     {
@@ -191,7 +192,7 @@ namespace OodHelper.Results
                     foreach (DataGridCellInfo inf in races.SelectedCells)
                     {
                         Entry drv = inf.Item as Entry;
-                        p["bid"] = drv.Bid;
+                        p["bid"] = drv.bid;
                         c.ExecuteNonQuery(p);
                     }
 

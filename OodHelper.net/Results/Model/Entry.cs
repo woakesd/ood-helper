@@ -6,9 +6,9 @@ using System.Text;
 using System.Windows;
 using OodHelper.Converters;
 
-namespace OodHelper.Results
+namespace OodHelper.Results.Model
 {
-    public class Entry : NotifyPropertyChanged, OodHelper.Results.Model.IEntry
+    public class Entry : IEntry
     {
         private DataRow _row;
         public Entry(DataRow result, DateTime StartDate, DateTime LimitDate)
@@ -18,58 +18,29 @@ namespace OodHelper.Results
             _limitDate = LimitDate;
         }
 
-        public int Rid { get { return (int)_row["rid"]; } }
-        public int Bid { get { return (int)_row["bid"]; } }
-        public string BoatName { get { return _row["boatname"] as string; } }
-        public string BoatClass { get { return _row["boatclass"] as string; } }
-        public string SailNo { get { return _row["sailno"] as string; } }
+        public int rid { get { return (int)_row["rid"]; } }
+        public int bid { get { return (int)_row["bid"]; } }
+        public string boatname { get { return _row["boatname"] as string; } }
+        public string boatclass { get { return _row["boatclass"] as string; } }
+        public string sailno { get { return _row["sailno"] as string; } }
 
         private DateTime _startDate;
         private DateTime _limitDate;
 
-        public DateTime? StartDate
+        public DateTime? start_date
         {
             get
             {
-                if (_row["start_date"] != DBNull.Value)
-                    return ((DateTime)_row["start_date"]).Date;
-                else
-                    return null;
+                return _row["start_date"] as DateTime?;
             }
 
             set
             {
-                if (_row["start_date"] != DBNull.Value)
-                    _row["start_date"] = value + ((DateTime)_row["start_date"]).TimeOfDay;
-                else
-                    _row["start_date"] = value;
-                OnPropertyChanged("StartTime");
-                OnPropertyChanged("StartDate");
+                _row["start_date"] = value;
             }
         }
 
-        public string StartTime
-        {
-            get
-            {
-                if (_row["start_date"] != DBNull.Value)
-                    return ((DateTime)_row["start_date"]).ToString("HH:mm:ss");
-                else
-                    return string.Empty;
-            }
-
-            set
-            {
-                TimeSpan resultTime;
-                if (TimeSpan.TryParse(value, out resultTime) || 
-                    TimeSpan.TryParseExact(value, @"hh\ mm\ ss", null, out resultTime))
-                    _row["start_date"] = _startDate.Date + resultTime;
-                OnPropertyChanged("StartTime");
-                OnPropertyChanged("StartDate");
-            }
-        }
-        
-        public string FinishCode
+        public string finish_code
         {
             get
             {
@@ -78,305 +49,187 @@ namespace OodHelper.Results
             set
             {
                 _row["finish_code"] = value;
-                OnPropertyChanged("FinishCode");
             }
         }
 
-        public DateTime? FinishDate
+        public DateTime? finish_date
         {
             get
             {
-                return ReadDate(_row["finish_date"]);
+                return _row["finish_date"] as DateTime?;
             }
 
             set
             {
-                SetFinishDate(value, _row["finish_date"]);
-                OnPropertyChanged("FinishTime");
-                OnPropertyChanged("FinishDate");
+                _row["finish_date"] = value;
             }
         }
 
-        public DateTime? InterimDate
+        public DateTime? interim_date
         {
             get
             {
-                return ReadDate(_row["interim_date"]);
+                return _row["interim_date"] as DateTime?;
             }
 
             set
             {
-                SetFinishDate(value, _row["interim_date"]);
-                OnPropertyChanged("InterimTime");
-                OnPropertyChanged("InterimDate");
+                _row["interim_date"] = value;
             }
         }
 
-        private DateTime? ReadDate(object DateTimeValue)
-        {
-            if (DateTimeValue != DBNull.Value)
-                return ((DateTime)DateTimeValue).Date;
-            else
-                return null;
-        }
-
-        private void SetFinishDate(DateTime? value, object DateTimeValue)
-        {
-            if (DateTimeValue != DBNull.Value)
-                DateTimeValue = value + ((DateTime)DateTimeValue).TimeOfDay;
-            else
-                DateTimeValue = value;
-        }
-
-        public string FinishTime
+        public double? override_points
         {
             get
             {
-                return ReadTime(_row["finish_date"]);
+                return _row["override_points"] as double?;
+            }
+            set
+            {
+                _row["override_points"] = value;
+            }
+        }
+
+        public int? laps
+        {
+            get
+            {
+                return _row["laps"] as int?;
+            }
+            set
+            {
+                _row["laps"] = value;
+            }
+        }
+
+        public int? elapsed
+        {
+            get
+            {
+                return _row["elapsed"] as int?;
+            }
+            set
+            {
+                _row["elapsed"] = value;
+            }
+        }
+
+        public double? corrected
+        {
+            get
+            {
+                return _row["corrected"] as double?;
+            }
+            set
+            {
+                _row["corrected"] = value;
+            }
+        }
+
+        public double? standard_corrected
+        {
+            get
+            {
+                return _row["standard_corrected"] as double?;
+            }
+            set
+            {
+                _row["standard_corrected"] = value;
+            }
+        }
+
+        public int? place
+        {
+            get
+            {
+                return _row["place"] as int?;
+            }
+            set
+            {
+                _row["place"] = value;
+            }
+        }
+
+        public double? points
+        {
+            get
+            {
+                return _row["points"] as double?;
+            }
+            set
+            {
+                _row["points"] = value;
+            }
+        }
+
+        public int? open_handicap
+        {
+            get
+            {
+                return _row["open_handicap"] as int?;
             }
 
             set
             {
-                SetFinishTime(value, "finish_date");
-                OnPropertyChanged("FinishTime");
-                OnPropertyChanged("FinishDate");
+                _row["open_handicap"] = value;
             }
         }
 
-        public string InterimTime
+        public int? rolling_handicap
         {
             get
             {
-                return ReadTime(_row["interim_date"]);
+                return _row["rolling_handicap"] as int?;
             }
 
             set
             {
-                SetFinishTime(value, "interim_date");
-                OnPropertyChanged("InterimTime");
-                OnPropertyChanged("InterimDate");
+                _row["rolling_handicap"] = value;
             }
         }
 
-        private void SetFinishTime(string value, string DateTimeValue)
-        {
-            TimeSpan resultTime;
-            System.Text.RegularExpressions.Regex _finishCode = new System.Text.RegularExpressions.Regex("[a-zA-Z]{3,4}");
-            if (TimeSpan.TryParse(value, out resultTime) ||
-                TimeSpan.TryParseExact(value, @"hh\ mm\ ss", null, out resultTime))
-            {
-                if (_row[DateTimeValue] != DBNull.Value)
-                    _row[DateTimeValue] = ((DateTime)_row[DateTimeValue]).Date + resultTime;
-                else
-                    _row[DateTimeValue] = _startDate.Date + resultTime;
-            }
-            else if (_finishCode.IsMatch(value))
-            {
-                FinishCode = value;
-            }
-            else
-                _row[DateTimeValue] = DBNull.Value;
-        }
-
-        private string ReadTime(object DateTimeValue)
-        {
-            if (DateTimeValue != DBNull.Value)
-            {
-                DateTime finish = (DateTime)DateTimeValue;
-                return finish.ToString("HH:mm:ss");
-            }
-            else
-                return string.Empty;
-        }
-
-        public string OverridePoints
+        public int? achieved_handicap
         {
             get
             {
-                return (_row["override_points"] != DBNull.Value) ? _row["override_points"].ToString() : string.Empty;
-            }
-            set
-            {
-                double tmp;
-                if (Double.TryParse(value, out tmp))
-                    _row["override_points"] = tmp;
-                else
-                    _row["override_points"] = DBNull.Value;
-
-                OnPropertyChanged("OverridePoints");
-            }
-        }
-
-        public string Laps
-        {
-            get
-            {
-                return (_row["laps"] != DBNull.Value) ? _row["laps"].ToString() : string.Empty;
-            }
-            set
-            {
-                int? _tmp = ValueParser.ReadInt(value);
-                if (_tmp.HasValue)
-                    _row["laps"] = _tmp;
-                else
-                    _row["laps"] = DBNull.Value;
-                OnPropertyChanged("Laps");
-            }
-        }
-
-        public string Elapsed
-        {
-            get
-            {
-                if (_row["elapsed"] != DBNull.Value)
-                {
-                    TimeSpan s = new TimeSpan(0,0,(int)_row["elapsed"]);
-                    if (s.Days > 0)
-                        return s.ToString(@"d\ hh\:mm\:ss");
-                    return s.ToString(@"hh\:mm\:ss");
-                }
-                else
-                    return string.Empty;
-            }
-            set
-            {
-            }
-        }
-
-        public string Corrected
-        {
-            get
-            {
-                if (_row["corrected"] != DBNull.Value)
-                {
-                    TimeSpan s = new TimeSpan((long)((double)_row["corrected"] * 10000000));
-                    if (s.Days > 0)
-                        return s.ToString(@"d\ hh\:mm\:ss\.ff");
-                    return s.ToString(@"hh\:mm\:ss\.ff");
-                }
-                else
-                    return string.Empty;
-            }
-            set
-            {
-            }
-        }
-
-        public string StandardCorrected
-        {
-            get
-            {
-                if (_row["standard_corrected"] != DBNull.Value)
-                {
-                    TimeSpan s = new TimeSpan((long)((double)_row["standard_corrected"] * 10000000));
-                    if (s.Days > 0)
-                        return s.ToString(@"d\ hh\:mm\:ss\.ff");
-                    return s.ToString(@"hh\:mm\:ss\.ff");
-                }
-                else
-                    return string.Empty;
-            }
-            set
-            {
-            }
-        }
-
-        public string Place
-        {
-            get
-            {
-                return _row["place"].ToString();
-            }
-            set
-            {
-                _row["place"] = ValueParser.ReadInt(value);
-                OnPropertyChanged("Place");
-            }
-        }
-
-        public string Points
-        {
-            get
-            {
-                return _row["points"].ToString();
-            }
-            set
-            {
-                _row["points"] = ValueParser.ReadDouble(value);
-                OnPropertyChanged("Points");
-            }
-        }
-
-        public string OpenHandicap
-        {
-            get
-            {
-                return _row["open_handicap"].ToString();
+                return _row["achieved_handicap"] as int?;
             }
 
             set
             {
+                _row["achieved_handicap"] = value;
             }
         }
 
-        public string RollingHandicap
+        public int? new_rolling_handicap
         {
             get
             {
-                return _row["rolling_handicap"].ToString();
+                return _row["new_rolling_handicap"] as int?;
             }
 
             set
             {
+                _row["new_rolling_handicap"] = value;
             }
         }
 
-        public string AchievedHandicap
-        {
-            get
-            {
-                return _row["achieved_handicap"].ToString();
-            }
-
-            set
-            {
-            }
-        }
-
-        public string NewRollingHandicap
-        {
-            get
-            {
-                return _row["new_rolling_handicap"].ToString();
-            }
-
-            set
-            {
-            }
-        }
-
-        public string HandicapStatus
+        public string handicap_status
         {
             get { return _row["handicap_status"] as string; }
-            set { }
+            set { _row["handicap_status"] = value; }
         }
 
-        public string C
+        public string c
         {
             get { return _row["c"] as string; }
-            set { }
+            set { _row["c"] = value; }
         }
 
-        public string A
+        public string a
         {
             get { return _row["a"] as string; }
-            set { }
-        }
-
-        public string PerformanceIndex
-        {
-            get { return _row["performance_index"].ToString(); }
-            set { }
+            set { _row["a"] = value; }
         }
     }
 }

@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using OodHelper.Results.Model;
 using OodHelper.Maintain;
 using OodHelper.Rules;
 
@@ -75,13 +76,13 @@ namespace OodHelper.Results
                 foreach (Entry r in d)
                 {
                     DataRow gr = bts.NewRow();
-                    gr["bid"] = r.Bid;
-                    gr["boatname"] = r.BoatName;
-                    gr["boatclass"] = r.BoatClass;
-                    gr["sailno"] = r.SailNo;
-                    gr["handicap_status"] = r.HandicapStatus;
-                    gr["open_handicap"] = r.OpenHandicap;
-                    gr["rolling_handicap"] = r.RollingHandicap;
+                    gr["bid"] = r.bid;
+                    gr["boatname"] = r.boatname;
+                    gr["boatclass"] = r.boatclass;
+                    gr["sailno"] = r.sailno;
+                    gr["handicap_status"] = r.handicap_status;
+                    gr["open_handicap"] = r.open_handicap;
+                    gr["rolling_handicap"] = r.rolling_handicap;
                     bts.Rows.Add(gr);
                 }
                 bts.AcceptChanges();
@@ -344,7 +345,7 @@ OR surname LIKE @filter) ");
             this.DialogResult = true;
             for (int i = 0; i < sbt.Length; i++)
             {
-                IList<Entry> rd = reds[i].Races.ItemsSource as IList<Entry>;
+                IList<IEntry> rd = reds[i].Races.ItemsSource as IList<IEntry>;
                 a["rid"] = sbt[i].RaceId;
                 DataTable sb = ((DataView)sbt[i].Boats.ItemsSource).Table;
                 Hashtable selectedBids = new Hashtable();
@@ -354,7 +355,7 @@ OR surname LIKE @filter) ");
                 //
                 foreach (DataRow r in sb.Rows)
                 {
-                    if (rd.Where(rm => rm.Bid == (int)r["bid"] && rm.Rid == (int)a["rid"]).Count() == 0)
+                    if (rd.Where(rm => rm.bid == (int)r["bid"] && rm.rid == (int)a["rid"]).Count() == 0)
                     {
                         a["bid"] = r["bid"];
                         a["start_date"] = reds[i].StartDate;
@@ -371,8 +372,8 @@ OR surname LIKE @filter) ");
                 //
                 foreach (Entry r in rd)
                 {
-                    a["bid"] = r.Bid;
-                    if (!selectedBids.ContainsKey(r.Bid.ToString()))
+                    a["bid"] = r.bid;
+                    if (!selectedBids.ContainsKey(r.bid.ToString()))
                     {
                         delete.ExecuteNonQuery(a);
                     }

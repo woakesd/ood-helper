@@ -37,8 +37,6 @@ namespace OodHelper.Results.ViewModel
             }
         }
 
-        readonly TimeSpan TwentyFourHours = new TimeSpan(1, 0, 0, 0);
-
         public string StartTime
         {
             get
@@ -53,7 +51,7 @@ namespace OodHelper.Results.ViewModel
                 TimeSpan? _tmp;
                 if ((_tmp = Converters.ValueParser.ReadTimeSpan(value)).HasValue)
                 {
-                    if (_tmp.Value <= TwentyFourHours)
+                    if (_tmp.Value <= Converters.ValueParser.TwentyFourHours)
                     {
                         _result.Event.start_date = _result.Event.start_date.Value.Date + _tmp.Value;
                         base.OnPropertyChanged("StartTime");
@@ -81,7 +79,7 @@ namespace OodHelper.Results.ViewModel
                 {
                     if (_result.Event.time_limit_type == CalendarEvent.TimeLimitTypes.F)
                     {
-                        if (_tmp < TwentyFourHours)
+                        if (_tmp < Converters.ValueParser.TwentyFourHours)
                         {
                             if (_result.Event.time_limit_fixed.HasValue)
                                 _result.Event.time_limit_fixed = _result.Event.time_limit_fixed.Value.Date + _tmp;

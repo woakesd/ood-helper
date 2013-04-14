@@ -3,32 +3,28 @@ namespace OodHelper.Results.Model
 {
     public interface IEntry
     {
-        string A { get; set; }
-        string AchievedHandicap { get; set; }
-        int Bid { get; }
-        string BoatClass { get; }
-        string BoatName { get; }
-        string C { get; set; }
-        string Corrected { get; set; }
-        string Elapsed { get; set; }
-        string FinishCode { get; set; }
-        DateTime? FinishDate { get; set; }
-        string FinishTime { get; set; }
-        string HandicapStatus { get; set; }
-        DateTime? InterimDate { get; set; }
-        string InterimTime { get; set; }
-        string Laps { get; set; }
-        string NewRollingHandicap { get; set; }
-        string OpenHandicap { get; set; }
-        string OverridePoints { get; set; }
-        string PerformanceIndex { get; set; }
-        string Place { get; set; }
-        string Points { get; set; }
-        int Rid { get; }
-        string RollingHandicap { get; set; }
-        string SailNo { get; }
-        string StandardCorrected { get; set; }
-        DateTime? StartDate { get; set; }
-        string StartTime { get; set; }
+        string a { get; set; }
+        int? achieved_handicap { get; set; }
+        int bid { get; }
+        string boatclass { get; }
+        string boatname { get; }
+        string c { get; set; }
+        double? corrected { get; set; }
+        int? elapsed { get; set; }
+        string finish_code { get; set; }
+        DateTime? finish_date { get; set; }
+        string handicap_status { get; set; }
+        DateTime? interim_date { get; set; }
+        int? laps { get; set; }
+        int? new_rolling_handicap { get; set; }
+        int? open_handicap { get; set; }
+        double? override_points { get; set; }
+        int? place { get; set; }
+        double? points { get; set; }
+        int rid { get; }
+        int? rolling_handicap { get; set; }
+        string sailno { get; }
+        double? standard_corrected { get; set; }
+        DateTime? start_date { get; set; }
     }
 }

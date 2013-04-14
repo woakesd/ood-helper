@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using OodHelper.ViewModel;
@@ -8,7 +9,356 @@ using OodHelper.Results.Model;
 
 namespace OodHelper.Results.ViewModel
 {
-    class ResultEntryViewModel : ViewModelBase
+    public class ResultEntryViewModel : ViewModelBase
     {
+        private IEntry _entry { get; set; }
+
+        public ResultEntryViewModel(IEntry Entry)
+        {
+            _entry = Entry;
+        }
+
+        public int Rid { get { return _entry.rid; } }
+        public int Bid { get { return _entry.bid; } }
+        public string BoatName { get { return _entry.boatname as string; } }
+        public string BoatClass { get { return _entry.boatclass as string; } }
+        public string SailNo { get { return _entry.sailno as string; } }
+
+        public DateTime? StartDate
+        {
+            get
+            {
+                if (_entry.start_date.HasValue)
+                    return (DateTime)_entry.start_date.Value.Date;
+                else
+                    return null;
+            }
+
+            set
+            {
+                if (!_entry.start_date.HasValue)
+                    _entry.start_date = value + _entry.start_date.Value.TimeOfDay;
+                else
+                    _entry.start_date = value;
+                OnPropertyChanged("StartDate");
+            }
+        }
+
+        public string StartTime
+        {
+            get
+            {
+                if (_entry.start_date.HasValue)
+                    return _entry.start_date.Value.ToString("HH:mm:ss");
+                else
+                    return string.Empty;
+            }
+
+            set
+            {
+                TimeSpan? _tmp;
+                _tmp = Converters.ValueParser.ReadTimeSpan(value);
+                if (_tmp.HasValue)
+                {
+                    if (_tmp.Value < Converters.ValueParser.TwentyFourHours)
+                    {
+                        if (_entry.start_date.HasValue)
+                            _entry.start_date = _entry.start_date.Value.Date + _tmp;
+                        else
+                            _entry.start_date = DateTime.Today + _tmp;
+
+                        OnPropertyChanged("StartTime");
+                    }
+                }
+            }
+        }
+
+        public string FinishCode
+        {
+            get
+            {
+                return _entry.finish_code;
+            }
+            set
+            {
+                _entry.finish_code = value;
+                OnPropertyChanged("FinishCode");
+            }
+        }
+
+        public DateTime? FinishDate
+        {
+            get
+            {
+                return _entry.finish_date.HasValue ? _entry.finish_date.Value.Date : (DateTime?)null;
+            }
+
+            set
+            {
+                if (_entry.finish_date.HasValue)
+                    _entry.finish_date = value + _entry.finish_date.Value.TimeOfDay;
+                else
+                    _entry.finish_date = value;
+
+                OnPropertyChanged("FinishDate");
+            }
+        }
+
+        public DateTime? InterimDate
+        {
+            get
+            {
+                return _entry.interim_date.HasValue ? _entry.interim_date.Value.Date : (DateTime?)null;
+            }
+
+            set
+            {
+                if (_entry.interim_date.HasValue)
+                    _entry.interim_date = value + _entry.interim_date.Value.TimeOfDay;
+                else
+                    _entry.interim_date = value;
+
+                OnPropertyChanged("InterimDate");
+            }
+        }
+
+        public string FinishTime
+        {
+            get
+            {
+                if (_entry.finish_date.HasValue)
+                    return _entry.finish_date.Value.ToString("HH:mm:ss");
+                else
+                    return string.Empty;
+            }
+
+            set
+            {
+                TimeSpan? _tmp;
+                _tmp = Converters.ValueParser.ReadTimeSpan(value);
+                if (_tmp.HasValue)
+                {
+                    if (_tmp.Value < Converters.ValueParser.TwentyFourHours)
+                    {
+                        if (_entry.finish_date.HasValue)
+                            _entry.finish_date = _entry.finish_date.Value.Date + _tmp;
+                        else
+                            _entry.finish_date = DateTime.Today + _tmp;
+
+                        OnPropertyChanged("FinishTime");
+                    }
+                }
+            }
+        }
+
+        public string InterimTime
+        {
+            get
+            {
+                if (_entry.interim_date.HasValue)
+                    return _entry.interim_date.Value.ToString("HH:mm:ss");
+                else
+                    return string.Empty;
+            }
+
+            set
+            {
+                TimeSpan? _tmp;
+                _tmp = Converters.ValueParser.ReadTimeSpan(value);
+                if (_tmp.HasValue)
+                {
+                    if (_tmp.Value < Converters.ValueParser.TwentyFourHours)
+                    {
+                        if (_entry.interim_date.HasValue)
+                            _entry.interim_date = _entry.interim_date.Value.Date + _tmp;
+                        else
+                            _entry.interim_date = DateTime.Today + _tmp;
+
+                        OnPropertyChanged("FinishTime");
+                    }
+                }
+            }
+        }
+
+        public string OverridePoints
+        {
+            get
+            {
+                return _entry.override_points.ToString();
+            }
+            set
+            {
+                double tmp;
+                if (Double.TryParse(value, out tmp))
+                    _entry.override_points = tmp;
+                else
+                    _entry.override_points = null;
+
+                OnPropertyChanged("OverridePoints");
+            }
+        }
+
+        public string Laps
+        {
+            get
+            {
+                return _entry.laps.ToString();
+            }
+            set
+            {
+                int? _tmp = Converters.ValueParser.ReadInt(value);
+                _entry.laps = _tmp;
+                OnPropertyChanged("Laps");
+            }
+        }
+
+        public string Elapsed
+        {
+            get
+            {
+                if (_entry.elapsed.HasValue)
+                {
+                    TimeSpan s = new TimeSpan(0, 0, (int)_entry.elapsed);
+                    if (s.Days > 0)
+                        return s.ToString(@"d\ hh\:mm\:ss");
+                    return s.ToString(@"hh\:mm\:ss");
+                }
+                else
+                    return string.Empty;
+            }
+            set
+            {
+            }
+        }
+
+        public string Corrected
+        {
+            get
+            {
+                if (_entry.corrected.HasValue)
+                {
+                    TimeSpan s = new TimeSpan((long)(_entry.corrected * 10000000));
+                    if (s.Days > 0)
+                        return s.ToString(@"d\ hh\:mm\:ss\.ff");
+                    return s.ToString(@"hh\:mm\:ss\.ff");
+                }
+                else
+                    return string.Empty;
+            }
+            set
+            {
+            }
+        }
+
+        public string StandardCorrected
+        {
+            get
+            {
+                if (_entry.standard_corrected.HasValue)
+                {
+                    TimeSpan s = new TimeSpan((long)(_entry.standard_corrected * 10000000));
+                    if (s.Days > 0)
+                        return s.ToString(@"d\ hh\:mm\:ss\.ff");
+                    return s.ToString(@"hh\:mm\:ss\.ff");
+                }
+                else
+                    return string.Empty;
+            }
+            set
+            {
+            }
+        }
+
+        public string Place
+        {
+            get
+            {
+                return _entry.place.ToString();
+            }
+            set
+            {
+                _entry.place = Converters.ValueParser.ReadInt(value);
+                OnPropertyChanged("Place");
+            }
+        }
+
+        public string Points
+        {
+            get
+            {
+                return _entry.points.ToString();
+            }
+            set
+            {
+                _entry.points = Converters.ValueParser.ReadDouble(value);
+                OnPropertyChanged("Points");
+            }
+        }
+
+        public string OpenHandicap
+        {
+            get
+            {
+                return _entry.open_handicap.ToString();
+            }
+
+            set
+            {
+            }
+        }
+
+        public string RollingHandicap
+        {
+            get
+            {
+                return _entry.rolling_handicap.ToString();
+            }
+
+            set
+            {
+            }
+        }
+
+        public string AchievedHandicap
+        {
+            get
+            {
+                return _entry.achieved_handicap.ToString();
+            }
+
+            set
+            {
+            }
+        }
+
+        public string NewRollingHandicap
+        {
+            get
+            {
+                return _entry.new_rolling_handicap.ToString();
+            }
+
+            set
+            {
+            }
+        }
+
+        public string HandicapStatus
+        {
+            get { return _entry.handicap_status; }
+            set { }
+        }
+
+        public string C
+        {
+            get { return _entry.c; }
+            set { }
+        }
+
+        public string A
+        {
+            get { return _entry.a; }
+            set { }
+        }
     }
 }

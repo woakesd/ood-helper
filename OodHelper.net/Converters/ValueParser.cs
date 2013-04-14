@@ -25,6 +25,8 @@ namespace OodHelper.Converters
                 return null;
         }
 
+        public static readonly TimeSpan TwentyFourHours = new TimeSpan(1, 0, 0, 0);
+
         public static TimeSpan? ReadTimeSpan(string Value)
         {
             TimeSpan _tmp;

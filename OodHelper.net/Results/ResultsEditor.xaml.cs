@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using OodHelper.Converters;
+using OodHelper.Results.Model;
 
 namespace OodHelper.Results
 {
@@ -424,7 +425,7 @@ namespace OodHelper.Results
             SetEditableColumns();
 
             Races.ItemsSource = (from DataRow r in RaceDataTable.Rows
-                                          select new Entry(r, StartDate.Value, LimitDate)).ToList<Entry>();
+                                          select new Entry(r, StartDate.Value, LimitDate)).ToList<IEntry>();
             this.DataContext = this;
         }
 
