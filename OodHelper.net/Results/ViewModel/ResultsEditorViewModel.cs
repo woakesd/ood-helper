@@ -10,7 +10,7 @@ namespace OodHelper.Results.ViewModel
 {
     public class ResultsEditorViewModel : ViewModelBase, IPrintSelectItem
     {
-        readonly OodHelper.Results.Model.Race _result;
+        public readonly OodHelper.Results.Model.Race _result;
 
         public IList<IEntry> Entries { get { return _result.EventEntries; } }
         public override string DisplayName { get { return string.Format("{0} - {1}", _result.Event.eventName, _result.Event.eventClass); } }

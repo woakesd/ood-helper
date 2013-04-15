@@ -37,7 +37,7 @@ namespace OodHelper.Converters
             //
             if (Value.Length == 3) Value = Value.PadLeft(4, '0');
 
-            if (!(TimeSpan.TryParseExact(Value, new [] { "hh':'mm", "h':'mm", "hh' 'mm", "h' 'mm", "hhmm" }, null, out _tmp)))
+            if (!(TimeSpan.TryParseExact(Value, new[] { "hh':'mm", "h':'mm", "hh' 'mm", "h' 'mm", "hhmm", "hh':'mm':'ss", "hh' 'mm' 'ss", "hhmmss" }, null, out _tmp)))
                 return null;
             
             return (Nullable<TimeSpan>)_tmp;

@@ -10,7 +10,7 @@ using OodHelper.Results.ViewModel;
 namespace NunitTests.Results.ViewModel
 {
     [TestFixture]
-    public class ResultEditorTest : AssertionHelper
+    public class ResultEditorViewModelTest : AssertionHelper
     {
         /// <summary>
         /// Need to set up different types of races.

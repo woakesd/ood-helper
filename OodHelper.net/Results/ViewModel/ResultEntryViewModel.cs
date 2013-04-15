@@ -12,11 +12,48 @@ namespace OodHelper.Results.ViewModel
     public class ResultEntryViewModel : ViewModelBase
     {
         private IEntry _entry { get; set; }
+        private ICalendarEvent _event { get; set; }
 
-        public ResultEntryViewModel(IEntry Entry)
+        public ResultEntryViewModel(IEntry Entry, ICalendarEvent CalEvent)
         {
             _entry = Entry;
+            _event = CalEvent;
         }
+
+        public void CalendarEvent_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (_event != null)
+            {
+                switch (e.PropertyName)
+                {
+                    case "StartDate":
+                        if (_event.start_date.HasValue && _event.racetype != CalendarEvent.RaceTypes.TimeGate && _event.racetype != CalendarEvent.RaceTypes.SternChase)
+                            StartDate = _event.start_date.Value;
+                        break;
+                    case "StartTime":
+                        if (_event.start_date.HasValue && _event.racetype != CalendarEvent.RaceTypes.TimeGate && _event.racetype != CalendarEvent.RaceTypes.SternChase)
+                            StartDate = _event.start_date.Value;
+                        break;
+                    case "TimeLimit":
+                        switch (_event.time_limit_type)
+                        {
+                            case CalendarEvent.TimeLimitTypes.F:
+                                if (_event.time_limit_delta.HasValue)
+                                    RaceTimeLimit = RaceStart.Value.AddSeconds(_event.time_limit_delta.Value);
+                                else
+                                    RaceTimeLimit = null;
+                                break;
+                            case CalendarEvent.TimeLimitTypes.D:
+                                RaceTimeLimit = _event.time_limit_fixed;
+                                break;
+                        }
+                        break;
+                }
+            }
+        }
+
+        public DateTime? RaceStart { get; set; }
+        public DateTime? RaceTimeLimit { get; set; }
 
         public int Rid { get { return _entry.rid; } }
         public int Bid { get { return _entry.bid; } }
@@ -36,11 +73,9 @@ namespace OodHelper.Results.ViewModel
 
             set
             {
-                if (!_entry.start_date.HasValue)
-                    _entry.start_date = value + _entry.start_date.Value.TimeOfDay;
-                else
-                    _entry.start_date = value;
+                _entry.start_date = value;
                 OnPropertyChanged("StartDate");
+                OnPropertyChanged("StartTime");
             }
         }
 
@@ -67,6 +102,7 @@ namespace OodHelper.Results.ViewModel
                         else
                             _entry.start_date = DateTime.Today + _tmp;
 
+                        OnPropertyChanged("StartDate");
                         OnPropertyChanged("StartTime");
                     }
                 }

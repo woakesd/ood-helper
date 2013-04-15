@@ -11,7 +11,7 @@ namespace NunitTests
     public class ValueParserTests : AssertionHelper
     {
         [Test]
-        public void TimeSpanParse()
+        public void TimeSpanNoSecondsParse()
         {
             Expect(ValueParser.ReadTimeSpan("14:20"), Is.EqualTo(new TimeSpan(14, 20, 0)), "Format hh:mm");
             Expect(ValueParser.ReadTimeSpan("14 02"), Is.EqualTo(new TimeSpan(14, 2, 0)), "Format hh mm");
@@ -25,6 +25,17 @@ namespace NunitTests
 
             Expect(ValueParser.ReadTimeSpan("XAAS1200"), Is.Null, "Bad input random alphanumeric");
             Expect(ValueParser.ReadTimeSpan("-1"), Is.Null, "Bad input, -1");
+        }
+
+        [Test]
+        public void TimeSpanWithSecondsParse()
+        {
+            Expect(ValueParser.ReadTimeSpan("14:20:22"), Is.EqualTo(new TimeSpan(14, 20, 22)), "Format hh:mm:ss");
+            Expect(ValueParser.ReadTimeSpan("14 02 22"), Is.EqualTo(new TimeSpan(14, 2, 22)), "Format hh mm ss");
+            Expect(ValueParser.ReadTimeSpan("145535"), Is.EqualTo(new TimeSpan(14, 55, 35)), "Format hhmmss");
+
+            Expect(ValueParser.ReadTimeSpan("24:00:00"), Is.Null, "24:00:00 should fail");
+            Expect(ValueParser.ReadTimeSpan("23:59:61"), Is.Null, "23:59:61 should fail");
         }
 
         [Test]
