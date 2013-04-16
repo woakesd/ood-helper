@@ -122,8 +122,7 @@ namespace OodHelper
             }
             catch (Exception ex)
             {
-                ShowException _show = new ShowException(ex);
-                _show.ShowDialog();
+                ShowException.DoShow(ex);
                 throw;
             }
         }
@@ -145,8 +144,7 @@ RESTORE VERIFYONLY FROM  DISK = N'{1}\{0}.bak' WITH  FILE = @backupSetId,  NOUNL
                 }
                 catch (Exception ex)
                 {
-                    ShowException _show = new ShowException(ex);
-                    _show.ShowDialog();
+                    ShowException.DoShow(ex);
                     throw;
                 }
                 finally
@@ -167,8 +165,6 @@ RESTORE VERIFYONLY FROM  DISK = N'{1}\{0}.bak' WITH  FILE = @backupSetId,  NOUNL
             {
                 SetSingleUser(DatabaseName);
                 BackupDatabase(DatabaseName, DatabaseFolder);
-                //File.Move(DataFileName, DatabaseFolder + _backupDb + ".mdf");
-                //File.Move(LogFileName, DatabaseFolder + _backupDb + ".ldf");
             }
 
             CreateDatabase(DatabaseName, DataFileName);

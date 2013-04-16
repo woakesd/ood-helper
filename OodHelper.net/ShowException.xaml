@@ -17,6 +17,6 @@
         <ScrollViewer Grid.Row="1" Grid.Column="0" CanContentScroll="True" IsEnabled="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <TextBox IsReadOnly="True" Margin="3" Text="{Binding StackTrace,Mode=OneWay}"/>
         </ScrollViewer>
-        <Button Grid.Row="2" Grid.Column="0" Margin="3" IsDefault="True" IsCancel="True">Ok</Button>
+        <Button Grid.Row="2" Grid.Column="0" Margin="3" IsDefault="True" IsCancel="True" Click="OkClick">Ok</Button>
     </Grid>
 </Window>
