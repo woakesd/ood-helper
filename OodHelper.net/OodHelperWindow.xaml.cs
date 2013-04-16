@@ -129,7 +129,6 @@ namespace OodHelper
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Db.Compact();
         }
 
         private void People_Click(object sender, RoutedEventArgs e)

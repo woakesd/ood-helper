@@ -565,20 +565,6 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
             }
         }
 
-        public static void Compact()
-        {
-            try
-            {
-                //
-                // After compacting we need to adjust seed values on identity columns
-                //
-                ReseedDatabase();
-            }
-            catch (SqlException)
-            {
-            }
-        }
-
         public static void ReseedDatabase()
         {
             string o;
