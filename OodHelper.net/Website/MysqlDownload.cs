@@ -99,6 +99,7 @@ namespace OodHelper.Website
             }
             catch (Exception ex)
             {
+                ShowException.DoShow(ex);
                 ErrorLogger.LogException(ex);
                 throw;
             }
