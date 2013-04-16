@@ -99,6 +99,8 @@ namespace OodHelper.Results.ViewModel
                     {
                         if (_entry.start_date.HasValue)
                             _entry.start_date = _entry.start_date.Value.Date + _tmp;
+                        else if (_event != null && _event.start_date != null)
+                            _entry.start_date = _event.start_date.Value.Date + _tmp;
                         else
                             _entry.start_date = DateTime.Today + _tmp;
 
@@ -178,6 +180,8 @@ namespace OodHelper.Results.ViewModel
                     {
                         if (_entry.finish_date.HasValue)
                             _entry.finish_date = _entry.finish_date.Value.Date + _tmp;
+                        else if (_event != null && _event.start_date != null)
+                            _entry.finish_date = _event.start_date.Value.Date + _tmp;
                         else
                             _entry.finish_date = DateTime.Today + _tmp;
 
