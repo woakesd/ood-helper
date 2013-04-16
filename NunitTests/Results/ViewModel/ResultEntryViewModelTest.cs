@@ -25,7 +25,7 @@ namespace NunitTests.Results.ViewModel
             _entryVM.StartTime = _test1;
 
             Expect(_entryVM.StartTime == _test1, "Start time accepted, with no racedate set");
-            Expect(_entryVM.StartDate == DateTime.Today, "Start date set to today");
+            Assert.AreEqual(DateTime.Today, _entryVM.StartDate, "Start date set to today");
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace NunitTests.Results.ViewModel
             _entryVM.StartTime = _test1;
 
             Expect(_entryVM.StartTime == _test1, "Start time accepted, overriding entry start");
-            Expect(_entryVM.StartDate == _now.Date, "Start date still as for now");
+            Assert.AreEqual(_now.Date, _entryVM.StartDate, "Start date still as for now");
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace NunitTests.Results.ViewModel
             _entryVM.StartTime = _test1;
 
             Expect(_entryVM.StartTime == _test1, "Start time accepted, overriding entry start");
-            Expect(_entryVM.StartDate == _now.Date, "Start date still as for now");
+            Assert.AreEqual(_now.Date, _entryVM.StartDate, "Start date still as for now");
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace NunitTests.Results.ViewModel
             _entryVM.FinishTime = _test1;
 
             Expect(_entryVM.FinishTime == _test1, "Finish time accepted, overriding null finish");
-            Expect(_entryVM.FinishDate == DateTime.Today, "Start date set today");
+            Assert.AreEqual(DateTime.Today, _entryVM.FinishDate, "Start date set today");
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace NunitTests.Results.ViewModel
             _entryVM.FinishTime = _test1;
 
             Expect(_entryVM.FinishTime == _test1, "Finish time accepted, overriding null finish");
-            Expect(_entryVM.FinishDate == _test.Date, "Start date set today");
+            Assert.AreEqual(_test.Date, _entryVM.FinishDate, "Start date set today");
         }
 
         [Test]
