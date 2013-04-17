@@ -391,6 +391,7 @@ OR surname LIKE @filter) ");
         private void NewBoat_Click(object sender, RoutedEventArgs e)
         {
             BoatView b = new BoatView(0);
+            b.Owner = this;
             if (b.ShowDialog() == true)
             {
                 Db c = new Db(BoatsSql.ToString());

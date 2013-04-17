@@ -92,6 +92,8 @@ namespace OodHelper.Website
                 scon.Close();
                 scon.Dispose();
 
+                Db.ReseedDatabase();
+
                 mcon.Close();
                 mcon.Dispose();
                 

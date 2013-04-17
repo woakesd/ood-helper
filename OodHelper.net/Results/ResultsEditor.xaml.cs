@@ -709,6 +709,25 @@ namespace OodHelper.Results
             OnPropertyChanged("CalculateEnabled");
         }
 
+        void SetColumnAttributes()
+        {
+            foreach (DataGridColumn c in Races.Columns)
+            {
+                Color _veryLightGray = new Color();
+                _veryLightGray.A = 255;
+                _veryLightGray.R = 224;
+                _veryLightGray.G = 224;
+                _veryLightGray.B = 224;
+                SolidColorBrush _veryLightGrayBrush = new SolidColorBrush(_veryLightGray);
+                //if (false && c.IsReadOnly)
+                //{
+                //    if (!c.IsSealed)
+                //        c.CellStyle = new System.Windows.Style();
+                //        c.CellStyle.Setters.Add(new Setter(DataGridCell.BackgroundProperty, _veryLightGrayBrush));
+                //}
+            }
+        }
+
         //
         // If key down and a cursor key look to see if the cursor is at the end or start. If it is and key down is left
         // or right (for start and end respectively) then we will commit changes and then end editing.

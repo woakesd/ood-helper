@@ -563,7 +563,6 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
 
         public static void ReseedDatabase()
         {
-            string o;
             int b = 1, t;
             b = Settings.BottomSeed;
             t = Settings.TopSeed;

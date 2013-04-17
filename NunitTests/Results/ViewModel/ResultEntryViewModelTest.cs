@@ -120,5 +120,45 @@ namespace NunitTests.Results.ViewModel
             Expect(_entryVM.FinishTime == _test1, "Finish time accepted, overriding null finish");
             Assert.AreEqual(_test.Date, _entryVM.FinishDate, "Finish date set to start date");
         }
+
+        [Test]
+        public void ReadBidTest()
+        {
+            Random _rnd = new Random();
+            int _test = _rnd.Next(9999);
+            Mock<IEntry> _entry = new Mock<IEntry>();
+
+            _entry.SetupProperty(d => d.bid, _test);
+
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            Assert.AreEqual(_test, _entryVM.Bid, "Read Bid");
+        }
+
+        [Test]
+        public void ReadBoatNameTest()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+            string _test = "Rothi";
+
+            _entry.SetupProperty(d => d.boatname, _test);
+
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            Assert.AreEqual(_test, _entryVM.BoatName, "Read Boatname");
+        }
+
+        [Test]
+        public void ReadBoatClassTest()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+            string _test = "Lasere";
+
+            _entry.SetupProperty(d => d.boatclass, _test);
+
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            Assert.AreEqual(_test, _entryVM.BoatClass, "Read BoatClass");
+        }
     }
 }
