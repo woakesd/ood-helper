@@ -5,9 +5,9 @@ namespace OodHelper.Results.Model
     {
         string a { get; set; }
         int? achieved_handicap { get; set; }
-        int bid { get; }
-        string boatclass { get; }
-        string boatname { get; }
+        int bid { get; set; }
+        string boatclass { get; set; }
+        string boatname { get; set; }
         string c { get; set; }
         double? corrected { get; set; }
         int? elapsed { get; set; }
@@ -21,9 +21,9 @@ namespace OodHelper.Results.Model
         double? override_points { get; set; }
         int? place { get; set; }
         double? points { get; set; }
-        int rid { get; }
+        int rid { get; set; }
         int? rolling_handicap { get; set; }
-        string sailno { get; }
+        string sailno { get; set; }
         double? standard_corrected { get; set; }
         DateTime? start_date { get; set; }
     }

@@ -152,7 +152,7 @@ namespace NunitTests.Results.ViewModel
         public void ReadBoatClassTest()
         {
             Mock<IEntry> _entry = new Mock<IEntry>();
-            string _test = "Lasere";
+            string _test = "Laser";
 
             _entry.SetupProperty(d => d.boatclass, _test);
 

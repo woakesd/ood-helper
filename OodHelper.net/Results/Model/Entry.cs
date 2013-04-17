@@ -18,11 +18,11 @@ namespace OodHelper.Results.Model
             _limitDate = LimitDate;
         }
 
-        public int rid { get { return (int)_row["rid"]; } }
-        public int bid { get { return (int)_row["bid"]; } }
-        public string boatname { get { return _row["boatname"] as string; } }
-        public string boatclass { get { return _row["boatclass"] as string; } }
-        public string sailno { get { return _row["sailno"] as string; } }
+        public int rid { get { return (int)_row["rid"]; } set { } }
+        public int bid { get { return (int)_row["bid"]; } set { } }
+        public string boatname { get { return _row["boatname"] as string; } set { _row["boatname"] = value; } }
+        public string boatclass { get { return _row["boatclass"] as string; } set { _row["boatclass"] = value; } }
+        public string sailno { get { return _row["sailno"] as string; } set { _row["sailno"] = value; } }
 
         private DateTime _startDate;
         private DateTime _limitDate;
