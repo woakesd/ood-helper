@@ -393,20 +393,12 @@ OR surname LIKE @filter) ");
             b.Owner = this;
             if (b.ShowDialog() == true)
             {
-                Db c = new Db(BoatsSql.ToString());
-                DataTable dt = c.GetData(null);
-
-                if (b.Bid > 0)
+                BoatModel _bm = b.DataContext as BoatModel;
+                if (_bm != null)
                 {
-                    c = new Db("SELECT boatname FROM boats WHERE bid = @bid");
-                    Hashtable p = new Hashtable();
-                    p["bid"] = b.Bid;
-                    Boatname.Text = c.GetScalar(p) as string;
-                }
-
-                Boats.ItemsSource = dt.DefaultView;
-                if (Boatname.Text != string.Empty)
+                    Boatname.Text = _bm.BoatName;
                     FilterBoats();
+                }
             }
         }
 
