@@ -720,12 +720,12 @@ namespace OodHelper.Results
                 _veryLightGray.G = 224;
                 _veryLightGray.B = 224;
                 SolidColorBrush _veryLightGrayBrush = new SolidColorBrush(_veryLightGray);
-                if (false && c.IsReadOnly)
-                {
-                    if (!c.IsSealed)
-                        c.CellStyle = new System.Windows.Style();
-                        c.CellStyle.Setters.Add(new Setter(DataGridCell.BackgroundProperty, _veryLightGrayBrush));
-                }
+                //if (false && c.IsReadOnly)
+                //{
+                //    if (!c.IsSealed)
+                //        c.CellStyle = new System.Windows.Style();
+                //        c.CellStyle.Setters.Add(new Setter(DataGridCell.BackgroundProperty, _veryLightGrayBrush));
+                //}
             }
         }
 
