@@ -160,5 +160,40 @@ namespace NunitTests.Results.ViewModel
 
             Assert.AreEqual(_test, _entryVM.BoatClass, "Read BoatClass");
         }
+
+        [Test]
+        public void ReadSailnoTest()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+            string _test = "182232";
+
+            _entry.SetupProperty(d => d.sailno, _test);
+
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            Assert.AreEqual(_test, _entryVM.SailNo, "Read SailNo");
+        }
+
+        [Test]
+        public void ReadFinishCodeTest()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+            string _test = "OOD";
+
+            _entry.SetupProperty(d => d.finish_code, _test);
+
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            Assert.AreEqual(_test, _entryVM.FinishCode, "Read FinishCode");
+
+            _entryVM.FinishCode = "RET";
+            Assert.AreEqual("RET", _entryVM.FinishCode, "Read FinishCode change to RET");
+
+            _entryVM.FinishCode = string.Empty;
+            Assert.AreEqual(string.Empty, _entryVM.FinishCode, "Read FinishCode change to RET");
+
+            _entryVM.FinishTime = "RET";
+            Assert.AreEqual("RET", _entryVM.FinishCode, "Read FinishCode change to RET");
+        }
     }
 }
