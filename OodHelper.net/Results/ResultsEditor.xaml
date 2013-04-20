@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:cnv="clr-namespace:OodHelper.Converters"
+             xmlns:behavior="clr-namespace:OodHelper.Behaviors"
              d:DesignHeight="128" d:DesignWidth="1293">
     <UserControl.Resources>
         <cnv:IntConverter x:Key="IntConverter"/>
@@ -85,13 +86,11 @@
             </StackPanel>
         </Grid>
         <DockPanel Grid.Row="1" Grid.ColumnSpan="2" Name="racesDockPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <DataGrid SelectionMode="Single" Name="Races" CanUserDeleteRows="False" AutoGenerateColumns="False" SelectionUnit="Cell" 
+            <DataGrid SelectionMode="Single" Name="Races" CanUserDeleteRows="False" AutoGenerateColumns="False" SelectionUnit="Cell"
                       CanUserResizeRows="False" CanUserAddRows="False" IsReadOnly="False">
-                <DataGrid.Resources>
+             <DataGrid.Resources>
                     <Style x:Key="Editable" TargetType="DataGridCell">
-                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridCell_PreviewMouseLeftButtonDown" />
-                        <EventSetter Event="PreviewKeyDown" Handler="DataGridCell_PreviewKeyDown" />
-                        <EventSetter Event="KeyUp" Handler="DataGridCell_KeyUp" />
+                        <Setter Property="behavior:ExcelLikeBehavior.IsExcelLike"  Value="True"/>
                         <Setter Property="Background" Value="White"/>
                     </Style>
                     <Style x:Key="ReadOnly" TargetType="DataGridCell">
