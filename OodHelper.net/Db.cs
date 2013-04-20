@@ -122,8 +122,7 @@ namespace OodHelper
             }
             catch (Exception ex)
             {
-                ShowException _show = new ShowException(ex);
-                _show.ShowDialog();
+                ShowException.DoShow(ex);
                 throw;
             }
         }
@@ -145,8 +144,7 @@ RESTORE VERIFYONLY FROM  DISK = N'{1}\{0}.bak' WITH  FILE = @backupSetId,  NOUNL
                 }
                 catch (Exception ex)
                 {
-                    ShowException _show = new ShowException(ex);
-                    _show.ShowDialog();
+                    ShowException.DoShow(ex);
                     throw;
                 }
                 finally
@@ -167,8 +165,6 @@ RESTORE VERIFYONLY FROM  DISK = N'{1}\{0}.bak' WITH  FILE = @backupSetId,  NOUNL
             {
                 SetSingleUser(DatabaseName);
                 BackupDatabase(DatabaseName, DatabaseFolder);
-                //File.Move(DataFileName, DatabaseFolder + _backupDb + ".mdf");
-                //File.Move(LogFileName, DatabaseFolder + _backupDb + ".ldf");
             }
 
             CreateDatabase(DatabaseName, DataFileName);
@@ -565,23 +561,8 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
             }
         }
 
-        public static void Compact()
-        {
-            try
-            {
-                //
-                // After compacting we need to adjust seed values on identity columns
-                //
-                ReseedDatabase();
-            }
-            catch (SqlException)
-            {
-            }
-        }
-
         public static void ReseedDatabase()
         {
-            string o;
             int b = 1, t;
             b = Settings.BottomSeed;
             t = Settings.TopSeed;

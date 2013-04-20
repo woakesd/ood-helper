@@ -19,12 +19,26 @@ namespace OodHelper
     /// </summary>
     public partial class ShowException : Window
     {
+        public static void DoShow(Exception Except)
+        {
+            Application.Current.Dispatcher.Invoke(delegate
+            {
+                ShowException _se = new ShowException(Except);
+                _se.Show();
+            });
+        }
+
         public ShowException(Exception Except)
         {
             DataContext = Except;
             if (App.Current.MainWindow != this && App.Current.MainWindow.IsArrangeValid)
                 Owner = App.Current.MainWindow;
             InitializeComponent();
+        }
+
+        private void OkClick(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

@@ -92,6 +92,8 @@ namespace OodHelper.Website
                 scon.Close();
                 scon.Dispose();
 
+                Db.ReseedDatabase();
+
                 mcon.Close();
                 mcon.Dispose();
                 
@@ -99,6 +101,7 @@ namespace OodHelper.Website
             }
             catch (Exception ex)
             {
+                ShowException.DoShow(ex);
                 ErrorLogger.LogException(ex);
                 throw;
             }

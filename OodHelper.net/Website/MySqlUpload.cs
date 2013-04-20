@@ -101,8 +101,8 @@ namespace OodHelper.Website
             }
             catch (Exception exp)
             {
-                System.Windows.MessageBox.Show(exp.Message, "Error", System.Windows.MessageBoxButton.OK, 
-                    System.Windows.MessageBoxImage.Error);
+                ShowException.DoShow(exp);
+                ErrorLogger.LogException(exp);
             }
         }
 

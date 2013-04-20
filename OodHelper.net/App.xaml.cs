@@ -45,8 +45,7 @@ namespace OodHelper
         void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             ErrorLogger.LogException(e.Exception);
-            ShowException _show = new ShowException(e.Exception);
-            _show.ShowDialog();
+            ShowException.DoShow(e.Exception);
             App.Current.Shutdown();
         }
     }

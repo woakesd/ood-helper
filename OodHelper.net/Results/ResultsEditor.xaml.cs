@@ -720,89 +720,15 @@ namespace OodHelper.Results
                 _veryLightGray.G = 224;
                 _veryLightGray.B = 224;
                 SolidColorBrush _veryLightGrayBrush = new SolidColorBrush(_veryLightGray);
-                if (false && c.IsReadOnly)
-                {
-                    if (!c.IsSealed)
-                        c.CellStyle = new System.Windows.Style();
-                        c.CellStyle.Setters.Add(new Setter(DataGridCell.BackgroundProperty, _veryLightGrayBrush));
-                }
+                //if (false && c.IsReadOnly)
+                //{
+                //    if (!c.IsSealed)
+                //        c.CellStyle = new System.Windows.Style();
+                //        c.CellStyle.Setters.Add(new Setter(DataGridCell.BackgroundProperty, _veryLightGrayBrush));
+                //}
             }
         }
 
-        //
-        // If key down and a cursor key look to see if the cursor is at the end or start. If it is and key down is left
-        // or right (for start and end respectively) then we will commit changes and then end editing.
-        //
-        private void DataGridCell_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Down || e.Key == Key.Up || e.Key == Key.Left || e.Key == Key.Right)
-            {
-                DataGridCell cell = sender as DataGridCell;
-                if (cell != null)
-                {
-                    TextBox c = cell.Content as TextBox;
-                    if (c == null || ((e.Key != Key.Right || c.SelectionStart != 0 || c.Text.Length == 0)
-                        && (e.Key != Key.Left && e.Key != Key.Right || c.SelectionStart == 0 || c.SelectionStart + c.SelectionLength >= c.Text.Length)
-                        && (e.Key != Key.Left || c.SelectionStart + c.SelectionLength < c.Text.Length || c.Text.Length == 0)))
-                    {
-                        Races.CommitEdit();
-                        cell.IsEditing = false;
-                    }
-                }
-                e.Handled = false;
-            }
-        }
-
-        //
-        // on key up with a cursor key go straight to editing mode if the cell is editable and we weren'_task in
-        // edit mode.
-        //
-        void DataGridCell_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Down || e.Key == Key.Up || e.Key == Key.Left || e.Key == Key.Right)
-            {
-                DataGridCell cell = sender as DataGridCell;
-                if (cell != null && !cell.IsEditing && !cell.IsReadOnly)
-                {
-                    cell.Focus();
-                    Races.BeginEdit();
-                }
-            }
-        }
-
-        //
-        // This allows the user to click in an editable cell and immediatly be in edit mode.
-        //
-        private void DataGridCell_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            DataGridCell cell = sender as DataGridCell;
-            if (cell != null && !cell.IsEditing && !cell.IsReadOnly)
-            {
-                if (!cell.IsFocused)
-                {
-                    cell.Focus();
-                    cell.IsSelected = true;
-                    Races.BeginEdit();
-                }
-            }
-        }
-
-        static T FindVisualParent<T>(UIElement element) where T : UIElement
-        {
-            UIElement parent = element;
-            while (parent != null)
-            {
-                T correctlyTyped = parent as T;
-                if (correctlyTyped != null)
-                {
-                    return correctlyTyped;
-                }
-
-                parent = VisualTreeHelper.GetParent(parent) as UIElement;
-            }
-            return null;
-        }
-        
         //
         // Will hold the list found below so that if the user says yes to auto population we don'_task need to select
         // again.
