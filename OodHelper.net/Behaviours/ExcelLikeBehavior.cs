@@ -13,12 +13,12 @@ namespace OodHelper.Behaviors
 {
     public class ExcelLikeBehavior : DependencyObject
     {
-        public static object GetIsExcelLike(UIElement Target)
+        public static bool GetIsExcelLike(UIElement Target)
         {
-            return Target.GetValue(IsExcelLikeProperty);
+            return (bool)Target.GetValue(IsExcelLikeProperty);
         }
 
-        public static void SetIsExcelLike(UIElement Target, object Value)
+        public static void SetIsExcelLike(UIElement Target, bool Value)
         {
             Target.SetValue(IsExcelLikeProperty, Value);
         }
@@ -100,6 +100,11 @@ namespace OodHelper.Behaviors
                     DataGrid _dg = FindVisualParent<DataGrid>(cell);
                     if (_dg != null)
                         _dg.BeginEdit();
+                    if (cell.Column.GetType() == typeof(DataGridCheckBoxColumn))
+                    {
+                        cell.IsEditing = true;
+                        object obj = cell.DataContext;
+                    }
                 }
             }
         }
