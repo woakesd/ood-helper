@@ -80,12 +80,11 @@
             </StackPanel>
         </Grid>
         <DockPanel Grid.Row="1" Grid.ColumnSpan="2" Name="racesDockPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <DataGrid SelectionMode="Single" Name="Races" CanUserDeleteRows="False" AutoGenerateColumns="False" SelectionUnit="Cell"
+            <DataGrid Name="Races" SelectionMode="Single" CanUserDeleteRows="False" AutoGenerateColumns="False" SelectionUnit="Cell"
                       CanUserResizeRows="False" CanUserAddRows="False" IsReadOnly="False">
              <DataGrid.Resources>
                     <Style x:Key="Editable" TargetType="DataGridCell">
-                        <Setter Property="behavior:ExcelLikeBehavior.IsExcelLike"  Value="True"/>
-                        <Setter Property="Background" Value="White"/>
+                        <Setter Property="behavior:ExcelLikeBehavior.IsExcelLike" Value="True"/>
                     </Style>
                     <Style x:Key="ReadOnly" TargetType="DataGridCell">
                         <Setter Property="Background" Value="#fff0f0f0"/>
