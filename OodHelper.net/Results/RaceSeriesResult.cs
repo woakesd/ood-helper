@@ -29,13 +29,13 @@ namespace OodHelper.Results
                 string SeriesName = dt["sname"] as string;
                 string SeriesDiscards = dt["discards"] as string;
 
-                c = new Db(@"SELECT c.event, c.class, c.handicapping, c.rid, c.start_date, c.result_calculated, c.race_type
+                c = new Db(@"SELECT c.event, c.class, c.handicapping, c.rid, c.start_date, c.result_calculated, c.racetype
                     FROM calendar c
                     INNER JOIN calendar_series_join j ON c.rid = j.rid
                     INNER JOIN races r on r.rid = c.rid
                     WHERE j.sid = @sid
                     AND c.raced = 1 
-                    GROUP BY c.event, c.class, c.handicapping, c.rid, c.start_date, c.result_calculated, c.race_type
+                    GROUP BY c.event, c.class, c.handicapping, c.rid, c.start_date, c.result_calculated, c.racetype
                     ORDER BY c.start_date");
 
                 DataTable races = c.GetData(p);
@@ -45,7 +45,7 @@ namespace OodHelper.Results
                 foreach (DataRow race in races.Rows)
                 {
                     Model.CalendarEvent.RaceTypes _raceType;
-                    if (Enum.TryParse<Model.CalendarEvent.RaceTypes>(race["race_type"].ToString(), out _raceType))
+                    if (Enum.TryParse<Model.CalendarEvent.RaceTypes>(race["racetype"].ToString(), out _raceType))
                     {
                         _worker.SetProgress("Calculating " + race["event"] + " - " + race["class"], races.Rows.IndexOf(race));
 
