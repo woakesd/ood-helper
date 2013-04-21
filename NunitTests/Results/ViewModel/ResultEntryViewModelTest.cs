@@ -175,6 +175,7 @@ namespace NunitTests.Results.ViewModel
         }
 
         [Test]
+        [Ignore]
         public void ReadFinishCodeTest()
         {
             Mock<IEntry> _entry = new Mock<IEntry>();
