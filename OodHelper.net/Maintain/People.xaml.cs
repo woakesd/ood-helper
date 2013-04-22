@@ -147,6 +147,7 @@ ORDER BY surname, firstname");
             PersonView p = new PersonView(0);
             if (p.ShowDialog().Value)
             {
+                Peoplename.Text = ((PersonModel)p.DataContext).Surname;
                 LoadGrid();
             }
         }

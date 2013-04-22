@@ -62,6 +62,7 @@ ORDER BY boatname"))
             BoatView b = new BoatView(0);
             if (b.ShowDialog().Value)
             {
+                Boatname.Text = ((BoatModel)b.DataContext).BoatName;
                 LoadGrid();
             }
         }
