@@ -147,6 +147,7 @@ ORDER BY surname, firstname");
             PersonView p = new PersonView(0);
             if (p.ShowDialog().Value)
             {
+                Peoplename.Text = ((PersonModel)p.DataContext).Surname;
                 LoadGrid();
             }
         }
@@ -431,11 +432,6 @@ ORDER BY surname, firstname");
                 System.Windows.MessageBox.Show(exp.Message, "Error", System.Windows.MessageBoxButton.OK,
                     System.Windows.MessageBoxImage.Error);
             }
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }
