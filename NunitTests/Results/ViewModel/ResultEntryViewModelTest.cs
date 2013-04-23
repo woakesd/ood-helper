@@ -79,7 +79,7 @@ namespace NunitTests.Results.ViewModel
             _entryVM.FinishTime = _test1;
 
             Expect(_entryVM.FinishTime == _test1, "Finish time accepted, overriding null finish");
-            Assert.AreEqual(DateTime.Today, _entryVM.FinishDate, "Start date set today");
+            Assert.AreEqual(DateTime.Today, _entryVM.FinishDate, "Finish date set today");
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace NunitTests.Results.ViewModel
             _entryVM.FinishTime = _test1;
 
             Expect(_entryVM.FinishTime == _test1, "Finish time accepted, overriding null finish");
-            Assert.AreEqual(_test.Date, _entryVM.FinishDate, "Start date set today");
+            Assert.AreEqual(_test.Date, _entryVM.FinishDate, "Finish date set today");
         }
 
         [Test]
@@ -119,6 +119,61 @@ namespace NunitTests.Results.ViewModel
 
             Expect(_entryVM.FinishTime == _test1, "Finish time accepted, overriding null finish");
             Assert.AreEqual(_test.Date, _entryVM.FinishDate, "Finish date set to start date");
+        }
+
+        [Test]
+        public void InterimTimeNullTest()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+
+            _entry.SetupProperty(d => d.interim_date);
+
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            string _test1 = "14:35:32";
+            _entryVM.InterimTime = _test1;
+
+            Expect(_entryVM.InterimTime == _test1, "Interim time accepted, overriding null finish");
+            Assert.AreEqual(DateTime.Today, _entryVM.InterimDate, "Interim date set today");
+        }
+
+        [Test]
+        public void InterimTimeNotNullTest()
+        {
+            Random _rnd = new Random();
+            Mock<IEntry> _entry = new Mock<IEntry>();
+            DateTime _test = DateTime.Now.AddDays(_rnd.Next(-30, 0));
+
+            _entry.SetupProperty(d => d.interim_date, _test);
+
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            string _test1 = "14:35:32";
+            _entryVM.InterimTime = _test1;
+
+            Expect(_entryVM.InterimTime == _test1, "Interim time accepted, overriding null finish");
+            Assert.AreEqual(_test.Date, _entryVM.InterimDate, "Interim date set today");
+        }
+
+        [Test]
+        public void InterimTimeEventStartTimeTest()
+        {
+            Random _rnd = new Random();
+            DateTime _test = DateTime.Now.AddDays(_rnd.Next(-30, 0));
+
+            Mock<IEntry> _entry = new Mock<IEntry>();
+            Mock<ICalendarEvent> _event = new Mock<ICalendarEvent>();
+
+            _event.SetupProperty(d => d.start_date, _test);
+            _entry.SetupProperty(d => d.interim_date);
+
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, _event.Object);
+
+            string _test1 = "14:35:32";
+            _entryVM.InterimTime = _test1;
+
+            Expect(_entryVM.InterimTime == _test1, "Interim time accepted, overriding null interim");
+            Assert.AreEqual(_test.Date, _entryVM.InterimDate, "Interim date set to start date");
         }
 
         [Test]
@@ -175,8 +230,7 @@ namespace NunitTests.Results.ViewModel
         }
 
         [Test]
-        [Ignore]
-        public void ReadFinishCodeTest()
+        public void FinishCodeTest()
         {
             Mock<IEntry> _entry = new Mock<IEntry>();
             string _test = "OOD";
@@ -187,14 +241,185 @@ namespace NunitTests.Results.ViewModel
 
             Assert.AreEqual(_test, _entryVM.FinishCode, "Read FinishCode");
 
+            _entryVM.FinishCode = _test.ToLower();
+            Assert.AreEqual(_test, _entryVM.FinishCode, "Cannot set Finishcode to lower");
+
             _entryVM.FinishCode = "RET";
             Assert.AreEqual("RET", _entryVM.FinishCode, "Read FinishCode change to RET");
 
             _entryVM.FinishCode = string.Empty;
-            Assert.AreEqual(string.Empty, _entryVM.FinishCode, "Read FinishCode change to RET");
+            Assert.AreEqual(string.Empty, _entryVM.FinishCode, "Read FinishCode change to empty string");
 
             _entryVM.FinishTime = "RET";
             Assert.AreEqual("RET", _entryVM.FinishCode, "Read FinishCode change to RET");
+
+            _entryVM.FinishCode = "ocs";
+            Assert.AreEqual("OCS", _entryVM.FinishCode, "Read FinishCode change to OCS when set to ocs");
+
+        }
+
+        [Test]
+        public void FinishDateTest()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+            DateTime _test = DateTime.Now;
+
+            _entry.SetupProperty(d => d.finish_date);
+
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            Assert.AreEqual(false, _entryVM.FinishDate.HasValue, "FinishDate has no value");
+            
+            _entry.Object.finish_date = _test;
+            Assert.AreEqual(_test.Date, _entryVM.FinishDate, "FinishDate is test date");
+            Assert.AreEqual(_test.TimeOfDay.ToString("hh':'mm':'ss"), _entryVM.FinishTime, "Finish time is as set");
+
+            _test = DateTime.Now.AddDays(-10).AddMinutes(33);
+            _entryVM.FinishDate = _test;
+            Assert.AreEqual(_test.Date, _entryVM.FinishDate, "FinishDate is set to FinishTime");
+            Assert.AreNotEqual(_test.TimeOfDay.ToString("hh':'mm':'ss"), _entryVM.FinishTime, "FinishTime not changed when FinishDate set");
+        }
+
+        [Test]
+        public void InterimDateTest()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+            DateTime _test = DateTime.Now;
+
+            _entry.SetupProperty(d => d.interim_date);
+
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            Assert.AreEqual(false, _entryVM.InterimDate.HasValue, "InterimDate has no value");
+
+            _entry.Object.interim_date = _test;
+            Assert.AreEqual(_test.Date, _entryVM.InterimDate, "InterimDate is test date");
+            Assert.AreEqual(_test.TimeOfDay.ToString("hh':'mm':'ss"), _entryVM.InterimTime, "InterimTime is as set");
+
+            _test = DateTime.Now.AddDays(-10).AddMinutes(33);
+            _entryVM.InterimDate = _test;
+            Assert.AreEqual(_test.Date, _entryVM.InterimDate, "InterimDate is set to InterimTime");
+            Assert.AreNotEqual(_test.TimeOfDay.ToString("hh':'mm':'ss"), _entryVM.InterimTime, "InterimTime not changed when InterimuDate set");
+        }
+
+        [Test]
+        public void OverridePointsTest()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+
+            _entry.SetupProperty(d => d.override_points);
+
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            Assert.AreEqual(string.Empty, _entryVM.OverridePoints, "Override points not set by default");
+
+            double _test = 4.2;
+            _entryVM.OverridePoints = _test.ToString();
+            Assert.AreEqual(_test.ToString(), _entryVM.OverridePoints, "Override point set successfully");
+            Assert.AreEqual(_test, _entry.Object.override_points, "Underlying override points set");
+
+            _entryVM.OverridePoints = "";
+            Assert.AreEqual(false, _entry.Object.override_points.HasValue, "Value of override points cleared");
+
+            string _testString = "Rubbish";
+            _entryVM.OverridePoints = _testString;
+            Assert.AreNotEqual(_testString, _entryVM.OverridePoints, "Override points not set to string");
+        }
+
+        [Test]
+        public void LapsTest()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+
+            _entry.SetupProperty(d => d.laps);
+
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            Assert.AreEqual(string.Empty, _entryVM.Laps, "Laps not set by default");
+
+            int _test = 4;
+            _entryVM.Laps = _test.ToString();
+            Assert.AreEqual(_test.ToString(), _entryVM.Laps, "Laps set successfully");
+            Assert.AreEqual(_test, _entry.Object.laps, "Underlying laps set");
+
+            _entryVM.Laps = "";
+            Assert.AreEqual(false, _entry.Object.laps.HasValue, "Value of laps cleared");
+
+            string _testString = "Rubbish";
+            _entryVM.Laps = _testString;
+            Assert.AreNotEqual(_testString, _entryVM.Laps, "Laps not set to string");
+        }
+
+        [Test]
+        public void ElapsedTest()
+        {
+            Random _rnt = new Random();
+            Mock<IEntry> _entry = new Mock<IEntry>();
+
+            _entry.SetupProperty(d => d.elapsed);
+
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            Assert.AreEqual(string.Empty, _entryVM.Elapsed, "Elapsed not set by default");
+
+            _entry.Object.elapsed = 3600;
+            Assert.AreEqual("01:00:00", _entryVM.Elapsed, "Elapsed set to 1 hour");
+
+            int _test = _rnt.Next(1, 24 * 3600 - 1);
+            _entry.Object.elapsed = _test;
+            Assert.AreEqual(new TimeSpan(0, 0, _test).ToString(@"hh\:mm\:ss"), _entryVM.Elapsed, "Elapsed set to random time less than 1 day");
+
+            _test = _rnt.Next(1, 24 * 3600) + 24 * 3600 * 10;
+            _entry.Object.elapsed = _test;
+            Assert.AreEqual(new TimeSpan(0, 0, _test).ToString(@"d\ hh\:mm\:ss"), _entryVM.Elapsed, "Elapsed set to random time greater than 1 day");
+        }
+
+        [Test]
+        public void CorrectedTest()
+        {
+            Random _rnt = new Random();
+            Mock<IEntry> _entry = new Mock<IEntry>();
+
+            _entry.SetupProperty(d => d.corrected);
+
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            Assert.AreEqual(string.Empty, _entryVM.Corrected, "Corrected not set by default");
+
+            _entry.Object.corrected = 3600.0;
+            Assert.AreEqual("01:00:00.00", _entryVM.Corrected, "Corrected set to 1 hour");
+
+            double _test = _rnt.Next(1, 24 * 3600 - 1) + _rnt.NextDouble();
+            _entry.Object.corrected = _test;
+            Assert.AreEqual(new TimeSpan((long)(_test * 10000000)).ToString(@"hh\:mm\:ss\.ff"), _entryVM.Corrected, "Corrected set to random time less than 1 day");
+
+            _test = _rnt.Next(1, 24 * 3600) + 24 * 3600 * 10 + _rnt.NextDouble();
+            _entry.Object.corrected = _test;
+            Assert.AreEqual(new TimeSpan((long)(_test * 10000000)).ToString(@"d\ hh\:mm\:ss\.ff"), _entryVM.Corrected, "Corrected set to random time greater than 1 day");
+        }
+
+        [Test]
+        public void StandardCorrectedTest()
+        {
+            Random _rnt = new Random();
+            Mock<IEntry> _entry = new Mock<IEntry>();
+
+            _entry.SetupProperty(d => d.standard_corrected);
+
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            Assert.AreEqual(string.Empty, _entryVM.StandardCorrected, "Corrected not set by default");
+
+            _entry.Object.standard_corrected = 3600.0;
+            Assert.AreEqual("01:00:00.00", _entryVM.StandardCorrected, "Corrected set to 1 hour");
+
+            double _test = _rnt.Next(1, 24 * 3600 - 1) + _rnt.NextDouble();
+            _entry.Object.standard_corrected = _test;
+            Assert.AreEqual(new TimeSpan((long)(_test * 10000000)).ToString(@"hh\:mm\:ss\.ff"), _entryVM.StandardCorrected, "Corrected set to random time less than 1 day");
+
+            _test = _rnt.Next(1, 24 * 3600) + 24 * 3600 * 10 + _rnt.NextDouble();
+            _entry.Object.standard_corrected = _test;
+            Assert.AreEqual(new TimeSpan((long)(_test * 10000000)).ToString(@"d\ hh\:mm\:ss\.ff"), _entryVM.StandardCorrected, "Corrected set to random time greater than 1 day");
         }
     }
 }

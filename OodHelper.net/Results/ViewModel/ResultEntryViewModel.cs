@@ -4,6 +4,7 @@ using System.Linq;
 using System.Data;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using OodHelper.ViewModel;
 using OodHelper.Results.Model;
 
@@ -117,10 +118,14 @@ namespace OodHelper.Results.ViewModel
             {
                 return _entry.finish_code;
             }
+
             set
             {
-                _entry.finish_code = value;
-                OnPropertyChanged("FinishCode");
+                if (value == string.Empty || IsFinishCode(value))
+                {
+                    _entry.finish_code = value.ToUpper();
+                    OnPropertyChanged("FinishCode");
+                }
             }
         }
 
@@ -133,12 +138,18 @@ namespace OodHelper.Results.ViewModel
 
             set
             {
-                if (_entry.finish_date.HasValue)
-                    _entry.finish_date = value + _entry.finish_date.Value.TimeOfDay;
+                if (value.HasValue)
+                {
+                    if (_entry.finish_date.HasValue)
+                        _entry.finish_date = value.Value.Date + _entry.finish_date.Value.TimeOfDay;
+                    else
+                        _entry.finish_date = value.Value.Date;
+                }
                 else
                     _entry.finish_date = value;
 
                 OnPropertyChanged("FinishDate");
+                OnPropertyChanged("FinishTime");
             }
         }
 
@@ -151,13 +162,27 @@ namespace OodHelper.Results.ViewModel
 
             set
             {
-                if (_entry.interim_date.HasValue)
-                    _entry.interim_date = value + _entry.interim_date.Value.TimeOfDay;
+                if (value.HasValue)
+                {
+                    if (_entry.interim_date.HasValue)
+                        _entry.interim_date = value.Value.Date + _entry.interim_date.Value.TimeOfDay;
+                    else
+                        _entry.interim_date = value.Value.Date;
+                }
                 else
                     _entry.interim_date = value;
 
                 OnPropertyChanged("InterimDate");
+                OnPropertyChanged("InterimTime");
             }
+        }
+
+        private bool IsFinishCode(string value)
+        {
+            Regex _entryCode = new Regex("[a-z]{3}", RegexOptions.IgnoreCase);
+            if (_entryCode.IsMatch(value))
+                return true;
+            return false;
         }
 
         public string FinishTime
@@ -172,20 +197,27 @@ namespace OodHelper.Results.ViewModel
 
             set
             {
-                TimeSpan? _tmp;
-                _tmp = Converters.ValueParser.ReadTimeSpan(value);
-                if (_tmp.HasValue)
+                if (IsFinishCode(value))
                 {
-                    if (_tmp.Value < Converters.ValueParser.TwentyFourHours)
+                    FinishCode = value;
+                }
+                else
+                {
+                    TimeSpan? _tmp;
+                    _tmp = Converters.ValueParser.ReadTimeSpan(value);
+                    if (_tmp.HasValue)
                     {
-                        if (_entry.finish_date.HasValue)
-                            _entry.finish_date = _entry.finish_date.Value.Date + _tmp;
-                        else if (_event != null && _event.start_date != null)
-                            _entry.finish_date = _event.start_date.Value.Date + _tmp;
-                        else
-                            _entry.finish_date = DateTime.Today + _tmp;
+                        if (_tmp.Value < Converters.ValueParser.TwentyFourHours)
+                        {
+                            if (_entry.finish_date.HasValue)
+                                _entry.finish_date = _entry.finish_date.Value.Date + _tmp;
+                            else if (_event != null && _event.start_date != null)
+                                _entry.finish_date = _event.start_date.Value.Date + _tmp;
+                            else
+                                _entry.finish_date = DateTime.Today + _tmp;
 
-                        OnPropertyChanged("FinishTime");
+                            OnPropertyChanged("FinishTime");
+                        }
                     }
                 }
             }
@@ -211,10 +243,12 @@ namespace OodHelper.Results.ViewModel
                     {
                         if (_entry.interim_date.HasValue)
                             _entry.interim_date = _entry.interim_date.Value.Date + _tmp;
+                        else if (_event != null && _event.start_date != null)
+                            _entry.interim_date = _event.start_date.Value.Date + _tmp;
                         else
                             _entry.interim_date = DateTime.Today + _tmp;
 
-                        OnPropertyChanged("FinishTime");
+                        OnPropertyChanged("InterimTime");
                     }
                 }
             }
@@ -317,7 +351,8 @@ namespace OodHelper.Results.ViewModel
             }
             set
             {
-                _entry.place = Converters.ValueParser.ReadInt(value);
+                if (_event != null || _event.racetype == CalendarEvent.RaceTypes.SternChase)
+                    _entry.place = Converters.ValueParser.ReadInt(value);
                 OnPropertyChanged("Place");
             }
         }
