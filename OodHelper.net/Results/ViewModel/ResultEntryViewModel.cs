@@ -203,24 +203,29 @@ namespace OodHelper.Results.ViewModel
                 }
                 else
                 {
-                    TimeSpan? _tmp;
-                    _tmp = Converters.ValueParser.ReadTimeSpan(value);
-                    if (_tmp.HasValue)
-                    {
-                        if (_tmp.Value < Converters.ValueParser.TwentyFourHours)
-                        {
-                            if (_entry.finish_date.HasValue)
-                                _entry.finish_date = _entry.finish_date.Value.Date + _tmp;
-                            else if (_event != null && _event.start_date != null)
-                                _entry.finish_date = _event.start_date.Value.Date + _tmp;
-                            else
-                                _entry.finish_date = DateTime.Today + _tmp;
+                    _entry.finish_date = ReadFinishTime(value, _entry.finish_date);
+                }
+                OnPropertyChanged("FinishTime");
+            }
+        }
 
-                            OnPropertyChanged("FinishTime");
-                        }
-                    }
+        private DateTime? ReadFinishTime(string value, DateTime? FinishDate)
+        {
+            TimeSpan? _tmp;
+            _tmp = Converters.ValueParser.ReadTimeSpan(value);
+            if (_tmp.HasValue)
+            {
+                if (_tmp.Value < Converters.ValueParser.TwentyFourHours)
+                {
+                    if (FinishDate.HasValue)
+                        return FinishDate.Value.Date + _tmp;
+                    else if (_event != null && _event.start_date != null)
+                        return _event.start_date.Value.Date + _tmp;
+                    else
+                        return DateTime.Today + _tmp;
                 }
             }
+            return null;
         }
 
         public string InterimTime
@@ -235,22 +240,8 @@ namespace OodHelper.Results.ViewModel
 
             set
             {
-                TimeSpan? _tmp;
-                _tmp = Converters.ValueParser.ReadTimeSpan(value);
-                if (_tmp.HasValue)
-                {
-                    if (_tmp.Value < Converters.ValueParser.TwentyFourHours)
-                    {
-                        if (_entry.interim_date.HasValue)
-                            _entry.interim_date = _entry.interim_date.Value.Date + _tmp;
-                        else if (_event != null && _event.start_date != null)
-                            _entry.interim_date = _event.start_date.Value.Date + _tmp;
-                        else
-                            _entry.interim_date = DateTime.Today + _tmp;
-
-                        OnPropertyChanged("InterimTime");
-                    }
-                }
+                _entry.interim_date = ReadFinishTime(value, _entry.interim_date);
+                OnPropertyChanged("InterimTime");
             }
         }
 
@@ -309,15 +300,7 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                if (_entry.corrected.HasValue)
-                {
-                    TimeSpan s = new TimeSpan((long)(_entry.corrected * 10000000));
-                    if (s.Days > 0)
-                        return s.ToString(@"d\ hh\:mm\:ss\.ff");
-                    return s.ToString(@"hh\:mm\:ss\.ff");
-                }
-                else
-                    return string.Empty;
+                return OutputCorrected(_entry.corrected);
             }
             set
             {
@@ -328,19 +311,24 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                if (_entry.standard_corrected.HasValue)
-                {
-                    TimeSpan s = new TimeSpan((long)(_entry.standard_corrected * 10000000));
-                    if (s.Days > 0)
-                        return s.ToString(@"d\ hh\:mm\:ss\.ff");
-                    return s.ToString(@"hh\:mm\:ss\.ff");
-                }
-                else
-                    return string.Empty;
+                return OutputCorrected(_entry.standard_corrected);
             }
             set
             {
             }
+        }
+
+        private string OutputCorrected(double? Corrected)
+        {
+            if (Corrected.HasValue)
+            {
+                TimeSpan s = new TimeSpan((long)(Corrected * 10000000));
+                if (s.Days > 0)
+                    return s.ToString(@"d\ hh\:mm\:ss\.ff");
+                return s.ToString(@"hh\:mm\:ss\.ff");
+            }
+            else
+                return string.Empty;
         }
 
         public string Place
@@ -351,7 +339,7 @@ namespace OodHelper.Results.ViewModel
             }
             set
             {
-                if (_event != null || _event.racetype == CalendarEvent.RaceTypes.SternChase)
+                if (_event != null && _event.racetype == CalendarEvent.RaceTypes.SternChase)
                     _entry.place = Converters.ValueParser.ReadInt(value);
                 OnPropertyChanged("Place");
             }
@@ -365,8 +353,6 @@ namespace OodHelper.Results.ViewModel
             }
             set
             {
-                _entry.points = Converters.ValueParser.ReadDouble(value);
-                OnPropertyChanged("Points");
             }
         }
 

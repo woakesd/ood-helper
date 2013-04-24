@@ -25,20 +25,20 @@ namespace OodHelper.Results
     /// </summary>
     public partial class RaceResults : UserControl
     {
-        private ViewModel.ResultsEditorViewModel[] reds;
+        private ViewModel.ResultEditorViewModel[] reds;
 
         public RaceResults(int[] rids)
         {
             InitializeComponent();
 
-            reds = new ViewModel.ResultsEditorViewModel[rids.Length];
+            reds = new ViewModel.ResultEditorViewModel[rids.Length];
 
             bool askAutoPopulate = true, doAutoPopulate = false;
             for (int i = 0; i < rids.Length; i++)
             {
                 Model.CalendarEvent _event = new Model.CalendarEvent(rids[i]);
                 Model.Race _race = new Model.Race(_event, null);
-                ViewModel.ResultsEditorViewModel r = new ViewModel.ResultsEditorViewModel(_race);
+                ViewModel.ResultEditorViewModel r = new ViewModel.ResultEditorViewModel(_race);
                 //if (_race.Entries.Count == 0) // && r.CountAutoPopulateData() > 0)
                 //{
                 //    if (askAutoPopulate)
@@ -223,7 +223,7 @@ namespace OodHelper.Results
                             w.SetRange(0, reds.Length);
                             for (int i = 0; i < reds.Length; i++)
                             {
-                                ViewModel.ResultsEditorViewModel red = reds[i];
+                                ViewModel.ResultEditorViewModel red = reds[i];
                                 if (red.PrintInclude)
                                 {
                                     string msg = null;

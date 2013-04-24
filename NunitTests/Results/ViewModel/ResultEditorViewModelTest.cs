@@ -23,7 +23,7 @@ namespace NunitTests.Results.ViewModel
 
             Race _race = new OodHelper.Results.Model.Race(_event.Object, null);
 
-            ResultsEditorViewModel EditorViewModel = new OodHelper.Results.ViewModel.ResultsEditorViewModel(_race);
+            ResultEditorViewModel EditorViewModel = new OodHelper.Results.ViewModel.ResultEditorViewModel(_race);
             EditorViewModel.PropertyChanged += EditorViewModel_PropertyChanged;
 
             EditorViewModel.StartTime = "14:00";
@@ -109,7 +109,7 @@ namespace NunitTests.Results.ViewModel
 
             Race _race = new OodHelper.Results.Model.Race(_event.Object, null);
 
-            ResultsEditorViewModel EditorViewModel = new OodHelper.Results.ViewModel.ResultsEditorViewModel(_race);
+            ResultEditorViewModel EditorViewModel = new OodHelper.Results.ViewModel.ResultEditorViewModel(_race);
             EditorViewModel.PropertyChanged += EditorViewModel_PropertyChanged;
 
             _event.Object.time_limit_type = CalendarEvent.TimeLimitTypes.D;
@@ -136,7 +136,7 @@ namespace NunitTests.Results.ViewModel
 
             Race _race = new OodHelper.Results.Model.Race(_event.Object, null);
 
-            ResultsEditorViewModel EditorViewModel = new OodHelper.Results.ViewModel.ResultsEditorViewModel(_race);
+            ResultEditorViewModel EditorViewModel = new OodHelper.Results.ViewModel.ResultEditorViewModel(_race);
             EditorViewModel.PropertyChanged += EditorViewModel_PropertyChanged;
 
             _event.Object.extension = 900;
@@ -159,7 +159,7 @@ namespace NunitTests.Results.ViewModel
 
             _event.Object.standard_corrected_time = 668.0;
             
-            ResultsEditorViewModel EditorViewModel = new OodHelper.Results.ViewModel.ResultsEditorViewModel(_race);
+            ResultEditorViewModel EditorViewModel = new OodHelper.Results.ViewModel.ResultEditorViewModel(_race);
 
             Expect(EditorViewModel.StandardCorrectedTime, Is.EqualTo("00:11:08"), "SCT set to 668s");
 
@@ -176,7 +176,7 @@ namespace NunitTests.Results.ViewModel
 
             Race _race = new OodHelper.Results.Model.Race(_event.Object, null);
 
-            ResultsEditorViewModel EditorViewModel = new OodHelper.Results.ViewModel.ResultsEditorViewModel(_race);
+            ResultEditorViewModel EditorViewModel = new OodHelper.Results.ViewModel.ResultEditorViewModel(_race);
             EditorViewModel.PropertyChanged += EditorViewModel_PropertyChanged;
 
             EditorViewModel.WindDirection = "NE";
@@ -194,7 +194,7 @@ namespace NunitTests.Results.ViewModel
 
             Race _race = new OodHelper.Results.Model.Race(_event.Object, null);
 
-            ResultsEditorViewModel EditorViewModel = new OodHelper.Results.ViewModel.ResultsEditorViewModel(_race);
+            ResultEditorViewModel EditorViewModel = new OodHelper.Results.ViewModel.ResultEditorViewModel(_race);
             EditorViewModel.PropertyChanged += EditorViewModel_PropertyChanged;
 
             EditorViewModel.WindSpeed = "20kts";
@@ -212,7 +212,7 @@ namespace NunitTests.Results.ViewModel
 
             Race _race = new OodHelper.Results.Model.Race(_event.Object, null);
 
-            ResultsEditorViewModel EditorViewModel = new OodHelper.Results.ViewModel.ResultsEditorViewModel(_race);
+            ResultEditorViewModel EditorViewModel = new OodHelper.Results.ViewModel.ResultEditorViewModel(_race);
             EditorViewModel.PropertyChanged += EditorViewModel_PropertyChanged;
 
             EditorViewModel.Laps = "X";

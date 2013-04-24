@@ -327,30 +327,6 @@ namespace NunitTests.Results.ViewModel
         }
 
         [Test]
-        public void LapsTest()
-        {
-            Mock<IEntry> _entry = new Mock<IEntry>();
-
-            _entry.SetupProperty(d => d.laps);
-
-            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
-
-            Assert.AreEqual(string.Empty, _entryVM.Laps, "Laps not set by default");
-
-            int _test = 4;
-            _entryVM.Laps = _test.ToString();
-            Assert.AreEqual(_test.ToString(), _entryVM.Laps, "Laps set successfully");
-            Assert.AreEqual(_test, _entry.Object.laps, "Underlying laps set");
-
-            _entryVM.Laps = "";
-            Assert.AreEqual(false, _entry.Object.laps.HasValue, "Value of laps cleared");
-
-            string _testString = "Rubbish";
-            _entryVM.Laps = _testString;
-            Assert.AreNotEqual(_testString, _entryVM.Laps, "Laps not set to string");
-        }
-
-        [Test]
         public void ElapsedTest()
         {
             Random _rnt = new Random();
@@ -420,6 +396,188 @@ namespace NunitTests.Results.ViewModel
             _test = _rnt.Next(1, 24 * 3600) + 24 * 3600 * 10 + _rnt.NextDouble();
             _entry.Object.standard_corrected = _test;
             Assert.AreEqual(new TimeSpan((long)(_test * 10000000)).ToString(@"d\ hh\:mm\:ss\.ff"), _entryVM.StandardCorrected, "Corrected set to random time greater than 1 day");
+        }
+
+        [Test]
+        public void LapsTest()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+
+            _entry.SetupProperty(d => d.laps);
+
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            Assert.AreEqual(string.Empty, _entryVM.Laps, "Laps not set by default");
+
+            int _test = 4;
+            _entryVM.Laps = _test.ToString();
+            Assert.AreEqual(_test.ToString(), _entryVM.Laps, "Laps set successfully");
+            Assert.AreEqual(_test, _entry.Object.laps, "Underlying laps set");
+
+            _entryVM.Laps = "";
+            Assert.AreEqual(false, _entry.Object.laps.HasValue, "Value of laps cleared");
+
+            string _testString = "Rubbish";
+            _entryVM.Laps = _testString;
+            Assert.AreNotEqual(_testString, _entryVM.Laps, "Laps not set to string");
+        }
+
+        [Test]
+        public void PlaceNoEventTest()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+
+            _entry.SetupProperty(d => d.place);
+
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            Assert.AreEqual(string.Empty, _entryVM.Place, "Place not set by default");
+
+            int _test = 4;
+            _entryVM.Place = _test.ToString();
+            Assert.AreNotEqual(_test.ToString(), _entryVM.Place, "Place not changed as racetype is not set");
+            Assert.AreNotEqual(_test, _entry.Object.laps, "Underlying place not set");
+        }
+
+        [Test]
+        public void PlaceWithEventTest()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+            Mock<ICalendarEvent> _event = new Mock<ICalendarEvent>();
+
+            _entry.SetupProperty(d => d.place);
+            _event.SetupProperty(d => d.racetype, CalendarEvent.RaceTypes.AverageLap);
+
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, _event.Object);
+
+            Assert.AreEqual(string.Empty, _entryVM.Place, "Place not set by default");
+
+            int _test = 4;
+
+            _entryVM.Place = _test.ToString();
+            Assert.AreNotEqual(_test.ToString(), _entryVM.Place, "Place not changed as racetype is AverageLap");
+            Assert.AreNotEqual(_test, _entry.Object.place, "Underlying place not set");
+
+            _event.Object.racetype = CalendarEvent.RaceTypes.FixedLength;
+            _entryVM.Place = _test.ToString();
+            Assert.AreNotEqual(_test.ToString(), _entryVM.Place, "Place not changed as racetype is FixedLength");
+            Assert.AreNotEqual(_test, _entry.Object.place, "Underlying place not set");
+
+            _event.Object.racetype = CalendarEvent.RaceTypes.Hybrid;
+            _entryVM.Place = _test.ToString();
+            Assert.AreNotEqual(_test.ToString(), _entryVM.Place, "Place not changed as racetype is Hybrid");
+            Assert.AreNotEqual(_test, _entry.Object.place, "Underlying place not set");
+
+            _event.Object.racetype = CalendarEvent.RaceTypes.TimeGate;
+            _entryVM.Place = _test.ToString();
+            Assert.AreNotEqual(_test.ToString(), _entryVM.Place, "Place not changed as racetype is TimeGate");
+            Assert.AreNotEqual(_test, _entry.Object.place, "Underlying place not set");
+
+            _event.Object.racetype = CalendarEvent.RaceTypes.SternChase;
+            _entryVM.Place = _test.ToString();
+            Assert.AreEqual(_test.ToString(), _entryVM.Place, "Place changed as racetype is SternChase");
+            Assert.AreEqual(_test, _entry.Object.place, "Underlying place set");
+        }
+
+        [Test]
+        public void ReadPointsTest()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            Random _rnd = new Random();
+            int _test = _rnd.Next(10);
+            _entry.SetupProperty(d => d.points, _test);
+
+            Assert.AreEqual(_test.ToString(), _entryVM.Points, "Points read correctly");
+        }
+
+        [Test]
+        public void ReadOpenHandicapTest()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            Random _rnd = new Random();
+            int _test = _rnd.Next(500, 1700);
+            _entry.SetupProperty(d => d.open_handicap, _test);
+
+            Assert.AreEqual(_test.ToString(), _entryVM.OpenHandicap, "Open Handicap read correctly");
+        }
+
+        [Test]
+        public void ReadRollingHandicapTest()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            Random _rnd = new Random();
+            int _test = _rnd.Next(500, 1700);
+            _entry.SetupProperty(d => d.rolling_handicap, _test);
+
+            Assert.AreEqual(_test.ToString(), _entryVM.RollingHandicap, "Rolling Handicap read correctly");
+        }
+
+        [Test]
+        public void ReadAchievedHandicapTest()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            Random _rnd = new Random();
+            int _test = _rnd.Next(500, 1700);
+            _entry.SetupProperty(d => d.achieved_handicap, _test);
+
+            Assert.AreEqual(_test.ToString(), _entryVM.AchievedHandicap, "Achieved Handicap read correctly");
+        }
+
+        [Test]
+        public void ReadNewRollingHandicapTest()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            Random _rnd = new Random();
+            int _test = _rnd.Next(500, 1700);
+            _entry.SetupProperty(d => d.new_rolling_handicap, _test);
+
+            Assert.AreEqual(_test.ToString(), _entryVM.NewRollingHandicap, "Open Handicap read correctly");
+        }
+
+        [Test]
+        public void ReadHandicapStatus()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            string _test = "PY";
+            _entry.SetupProperty(d => d.handicap_status, _test);
+
+            Assert.AreEqual(_test, _entryVM.HandicapStatus, "Handicap Status read correctly");
+        }
+
+        [Test]
+        public void ReadCTest()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            string _test = "N";
+            _entry.SetupProperty(d => d.c, _test);
+
+            Assert.AreEqual(_test, _entryVM.C, "C read correctly");
+        }
+
+        [Test]
+        public void ReadATest()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            string _test = "S";
+            _entry.SetupProperty(d => d.a, _test);
+
+            Assert.AreEqual(_test, _entryVM.A, "A read correctly");
         }
     }
 }
