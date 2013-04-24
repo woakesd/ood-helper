@@ -1,0 +1,26 @@
+﻿CREATE TABLE [dbo].[people] (
+    [id]              INT              IDENTITY (1, 1) NOT NULL,
+    [main_id]         INT              NULL,
+    [firstname]       NVARCHAR (20)    NULL,
+    [surname]         NVARCHAR (28)    NULL,
+    [address1]        NVARCHAR (30)    NULL,
+    [address2]        NVARCHAR (30)    NULL,
+    [address3]        NVARCHAR (30)    NULL,
+    [address4]        NVARCHAR (30)    NULL,
+    [postcode]        NVARCHAR (9)     NULL,
+    [hometel]         NVARCHAR (20)    NULL,
+    [worktel]         NVARCHAR (20)    NULL,
+    [mobile]          NVARCHAR (20)    NULL,
+    [email]           NVARCHAR (45)    NULL,
+    [club]            NVARCHAR (10)    NULL,
+    [member]          NVARCHAR (6)     NULL,
+    [manmemo]         NTEXT            NULL,
+    [cp]              BIT              NULL,
+    [s]               BIT              NULL,
+    [novice]          BIT              NULL,
+    [uid]             UNIQUEIDENTIFIER NULL,
+    [papernewsletter] BIT              NULL,
+    [handbookexclude] BIT              NULL,
+    CONSTRAINT [PK_people] PRIMARY KEY CLUSTERED ([id] ASC)
+);
+
