@@ -17,6 +17,7 @@ using System.Printing;
 using System.Windows.Xps;
 using OodHelper.Maintain;
 using OodHelper.Results.Model;
+using OodHelper.Results.ViewModel;
 
 namespace OodHelper.Results
 {
@@ -25,7 +26,7 @@ namespace OodHelper.Results
     /// </summary>
     public partial class RaceResults : UserControl
     {
-        private ViewModel.ResultEditorViewModel[] reds;
+        private ResultEditorViewModel[] reds;
 
         public RaceResults(int[] rids)
         {
@@ -36,26 +37,11 @@ namespace OodHelper.Results
             bool askAutoPopulate = true, doAutoPopulate = false;
             for (int i = 0; i < rids.Length; i++)
             {
-                Model.CalendarEvent _event = new Model.CalendarEvent(rids[i]);
-                Model.Race _race = new Model.Race(_event, null);
-                ViewModel.ResultEditorViewModel r = new ViewModel.ResultEditorViewModel(_race);
-                //if (_race.Entries.Count == 0) // && r.CountAutoPopulateData() > 0)
-                //{
-                //    if (askAutoPopulate)
-                //    {
-                //        askAutoPopulate = false;
-                //        if (MessageBox.Show("Would you like to copy competitors from previous race?",
-                //            "Auto populate", MessageBoxButton.YesNo,
-                //            MessageBoxImage.Question, MessageBoxResult.Yes) == MessageBoxResult.Yes)
-                //        {
-                //            doAutoPopulate = true;
-                //        }
-                //    }
-                //    if (doAutoPopulate)
-                //    {
-                //        r.DoAutoPopulate();
-                //    }
-                //}
+                ICalendarEvent _event = new CalendarEvent(rids[i]);
+                IList<IEntry> _entries = Entry.GetEntries(rids[i], _event.start_date);
+                IRace _race = new Race(_event, _entries);
+                ResultEditorViewModel r = new ResultEditorViewModel(_race);
+
                 reds[i] = r;
                 TabItem t = new TabItem();
                 t.Header = r.DisplayName;
@@ -93,10 +79,6 @@ namespace OodHelper.Results
 
         class EditBoatCmd : ICommand
         {
-            public EditBoatCmd()
-            {
-            }
-
             #region ICommand Members
 
             public bool CanExecute(object parameter)
@@ -104,10 +86,17 @@ namespace OodHelper.Results
                 return true;
             }
 
-            // disable unused event warning
-#pragma warning disable 67
             public event EventHandler CanExecuteChanged;
-#pragma warning restore 67
+
+            protected virtual void OnCanExecuteChanged()
+            {
+                EventHandler handler = this.CanExecuteChanged;
+                if (handler != null)
+                {
+                    handler(this, null);
+                }
+            }
+
 
             public void Execute(object parameter)
             {

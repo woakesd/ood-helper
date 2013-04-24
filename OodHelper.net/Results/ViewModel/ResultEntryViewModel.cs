@@ -35,32 +35,17 @@ namespace OodHelper.Results.ViewModel
                         if (_event.start_date.HasValue && _event.racetype != CalendarEvent.RaceTypes.TimeGate && _event.racetype != CalendarEvent.RaceTypes.SternChase)
                             StartDate = _event.start_date.Value;
                         break;
-                    case "TimeLimit":
-                        switch (_event.time_limit_type)
-                        {
-                            case CalendarEvent.TimeLimitTypes.F:
-                                if (_event.time_limit_delta.HasValue)
-                                    RaceTimeLimit = RaceStart.Value.AddSeconds(_event.time_limit_delta.Value);
-                                else
-                                    RaceTimeLimit = null;
-                                break;
-                            case CalendarEvent.TimeLimitTypes.D:
-                                RaceTimeLimit = _event.time_limit_fixed;
-                                break;
-                        }
-                        break;
                 }
             }
         }
 
         public DateTime? RaceStart { get; set; }
-        public DateTime? RaceTimeLimit { get; set; }
 
         public int Rid { get { return _entry.rid; } }
         public int Bid { get { return _entry.bid; } }
-        public string BoatName { get { return _entry.boatname as string; } }
-        public string BoatClass { get { return _entry.boatclass as string; } }
-        public string SailNo { get { return _entry.sailno as string; } }
+        public string BoatName { get { return _entry.boatname; } }
+        public string BoatClass { get { return _entry.boatclass; } }
+        public string SailNo { get { return _entry.sailno; } }
 
         public DateTime? StartDate
         {

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace OodHelper.Results.Model
 {
-    interface IRace
+    public interface IRace
     {
         ICalendarEvent Event { get; set; }
-        System.Collections.Generic.IList<IEntry> EventEntries { get; set; }
+        IList<IEntry> EventEntries { get; set; }
     }
 }

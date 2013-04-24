@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OodHelper.Results.Model
 {
-    public class Race
+    public class Race : IRace
     {
         public IList<IEntry> EventEntries { get; set; }
         public ICalendarEvent Event { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
@@ -10,12 +11,31 @@ namespace OodHelper.Results.Model
 {
     public class Entry : IEntry
     {
+        public static IList<IEntry> GetEntries(int RaceId, DateTime? StartDate)
+        {
+            using (Db _conn = new Db(@"SELECT r.rid, r.bid, boatname, boatclass, sailno, r.start_date, " +
+                    "r.finish_code, r.finish_date, r.interim_date, r.laps, r.override_points, r.elapsed, r.standard_corrected, r.corrected, r.place, " +
+                    "r.points, r.open_handicap, r.rolling_handicap, r.achieved_handicap, " +
+                    "r.new_rolling_handicap, r.handicap_status, r.c, r.a, r.performance_index " +
+                    "FROM races r INNER JOIN boats ON boats.bid = r.bid " +
+                    "WHERE r.rid = @rid " +
+                    "ORDER BY place"))
+            {
+                Hashtable _para = new Hashtable();
+                _para["rid"] = RaceId;
+                DataTable Data = _conn.GetData(_para);
+
+                IList<IEntry> _entries = (from _ent in Data.AsEnumerable()
+                                         select new Entry(_ent, StartDate) as IEntry).ToList();
+                return _entries;
+            }
+        }
+
         private DataRow _row;
-        public Entry(DataRow result, DateTime StartDate, DateTime LimitDate)
+        public Entry(DataRow result, DateTime? StartDate)
         {
             _row = result;
             _startDate = StartDate;
-            _limitDate = LimitDate;
         }
 
         public int rid { get { return (int)_row["rid"]; } set { } }
@@ -24,8 +44,7 @@ namespace OodHelper.Results.Model
         public string boatclass { get { return _row["boatclass"] as string; } set { _row["boatclass"] = value; } }
         public string sailno { get { return _row["sailno"] as string; } set { _row["sailno"] = value; } }
 
-        private DateTime _startDate;
-        private DateTime _limitDate;
+        private DateTime? _startDate;
 
         public DateTime? start_date
         {

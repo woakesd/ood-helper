@@ -18,9 +18,9 @@ namespace OodHelper.Results.View
     /// <summary>
     /// Interaction logic for ResultsEditorView.xaml
     /// </summary>
-    public partial class ResultEditorView : UserControl
+    public partial class ResultsEditorView : UserControl
     {
-        public ResultEditorView()
+        public ResultsEditorView()
         {
             InitializeComponent();
         }

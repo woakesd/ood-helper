@@ -10,20 +10,22 @@ namespace OodHelper.Results.ViewModel
 {
     public class ResultEditorViewModel : ViewModelBase, IPrintSelectItem
     {
-        public readonly OodHelper.Results.Model.Race _result;
+        public readonly IRace Result;
 
-        public IList<IEntry> Entries { get { return _result.EventEntries; } }
-        public override string DisplayName { get { return string.Format("{0} - {1}", _result.Event.eventName, _result.Event.eventClass); } }
+        public IList<ResultEntryViewModel> Entries { get; set; }
+
+        public override string DisplayName { get { return string.Format("{0} - {1}", Result.Event.eventName, Result.Event.eventClass); } }
+
         public CalendarEvent.RaceTypes RaceType
         {
             get
             {
-                return _result.Event.racetype;
+                return Result.Event.racetype;
             }
             
             set
             {
-                _result.Event.racetype = value;
+                Result.Event.racetype = value;
                 base.OnPropertyChanged("RaceType");
                 base.OnPropertyChanged("LapsEnabled");
                 base.OnPropertyChanged("StartReadOnly");
@@ -40,11 +42,11 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                return _result.Event.handicapping;
+                return Result.Event.handicapping;
             }
             set
             {
-                _result.Event.handicapping = value;
+                Result.Event.handicapping = value;
                 base.OnPropertyChanged("RollingHandicapVisible");
                 base.OnPropertyChanged("OpenHandicapVisible");
                 base.OnPropertyChanged("AchievedHandicapVisible");
@@ -56,19 +58,19 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                if (_result.Event.start_date.HasValue)
-                    return _result.Event.start_date.Value.Date;
+                if (Result.Event.start_date.HasValue)
+                    return Result.Event.start_date.Value.Date;
                 return DateTime.Today;
             }
 
             set
             {
                 TimeSpan _tmp;
-                if (_result.Event.start_date.HasValue)
-                    _tmp = _result.Event.start_date.Value.TimeOfDay;
+                if (Result.Event.start_date.HasValue)
+                    _tmp = Result.Event.start_date.Value.TimeOfDay;
                 else
                     _tmp = TimeSpan.Zero;
-                _result.Event.start_date = value + _tmp;
+                Result.Event.start_date = value + _tmp;
                 base.OnPropertyChanged("StartDate");
             }
         }
@@ -77,8 +79,8 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                if (_result.Event.start_date.HasValue)
-                    return _result.Event.start_date.Value.ToString("HH:mm");
+                if (Result.Event.start_date.HasValue)
+                    return Result.Event.start_date.Value.ToString("HH:mm");
                 return string.Empty;
             }
 
@@ -89,7 +91,7 @@ namespace OodHelper.Results.ViewModel
                 {
                     if (_tmp.Value <= Converters.ValueParser.TwentyFourHours)
                     {
-                        _result.Event.start_date = _result.Event.start_date.Value.Date + _tmp.Value;
+                        Result.Event.start_date = Result.Event.start_date.Value.Date + _tmp.Value;
                         base.OnPropertyChanged("StartTime");
                         base.OnPropertyChanged("StartDate");
                     }
@@ -102,10 +104,10 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                if (_result.Event.time_limit_type == CalendarEvent.TimeLimitTypes.F && _result.Event.time_limit_fixed.HasValue)
-                    return _result.Event.time_limit_fixed.Value.ToString("HH:mm");
-                else if (_result.Event.time_limit_type == CalendarEvent.TimeLimitTypes.D && _result.Event.time_limit_delta.HasValue)
-                    return new TimeSpan(0, 0, _result.Event.time_limit_delta.Value).ToString("hh\\:mm");
+                if (Result.Event.time_limit_type == CalendarEvent.TimeLimitTypes.F && Result.Event.time_limit_fixed.HasValue)
+                    return Result.Event.time_limit_fixed.Value.ToString("HH:mm");
+                else if (Result.Event.time_limit_type == CalendarEvent.TimeLimitTypes.D && Result.Event.time_limit_delta.HasValue)
+                    return new TimeSpan(0, 0, Result.Event.time_limit_delta.Value).ToString("hh\\:mm");
                 return string.Empty;
             }
 
@@ -114,18 +116,18 @@ namespace OodHelper.Results.ViewModel
                 TimeSpan? _tmp;
                 if ((_tmp = Converters.ValueParser.ReadTimeSpan(value)) != null)
                 {
-                    if (_result.Event.time_limit_type == CalendarEvent.TimeLimitTypes.F)
+                    if (Result.Event.time_limit_type == CalendarEvent.TimeLimitTypes.F)
                     {
                         if (_tmp < Converters.ValueParser.TwentyFourHours)
                         {
-                            if (_result.Event.time_limit_fixed.HasValue)
-                                _result.Event.time_limit_fixed = _result.Event.time_limit_fixed.Value.Date + _tmp;
-                            else if (_result.Event.start_date.HasValue)
-                                _result.Event.time_limit_fixed = _result.Event.start_date.Value.Date + _tmp;
+                            if (Result.Event.time_limit_fixed.HasValue)
+                                Result.Event.time_limit_fixed = Result.Event.time_limit_fixed.Value.Date + _tmp;
+                            else if (Result.Event.start_date.HasValue)
+                                Result.Event.time_limit_fixed = Result.Event.start_date.Value.Date + _tmp;
                         }
                     }
-                    else if (_result.Event.time_limit_type == CalendarEvent.TimeLimitTypes.D)
-                        _result.Event.time_limit_delta = (int)_tmp.Value.TotalSeconds;
+                    else if (Result.Event.time_limit_type == CalendarEvent.TimeLimitTypes.D)
+                        Result.Event.time_limit_delta = (int)_tmp.Value.TotalSeconds;
                     base.OnPropertyChanged("TimeLimit");
                 }
             }
@@ -135,8 +137,8 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                if (_result.Event.extension.HasValue)
-                    return new TimeSpan(0, 0, _result.Event.extension.Value).ToString("hh\\:mm");
+                if (Result.Event.extension.HasValue)
+                    return new TimeSpan(0, 0, Result.Event.extension.Value).ToString("hh\\:mm");
                 return string.Empty;
             }
 
@@ -145,26 +147,28 @@ namespace OodHelper.Results.ViewModel
                 TimeSpan? _tmp;
                 if ((_tmp = Converters.ValueParser.ReadTimeSpan(value)) != null)
                 {
-                    _result.Event.extension = (int)_tmp.Value.TotalSeconds;
+                    Result.Event.extension = (int)_tmp.Value.TotalSeconds;
                     base.OnPropertyChanged("Extension");
                 }
             }
         }
         
-        public ResultEditorViewModel(OodHelper.Results.Model.Race Result)
+        public ResultEditorViewModel(IRace Result)
         {
             if (Result == null) throw new ArgumentNullException("Result");
 
-            _result = Result;
+            this.Result = Result;
+            this.Entries = (from _entry in Result.EventEntries
+                    select new ResultEntryViewModel(_entry, Result.Event)).ToList();
         }
 
         public string StandardCorrectedTime
         {
             get
             {
-                if (_result.Event.standard_corrected_time.HasValue)
+                if (Result.Event.standard_corrected_time.HasValue)
                 {
-                    long _sct = (long)Math.Round(_result.Event.standard_corrected_time.Value * 1000 * 1000 * 10);
+                    long _sct = (long)Math.Round(Result.Event.standard_corrected_time.Value * 1000 * 1000 * 10);
                     TimeSpan _tmp = new TimeSpan(_sct);
                     return _tmp.ToString("hh':'mm':'ss");
                 }
@@ -174,20 +178,20 @@ namespace OodHelper.Results.ViewModel
 
         public string Course
         {
-            get { return _result.Event.course; }
-            set { _result.Event.course = value; OnPropertyChanged("Course"); }
+            get { return Result.Event.course; }
+            set { Result.Event.course = value; OnPropertyChanged("Course"); }
         }
 
         public string WindSpeed
         {
-            get { return _result.Event.wind_speed; }
-            set { _result.Event.wind_speed = value; OnPropertyChanged("WindSpeed"); }
+            get { return Result.Event.wind_speed; }
+            set { Result.Event.wind_speed = value; OnPropertyChanged("WindSpeed"); }
         }
 
         public string WindDirection
         {
-            get { return _result.Event.wind_direction; }
-            set { _result.Event.wind_direction = value; OnPropertyChanged("WindDirection"); }
+            get { return Result.Event.wind_direction; }
+            set { Result.Event.wind_direction = value; OnPropertyChanged("WindDirection"); }
         }
 
         public bool LapsEnabled
@@ -201,7 +205,7 @@ namespace OodHelper.Results.ViewModel
         public string Laps
         {
             get {
-                return _result.Event.laps.ToString();
+                return Result.Event.laps.ToString();
             }
 
             set
@@ -211,7 +215,7 @@ namespace OodHelper.Results.ViewModel
                     int? _tmp;
                     if ((_tmp = Converters.ValueParser.ReadInt(value)) != null)
                     {
-                        _result.Event.laps = _tmp.Value;
+                        Result.Event.laps = _tmp.Value;
                         OnPropertyChanged("Laps");
                     }
                 }
@@ -222,10 +226,10 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                if (_result.Event.time_limit_fixed.HasValue)
-                    return _result.Event.time_limit_fixed.Value;
-                else if (_result.Event.time_limit_delta.HasValue)
-                    return StartDate.AddSeconds(_result.Event.time_limit_delta.Value);
+                if (Result.Event.time_limit_fixed.HasValue)
+                    return Result.Event.time_limit_fixed.Value;
+                else if (Result.Event.time_limit_delta.HasValue)
+                    return StartDate.AddSeconds(Result.Event.time_limit_delta.Value);
                 return StartDate;
             }
         }
