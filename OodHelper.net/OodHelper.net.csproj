@@ -212,6 +212,9 @@
     </Compile>
     <Compile Include="NotifyPropertyChanged.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="WebService\People.cs" />
+    <Compile Include="WebService\PeopleGenerated.cs" />
+    <Compile Include="WebService\ServiceEntity.cs" />
     <Compile Include="Website\CheckForUpdates.cs" />
     <Compile Include="Website\UploadSun.cs" />
     <Compile Include="Website\UploadTide.cs" />
