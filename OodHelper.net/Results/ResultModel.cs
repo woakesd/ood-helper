@@ -162,8 +162,8 @@ namespace OodHelper.Results
         {
             TimeSpan resultTime;
             System.Text.RegularExpressions.Regex _finishCode = new System.Text.RegularExpressions.Regex("[a-zA-Z]{3,4}");
-            if (TimeSpan.TryParse(value, out resultTime) ||
-                TimeSpan.TryParseExact(value, @"hh\ mm\ ss", null, out resultTime))
+            if (TimeSpan.TryParseExact(value, @"hh\ mm\ ss", null, out resultTime)
+                || TimeSpan.TryParseExact(value, @"hhmmss", null, out resultTime))
             {
                 if (_row[DateTimeValue] != DBNull.Value)
                     _row[DateTimeValue] = ((DateTime)_row[DateTimeValue]).Date + resultTime;
