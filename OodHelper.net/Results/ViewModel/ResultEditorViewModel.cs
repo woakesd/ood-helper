@@ -111,6 +111,20 @@ namespace OodHelper.Results.ViewModel
             }
         }
 
+        IList<CommandListItem> _ContextMenuItems;
+        public IList<CommandListItem> ContextMenuItems
+        {
+            get
+            {
+                return _ContextMenuItems;
+            }
+
+            set
+            {
+                _ContextMenuItems = value;
+            }
+        }
+
         public CalendarEvent.RaceTypes RaceType
         {
             get

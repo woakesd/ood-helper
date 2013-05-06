@@ -47,6 +47,8 @@ namespace OodHelper.Results
                 t.Header = r.DisplayName;
                 t.Content = r;
                 raceTabControl.Items.Add(t);
+                //r.ContextMenuItems = new List<CommandListItem>();
+                //r.ContextMenuItems.Add(new CommandListItem() { Text = "Edit Boat", Command = null });
                 //r.ContextMenu = new ContextMenu();
             }
 

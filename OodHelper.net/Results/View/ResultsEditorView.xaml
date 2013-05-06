@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:behaviour="clr-namespace:OodHelper.Behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="286" d:DesignWidth="1350">
     <Grid>
@@ -84,18 +85,23 @@
             </StackPanel>
         </Grid>
         <DockPanel Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <DataGrid SelectionMode="Single" CanUserDeleteRows="False" AutoGenerateColumns="False" SelectionUnit="Cell" 
+            <DataGrid SelectionMode="Single" CanUserDeleteRows="False" AutoGenerateColumns="False" SelectionUnit="Cell" behaviour:ExcelLikeBehavior.IsExcelLike="True"
                       CanUserResizeRows="False" CanUserAddRows="False" IsReadOnly="False" ItemsSource="{Binding Entries}">
                 <DataGrid.Resources>
+                    <DataTemplate x:Key="contextMenuItemTemplate">
+                        <TextBlock Text="{Binding Text}" />
+                    </DataTemplate>
                     <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
                     <Style x:Key="Editable" TargetType="DataGridCell">
-                        <Setter Property="Background" Value="White"/>
                     </Style>
                     <Style x:Key="ReadOnly" TargetType="DataGridCell">
                         <Setter Property="Background" Value="#fff0f0f0"/>
                         <Setter Property="Foreground" Value="Black"/>
                     </Style>
                 </DataGrid.Resources>
+                <DataGrid.ContextMenu>
+                    <ContextMenu ItemsSource="{Binding ContextMenuItems}" ItemTemplate="{StaticResource contextMenuItemTemplate}"/>
+                </DataGrid.ContextMenu>
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Rid}" Header="RID" IsReadOnly="True" Visibility="Collapsed" CellStyle="{StaticResource ReadOnly}" />
                     <DataGridTextColumn Binding="{Binding Bid}" Header="BID" IsReadOnly="True" CellStyle="{StaticResource ReadOnly}" />
