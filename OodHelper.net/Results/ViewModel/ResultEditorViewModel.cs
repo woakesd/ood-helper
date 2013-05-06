@@ -16,12 +16,12 @@ namespace OodHelper.Results.ViewModel
         public override string DisplayName { get { return string.Format("{0} - {1}", Result.Event.eventName, Result.Event.eventClass); } }
 
         RelayCommand _saveCommand;
-        public RelayCommand SaveCommand 
-        { 
+        public RelayCommand SaveCommand
+        {
             get
             {
-                if (_saveCommand == null) 
-                { 
+                if (_saveCommand == null)
+                {
                     _saveCommand = new RelayCommand(param => this.Save(), param => this.CanSave);
                 }
                 return _saveCommand;
@@ -39,6 +39,24 @@ namespace OodHelper.Results.ViewModel
             {
                 return true;
             }
+        }
+
+        RelayCommand _addNotesCommand;
+        public RelayCommand AddNotesCommand
+        {
+            get
+            {
+                if (_addNotesCommand == null)
+                {
+                    _addNotesCommand = new RelayCommand(param => this.AddNotes());
+                }
+                return _addNotesCommand;
+            }
+        }
+
+        public void AddNotes()
+        {
+            Result.AddNotes();
         }
 
         RelayCommand _publishCommand;
@@ -60,6 +78,32 @@ namespace OodHelper.Results.ViewModel
         }
 
         public bool CanPublish
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        RelayCommand _refreshHandicapsCommand;
+        public RelayCommand RefreshHandicapsCommand
+        {
+            get
+            {
+                if (_refreshHandicapsCommand == null)
+                {
+                    _refreshHandicapsCommand = new RelayCommand(param => this.RefreshHandicaps(), param => this.CanRefreshHandicaps);
+                }
+                return _refreshHandicapsCommand;
+            }
+        }
+
+        public void RefreshHandicaps()
+        {
+            Result.RefreshHandicaps();
+        }
+
+        public bool CanRefreshHandicaps
         {
             get
             {

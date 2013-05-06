@@ -17,6 +17,11 @@ namespace OodHelper.Results.Model
             EventEntries = Entries;
         }
 
+        public void AddNotes()
+        {
+            System.Windows.MessageBox.Show("Add notes clicked!");
+        }
+
         public void Save()
         {
             System.Windows.MessageBox.Show("Save clicked!");
@@ -25,6 +30,11 @@ namespace OodHelper.Results.Model
         public void Publish()
         {
             System.Windows.MessageBox.Show("Publish clicked!");
+        }
+
+        public void RefreshHandicaps()
+        {
+            System.Windows.MessageBox.Show("Refresh Handicaps clicked!");
         }
     }
 }

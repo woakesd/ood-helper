@@ -57,25 +57,25 @@
                 <ComboBoxItem Tag="SternChase">Stern Chase</ComboBoxItem>
             </ComboBox>
             <StackPanel Grid.RowSpan="3" Grid.Row="0" Grid.Column="8" VerticalAlignment="Center" Orientation="Horizontal" Margin="20,0,5,0">
-                <Button Margin="15" HorizontalContentAlignment="Left" Command="{Binding Path=Notes}">
+                <Button Margin="15" HorizontalContentAlignment="Left" Command="{Binding Path=AddNotesCommand}">
                     <StackPanel Orientation="Horizontal">
                         <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper;component/Images/Document.png"/>
-                        <Label Grid.Column="1">Notes</Label>
+                        <Label Grid.Column="1">Add Notes</Label>
                     </StackPanel>
                 </Button>
                 <Button VerticalAlignment="Center" Margin="5" IsEnabled="{Binding Path=SaveEnabled}" Command="{Binding Path=SaveCommand}">
                     <StackPanel Orientation="Horizontal">
                         <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper;component/Images/Calc.png"/>
-                        <Label Grid.Column="1">Save</Label>
+                        <Label Grid.Column="1">Save Results</Label>
                     </StackPanel>
                 </Button>
                 <Button VerticalAlignment="Center" Margin="5" IsEnabled="{Binding Path=PublishEnabled}" Command="{Binding Path=PublishCommand}">
                     <StackPanel Orientation="Horizontal">
                         <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper;component/Images/Calc.png"/>
-                        <Label Grid.Column="1">Publish</Label>
+                        <Label Grid.Column="1">Publish Results</Label>
                     </StackPanel>
                 </Button>
-                <Button VerticalAlignment="Center" Margin="5" IsEnabled="{Binding Path=RefreshHandicapsEnabled}" Command="{Binding Path=RefreshHandicaps}">
+                <Button VerticalAlignment="Center" Margin="5" IsEnabled="{Binding Path=RefreshHandicapsEnabled}" Command="{Binding Path=RefreshHandicapsCommand}">
                     <StackPanel Orientation="Horizontal">
                         <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper;component/Images/Calc.png"/>
                         <Label Grid.Column="1">Refresh Hcaps</Label>
