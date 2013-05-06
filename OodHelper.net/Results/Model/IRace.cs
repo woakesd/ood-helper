@@ -7,5 +7,7 @@ namespace OodHelper.Results.Model
     {
         ICalendarEvent Event { get; set; }
         IList<IEntry> EventEntries { get; set; }
+        void Save();
+        void Publish();
     }
 }

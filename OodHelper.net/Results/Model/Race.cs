@@ -16,5 +16,15 @@ namespace OodHelper.Results.Model
             Event = Calendar;
             EventEntries = Entries;
         }
+
+        public void Save()
+        {
+            System.Windows.MessageBox.Show("Save clicked!");
+        }
+
+        public void Publish()
+        {
+            System.Windows.MessageBox.Show("Publish clicked!");
+        }
     }
 }

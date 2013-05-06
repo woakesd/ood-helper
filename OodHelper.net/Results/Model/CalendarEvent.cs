@@ -100,10 +100,7 @@ namespace OodHelper.Results.Model
             {
                 RaceTypes _tmp = RaceTypes.Undefined;
                 if (Data["racetype"] != DBNull.Value)
-                {
-                    if (!Enum.TryParse<RaceTypes>(Data["racetype"].ToString(), out _tmp))
-                        ;
-                }
+                    Enum.TryParse<RaceTypes>(Data["racetype"].ToString(), out _tmp);
                 return _tmp;
             }
             set
@@ -136,8 +133,7 @@ namespace OodHelper.Results.Model
             get
             {
                 Handicappings _tmp = Handicappings.Undefined;
-                if (!Enum.TryParse<Handicappings>(Data["handicapping"].ToString(), out _tmp))
-                    ;
+                Enum.TryParse<Handicappings>(Data["handicapping"].ToString(), out _tmp);
                 return _tmp;
             }
             set
@@ -160,8 +156,7 @@ namespace OodHelper.Results.Model
                 TimeLimitTypes _tmp = TimeLimitTypes.Undefined;
                 if (Data["time_limit_type"] != DBNull.Value)
                 {
-                    if (!Enum.TryParse<TimeLimitTypes>(Data["time_limit_type"].ToString(), out _tmp))
-                        ;
+                    Enum.TryParse<TimeLimitTypes>(Data["time_limit_type"].ToString(), out _tmp);
                 }
                 return _tmp;
             }

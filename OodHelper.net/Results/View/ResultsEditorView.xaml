@@ -63,10 +63,16 @@
                         <Label Grid.Column="1">Notes</Label>
                     </StackPanel>
                 </Button>
-                <Button VerticalAlignment="Center" Margin="5" IsEnabled="{Binding Path=CalculateEnabled}" Command="{Binding Path=Calculate}">
+                <Button VerticalAlignment="Center" Margin="5" IsEnabled="{Binding Path=SaveEnabled}" Command="{Binding Path=SaveCommand}">
                     <StackPanel Orientation="Horizontal">
                         <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper;component/Images/Calc.png"/>
-                        <Label Grid.Column="1">Calculate</Label>
+                        <Label Grid.Column="1">Save</Label>
+                    </StackPanel>
+                </Button>
+                <Button VerticalAlignment="Center" Margin="5" IsEnabled="{Binding Path=PublishEnabled}" Command="{Binding Path=PublishCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Grid.Column="0" Height="24" Width="24" Source="/OodHelper;component/Images/Calc.png"/>
+                        <Label Grid.Column="1">Publish</Label>
                     </StackPanel>
                 </Button>
                 <Button VerticalAlignment="Center" Margin="5" IsEnabled="{Binding Path=RefreshHandicapsEnabled}" Command="{Binding Path=RefreshHandicaps}">

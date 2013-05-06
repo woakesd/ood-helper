@@ -34,7 +34,7 @@ namespace OodHelper.Results
 
             reds = new ViewModel.ResultEditorViewModel[rids.Length];
 
-            bool askAutoPopulate = true, doAutoPopulate = false;
+            //bool askAutoPopulate = true, doAutoPopulate = false;
             for (int i = 0; i < rids.Length; i++)
             {
                 ICalendarEvent _event = new CalendarEvent(rids[i]);

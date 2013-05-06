@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.ComponentModel;
 using OodHelper.ViewModel;
 using OodHelper.Results.Model;
 
@@ -15,6 +14,58 @@ namespace OodHelper.Results.ViewModel
         public IList<ResultEntryViewModel> Entries { get; set; }
 
         public override string DisplayName { get { return string.Format("{0} - {1}", Result.Event.eventName, Result.Event.eventClass); } }
+
+        RelayCommand _saveCommand;
+        public RelayCommand SaveCommand 
+        { 
+            get
+            {
+                if (_saveCommand == null) 
+                { 
+                    _saveCommand = new RelayCommand(param => this.Save(), param => this.CanSave);
+                }
+                return _saveCommand;
+            }
+        }
+
+        public void Save()
+        {
+            Result.Save();
+        }
+
+        public bool CanSave
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        RelayCommand _publishCommand;
+        public RelayCommand PublishCommand
+        {
+            get
+            {
+                if (_publishCommand == null)
+                {
+                    _publishCommand = new RelayCommand(param => this.Publish(), param => this.CanPublish);
+                }
+                return _publishCommand;
+            }
+        }
+
+        public void Publish()
+        {
+            Result.Publish();
+        }
+
+        public bool CanPublish
+        {
+            get
+            {
+                return true;
+            }
+        }
 
         public CalendarEvent.RaceTypes RaceType
         {
