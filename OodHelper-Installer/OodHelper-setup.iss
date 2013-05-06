@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "OodHelper"
-#define MyAppVersion "1.0.0.15"
+#define MyAppVersion "1.0.0.16"
 #define MyAppExeName "OodHelper.exe"
 
 [Setup]
