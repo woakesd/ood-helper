@@ -10,6 +10,7 @@ namespace OodHelper.Results.Model
     {
         public string Text { get; set; }
         public RelayCommand Command { get; set; }
+        public object CommandParameter { get; set; }
     }
     public class Race : IRace
     {

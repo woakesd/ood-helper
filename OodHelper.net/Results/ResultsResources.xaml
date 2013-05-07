@@ -3,6 +3,6 @@
                     xmlns:vm="clr-namespace:OodHelper.Results.ViewModel"
                     xmlns:v="clr-namespace:OodHelper.Results.View">
     <DataTemplate DataType="{x:Type vm:ResultEditorViewModel}">
-        <v:ResultsEditorView/>
+        <v:ResultEditorView/>
     </DataTemplate>
 </ResourceDictionary>

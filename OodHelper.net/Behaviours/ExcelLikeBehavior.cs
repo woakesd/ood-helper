@@ -95,9 +95,14 @@ namespace OodHelper.Behaviors
             {
                 if (!cell.IsFocused)
                 {
-                    cell.Focus();
-                    cell.IsSelected = true;
                     DataGrid _dg = FindVisualParent<DataGrid>(cell);
+                    DataGridRow _dr = FindVisualParent<DataGridRow>(cell);
+                    if (_dg.SelectionUnit == DataGridSelectionUnit.Cell)
+                        cell.IsSelected = true;
+                    else
+                        _dr.IsSelected = true;
+                    cell.Focus();
+                    
                     if (_dg != null)
                         _dg.BeginEdit();
                     if (cell.Column.GetType() == typeof(DataGridCheckBoxColumn))

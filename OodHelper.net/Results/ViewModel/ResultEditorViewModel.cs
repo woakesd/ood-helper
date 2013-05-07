@@ -125,6 +125,8 @@ namespace OodHelper.Results.ViewModel
             }
         }
 
+        public object SelectedEntry { get; set; }
+
         public CalendarEvent.RaceTypes RaceType
         {
             get

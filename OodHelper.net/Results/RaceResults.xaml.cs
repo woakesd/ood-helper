@@ -40,76 +40,52 @@ namespace OodHelper.Results
                 ICalendarEvent _event = new CalendarEvent(rids[i]);
                 IList<IEntry> _entries = Entry.GetEntries(rids[i], _event.start_date);
                 IRace _race = new Race(_event, _entries);
-                ResultEditorViewModel r = new ResultEditorViewModel(_race);
+                ResultEditorViewModel _resultEditor = new ResultEditorViewModel(_race);
 
-                reds[i] = r;
+                reds[i] = _resultEditor;
                 TabItem t = new TabItem();
-                t.Header = r.DisplayName;
-                t.Content = r;
+                t.Header = _resultEditor.DisplayName;
+                t.Content = _resultEditor;
                 raceTabControl.Items.Add(t);
-                //r.ContextMenuItems = new List<CommandListItem>();
-                //r.ContextMenuItems.Add(new CommandListItem() { Text = "Edit Boat", Command = null });
-                //r.ContextMenu = new ContextMenu();
+                _resultEditor.ContextMenuItems = new List<CommandListItem>();
+                _resultEditor.ContextMenuItems.Add(new CommandListItem() { Text = "Edit Boat", Command = 
+                    new RelayCommand(param => this.EditBoat(_resultEditor))
+                });
             }
 
-            //for (int i = 0; i < rids.Length; i++)
-            //{
-            //    ResultsEditor from = (ResultsEditor)((TabItem)raceTabControl.Items[i]).Content;
-            //    ContextMenu m = from.ContextMenu;
-            //    MenuItem editBoat = new MenuItem();
-            //    editBoat.Header = "Edit Boat";
-            //    editBoat.Command = new EditBoatCmd();
-            //    editBoat.CommandParameter = from;
-            //    m.Items.Add(editBoat);
-            //    if (rids.Length > 1)
-            //    {
-            //        for (int j = 0; j < rids.Length; j++)
-            //        {
-            //            ResultsEditor to = (ResultsEditor)((TabItem)raceTabControl.Items[j]).Content;
-            //            if (i != j)
-            //            {
-            //                MenuItem mi = new MenuItem();
-            //                mi.Header = "Move to " + to.DisplayName;
-            //                mi.Command = new FleetChanger(this, from.Rid, to.Rid);
-            //                mi.CommandParameter = from.Races;
-            //                m.Items.Add(mi);
-            //            }
-            //        }
-            //    }
-            //}
-        }
-
-        class EditBoatCmd : ICommand
-        {
-            #region ICommand Members
-
-            public bool CanExecute(object parameter)
+            for (int i = 0; i < rids.Length; i++)
             {
-                return true;
-            }
+                ResultEditorViewModel from = ((TabItem)raceTabControl.Items[i]).Content as ResultEditorViewModel;
+                IList<CommandListItem> _commandList = from.ContextMenuItems;
 
-            public event EventHandler CanExecuteChanged;
-
-            protected virtual void OnCanExecuteChanged()
-            {
-                EventHandler handler = this.CanExecuteChanged;
-                if (handler != null)
+                if (rids.Length > 1)
                 {
-                    handler(this, null);
+                    for (int j = 0; j < rids.Length; j++)
+                    {
+                        ResultEditorViewModel to = ((TabItem)raceTabControl.Items[j]).Content as ResultEditorViewModel;
+                        if (i != j)
+                        {
+                            CommandListItem _moveBoat = new CommandListItem();
+                            _moveBoat.Text = string.Format("Move to {0}", to.DisplayName);
+                            //mi.Command = new RelayCommand(param => this.ChangeFleet(from, to));
+                            _commandList.Add(_moveBoat);
+                        }
+                    }
                 }
             }
+        }
 
+        public void EditBoat(object parameter)
+        {
+            bool reload = false;
+            ResultEditorViewModel rr = parameter as ResultEditorViewModel;
 
-            public void Execute(object parameter)
+            if (rr != null && rr.SelectedEntry != null)
             {
-                bool reload = false;
-                ResultsEditor rr = (ResultsEditor)parameter;
-                IList<DataGridCellInfo> cc = rr.Races.SelectedCells;
-
-                foreach (DataGridCellInfo inf in rr.Races.SelectedCells)
+                ResultEntryViewModel _entry = rr.SelectedEntry as ResultEntryViewModel;
+                if (_entry != null)
                 {
-                    Entry rv = inf.Item as Entry;
-                    int bid = rv.bid;
+                    int bid = _entry.Bid;
                     BoatView edit = new BoatView(bid);
                     if (edit.ShowDialog().Value)
                     {
@@ -120,7 +96,7 @@ namespace OodHelper.Results
                         Hashtable d = c.GetHashtable(p);
                         foreach (object o in d.Keys)
                             p[o] = d[o];
-                        p["rid"] = rr.Rid;
+                        p["rid"] = rr.Result.Event.rid;
                         c = new Db(@"UPDATE races
                                 SET rolling_handicap = @rolling_handicap,
                                 handicap_status = @handicap_status,
@@ -132,10 +108,7 @@ namespace OodHelper.Results
                         reload = true;
                     }
                 }
-                if (reload) rr.LoadGrid();
             }
-
-            #endregion
         }
 
         class FleetChanger : ICommand
