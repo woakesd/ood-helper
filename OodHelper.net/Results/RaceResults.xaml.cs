@@ -104,7 +104,6 @@ namespace OodHelper.Results
                                 WHERE rid = @rid
                                 AND bid = @bid");
                         c.ExecuteNonQuery(p);
-                        reload = true;
                     }
                 }
             }
