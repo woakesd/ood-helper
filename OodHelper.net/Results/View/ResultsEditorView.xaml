@@ -88,9 +88,6 @@
             <DataGrid SelectionMode="Single" CanUserDeleteRows="False" AutoGenerateColumns="False" SelectionUnit="FullRow" SelectedItem="{Binding Path=SelectedEntry,Mode=TwoWay}"
                       CanUserResizeRows="False" CanUserAddRows="False" IsReadOnly="False" ItemsSource="{Binding Entries}">
                 <DataGrid.Resources>
-                    <DataTemplate x:Key="contextMenuItemTemplate">
-                        <MenuItem Header="{Binding Text}" Command="{Binding Command}" />
-                    </DataTemplate>
                     <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
                     <Style x:Key="Editable" TargetType="DataGridCell">
                         <Setter Property="behavior:ExcelLikeBehavior.IsExcelLike" Value="True"/>
@@ -99,6 +96,9 @@
                         <Setter Property="Background" Value="#fff0f0f0"/>
                         <Setter Property="Foreground" Value="Black"/>
                     </Style>
+                    <DataTemplate x:Key="contextMenuItemTemplate">
+                        <MenuItem Header="{Binding Text}" Command="{Binding Command}" IsCheckable="False" IsChecked="False"/>
+                    </DataTemplate>
                 </DataGrid.Resources>
                 <DataGrid.ContextMenu>
                     <ContextMenu ItemsSource="{Binding ContextMenuItems}" ItemTemplate="{StaticResource contextMenuItemTemplate}" />

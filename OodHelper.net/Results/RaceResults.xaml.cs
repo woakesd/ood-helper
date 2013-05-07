@@ -77,7 +77,6 @@ namespace OodHelper.Results
 
         public void EditBoat(object parameter)
         {
-            bool reload = false;
             ResultEditorViewModel rr = parameter as ResultEditorViewModel;
 
             if (rr != null && rr.SelectedEntry != null)
