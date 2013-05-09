@@ -161,13 +161,11 @@
     </Compile>
     <Compile Include="Behaviours\ExcelLikeBehavior.cs" />
     <Compile Include="GuidExtension.cs" />
+    <Compile Include="Helpers\CommandListItem.cs" />
     <Compile Include="Helpers\IExecuteWithObject.cs" />
-    <Compile Include="Helpers\IExecuteWithObjectAndResult.cs" />
     <Compile Include="Helpers\VisualHelper.cs" />
     <Compile Include="Helpers\WeakAction.cs" />
     <Compile Include="Helpers\WeakActionGeneric.cs" />
-    <Compile Include="Helpers\WeakFunc.cs" />
-    <Compile Include="Helpers\WeakFuncGeneric.cs" />
     <Compile Include="Maintain\BoatModel.cs" />
     <Compile Include="Maintain\BoatView.xaml.cs">
       <DependentUpon>BoatView.xaml</DependentUpon>
@@ -195,18 +193,8 @@
     <Compile Include="Membership\RenewPart2.xaml.cs">
       <DependentUpon>RenewPart2.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Messaging\DialogMessage.cs" />
-    <Compile Include="Messaging\GenericMessage.cs" />
     <Compile Include="Messaging\IMessenger.cs" />
-    <Compile Include="Messaging\MessageBase.cs" />
     <Compile Include="Messaging\Messenger.cs" />
-    <Compile Include="Messaging\NotificationMessage.cs" />
-    <Compile Include="Messaging\NotificationMessageAction.cs" />
-    <Compile Include="Messaging\NotificationMessageActionGeneric.cs" />
-    <Compile Include="Messaging\NotificationMessageGeneric.cs" />
-    <Compile Include="Messaging\NotificationMessageWithCallback.cs" />
-    <Compile Include="Messaging\PropertyChangedMessage.cs" />
-    <Compile Include="Messaging\PropertyChangedMessageBase.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="Results\Model\CalendarEvent.cs" />
     <Compile Include="Results\Model\ICalendarEvent.cs" />

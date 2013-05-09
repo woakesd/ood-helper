@@ -4,11 +4,29 @@ using System.Linq;
 using System.Text;
 using OodHelper.ViewModel;
 using OodHelper.Results.Model;
+using OodHelper.Helpers;
 
 namespace OodHelper.Results.ViewModel
 {
     public class ResultEditorViewModel : ViewModelBase, IPrintSelectItem
     {
+        public ResultEditorViewModel(IRace Result)
+        {
+            if (Result == null) throw new ArgumentNullException("Result");
+
+            this.Result = Result;
+            this.Entries = (from _entry in Result.EventEntries
+                            select new ResultEntryViewModel(_entry, Result.Event)).ToList();
+
+            ContextMenuItems = new List<CommandListItem>();
+            ContextMenuItems.Add(new CommandListItem()
+            {
+                Text = "Edit Boat",
+                Command =
+                    new RelayCommand(execute => this.EditBoat(), canExecute => this.CanEditBoat())
+            });
+        }
+
         public readonly IRace Result;
 
         public IList<ResultEntryViewModel> Entries { get; set; }
@@ -264,13 +282,35 @@ namespace OodHelper.Results.ViewModel
             }
         }
         
-        public ResultEditorViewModel(IRace Result)
+        public void BoatUpdated(ResultEntryViewModel EntryVM)
         {
-            if (Result == null) throw new ArgumentNullException("Result");
+            IEntry _updated = Entry.GetEntries(EntryVM.Rid, EntryVM.Bid, EntryVM.StartDate).FirstOrDefault();
+            Entries[Entries.IndexOf(EntryVM)] = EntryVM;
+        }
 
-            this.Result = Result;
-            this.Entries = (from _entry in Result.EventEntries
-                    select new ResultEntryViewModel(_entry, Result.Event)).ToList();
+        public bool CanEditBoat()
+        {
+            return SelectedEntry != null;
+        }
+
+        public void EditBoat()
+        {
+            ResultEntryViewModel _entry = SelectedEntry as ResultEntryViewModel;
+            if (_entry != null)
+            {
+                int bid = _entry.Bid;
+                OodHelper.Messaging.Messenger.Default.Send<ResultEntryViewModel>(_entry);
+            }
+        }
+
+        public bool CanMoveEntry()
+        {
+            return SelectedEntry != null;
+        }
+
+        public void MoveEntry(ResultEditorViewModel To)
+        {
+            ResultEntryViewModel _entry = SelectedEntry as ResultEntryViewModel;
         }
 
         public string StandardCorrectedTime

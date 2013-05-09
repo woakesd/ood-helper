@@ -6,12 +6,6 @@ using System.Threading.Tasks;
 
 namespace OodHelper.Results.Model
 {
-    public class CommandListItem
-    {
-        public string Text { get; set; }
-        public RelayCommand Command { get; set; }
-        public object CommandParameter { get; set; }
-    }
     public class Race : IRace
     {
         public IList<IEntry> EventEntries { get; set; }

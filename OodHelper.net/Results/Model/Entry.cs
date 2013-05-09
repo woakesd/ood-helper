@@ -11,7 +11,7 @@ namespace OodHelper.Results.Model
 {
     public class Entry : IEntry
     {
-        public static IList<IEntry> GetEntries(int RaceId, DateTime? StartDate)
+        public static IList<IEntry> GetEntries(int RaceId, int? BoatId, DateTime? StartDate)
         {
             using (Db _conn = new Db(@"SELECT r.rid, r.bid, boatname, boatclass, sailno, r.start_date, " +
                     "r.finish_code, r.finish_date, r.interim_date, r.laps, r.override_points, r.elapsed, r.standard_corrected, r.corrected, r.place, " +
@@ -19,14 +19,16 @@ namespace OodHelper.Results.Model
                     "r.new_rolling_handicap, r.handicap_status, r.c, r.a, r.performance_index " +
                     "FROM races r INNER JOIN boats ON boats.bid = r.bid " +
                     "WHERE r.rid = @rid " +
+                    "AND boats.bid = ISNULL(@bid, boats.bid) " +
                     "ORDER BY place"))
             {
                 Hashtable _para = new Hashtable();
                 _para["rid"] = RaceId;
+                _para["bid"] = BoatId;
                 DataTable Data = _conn.GetData(_para);
 
                 IList<IEntry> _entries = (from _ent in Data.AsEnumerable()
-                                         select new Entry(_ent, StartDate) as IEntry).ToList();
+                                          select new Entry(_ent, StartDate) as IEntry).ToList();
                 return _entries;
             }
         }

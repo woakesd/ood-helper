@@ -97,11 +97,11 @@
                         <Setter Property="Foreground" Value="Black"/>
                     </Style>
                     <DataTemplate x:Key="contextMenuItemTemplate">
-                        <MenuItem Header="{Binding Text}" Command="{Binding Command}" IsCheckable="False" IsChecked="False"/>
+                        <MenuItem Header="{Binding Text}" Command="{Binding Command}" IsEnabled="{Binding CanExecute}"/>
                     </DataTemplate>
                 </DataGrid.Resources>
                 <DataGrid.ContextMenu>
-                    <ContextMenu ItemsSource="{Binding ContextMenuItems}" ItemTemplate="{StaticResource contextMenuItemTemplate}" />
+                    <ContextMenu  ItemsSource="{Binding ContextMenuItems}" ItemTemplate="{StaticResource contextMenuItemTemplate}" />
                 </DataGrid.ContextMenu>
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Rid}" Header="RID" IsReadOnly="True" Visibility="Collapsed" CellStyle="{StaticResource ReadOnly}" />
