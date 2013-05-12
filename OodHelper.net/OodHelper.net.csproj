@@ -173,6 +173,7 @@
     <Compile Include="Maintain\FamilyMember.xaml.cs">
       <DependentUpon>FamilyMember.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Maintain\Models\IBoatModel.cs" />
     <Compile Include="Maintain\NamedValuePair.cs" />
     <Compile Include="Maintain\PersonModel.cs" />
     <Compile Include="Maintain\SelectCrewBoats.xaml.cs">
@@ -193,8 +194,10 @@
     <Compile Include="Membership\RenewPart2.xaml.cs">
       <DependentUpon>RenewPart2.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Messaging\EditBoatMessage.cs" />
     <Compile Include="Messaging\IMessenger.cs" />
     <Compile Include="Messaging\Messenger.cs" />
+    <Compile Include="Messaging\UpdatedBoatMessage.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="Results\Model\CalendarEvent.cs" />
     <Compile Include="Results\Model\ICalendarEvent.cs" />

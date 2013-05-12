@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace OodHelper.Results.Model
 {
     public interface IEntry
@@ -26,5 +27,7 @@ namespace OodHelper.Results.Model
         string sailno { get; set; }
         double? standard_corrected { get; set; }
         DateTime? start_date { get; set; }
+        int? performance_index { get; set; }
+        void SaveChanges();
     }
 }

@@ -20,6 +20,7 @@ using OodHelper.Sun;
 using System.Printing;
 using System.Windows.Xps;
 using OodHelper.Results;
+using OodHelper.Messaging;
 
 namespace OodHelper
 {
@@ -32,6 +33,16 @@ namespace OodHelper
         {
             InitializeComponent();
             DataContext = dc;
+            Messenger.Default.Register<EditBoatMessage>(this, (m) => EditBoat(m));
+        }
+
+        public void EditBoat(EditBoatMessage EditBoat)
+        {
+            OodHelper.Maintain.BoatView _bv = new BoatView(EditBoat.Bid);
+            if (_bv.ShowDialog() == true)
+            {
+                Messenger.Default.Send<UpdatedBoatMessage>(new UpdatedBoatMessage() { Boat = _bv.DataContext as OodHelper.Maintain.Models.IBoatModel });
+            }
         }
 
         private class Data : NotifyPropertyChanged

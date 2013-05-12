@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OodHelper.Messaging;
 using OodHelper.ViewModel;
 using OodHelper.Results.Model;
 using OodHelper.Helpers;
@@ -23,8 +24,10 @@ namespace OodHelper.Results.ViewModel
             {
                 Text = "Edit Boat",
                 Command =
-                    new RelayCommand(execute => this.EditBoat(), canExecute => this.CanEditBoat())
+                    new RelayCommand(execute => EditBoat(), canExecute => CanEditBoat())
             });
+
+            Messenger.Default.Register<UpdatedBoatMessage>(this, (m) => BoatUpdated(m));
         }
 
         public readonly IRace Result;
@@ -282,10 +285,19 @@ namespace OodHelper.Results.ViewModel
             }
         }
         
-        public void BoatUpdated(ResultEntryViewModel EntryVM)
+        public void BoatUpdated(UpdatedBoatMessage UpdatedBoat)
         {
-            IEntry _updated = Entry.GetEntries(EntryVM.Rid, EntryVM.Bid, EntryVM.StartDate).FirstOrDefault();
-            Entries[Entries.IndexOf(EntryVM)] = EntryVM;
+            ResultEntryViewModel _updatedVM = Entries.FirstOrDefault(_u => _u.Bid == UpdatedBoat.Boat.Bid);
+            if (_updatedVM != null)
+            {
+                _updatedVM.BoatName = UpdatedBoat.Boat.BoatName;
+                _updatedVM.BoatClass = UpdatedBoat.Boat.BoatClass;
+                _updatedVM.SailNo = UpdatedBoat.Boat.SailNumber;
+                _updatedVM.HandicapStatus = UpdatedBoat.Boat.HandicapStatus;
+                _updatedVM.OpenHandicap = UpdatedBoat.Boat.OpenHandicap != string.Empty ? (int?)Int32.Parse(UpdatedBoat.Boat.OpenHandicap) : null;
+                _updatedVM.RollingHandicap = UpdatedBoat.Boat.RollingHandicap != string.Empty ? (int?)Int32.Parse(UpdatedBoat.Boat.RollingHandicap) : null;
+                _updatedVM.SaveChanges();
+            }
         }
 
         public bool CanEditBoat()
@@ -299,7 +311,7 @@ namespace OodHelper.Results.ViewModel
             if (_entry != null)
             {
                 int bid = _entry.Bid;
-                OodHelper.Messaging.Messenger.Default.Send<ResultEntryViewModel>(_entry);
+                Messenger.Default.Send<EditBoatMessage>(new EditBoatMessage() { Bid = _entry.Bid });
             }
         }
 

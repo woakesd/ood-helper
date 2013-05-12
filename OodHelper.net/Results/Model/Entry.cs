@@ -241,6 +241,12 @@ namespace OodHelper.Results.Model
             set { _row["handicap_status"] = value; }
         }
 
+        public int? performance_index
+        {
+            get { return _row["performance_index"] as int?; }
+            set { _row["performance_index"] = value; }
+        }
+
         public string c
         {
             get { return _row["c"] as string; }
@@ -251,6 +257,124 @@ namespace OodHelper.Results.Model
         {
             get { return _row["a"] as string; }
             set { _row["a"] = value; }
+        }
+
+        public void SaveChanges()
+        {
+            using (Db _conn = new Db())
+            {
+                _conn.Sql = @"MERGE (SELECT @achieved_handicap achieved_handicap,
+    , @a a
+    , @c c
+    , @corrected corrected
+    , @elapsed elapsed
+    , @finish_code finish_code
+    , @finish_date finish_date
+    , @handicap_status handicap_status
+    , @interim_date interim_date
+    , @laps laps
+    , @new_rolling_handicap new_rolling_handicap
+    , @open_handicap open_handicap
+    , @override_points override_points
+    , @place place
+    , @points points
+    , @rolling_handicap rolling_handicap
+    , @standard_corrected
+    , @start_date
+    , @bid bid
+    , @rid rid) AS src
+INTO races AS tgt
+USING src.bid = tgt.bid and src.rid = tgt.rid
+WHEN MATCHED
+UPDATE SET start_date = @start_date
+      ,finish_code = src.finish_code
+      ,finish_date = src.finish_date
+      ,interim_date = src.interim_date
+      ,last_edit = src.last_edit
+      ,laps = src.laps
+      ,place = src.place
+      ,points = src.points
+      ,override_points = src.override_points
+      ,elapsed = src.elapsed
+      ,corrected = src.corrected
+      ,standard_corrected = src.standard_corrected
+      ,handicap_status = src.handicap_status
+      ,open_handicap = src.open_handicap
+      ,rolling_handicap = src.rolling_handicap
+      ,achieved_handicap = src.achieved_handicap
+      ,new_rolling_handicap = src.new_rolling_handicap
+      ,performance_index = src.performance_index
+      ,a = src.a
+      ,c = src.c
+WHEN NOT MATCHED
+INSERT ([rid]
+    ,[bid]
+    ,[start_date]
+    ,[finish_code]
+    ,[finish_date]
+    ,[interim_date]
+    ,[last_edit]
+    ,[laps]
+    ,[place]
+    ,[points]
+    ,[override_points]
+    ,[elapsed]
+    ,[corrected]
+    ,[standard_corrected]
+    ,[handicap_status]
+    ,[open_handicap]
+    ,[rolling_handicap]
+    ,[achieved_handicap]
+    ,[new_rolling_handicap]
+    ,[performance_index]
+    ,[a]
+    ,[c])
+VALUES (src.rid
+    ,src.bid
+    ,src.start_date
+    ,src.finish_code
+    ,src.finish_date
+    ,src.interim_date
+    ,src.last_edit
+    ,src.laps
+    ,src.place
+    ,src.points
+    ,src.override_points
+    ,src.elapsed
+    ,src.corrected
+    ,src.standard_corrected
+    ,src.handicap_status
+    ,src.open_handicap
+    ,src.rolling_handicap
+    ,src.achieved_handicap
+    ,src.new_rolling_handicap
+    ,src.performance_index
+    ,src.a
+    ,src.c";
+                Hashtable _para = new Hashtable();
+                _para["rid"] = rid;
+                _para["bid"] = bid;
+                _para["start_date"] = start_date;
+                _para["finish_code"] = finish_code;
+                _para["finish_date"] = finish_date;
+                _para["interim_date"] = interim_date;
+                _para["last_edit"] = DateTime.Now;
+                _para["laps"] = laps;
+                _para["place"] = place;
+                _para["points"] = points;
+                _para["override_points"] = override_points;
+                _para["elapsed"] = elapsed;
+                _para["corrected"] = corrected;
+                _para["standard_corrected"] = standard_corrected;
+                _para["handicap_status"] = handicap_status;
+                _para["open_handicap"] = open_handicap;
+                _para["rolling_handicap"] = rolling_handicap;
+                _para["achieved_handicap"] = achieved_handicap;
+                _para["new_rolling_handicap"] = new_rolling_handicap;
+                _para["performance_index"] = performance_index;
+                _para["a"] = a;
+                _para["c"] = c;
+            }
         }
     }
 }

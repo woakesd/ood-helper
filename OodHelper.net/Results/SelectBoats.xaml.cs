@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using OodHelper.Results.Model;
+using OodHelper.Maintain.Models;
 using OodHelper.Maintain;
 using OodHelper.Rules;
 

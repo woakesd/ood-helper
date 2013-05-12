@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using OodHelper.Messaging;
+using OodHelper.Results.ViewModel;
 
 namespace OodHelper.Results.View
 {
@@ -23,6 +25,11 @@ namespace OodHelper.Results.View
         public ResultEditorView()
         {
             InitializeComponent();
+            Messenger.Default.Register<EditBoatMessage>(this, EditBoat);
+        }
+
+        public void EditBoat(EditBoatMessage Message)
+        {
         }
     }
 }

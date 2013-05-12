@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
@@ -12,13 +13,18 @@ namespace OodHelper.Results.ViewModel
 {
     public class ResultEntryViewModel : ViewModelBase
     {
-        private IEntry _entry { get; set; }
+        public IEntry Entry { get; set; }
         private ICalendarEvent _event { get; set; }
 
         public ResultEntryViewModel(IEntry Entry, ICalendarEvent CalEvent)
         {
-            _entry = Entry;
+            this.Entry = Entry;
             _event = CalEvent;
+        }
+
+        public void SaveChanges()
+        {
+            Entry.SaveChanges();
         }
 
         public void CalendarEvent_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -41,25 +47,25 @@ namespace OodHelper.Results.ViewModel
 
         public DateTime? RaceStart { get; set; }
 
-        public int Rid { get { return _entry.rid; } }
-        public int Bid { get { return _entry.bid; } }
-        public string BoatName { get { return _entry.boatname; } }
-        public string BoatClass { get { return _entry.boatclass; } }
-        public string SailNo { get { return _entry.sailno; } }
+        public int Rid { get { return Entry.rid; } }
+        public int Bid { get { return Entry.bid; } }
+        public string BoatName { get { return Entry.boatname; } set { Entry.boatname = value; OnPropertyChanged("BoatName"); } }
+        public string BoatClass { get { return Entry.boatclass; } set { Entry.boatclass = value; OnPropertyChanged("BoatClass"); } }
+        public string SailNo { get { return Entry.sailno; } set { Entry.sailno = value; OnPropertyChanged("SailNo"); } }
 
         public DateTime? StartDate
         {
             get
             {
-                if (_entry.start_date.HasValue)
-                    return (DateTime)_entry.start_date.Value.Date;
+                if (Entry.start_date.HasValue)
+                    return (DateTime)Entry.start_date.Value.Date;
                 else
                     return null;
             }
 
             set
             {
-                _entry.start_date = value;
+                Entry.start_date = value;
                 OnPropertyChanged("StartDate");
                 OnPropertyChanged("StartTime");
             }
@@ -69,8 +75,8 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                if (_entry.start_date.HasValue)
-                    return _entry.start_date.Value.ToString("HH:mm:ss");
+                if (Entry.start_date.HasValue)
+                    return Entry.start_date.Value.ToString("HH:mm:ss");
                 else
                     return string.Empty;
             }
@@ -83,12 +89,12 @@ namespace OodHelper.Results.ViewModel
                 {
                     if (_tmp.Value < Converters.ValueParser.TwentyFourHours)
                     {
-                        if (_entry.start_date.HasValue)
-                            _entry.start_date = _entry.start_date.Value.Date + _tmp;
+                        if (Entry.start_date.HasValue)
+                            Entry.start_date = Entry.start_date.Value.Date + _tmp;
                         else if (_event != null && _event.start_date != null)
-                            _entry.start_date = _event.start_date.Value.Date + _tmp;
+                            Entry.start_date = _event.start_date.Value.Date + _tmp;
                         else
-                            _entry.start_date = DateTime.Today + _tmp;
+                            Entry.start_date = DateTime.Today + _tmp;
 
                         OnPropertyChanged("StartDate");
                         OnPropertyChanged("StartTime");
@@ -101,14 +107,14 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                return _entry.finish_code;
+                return Entry.finish_code;
             }
 
             set
             {
                 if (value == string.Empty || IsFinishCode(value))
                 {
-                    _entry.finish_code = value.ToUpper();
+                    Entry.finish_code = value.ToUpper();
                     OnPropertyChanged("FinishCode");
                 }
             }
@@ -118,20 +124,20 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                return _entry.finish_date.HasValue ? _entry.finish_date.Value.Date : (DateTime?)null;
+                return Entry.finish_date.HasValue ? Entry.finish_date.Value.Date : (DateTime?)null;
             }
 
             set
             {
                 if (value.HasValue)
                 {
-                    if (_entry.finish_date.HasValue)
-                        _entry.finish_date = value.Value.Date + _entry.finish_date.Value.TimeOfDay;
+                    if (Entry.finish_date.HasValue)
+                        Entry.finish_date = value.Value.Date + Entry.finish_date.Value.TimeOfDay;
                     else
-                        _entry.finish_date = value.Value.Date;
+                        Entry.finish_date = value.Value.Date;
                 }
                 else
-                    _entry.finish_date = value;
+                    Entry.finish_date = value;
 
                 OnPropertyChanged("FinishDate");
                 OnPropertyChanged("FinishTime");
@@ -142,20 +148,20 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                return _entry.interim_date.HasValue ? _entry.interim_date.Value.Date : (DateTime?)null;
+                return Entry.interim_date.HasValue ? Entry.interim_date.Value.Date : (DateTime?)null;
             }
 
             set
             {
                 if (value.HasValue)
                 {
-                    if (_entry.interim_date.HasValue)
-                        _entry.interim_date = value.Value.Date + _entry.interim_date.Value.TimeOfDay;
+                    if (Entry.interim_date.HasValue)
+                        Entry.interim_date = value.Value.Date + Entry.interim_date.Value.TimeOfDay;
                     else
-                        _entry.interim_date = value.Value.Date;
+                        Entry.interim_date = value.Value.Date;
                 }
                 else
-                    _entry.interim_date = value;
+                    Entry.interim_date = value;
 
                 OnPropertyChanged("InterimDate");
                 OnPropertyChanged("InterimTime");
@@ -174,8 +180,8 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                if (_entry.finish_date.HasValue)
-                    return _entry.finish_date.Value.ToString("HH:mm:ss");
+                if (Entry.finish_date.HasValue)
+                    return Entry.finish_date.Value.ToString("HH:mm:ss");
                 else
                     return string.Empty;
             }
@@ -188,7 +194,7 @@ namespace OodHelper.Results.ViewModel
                 }
                 else
                 {
-                    _entry.finish_date = ReadFinishTime(value, _entry.finish_date);
+                    Entry.finish_date = ReadFinishTime(value, Entry.finish_date);
                 }
                 OnPropertyChanged("FinishTime");
             }
@@ -217,15 +223,15 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                if (_entry.interim_date.HasValue)
-                    return _entry.interim_date.Value.ToString("HH:mm:ss");
+                if (Entry.interim_date.HasValue)
+                    return Entry.interim_date.Value.ToString("HH:mm:ss");
                 else
                     return string.Empty;
             }
 
             set
             {
-                _entry.interim_date = ReadFinishTime(value, _entry.interim_date);
+                Entry.interim_date = ReadFinishTime(value, Entry.interim_date);
                 OnPropertyChanged("InterimTime");
             }
         }
@@ -234,15 +240,15 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                return _entry.override_points.ToString();
+                return Entry.override_points.ToString();
             }
             set
             {
                 double tmp;
                 if (Double.TryParse(value, out tmp))
-                    _entry.override_points = tmp;
+                    Entry.override_points = tmp;
                 else
-                    _entry.override_points = null;
+                    Entry.override_points = null;
 
                 OnPropertyChanged("OverridePoints");
             }
@@ -252,12 +258,12 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                return _entry.laps.ToString();
+                return Entry.laps.ToString();
             }
             set
             {
                 int? _tmp = Converters.ValueParser.ReadInt(value);
-                _entry.laps = _tmp;
+                Entry.laps = _tmp;
                 OnPropertyChanged("Laps");
             }
         }
@@ -266,9 +272,9 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                if (_entry.elapsed.HasValue)
+                if (Entry.elapsed.HasValue)
                 {
-                    TimeSpan s = new TimeSpan(0, 0, (int)_entry.elapsed);
+                    TimeSpan s = new TimeSpan(0, 0, (int)Entry.elapsed);
                     if (s.Days > 0)
                         return s.ToString(@"d\ hh\:mm\:ss");
                     return s.ToString(@"hh\:mm\:ss");
@@ -285,7 +291,7 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                return OutputCorrected(_entry.corrected);
+                return OutputCorrected(Entry.corrected);
             }
             set
             {
@@ -296,7 +302,7 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                return OutputCorrected(_entry.standard_corrected);
+                return OutputCorrected(Entry.standard_corrected);
             }
             set
             {
@@ -320,12 +326,12 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                return _entry.place.ToString();
+                return Entry.place.ToString();
             }
             set
             {
                 if (_event != null && _event.racetype == CalendarEvent.RaceTypes.SternChase)
-                    _entry.place = Converters.ValueParser.ReadInt(value);
+                    Entry.place = Converters.ValueParser.ReadInt(value);
                 OnPropertyChanged("Place");
             }
         }
@@ -334,34 +340,38 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                return _entry.points.ToString();
+                return Entry.points.ToString();
             }
             set
             {
             }
         }
 
-        public string OpenHandicap
+        public int? OpenHandicap
         {
             get
             {
-                return _entry.open_handicap.ToString();
+                return Entry.open_handicap;
             }
 
             set
             {
+                Entry.open_handicap = value;
+                OnPropertyChanged("OpenHandicap");
             }
         }
 
-        public string RollingHandicap
+        public int? RollingHandicap
         {
             get
             {
-                return _entry.rolling_handicap.ToString();
+                return Entry.rolling_handicap;
             }
 
             set
             {
+                Entry.open_handicap = value;
+                OnPropertyChanged("RollingHandicap");
             }
         }
 
@@ -369,7 +379,7 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                return _entry.achieved_handicap.ToString();
+                return Entry.achieved_handicap.ToString();
             }
 
             set
@@ -381,7 +391,7 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                return _entry.new_rolling_handicap.ToString();
+                return Entry.new_rolling_handicap.ToString();
             }
 
             set
@@ -391,19 +401,19 @@ namespace OodHelper.Results.ViewModel
 
         public string HandicapStatus
         {
-            get { return _entry.handicap_status; }
-            set { }
+            get { return Entry.handicap_status; }
+            set { Entry.handicap_status = value; OnPropertyChanged("HandicapStatus"); }
         }
 
         public string C
         {
-            get { return _entry.c; }
+            get { return Entry.c; }
             set { }
         }
 
         public string A
         {
-            get { return _entry.a; }
+            get { return Entry.a; }
             set { }
         }
     }

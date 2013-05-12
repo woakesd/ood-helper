@@ -6,9 +6,9 @@ using System.Data;
 using System.Linq;
 using System.Text;
 
-namespace OodHelper.Maintain
+namespace OodHelper.Maintain.Models
 {
-    public class BoatModel : NotifyPropertyChanged
+    public class BoatModel : NotifyPropertyChanged, IBoatModel
     {
         public BoatModel(int b)
         {

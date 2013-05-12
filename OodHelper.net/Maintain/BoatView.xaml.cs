@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.ComponentModel;
 using System.Linq;
 using OodHelper.Helpers;
+using OodHelper.Maintain.Models;
 
 namespace OodHelper.Maintain
 {
@@ -36,6 +37,7 @@ namespace OodHelper.Maintain
 
         public BoatView(int b)
         {
+            Owner = App.Current.MainWindow;
             InitializeComponent();
 
             BoatModel bm = new BoatModel(b);
