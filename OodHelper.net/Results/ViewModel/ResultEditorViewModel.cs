@@ -16,8 +16,9 @@ namespace OodHelper.Results.ViewModel
             if (Result == null) throw new ArgumentNullException("Result");
 
             this.Result = Result;
-            this.Entries = (from _entry in Result.EventEntries
-                            select new ResultEntryViewModel(_entry, Result.Event)).ToList();
+            if (Result.EventEntries != null)
+                this.Entries = (from _entry in Result.EventEntries
+                                select new ResultEntryViewModel(_entry, Result.Event)).ToList();
 
             ContextMenuItems = new List<CommandListItem>();
             ContextMenuItems.Add(new CommandListItem()

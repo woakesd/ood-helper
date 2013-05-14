@@ -209,11 +209,14 @@ namespace NunitTests.Results.ViewModel
         {
             Mock<ICalendarEvent> _event = new Mock<ICalendarEvent>();
             _event.SetupProperty(d => d.laps);
+            _event.SetupProperty(d => d.racetype, CalendarEvent.RaceTypes.FixedLength);
 
             Race _race = new OodHelper.Results.Model.Race(_event.Object, null);
 
             ResultEditorViewModel EditorViewModel = new OodHelper.Results.ViewModel.ResultEditorViewModel(_race);
             EditorViewModel.PropertyChanged += EditorViewModel_PropertyChanged;
+
+            Assert.AreEqual(CalendarEvent.RaceTypes.FixedLength, EditorViewModel.RaceType, "RaceType isn't FixedLength");
 
             EditorViewModel.Laps = "X";
             Expect(_propertyChangeCounts.ContainsKey("Laps"), Is.False, string.Format("{0} onPropertyChanged raised when set to X", "Laps"));

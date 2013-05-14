@@ -502,7 +502,7 @@ namespace NunitTests.Results.ViewModel
             int _test = _rnd.Next(500, 1700);
             _entry.SetupProperty(d => d.open_handicap, _test);
 
-            Assert.AreEqual(_test.ToString(), _entryVM.OpenHandicap, "Open Handicap read correctly");
+            Assert.AreEqual(_test, _entryVM.OpenHandicap, "Open Handicap read correctly");
         }
 
         [Test]
@@ -515,7 +515,7 @@ namespace NunitTests.Results.ViewModel
             int _test = _rnd.Next(500, 1700);
             _entry.SetupProperty(d => d.rolling_handicap, _test);
 
-            Assert.AreEqual(_test.ToString(), _entryVM.RollingHandicap, "Rolling Handicap read correctly");
+            Assert.AreEqual(_test, _entryVM.RollingHandicap, "Rolling Handicap read correctly");
         }
 
         [Test]
@@ -578,6 +578,17 @@ namespace NunitTests.Results.ViewModel
             _entry.SetupProperty(d => d.a, _test);
 
             Assert.AreEqual(_test, _entryVM.A, "A read correctly");
+        }
+
+        [Test]
+        public void SaveTest()
+        {
+            Mock<IEntry> _entry = new Mock<IEntry>();
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            _entryVM.SaveChanges();
+            
+            _entry.Verify(foo => foo.SaveChanges(), Times.Once(), "SaveChanges wasn't called once");
         }
     }
 }
