@@ -6,6 +6,7 @@ using NUnit.Framework;
 using Moq;
 using OodHelper.Results.Model;
 using OodHelper.Results.ViewModel;
+using OodHelper.Messaging;
 
 namespace NunitTests.Results.ViewModel
 {
@@ -226,6 +227,115 @@ namespace NunitTests.Results.ViewModel
             Expect(_event.Object.laps, Is.EqualTo(3), "Laps underlying set to 3");
 
             ValidateOnPropertyChangedRaised("Laps");
+        }
+
+        private EventStartChanged _message = null;
+        private void EventStartChangeMessage(EventStartChanged Message)
+        {
+            _message = Message;
+        }
+
+        [Test]
+        public void StartChangeMessageDateTest()
+        {
+            int _testRid;
+            ResultEditorViewModel EditorViewModel;
+            SetUpStartChangeMessageTest(out _testRid, out EditorViewModel);
+
+            //
+            // Set test data
+            //
+            DateTime _test = DateTime.Now;
+            _message = null;
+
+            //
+            // Set test date
+            //
+            EditorViewModel.StartDate = _test;
+
+            // Expect message to be now null
+            Assert.AreNotEqual(null, _message, "Message not received");
+            Assert.AreEqual(_test.Date, _message.Start, "Message set to correct wrong date");
+            Assert.AreEqual(_testRid, _message.Rid, "Message set to correct rid");
+        }
+
+        [Test]
+        public void StartChangeMessageDateTimeGateTest()
+        {
+            int _testRid;
+            ResultEditorViewModel EditorViewModel;
+            SetUpStartChangeMessageTest(out _testRid, out EditorViewModel);
+
+            EditorViewModel.RaceType = CalendarEvent.RaceTypes.TimeGate;
+
+            //
+            // Set test data
+            //
+            DateTime _test = DateTime.Now;
+            _message = null;
+
+            //
+            // Set test date
+            //
+            EditorViewModel.StartDate = _test;
+
+            // Expect message to be now null
+            Assert.AreEqual(null, _message, "Message received");
+        }
+
+        [Test]
+        public void StartChangeMessageTimeTest()
+        {
+            int _testRid;
+            ResultEditorViewModel EditorViewModel;
+            SetUpStartChangeMessageTest(out _testRid, out EditorViewModel);
+
+            //
+            // Set test data
+            //
+            string _test = "12:20";
+            _message = null;
+
+            //
+            // Set test date
+            //
+            EditorViewModel.StartTime = _test;
+
+            // Expect message to be now null
+            Assert.AreNotEqual(null, _message, "Message not received");
+            Assert.AreEqual(_test, _message.Start.Value.ToString("hh:mm"), "Message set to correct wrong time");
+            Assert.AreEqual(_testRid, _message.Rid, "Message set to correct rid");
+        }
+
+        private void SetUpStartChangeMessageTest(out int _testRid, out ResultEditorViewModel EditorViewModel)
+        {
+            Random _rnd = new Random();
+            //
+            //
+            //
+            _testRid = _rnd.Next(10, 100);
+            //
+            // Register for message
+            //
+            Messenger.Default.Register<EventStartChanged>(this, (msg) => EventStartChangeMessage(msg));
+
+            //
+            // Set up event mock to store date
+            //
+            Mock<ICalendarEvent> _event = new Mock<ICalendarEvent>();
+            _event.SetupProperty(d => d.start_date);
+            _event.SetupProperty(d => d.rid, _testRid);
+            _event.SetupProperty(d => d.racetype);
+
+            //
+            // Create Race
+            //
+            Race _race = new OodHelper.Results.Model.Race(_event.Object, null);
+
+            //
+            // Create ViewModel
+            //
+            EditorViewModel = new OodHelper.Results.ViewModel.ResultEditorViewModel(_race);
         }
     }
 }

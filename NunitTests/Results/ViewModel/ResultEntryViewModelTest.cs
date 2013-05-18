@@ -7,6 +7,7 @@ using NUnit.Framework;
 using Moq;
 using OodHelper.Results.Model;
 using OodHelper.Results.ViewModel;
+using OodHelper.Messaging;
 
 namespace NunitTests.Results.ViewModel
 {
@@ -589,6 +590,25 @@ namespace NunitTests.Results.ViewModel
             _entryVM.SaveChanges();
             
             _entry.Verify(foo => foo.SaveChanges(), Times.Once(), "SaveChanges wasn't called once");
+        }
+
+        [Test]
+        public void ReceiveStartDateMessageTest()
+        {
+            Random _rnd = new Random();
+            int _testRid = _rnd.Next(10, 100);
+            DateTime _test = DateTime.Now;
+
+            Mock<IEntry> _entry = new Mock<IEntry>();
+            _entry.SetupProperty(_d => _d.rid, _testRid);
+            _entry.SetupProperty(_d => _d.start_date);
+
+            ResultEntryViewModel _entryVM = new ResultEntryViewModel(_entry.Object, null);
+
+            Messenger.Default.Send(new EventStartChanged() { Rid = _testRid, Start = _test });
+
+            Assert.AreEqual(_test.Date, _entryVM.StartDate, "Start Date not set");
+            Assert.AreEqual(_test.TimeOfDay.ToString("hh':'mm':'ss"), _entryVM.StartTime, "Start Time not set");
         }
     }
 }

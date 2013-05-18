@@ -203,8 +203,10 @@ namespace OodHelper.Results.ViewModel
                     _tmp = Result.Event.start_date.Value.TimeOfDay;
                 else
                     _tmp = TimeSpan.Zero;
-                Result.Event.start_date = value + _tmp;
+                Result.Event.start_date = value.Date + _tmp;
                 base.OnPropertyChanged("StartDate");
+                if (RaceType != CalendarEvent.RaceTypes.SternChase && RaceType != CalendarEvent.RaceTypes.TimeGate)
+                    Messenger.Default.Send(new EventStartChanged() { Rid = Result.Event.rid, Start = Result.Event.start_date });
             }
         }
 
@@ -224,6 +226,8 @@ namespace OodHelper.Results.ViewModel
                 {
                     if (_tmp.Value <= Converters.ValueParser.TwentyFourHours)
                     {
+                        if (!Result.Event.start_date.HasValue)
+                            Result.Event.start_date = DateTime.Today;
                         Result.Event.start_date = Result.Event.start_date.Value.Date + _tmp.Value;
                         base.OnPropertyChanged("StartTime");
                         base.OnPropertyChanged("StartDate");
