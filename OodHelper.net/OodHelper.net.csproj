@@ -195,6 +195,7 @@
       <DependentUpon>RenewPart2.xaml</DependentUpon>
     </Compile>
     <Compile Include="Messaging\EditBoatMessage.cs" />
+    <Compile Include="Messaging\EventStartChanged.cs" />
     <Compile Include="Messaging\IMessenger.cs" />
     <Compile Include="Messaging\Messenger.cs" />
     <Compile Include="Messaging\UpdatedBoatMessage.cs" />

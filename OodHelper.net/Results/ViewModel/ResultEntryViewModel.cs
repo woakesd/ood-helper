@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using OodHelper.ViewModel;
 using OodHelper.Results.Model;
+using OodHelper.Messaging;
 
 namespace OodHelper.Results.ViewModel
 {
@@ -20,29 +21,22 @@ namespace OodHelper.Results.ViewModel
         {
             this.Entry = Entry;
             _event = CalEvent;
+            Messenger.Default.Register<EventStartChanged>(this, (msg) => this.StartChanged(msg));
+        }
+
+        private void StartChanged(EventStartChanged Message)
+        {
+            if (Message.Rid == Entry.rid)
+            {
+                Entry.start_date = Message.Start;
+                base.OnPropertyChanged("StartDate");
+                base.OnPropertyChanged("StartTime");
+            }
         }
 
         public void SaveChanges()
         {
             Entry.SaveChanges();
-        }
-
-        public void CalendarEvent_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (_event != null)
-            {
-                switch (e.PropertyName)
-                {
-                    case "StartDate":
-                        if (_event.start_date.HasValue && _event.racetype != CalendarEvent.RaceTypes.TimeGate && _event.racetype != CalendarEvent.RaceTypes.SternChase)
-                            StartDate = _event.start_date.Value;
-                        break;
-                    case "StartTime":
-                        if (_event.start_date.HasValue && _event.racetype != CalendarEvent.RaceTypes.TimeGate && _event.racetype != CalendarEvent.RaceTypes.SternChase)
-                            StartDate = _event.start_date.Value;
-                        break;
-                }
-            }
         }
 
         public DateTime? RaceStart { get; set; }

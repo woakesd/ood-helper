@@ -227,8 +227,8 @@ namespace OodHelper.Results.ViewModel
                         Result.Event.start_date = Result.Event.start_date.Value.Date + _tmp.Value;
                         base.OnPropertyChanged("StartTime");
                         base.OnPropertyChanged("StartDate");
+                        Messenger.Default.Send(new EventStartChanged() { Rid = Result.Event.rid, Start = Result.Event.start_date });
                     }
-                    base.OnPropertyChanged("StartTime");
                 }
             }
         }
@@ -436,7 +436,7 @@ namespace OodHelper.Results.ViewModel
         {
             get
             {
-                return !StartReadOnly;
+                return true;// !StartReadOnly;
             }
         }
 
