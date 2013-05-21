@@ -25,11 +25,6 @@ namespace OodHelper.Results.View
         public ResultEditorView()
         {
             InitializeComponent();
-            Messenger.Default.Register<EditBoatMessage>(this, EditBoat);
-        }
-
-        public void EditBoat(EditBoatMessage Message)
-        {
         }
     }
 }
