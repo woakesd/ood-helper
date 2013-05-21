@@ -97,6 +97,8 @@ namespace OodHelper.Website
                     mcon.Dispose();
 
                     w.ReportProgress(100, "All done");
+
+                    PushResultNotification.ResultPublished();
                 }
             }
             catch (Exception exp)

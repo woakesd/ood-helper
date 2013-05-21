@@ -21,6 +21,10 @@ namespace OodHelper
         private const string settResultsWebServiceBaseUsername = "ResultsWebServiceBaseUsername";
         private const string settResultsWebServiceBasePassword = "ResultsWebServiceBasePassword";
 
+        private const string settPusherAppId = "PusherAppId";
+        private const string settPusherAppKey = "PusherAppKey";
+        private const string settPusherAppSecret = "PusherAppSecret";
+
         private static string CustomSettings;
         private static Configuration Config;
 
@@ -64,6 +68,42 @@ namespace OodHelper
             set
             {
                 AddSetting(settResultsWebServiceBasePassword, value);
+            }
+        }
+
+        public static string PusherAppId
+        {
+            get
+            {
+                return GetSetting(settPusherAppId);
+            }
+            set
+            {
+                AddSetting(settPusherAppId, value);
+            }
+        }
+
+        public static string PusherAppKey
+        {
+            get
+            {
+                return GetSetting(settPusherAppKey);
+            }
+            set
+            {
+                AddSetting(settPusherAppKey, value);
+            }
+        }
+
+        public static string PusherAppSecret
+        {
+            get
+            {
+                return GetSetting(settPusherAppSecret);
+            }
+            set
+            {
+                AddSetting(settPusherAppSecret, value);
             }
         }
 

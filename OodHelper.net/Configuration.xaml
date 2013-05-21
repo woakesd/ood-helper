@@ -85,6 +85,16 @@
                     <TextBox Margin="2" Grid.Row="1" Name="DefaultDiscardProfile" />
                 </Grid>
             </TabItem>
+            <TabItem Name="Pusher" Header="Pusher">
+                <StackPanel Orientation="Vertical">
+                    <Label>Pusher App Id</Label>
+                    <TextBox Margin="2" Name="PusherAppId" />
+                    <Label>Pusher App Key</Label>
+                    <TextBox Margin="2" Name="PusherAppKey" />
+                    <Label>Pusher App Secret</Label>
+                    <TextBox Margin="2" Name="PusherAppSecret" />
+                </StackPanel>
+            </TabItem>
         </TabControl>
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.ColumnDefinitions>
