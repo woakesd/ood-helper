@@ -13,9 +13,11 @@ namespace OodHelper.Website
     {
         public static void ResultPublished()
         {
-            //var _pusher = new Pusher("44473", "4ea1508f11de611598d3", "91be27c6919a7451209b");
-            var _pusher = new Pusher(Settings.PusherAppId, Settings.PusherAppKey, Settings.PusherAppSecret);
-            ITriggerResult _res = _pusher.Trigger("PEYC-Results", "Results-Published", new { message = "Results Published" });
+            if (Settings.PusherAppId != string.Empty && Settings.PusherAppKey != string.Empty && Settings.PusherAppSecret != string.Empty)
+            {
+                var _pusher = new Pusher(Settings.PusherAppId, Settings.PusherAppKey, Settings.PusherAppSecret);
+                ITriggerResult _res = _pusher.Trigger("PEYC-Results", "Results-Published", new { message = "Results Published" });
+            }
         }
     }
 }

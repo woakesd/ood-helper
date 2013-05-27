@@ -116,6 +116,7 @@
     </Reference>
     <Reference Include="PusherServer">
       <HintPath>..\..\pusher-dotnet-server\PusherServer\bin\Debug\PusherServer.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="ReachFramework" />
     <Reference Include="RestSharp">
