@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "OodHelper"
-#define MyAppVersion "1.0.0.16"
+#define MyAppVersion "1.0.0.18"
 #define MyAppExeName "OodHelper.exe"
 
 [Setup]
@@ -29,6 +29,8 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 
 [Files]
 Source: "C:\Users\Administrator.LAPXP3\Documents\Visual Studio 2010\Projects\ood-helper\OodHelper.net\bin\Release\OodHelper.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\Administrator.LAPXP3\Documents\Visual Studio 2010\Projects\ood-helper\OodHelper.net\bin\Release\PusherServer.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\Administrator.LAPXP3\Documents\Visual Studio 2010\Projects\ood-helper\OodHelper.net\bin\Release\RestSharp.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
