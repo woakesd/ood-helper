@@ -92,8 +92,8 @@
             <ComboBoxItem Content="Twin bilge (2K)" Tag="2K" />
             <ComboBoxItem Content="Central and bilge (3K)" Tag="3K" />
         </ComboBox>
-        <TextBox Text="{Binding Path=Deviation}" Grid.Row="12" Grid.Column="1" HorizontalAlignment="Left" Height="47" MaxLength="30" Width="200" Margin="2" />
-        <TextBox Text="{Binding Path=Notes}" Grid.Row="13" Grid.Column="1" HorizontalAlignment="Left" Height="107" Width="200" Margin="2" />
+        <TextBox Text="{Binding Path=Deviations}" Grid.Row="12" Grid.Column="1" HorizontalAlignment="Left" Height="47" MaxLength="30" Width="200" Margin="2" />
+        <TextBox Text="{Binding Path=BoatMemo}" Grid.Row="13" Grid.Column="1" HorizontalAlignment="Left" Height="107" Width="200" Margin="2" />
         <Grid Grid.Row="14" Grid.ColumnSpan="2" Margin="0,2" Width="300" HorizontalAlignment="Right" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
