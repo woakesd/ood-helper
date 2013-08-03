@@ -114,7 +114,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\Framework\v4.0.30319\WPF\PresentationUI.dll</HintPath>
     </Reference>
+    <Reference Include="PusherServer">
+      <HintPath>..\..\pusher-dotnet-server\PusherServer\bin\Debug\PusherServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ReachFramework" />
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.104.1\lib\net4\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
@@ -231,6 +238,7 @@
     <Compile Include="NotifyPropertyChanged.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="Website\CheckForUpdates.cs" />
+    <Compile Include="Website\PushResultNotification.cs" />
     <Compile Include="Website\UploadSun.cs" />
     <Compile Include="Website\UploadTide.cs" />
     <Compile Include="Website\MysqlDownload.cs" />
@@ -585,6 +593,7 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

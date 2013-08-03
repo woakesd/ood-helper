@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +22,7 @@ namespace OodHelper
     {
         public Configure()
         {
+            Owner = App.Current.MainWindow;
             InitializeComponent();
 
             //
@@ -49,7 +50,11 @@ namespace OodHelper
                 SSL.SelectedValue = SslVerifyCA;
             else if (mcsb.SslMode.HasFlag(MySqlSslMode.VerifyFull))
                 SSL.SelectedValue = SslVerifyFull;
-            
+
+            PusherAppId.Text = Settings.PusherAppId;
+            PusherAppKey.Text = Settings.PusherAppKey;
+            PusherAppSecret.Text = Settings.PusherAppSecret;
+
             //
             // init default discard profile
             //

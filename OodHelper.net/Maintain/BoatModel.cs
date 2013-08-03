@@ -249,12 +249,12 @@ namespace OodHelper.Maintain.Models
         {
             set
             {
-                Values["deviation"] = value;
-                OnPropertyChanged("Deviation");
+                Values["deviations"] = value;
+                OnPropertyChanged("Deviations");
             }
             get
             {
-                return Values["deviation"] as string;
+                return Values["deviations"] as string;
             }
         }
 
@@ -262,12 +262,12 @@ namespace OodHelper.Maintain.Models
         {
             set
             {
-                Values["notes"] = value;
-                OnPropertyChanged("Notes");
+                Values["boatmemo"] = value;
+                OnPropertyChanged("BoatMemo");
             }
             get
             {
-                return Values["notes"] as string;
+                return Values["boatmemo"] as string;
             }
         }
 
