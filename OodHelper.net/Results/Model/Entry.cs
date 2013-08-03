@@ -263,7 +263,8 @@ namespace OodHelper.Results.Model
         {
             using (Db _conn = new Db())
             {
-                _conn.Sql = @"MERGE (SELECT @achieved_handicap achieved_handicap,
+                _conn.Sql = @"MERGE races AS tgt
+USING (SELECT @achieved_handicap achieved_handicap
     , @a a
     , @c c
     , @corrected corrected
@@ -273,20 +274,21 @@ namespace OodHelper.Results.Model
     , @handicap_status handicap_status
     , @interim_date interim_date
     , @laps laps
+	, @last_edit last_edit
     , @new_rolling_handicap new_rolling_handicap
     , @open_handicap open_handicap
     , @override_points override_points
+	, @performance_index performance_index
     , @place place
     , @points points
     , @rolling_handicap rolling_handicap
-    , @standard_corrected
-    , @start_date
+    , @standard_corrected standard_corrected
+    , @start_date start_date
     , @bid bid
     , @rid rid) AS src
-INTO races AS tgt
-USING src.bid = tgt.bid and src.rid = tgt.rid
-WHEN MATCHED
-UPDATE SET start_date = @start_date
+ON src.bid = tgt.bid and src.rid = tgt.rid
+WHEN MATCHED THEN
+UPDATE SET start_date = src.start_date
       ,finish_code = src.finish_code
       ,finish_date = src.finish_date
       ,interim_date = src.interim_date
@@ -306,7 +308,7 @@ UPDATE SET start_date = @start_date
       ,performance_index = src.performance_index
       ,a = src.a
       ,c = src.c
-WHEN NOT MATCHED
+WHEN NOT MATCHED THEN
 INSERT ([rid]
     ,[bid]
     ,[start_date]
@@ -350,7 +352,7 @@ VALUES (src.rid
     ,src.new_rolling_handicap
     ,src.performance_index
     ,src.a
-    ,src.c";
+    ,src.c);";
                 Hashtable _para = new Hashtable();
                 _para["rid"] = rid;
                 _para["bid"] = bid;
@@ -374,6 +376,8 @@ VALUES (src.rid
                 _para["performance_index"] = performance_index;
                 _para["a"] = a;
                 _para["c"] = c;
+
+                _conn.ExecuteNonQuery(_para);
             }
         }
     }

@@ -22,9 +22,16 @@ namespace OodHelper.Results.Model
             System.Windows.MessageBox.Show("Add notes clicked!");
         }
 
+        /// <summary>
+        /// Save pushes the results to the database and calls calculate.
+        /// </summary>
         public void Save()
         {
-            System.Windows.MessageBox.Show("Save clicked!");
+            Event.Update();
+            foreach (IEntry _entry in EventEntries)
+            {
+                _entry.SaveChanges();
+            }
         }
 
         public void Publish()

@@ -16,9 +16,10 @@ namespace OodHelper.Results.Model
         int? time_limit_delta { get; set; }
         DateTime? time_limit_fixed { get; set; }
         CalendarEvent.TimeLimitTypes time_limit_type { get; set; }
-        void Update();
         string wind_direction { get; set; }
         string wind_speed { get; set; }
         double? standard_corrected_time { get; set; }
+
+        void Update();
     }
 }
