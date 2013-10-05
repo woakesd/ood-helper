@@ -142,6 +142,9 @@ namespace OodHelper.Results
                 OnPropertyChanged("LapsReadOnly");
                 OnPropertyChanged("LapsVisible");
 
+                CalculateEnabled = true;
+                OnPropertyChanged("CalculateEnabled");
+
                 SetEditableColumns();
                 CreateScorer();
                 SetColumnAttributes();
@@ -438,6 +441,7 @@ namespace OodHelper.Results
                 case CalendarModel.RaceTypes.AverageLap:
                 case CalendarModel.RaceTypes.FixedLength:
                 case CalendarModel.RaceTypes.TimeGate:
+                case CalendarModel.RaceTypes.HybridOld:
                 case CalendarModel.RaceTypes.Hybrid:
                     switch (Handicap)
                     {
@@ -479,6 +483,7 @@ namespace OodHelper.Results
                     RaceDataTable.Columns["override_points"].ReadOnly = false;
                     RaceDataTable.Columns["finish_code"].ReadOnly = false;
                     break;
+                case CalendarModel.RaceTypes.HybridOld:
                 case CalendarModel.RaceTypes.Hybrid:
                     RaceDataTable.Columns["finish_date"].ReadOnly = false;
                     RaceDataTable.Columns["override_points"].ReadOnly = false;
@@ -592,7 +597,7 @@ namespace OodHelper.Results
         {
             get
             {
-                return RaceType != CalendarModel.RaceTypes.Hybrid;
+                return RaceType != CalendarModel.RaceTypes.HybridOld && RaceType != CalendarModel.RaceTypes.Hybrid;
             }
         }
 
@@ -627,6 +632,7 @@ namespace OodHelper.Results
                 switch (RaceType)
                 {
                     case CalendarModel.RaceTypes.AverageLap:
+                    case CalendarModel.RaceTypes.HybridOld:
                     case CalendarModel.RaceTypes.Hybrid:
                         return false;
                     default:

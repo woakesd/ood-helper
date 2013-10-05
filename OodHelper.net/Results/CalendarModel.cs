@@ -7,7 +7,7 @@ namespace OodHelper.Results
 {
     public class CalendarModel
     {
-        public enum RaceTypes { Undefined, FixedLength, AverageLap, Hybrid, TimeGate, SternChase, }
+        public enum RaceTypes { Undefined, FixedLength, AverageLap, HybridOld, Hybrid, TimeGate, SternChase, }
 
         public int Rid { get; set; }
 

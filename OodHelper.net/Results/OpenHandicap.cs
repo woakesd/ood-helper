@@ -245,17 +245,25 @@ namespace OodHelper
 
         protected virtual void CorrectedTime()
         {
+            var query = (from r in racedata.AsEnumerable()
+                         where r.Field<string>("finish_code") != "DNF"
+                             && r.Field<string>("finish_code") != "DSQ"
+                             && r.Field<DateTime?>("start_date") != null
+                             && r.Field<DateTime?>("finish_date") != null
+                             && (RaceType != CalendarModel.RaceTypes.HybridOld || r.Field<DateTime?>("interim_date") != null && r.Field<int?>("laps") != null)
+                             && (RaceType != CalendarModel.RaceTypes.Hybrid || r.Field<DateTime?>("interim_date") != null && r.Field<int?>("laps") != null)
+                             && (RaceType != CalendarModel.RaceTypes.AverageLap || r.Field<int?>("laps") != null)
+                         select r);
+
+            //
+            // Average laps
+            //
+            var avgLaps = Math.Round(query.Average(r => (r.Field<int?>("laps")) ?? 0), 1);
+
             //
             // Select all boats and work out elapsed, corrected and stdcorr
             //
-            foreach (DataRow dr in (from r in racedata.AsEnumerable()
-                                    where r.Field<string>("finish_code") != "DNF"
-                                        && r.Field<string>("finish_code") != "DSQ"
-                                        && r.Field<DateTime?>("start_date") != null
-                                        && r.Field<DateTime?>("finish_date") != null
-                                        && (RaceType != CalendarModel.RaceTypes.Hybrid || r.Field<DateTime?>("interim_date") != null && r.Field<int?>("laps") != null)
-                                        && (RaceType != CalendarModel.RaceTypes.AverageLap || r.Field<int?>("laps") != null)
-                                    select r))
+            foreach (DataRow dr in query)
             {
                 DateTime? _start = dr["start_date"] as DateTime?;
                 DateTime? _finish = dr["finish_date"] as DateTime?;
@@ -263,10 +271,8 @@ namespace OodHelper
                 TimeSpan? _fixedPart = null;
                 TimeSpan? _averageLapPart = null;
 
-                if (RaceType == CalendarModel.RaceTypes.Hybrid)
+                if (RaceType == CalendarModel.RaceTypes.HybridOld)
                 {
-                    _fixedPart = _interim - _start;
-                    _averageLapPart = _finish - _interim;
                 }
 
                 TimeSpan? _elapsed = _finish - _start;
@@ -286,9 +292,17 @@ namespace OodHelper
                     case CalendarModel.RaceTypes.AverageLap:
                         dr["corrected"] = Math.Round(_elapsed.Value.TotalSeconds * 1000 / hcap) / _laps.Value;
                         break;
-                    case CalendarModel.RaceTypes.Hybrid:
+                    case CalendarModel.RaceTypes.HybridOld:
+                        _fixedPart = _interim - _start;
+                        _averageLapPart = _finish - _interim;
                         dr["corrected"] = Math.Round(_fixedPart.Value.TotalSeconds * 1000 / hcap) +
                             Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / hcap) / _laps.Value;
+                        break;
+                    case CalendarModel.RaceTypes.Hybrid:
+                        _fixedPart = _interim - _start;
+                        _averageLapPart = _finish - _interim;
+                        dr["corrected"] = Math.Round(_fixedPart.Value.TotalSeconds * 1000 / hcap) +
+                            Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / hcap) / _laps.Value * avgLaps;
                         break;
                     case CalendarModel.RaceTypes.FixedLength:
                     case CalendarModel.RaceTypes.TimeGate:
