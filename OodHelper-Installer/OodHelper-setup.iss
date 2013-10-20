@@ -16,7 +16,7 @@ AppVersion={#MyAppVersion}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 OutputDir=C:\Users\Administrator.LAPXP3\Documents\Visual Studio 2010\Projects\ood-helper\OodHelper-Installer
-OutputBaseFilename=OodHelper-Setup
+OutputBaseFilename=OodHelper-Setup-{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
 
