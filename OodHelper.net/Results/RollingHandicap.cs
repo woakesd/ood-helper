@@ -26,7 +26,7 @@ namespace OodHelper
             //
             // Average laps
             //
-            var avgLaps = Math.Round(query.Average(r => (r.Field<int?>("laps")) ?? 0), 1);
+            var avgLaps = query.Average(r => (r.Field<int?>("laps")) ?? 0);
 
             //
             // Select all boats and work out elapsed, corrected and stdcorr
@@ -69,9 +69,9 @@ namespace OodHelper
                         _fixedPart = _interim - _start;
                         _averageLapPart = _finish - _interim;
                         dr["corrected"] = Math.Round(_fixedPart.Value.TotalSeconds * 1000 / hcap) +
-                            Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / hcap) / _laps.Value * avgLaps;
+                            Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / hcap * avgLaps) / _laps.Value;
                         dr["standard_corrected"] = Math.Round(_fixedPart.Value.TotalSeconds * 1000 / ohp) +
-                            Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / ohp) / _laps.Value * avgLaps;
+                            Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / ohp * avgLaps) / _laps.Value;
                         break;
                     case CalendarModel.RaceTypes.FixedLength:
                     case CalendarModel.RaceTypes.TimeGate:

@@ -302,7 +302,7 @@ namespace OodHelper
                         _fixedPart = _interim - _start;
                         _averageLapPart = _finish - _interim;
                         dr["corrected"] = Math.Round(_fixedPart.Value.TotalSeconds * 1000 / hcap) +
-                            Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / hcap) / _laps.Value * avgLaps;
+                            Math.Round(_averageLapPart.Value.TotalSeconds * 1000 / hcap * avgLaps) / _laps.Value;
                         break;
                     case CalendarModel.RaceTypes.FixedLength:
                     case CalendarModel.RaceTypes.TimeGate:
