@@ -218,7 +218,10 @@ namespace OodHelper
                 //
                 // if average lap and user enters a finish time and no laps then default to 1.
                 //
-                if (RaceType == CalendarModel.RaceTypes.AverageLap && r["laps"] == DBNull.Value && r["finish_date"] != DBNull.Value)
+                if ((RaceType == CalendarModel.RaceTypes.AverageLap
+                    || RaceType == CalendarModel.RaceTypes.Hybrid
+                    || RaceType == CalendarModel.RaceTypes.HybridOld)
+                    && r["laps"] == DBNull.Value && r["finish_date"] != DBNull.Value)
                     r["laps"] = 1;
             }
         }
