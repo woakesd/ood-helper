@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace OodHelper
 {
-    class Db : IDisposable
+    public class Db : IDisposable
     {
         private const string MasterConnection = @"Data Source=(LocalDB)\v11.0;Initial Catalog=master;Integrated Security=True";
 
