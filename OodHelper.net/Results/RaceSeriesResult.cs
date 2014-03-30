@@ -55,7 +55,7 @@ namespace OodHelper.Results
                             case CalendarModel.RaceTypes.AverageLap:
                             case CalendarModel.RaceTypes.FixedLength:
                             case CalendarModel.RaceTypes.TimeGate:
-                            case CalendarModel.RaceTypes.Hybrid:
+                            case CalendarModel.RaceTypes.HybridOld:
                                 switch (race["handicapping"].ToString().ToUpper())
                                 {
                                     case "R":

@@ -61,6 +61,7 @@
                 <ComboBoxItem Tag="FixedLength">Fixed Length</ComboBoxItem>
                 <ComboBoxItem Tag="AverageLap">Average Lap</ComboBoxItem>
                 <ComboBoxItem Tag="Hybrid">Hybrid Fixed/Average</ComboBoxItem>
+                <ComboBoxItem Tag="HybridOld">Hybrid (Old)</ComboBoxItem>
                 <ComboBoxItem Tag="TimeGate">Time Gate</ComboBoxItem>
                 <ComboBoxItem Tag="SternChase">Stern Chase</ComboBoxItem>
             </ComboBox>
@@ -158,7 +159,7 @@
                                         IsReadOnly="{Binding Path=(FrameworkElement.DataContext).FinishReadOnly,RelativeSource={x:Static RelativeSource.Self}}"
                                         Visibility="{Binding Path=(FrameworkElement.DataContext).FinishTimeVisible,RelativeSource={x:Static RelativeSource.Self}}"
                                             CellStyle="{StaticResource Editable}"/>
-                    <DataGridTextColumn Binding="{Binding Laps,UpdateSourceTrigger=LostFocus}" Header="Laps" CellStyle="{StaticResource Editable}" 
+                    <DataGridTextColumn Binding="{Binding Laps,UpdateSourceTrigger=LostFocus}" Header="Avg Laps" CellStyle="{StaticResource Editable}" 
                                         Visibility="{Binding Path=(FrameworkElement.DataContext).LapsVisible,RelativeSource={x:Static RelativeSource.Self}}"
                                         IsReadOnly="{Binding Path=(FrameworkElement.DataContext).LapsReadOnly,RelativeSource={x:Static RelativeSource.Self}}"/>
                     <DataGridTextColumn Binding="{Binding FinishCode}" Header="Code" CellStyle="{StaticResource Editable}"  />

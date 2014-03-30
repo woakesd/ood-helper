@@ -30,7 +30,7 @@ namespace OodHelper
 
         static Settings()
         {
-            Assembly _ass = Assembly.GetAssembly(typeof(App));
+            Assembly _ass = Assembly.GetExecutingAssembly();
             AssemblyName _an = _ass.GetName();
             CustomSettings = string.Format(@"{0}\{1}\OodHelper.net.custom.config", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), _an.Name);
         }

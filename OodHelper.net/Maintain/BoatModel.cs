@@ -245,29 +245,29 @@ namespace OodHelper.Maintain
             }
         }
 
-        public string Deviation
+        public string Deviations
         {
             set
             {
-                Values["deviation"] = value;
-                OnPropertyChanged("Deviation");
+                Values["deviations"] = value;
+                OnPropertyChanged("Deviations");
             }
             get
             {
-                return Values["deviation"] as string;
+                return Values["deviations"] as string;
             }
         }
 
-        public string Notes
+        public string BoatMemo
         {
             set
             {
-                Values["notes"] = value;
-                OnPropertyChanged("Notes");
+                Values["boatmemo"] = value;
+                OnPropertyChanged("BoatMemo");
             }
             get
             {
-                return Values["notes"] as string;
+                return Values["boatmemo"] as string;
             }
         }
 
