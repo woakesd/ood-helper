@@ -36,8 +36,8 @@ namespace LoadTide
 
             SqlCommand scom = new SqlCommand(@"SELECT date, height, [current] FROM tidedata WHERE date >= @start AND date < @end");
             scom.Connection = scon;
-            scom.Parameters.Add("start", new DateTime(2014, 1, 1));
-            scom.Parameters.Add("end", new DateTime(2015, 1, 1));
+            scom.Parameters.AddWithValue("start", new DateTime(2014, 1, 1));
+            scom.Parameters.AddWithValue("end", new DateTime(2015, 1, 1));
             SqlDataAdapter sdt = new SqlDataAdapter(scom);
             DataTable Tide = new DataTable();
             sdt.Fill(Tide);
