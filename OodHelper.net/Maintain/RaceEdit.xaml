@@ -175,6 +175,7 @@
                 <ComboBoxItem Tag="CalendarEntry">Calendar Entry</ComboBoxItem>
                 <ComboBoxItem Tag="FixedLength">Fixed Length</ComboBoxItem>
                 <ComboBoxItem Tag="AverageLap">Average Lap</ComboBoxItem>
+                <ComboBoxItem Tag="HybridOld">Hybrid Fixed/Average (Old)</ComboBoxItem>
                 <ComboBoxItem Tag="Hybrid">Hybrid Fixed/Average</ComboBoxItem>
                 <ComboBoxItem Tag="TimeGate">Time Gate</ComboBoxItem>
                 <ComboBoxItem Tag="SternChase">Stern Chase</ComboBoxItem>

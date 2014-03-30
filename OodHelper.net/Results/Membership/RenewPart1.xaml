@@ -1,0 +1,186 @@
+﻿<Page x:Class="OodHelper.Membership.RenewPart1"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      d:DesignHeight="841" d:DesignWidth="595"
+	Title="RenewPart1">
+    <Grid Margin="60">
+        <StackPanel Orientation="Vertical">
+            <TextBlock Padding="6" TextAlignment="Right" TextWrapping="Wrap" Name="PEAddress" Text="Port Edgar Yacht Club
+                       "/>
+            <TextBlock Padding="6" TextAlignment="Right" TextWrapping="Wrap" Name="Date" Text=""/>
+            <TextBlock Padding="6" TextAlignment="Justify" TextWrapping="Wrap" Name="Salutation" Text="Dear x y" />
+            <TextBlock Padding="6" TextAlignment="Justify" TextWrapping="Wrap">The new season is fast approaching and it's time to renew your yacht club membership. The first race of the Easter Series is on Sunday April 1st (no fooling!). Wednesday Evening Racing commences Wednesday April 18th. The cruising section's first drinks meeting is on Thursday April 26th and with first cruise the following week . There is a 707 Regatta on April 28th with a barbecue afterwards.</TextBlock>
+            <TextBlock Padding="6" TextAlignment="Justify" TextWrapping="Wrap" Text="Please check your details, then sign this letter and return it to:"></TextBlock>
+            <TextBlock Padding="6" TextAlignment="Justify" TextWrapping="Wrap" Text="Keith Squire
+Membership Secretary PEYC,
+2 Heather Grove,
+Maddiston,
+Falkirk,
+FK2 0BB
+
+Tel: 01324 412 207
+Mob: 07903 880 056" />
+            <Grid Margin="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Vertical" Grid.Column="0">
+                    <TextBlock Text="First name"/>
+                    <TextBlock Text="Last name"/>
+                    <TextBlock Text="Address"/>
+                    <TextBlock Text=""/>
+                    <TextBlock Text=""/>
+                    <TextBlock Text=""/>
+                    <TextBlock Text="Postcode"/>
+                    <TextBlock Text="Home phone"/>
+                    <TextBlock Text="Work phone"/>
+                    <TextBlock Text="Mobile"/>
+                    <TextBlock Text="Email"/>
+                    <TextBlock Text="Paper copy of newsletter"/>
+                    <TextBlock Text="Exclude from handbook"/>
+                    <TextBlock Text="Membership type"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Grid.Column="1">
+                    <TextBlock Text="{Binding FirstName}"/>
+                    <TextBlock Text="{Binding LastName}"/>
+                    <TextBlock Text="{Binding Address1}"/>
+                    <TextBlock Text="{Binding Address2}"/>
+                    <TextBlock Text="{Binding Address3}"/>
+                    <TextBlock Text="{Binding Address4}"/>
+                    <TextBlock Text="{Binding Postcode}"/>
+                    <TextBlock Text="{Binding HomePhone}"/>
+                    <TextBlock Text="{Binding WorkPhone}"/>
+                    <TextBlock Text="{Binding Mobile}"/>
+                    <TextBlock Text="{Binding Email}"/>
+                    <TextBlock Text="{Binding PaperCopyOfNewsletter}"/>
+                    <TextBlock Text="{Binding ExcludeFromHandbook}"/>
+                    <TextBlock Text="{Binding MembershipType}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Grid.Column="2">
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                    <Border BorderBrush="Black">
+                        <Border.BorderThickness>
+                            <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                        </Border.BorderThickness>
+                        <TextBlock Height="15" />
+                    </Border>
+                </StackPanel>
+            </Grid>
+            <DataGrid>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Family Members">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical" Margin="0 0 0 12">
+                                    <Grid Margin="6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Vertical" Grid.Column="0">
+                                            <TextBlock Text="Name"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical" Grid.Column="1">
+                                            <TextBlock Text="{Binding Name}" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical" Grid.Column="2">
+                                            <Border BorderBrush="Black">
+                                                <Border.BorderThickness>
+                                                    <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                                                </Border.BorderThickness>
+                                                <TextBlock Height="15" />
+                                            </Border>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+    </Grid>
+</Page>

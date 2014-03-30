@@ -1,0 +1,108 @@
+﻿<Page x:Class="OodHelper.Membership.RenewPart2"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      d:DesignHeight="841" d:DesignWidth="595"
+	Title="RenewPart2">
+    <Grid Margin="60">
+        <DataGrid HeadersVisibility="None">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical" Margin="0 0 0 12">
+                                <Grid Margin="6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Orientation="Vertical" Grid.Column="0">
+                                        <TextBlock Text="Boat name"/>
+                                        <TextBlock Text="Boat class"/>
+                                        <TextBlock Text="Sail number"/>
+                                        <TextBlock Text="Dinghy/Yacht"/>
+                                        <TextBlock Text="Hull type"/>
+                                        <TextBlock Text="Engine/Propeller"/>
+                                        <TextBlock Text="Keel"/>
+                                        <TextBlock Text="Handicap"/>
+                                        <TextBlock Text="Notes"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" Grid.Column="1">
+                                        <TextBlock Text="{Binding Boatname}" />
+                                        <TextBlock Text="{Binding Boatclass}"/>
+                                        <TextBlock Text="{Binding Sailno}"/>
+                                        <TextBlock Text="{Binding Dinghy}"/>
+                                        <TextBlock Text="{Binding Hulltype}"/>
+                                        <TextBlock Text="{Binding Engine}"/>
+                                        <TextBlock Text="{Binding Keel}"/>
+                                        <TextBlock Text="{Binding Handicap}"/>
+                                        <TextBlock Text="{Binding Notes}"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" Grid.Column="2">
+                                        <Border BorderBrush="Black">
+                                            <Border.BorderThickness>
+                                                <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                                            </Border.BorderThickness>
+                                            <TextBlock Height="15" />
+                                        </Border>
+                                        <Border BorderBrush="Black">
+                                            <Border.BorderThickness>
+                                                <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                                            </Border.BorderThickness>
+                                            <TextBlock Height="15" />
+                                        </Border>
+                                        <Border BorderBrush="Black">
+                                            <Border.BorderThickness>
+                                                <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                                            </Border.BorderThickness>
+                                            <TextBlock Height="15" />
+                                        </Border>
+                                        <Border BorderBrush="Black">
+                                            <Border.BorderThickness>
+                                                <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                                            </Border.BorderThickness>
+                                            <TextBlock Height="15" />
+                                        </Border>
+                                        <Border BorderBrush="Black">
+                                            <Border.BorderThickness>
+                                                <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                                            </Border.BorderThickness>
+                                            <TextBlock Height="15" />
+                                        </Border>
+                                        <Border BorderBrush="Black">
+                                            <Border.BorderThickness>
+                                                <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                                            </Border.BorderThickness>
+                                            <TextBlock Height="15" />
+                                        </Border>
+                                        <Border BorderBrush="Black">
+                                            <Border.BorderThickness>
+                                                <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                                            </Border.BorderThickness>
+                                            <TextBlock Height="15" />
+                                        </Border>
+                                        <Border BorderBrush="Black">
+                                            <Border.BorderThickness>
+                                                <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                                            </Border.BorderThickness>
+                                            <TextBlock Height="15" />
+                                        </Border>
+                                        <Border BorderBrush="Black">
+                                            <Border.BorderThickness>
+                                                <Thickness Left="0" Right="0" Top="0" Bottom="1"/>
+                                            </Border.BorderThickness>
+                                            <TextBlock Height="15" />
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Page>
