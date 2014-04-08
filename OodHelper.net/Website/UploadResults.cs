@@ -44,9 +44,6 @@ namespace OodHelper.Website
             mcom.Connection = mcon;
             mcom.ExecuteNonQuery();
 
-            mcom.CommandText = "ALTER TABLE `boats` DISABLE KEYS";
-            mcom.ExecuteNonQuery();
-
             StringBuilder msql = new StringBuilder("INSERT INTO `boats` (`boatname`,`boatclass`,`sailno`,`dngy`,`h`,`bid`,");
             msql.Append("`distance`,`crewname`,`ohp`,`ohstat`,`rhp`,`csf`,`eng`,`kl`,`deviations`,`subscriptn`,`p`,`s`,");
             msql.Append("`boatmemo`,`id`,`beaten`,`berth`,`hired`,`uid`) VALUES ");
@@ -58,13 +55,19 @@ namespace OodHelper.Website
             DataTable d = c.GetData(null);
             c.Dispose();
 
-            BuildInsertData(d, msql);
+            if (d.Rows.Count > 0)
+            {
+                mcom.CommandText = "ALTER TABLE `boats` DISABLE KEYS";
+                mcom.ExecuteNonQuery();
 
-            mcom.CommandText = msql.ToString();
-            mcom.ExecuteNonQuery();
+                BuildInsertData(d, msql);
 
-            mcom.CommandText = "ALTER TABLE `boats` ENABLE KEYS";
-            mcom.ExecuteNonQuery();
+                mcom.CommandText = msql.ToString();
+                mcom.ExecuteNonQuery();
+
+                mcom.CommandText = "ALTER TABLE `boats` ENABLE KEYS";
+                mcom.ExecuteNonQuery();
+            }
 
             if (w.CancellationPending)
             {
@@ -76,9 +79,6 @@ namespace OodHelper.Website
 
             mcom.CommandText = "DELETE FROM calendar_new";
             mcom.Connection = mcon;
-            mcom.ExecuteNonQuery();
-
-            mcom.CommandText = "ALTER TABLE `calendar_new` DISABLE KEYS";
             mcom.ExecuteNonQuery();
 
             msql.Clear();
@@ -95,13 +95,19 @@ namespace OodHelper.Website
             d = c.GetData(null);
             c.Dispose();
 
-            BuildInsertData(d, msql);
+            if (d.Rows.Count > 0)
+            {
+                mcom.CommandText = "ALTER TABLE `calendar_new` DISABLE KEYS";
+                mcom.ExecuteNonQuery();
 
-            mcom.CommandText = msql.ToString();
-            mcom.ExecuteNonQuery();
+                BuildInsertData(d, msql);
 
-            mcom.CommandText = "ALTER TABLE `calendar_new` ENABLE KEYS";
-            mcom.ExecuteNonQuery();
+                mcom.CommandText = msql.ToString();
+                mcom.ExecuteNonQuery();
+
+                mcom.CommandText = "ALTER TABLE `calendar_new` ENABLE KEYS";
+                mcom.ExecuteNonQuery();
+            }
 
             if (w.CancellationPending)
             {
@@ -112,9 +118,6 @@ namespace OodHelper.Website
             w.ReportProgress(200 / Steps, "Uploading people");
 
             mcom.CommandText = "DELETE FROM `people`";
-            mcom.ExecuteNonQuery();
-
-            mcom.CommandText = "ALTER TABLE `people` DISABLE KEYS";
             mcom.ExecuteNonQuery();
 
             msql.Clear();
@@ -128,13 +131,19 @@ namespace OodHelper.Website
             d = c.GetData(null);
             c.Dispose();
 
-            BuildInsertData(d, msql);
+            if (d.Rows.Count > 0)
+            {
+                mcom.CommandText = "ALTER TABLE `people` DISABLE KEYS";
+                mcom.ExecuteNonQuery();
 
-            mcom.CommandText = msql.ToString();
-            mcom.ExecuteNonQuery();
+                BuildInsertData(d, msql);
 
-            mcom.CommandText = "ALTER TABLE `people` ENABLE KEYS";
-            mcom.ExecuteNonQuery();
+                mcom.CommandText = msql.ToString();
+                mcom.ExecuteNonQuery();
+
+                mcom.CommandText = "ALTER TABLE `people` ENABLE KEYS";
+                mcom.ExecuteNonQuery();
+            }
 
             if (w.CancellationPending)
             {
@@ -147,9 +156,6 @@ namespace OodHelper.Website
             mcom.CommandText = "DELETE FROM `boat_crew`";
             mcom.ExecuteNonQuery();
 
-            mcom.CommandText = "ALTER TABLE `boat_crew` DISABLE KEYS";
-            mcom.ExecuteNonQuery();
-
             msql.Clear();
             msql.Append("INSERT INTO `boat_crew` (`id`,`bid`) VALUES ");
 
@@ -157,13 +163,19 @@ namespace OodHelper.Website
             d = c.GetData(null);
             c.Dispose();
 
-            BuildInsertData(d, msql);
+            if (d.Rows.Count > 0)
+            {
+                mcom.CommandText = "ALTER TABLE `boat_crew` DISABLE KEYS";
+                mcom.ExecuteNonQuery();
 
-            mcom.CommandText = msql.ToString();
-            mcom.ExecuteNonQuery();
+                BuildInsertData(d, msql);
 
-            mcom.CommandText = "ALTER TABLE `boat_crew` ENABLE KEYS";
-            mcom.ExecuteNonQuery();
+                mcom.CommandText = msql.ToString();
+                mcom.ExecuteNonQuery();
+
+                mcom.CommandText = "ALTER TABLE `boat_crew` ENABLE KEYS";
+                mcom.ExecuteNonQuery();
+            }
 
             if (w.CancellationPending)
             {
@@ -174,9 +186,6 @@ namespace OodHelper.Website
             w.ReportProgress(400 / Steps, "Uploading races");
 
             mcom.CommandText = "DELETE FROM `races_new`";
-            mcom.ExecuteNonQuery();
-
-            mcom.CommandText = "ALTER TABLE `races_new` DISABLE KEYS";
             mcom.ExecuteNonQuery();
 
             msql.Clear();
@@ -195,14 +204,17 @@ namespace OodHelper.Website
 
             if (d.Rows.Count > 0)
             {
+                mcom.CommandText = "ALTER TABLE `races_new` DISABLE KEYS";
+                mcom.ExecuteNonQuery();
+
                 BuildInsertData(d, msql);
 
                 mcom.CommandText = msql.ToString();
                 mcom.ExecuteNonQuery();
-            }
 
-            mcom.CommandText = "ALTER TABLE `races_new` ENABLE KEYS";
-            mcom.ExecuteNonQuery();
+                mcom.CommandText = "ALTER TABLE `races_new` ENABLE KEYS";
+                mcom.ExecuteNonQuery();
+            }
 
             if (w.CancellationPending)
             {
@@ -215,9 +227,6 @@ namespace OodHelper.Website
             mcom.CommandText = "DELETE FROM `series`";
             mcom.ExecuteNonQuery();
 
-            mcom.CommandText = "ALTER TABLE `series` DISABLE KEYS";
-            mcom.ExecuteNonQuery();
-
             msql.Clear();
             msql.Append("INSERT INTO `series` (sid,sname,discards) VALUES ");
 
@@ -225,13 +234,19 @@ namespace OodHelper.Website
             d = c.GetData(null);
             c.Dispose();
 
-            BuildInsertData(d, msql);
+            if (d.Rows.Count > 0)
+            {
+                mcom.CommandText = "ALTER TABLE `series` DISABLE KEYS";
+                mcom.ExecuteNonQuery();
 
-            mcom.CommandText = msql.ToString();
-            mcom.ExecuteNonQuery();
+                BuildInsertData(d, msql);
 
-            mcom.CommandText = "ALTER TABLE `series` ENABLE KEYS";
-            mcom.ExecuteNonQuery();
+                mcom.CommandText = msql.ToString();
+                mcom.ExecuteNonQuery();
+
+                mcom.CommandText = "ALTER TABLE `series` ENABLE KEYS";
+                mcom.ExecuteNonQuery();
+            }
 
             if (w.CancellationPending)
             {
@@ -244,9 +259,6 @@ namespace OodHelper.Website
             mcom.CommandText = "DELETE FROM `calendar_series_join`";
             mcom.ExecuteNonQuery();
 
-            mcom.CommandText = "ALTER TABLE `calendar_series_join` DISABLE KEYS";
-            mcom.ExecuteNonQuery();
-
             msql.Clear();
             msql.Append("INSERT INTO `calendar_series_join` (sid,rid) VALUES ");
 
@@ -254,13 +266,19 @@ namespace OodHelper.Website
             d = c.GetData(null);
             c.Dispose();
 
-            BuildInsertData(d, msql);
+            if (d.Rows.Count > 0)
+            {
+                mcom.CommandText = "ALTER TABLE `calendar_series_join` DISABLE KEYS";
+                mcom.ExecuteNonQuery();
 
-            mcom.CommandText = msql.ToString();
-            mcom.ExecuteNonQuery();
+                BuildInsertData(d, msql);
 
-            mcom.CommandText = "ALTER TABLE `calendar_series_join` ENABLE KEYS";
-            mcom.ExecuteNonQuery();
+                mcom.CommandText = msql.ToString();
+                mcom.ExecuteNonQuery();
+
+                mcom.CommandText = "ALTER TABLE `calendar_series_join` ENABLE KEYS";
+                mcom.ExecuteNonQuery();
+            }
 
             //
             // Series results
@@ -270,9 +288,6 @@ namespace OodHelper.Website
             mcom.CommandText = "DELETE FROM `series_results`";
             mcom.ExecuteNonQuery();
 
-            mcom.CommandText = "ALTER TABLE `series_results` DISABLE KEYS";
-            mcom.ExecuteNonQuery();
-
             msql.Clear();
             msql.Append("INSERT INTO `series_results` (sid,bid,division,entered,gross,nett,place) VALUES ");
 
@@ -280,13 +295,19 @@ namespace OodHelper.Website
             d = c.GetData(null);
             c.Dispose();
 
-            BuildInsertData(d, msql);
+            if (d.Rows.Count > 0)
+            {
+                mcom.CommandText = "ALTER TABLE `series_results` DISABLE KEYS";
+                mcom.ExecuteNonQuery();
 
-            mcom.CommandText = msql.ToString();
-            mcom.ExecuteNonQuery();
+                BuildInsertData(d, msql);
 
-            mcom.CommandText = "ALTER TABLE `series_results` ENABLE KEYS";
-            mcom.ExecuteNonQuery();
+                mcom.CommandText = msql.ToString();
+                mcom.ExecuteNonQuery();
+
+                mcom.CommandText = "ALTER TABLE `series_results` ENABLE KEYS";
+                mcom.ExecuteNonQuery();
+            }
 
             if (w.CancellationPending)
             {
@@ -311,10 +332,13 @@ namespace OodHelper.Website
             d = c.GetData(null);
             c.Dispose();
 
-            BuildInsertData(d, msql);
+            if (d.Rows.Count > 0)
+            {
+                BuildInsertData(d, msql);
 
-            mcom.CommandText = msql.ToString();
-            mcom.ExecuteNonQuery();
+                mcom.CommandText = msql.ToString();
+                mcom.ExecuteNonQuery();
+            }
 
             if (w.CancellationPending)
             {
@@ -328,9 +352,6 @@ namespace OodHelper.Website
             mcom.Connection = mcon;
             mcom.ExecuteNonQuery();
 
-            mcom.CommandText = "ALTER TABLE `portsmouth_numbers` DISABLE KEYS";
-            mcom.ExecuteNonQuery();
-
             msql.Clear();
             msql.Append(@"INSERT INTO `portsmouth_numbers` 
 (`id`, `class_name`, `no_of_crew`, `rig`, `spinnaker`, `engine`, `keel`, `number`, `status`, `notes`)
@@ -341,13 +362,19 @@ VALUES ");
             d = c.GetData(null);
             c.Dispose();
 
-            BuildInsertData(d, msql);
+            if (d.Rows.Count > 0)
+            {
+                mcom.CommandText = "ALTER TABLE `portsmouth_numbers` DISABLE KEYS";
+                mcom.ExecuteNonQuery();
 
-            mcom.CommandText = msql.ToString();
-            mcom.ExecuteNonQuery();
+                BuildInsertData(d, msql);
 
-            mcom.CommandText = "ALTER TABLE `portsmouth_numbers` ENABLE KEYS";
-            mcom.ExecuteNonQuery();
+                mcom.CommandText = msql.ToString();
+                mcom.ExecuteNonQuery();
+
+                mcom.CommandText = "ALTER TABLE `portsmouth_numbers` ENABLE KEYS";
+                mcom.ExecuteNonQuery();
+            }
 
             //
             // Recreate update time from itself. This will truncate the time to the second.
