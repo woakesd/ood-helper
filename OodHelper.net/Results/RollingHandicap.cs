@@ -26,7 +26,7 @@ namespace OodHelper
             //
             // Average laps
             //
-            var avgLaps = query.Average(r => (r.Field<int?>("laps")) ?? 0);
+            var avgLaps = Math.Round(query.Average(r => (r.Field<int?>("laps")) ?? 0), 1);
 
             //
             // Select all boats and work out elapsed, corrected and stdcorr

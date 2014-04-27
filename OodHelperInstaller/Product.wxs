@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="{5BFFBF30-89EE-4260-8D26-A20391555A95}" Name="OodHelper" Language="1033" Version="1.0.0.25" Manufacturer="Mitredata" UpgradeCode="{586CAE3C-1E00-4522-ABD5-DFEAE4C5DA54}">
+	<Product Id="{5BFFBF30-89EE-4260-8D26-A20391555A95}" Name="OodHelper" Language="1033" Version="1.0.0.26" Manufacturer="David Woakes" UpgradeCode="{586CAE3C-1E00-4522-ABD5-DFEAE4C5DA54}">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />

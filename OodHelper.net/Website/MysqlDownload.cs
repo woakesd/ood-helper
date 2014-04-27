@@ -103,7 +103,6 @@ namespace OodHelper.Website
             {
                 ShowException.DoShow(ex);
                 ErrorLogger.LogException(ex);
-                //throw;
             }
         }
 
