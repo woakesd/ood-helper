@@ -390,7 +390,7 @@ ON DELETE SET NULL;
 
 ALTER TABLE [dbo].[boats] CHECK CONSTRAINT [FK_boats_people];
 
-ALTER TABLE [dbo].[calendar_series_join]  WITH CHECK ADD  CONSTRAINT [FK_calendar_series_join_calendar] FOREIGN KEY([sid])
+ALTER TABLE [dbo].[calendar_series_join]  WITH CHECK ADD  CONSTRAINT [FK_calendar_series_join_calendar] FOREIGN KEY([rid])
 REFERENCES [dbo].[calendar] ([rid])
 ON UPDATE CASCADE
 ON DELETE CASCADE;
