@@ -205,7 +205,7 @@ LEFT JOIN people ON boats.id = people.id ");
                         if (reds[i].RaceClass.IndexOf("Yacht") >= 0)
                             yachts = true;
 
-                        if (reds[i].RaceClass.IndexOf("Division") >= 0)
+                        if (reds[i].RaceClass.IndexOf("Div") >= 0)
                             yachts = true;
 
                         if (reds[i].RaceClass.IndexOf("Dinghy") >= 0)

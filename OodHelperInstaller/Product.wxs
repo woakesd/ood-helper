@@ -36,13 +36,6 @@
       <Component Id="MySqlDataDLL" Guid="{1C10CC45-3874-4345-B21F-FD568C68BA0B}">
         <File Id="MySqlDataDLL" Name="mysql.data.dll" Source="$(var.OodHelper.net.TargetDir)\mysql.data.dll" KeyPath="yes" />
       </Component>
-      <Component Id="RestSharpDLL" Guid="{1C2ABAB9-EBAE-49F6-887F-7A3689D8C3FA}" KeyPath="yes" >
-        <File Id="RestSharpDLL" Name="RestSharp.dll" Source="$(var.OodHelper.net.TargetDir)\RestSharp.dll" />
-        <File Id="RestSharpXML" Name="RestSharp.xml" Source="$(var.OodHelper.net.TargetDir)\RestSharp.xml" />
-      </Component>
-      <Component Id="PusherServerDLL" Guid="{2A606F64-A390-4E41-A1A5-F656CDD2CB22}">
-        <File Id="PusherServerDLL" Name="PusherServer.dll" Source="$(var.OodHelper.net.TargetDir)\PusherServer.dll" KeyPath="yes" />
-      </Component>
 		</ComponentGroup>
 	</Fragment>
 </Wix>

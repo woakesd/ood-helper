@@ -97,7 +97,14 @@ namespace OodHelper.Rules
                 else
                 {
                     child.Rule = RuleType.Compound;
-                    child.Application = (Apply)System.Enum.GetValues(typeof(Apply)).GetValue((int)r["application"]);
+                    try
+                    {
+                        child.Application = (Apply)System.Enum.GetValues(typeof(Apply)).GetValue((int)r["application"]);
+                    }
+                    catch
+                    {
+                        child.Application = Apply.Any;
+                    }
                     AddChildren(child);
                 }
                 parent.Add(child);
