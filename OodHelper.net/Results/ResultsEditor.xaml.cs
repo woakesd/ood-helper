@@ -453,6 +453,9 @@ namespace OodHelper.Results
                             break;
                     }
                     break;
+                case CalendarModel.RaceTypes.SternChase:
+                    Scorer = new SternChaseScorer();
+                    break;
             }
         }
 
@@ -499,13 +502,21 @@ namespace OodHelper.Results
                     break;
                 case CalendarModel.RaceTypes.SternChase:
                     RaceDataTable.Columns["place"].ReadOnly = false;
+                    RaceDataTable.Columns["override_points"].ReadOnly = false;
                     break;
             }
         }
 
         public bool PlaceReadOnly
         {
-            get { return true; }
+            get {
+                switch (RaceType)
+                {
+                    case CalendarModel.RaceTypes.SternChase:
+                        return false;
+                }
+                return true;
+            }
         }
 
         public bool DisplayDate

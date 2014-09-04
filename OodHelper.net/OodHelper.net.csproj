@@ -194,6 +194,7 @@
     <Compile Include="Results\ResultsViewModel.cs" />
     <Compile Include="Results\ResultModel.cs" />
     <Compile Include="Converters\ValueParsers.cs" />
+    <Compile Include="Results\SternChaseScorer.cs" />
     <Compile Include="Rules\RuleSelector.xaml.cs">
       <DependentUpon>RuleSelector.xaml</DependentUpon>
     </Compile>

@@ -17,7 +17,8 @@ namespace LoadTide
         
         static void Main(string[] args)
         {
-            
+            DataTable Tide = new DataTable();
+
             string mysql = "server=peycrace.info;User Id=peycrace;" +
                 "password=5c8gbE7stjH4;database=peycrace;Use Compression=True;" +
                 "port=7506;Ssl Mode=VerifyFull";
@@ -25,45 +26,60 @@ namespace LoadTide
             mysql = mcsb.ConnectionString;
             mcon = new MySqlConnection(mysql);
             mcon.Open();
-            mtrn = mcon.BeginTransaction();
+            //mtrn = mcon.BeginTransaction();
 
             SqlConnectionStringBuilder conb = new SqlConnectionStringBuilder();
             conb.DataSource = "(localdb)\\v11.0";
             conb.InitialCatalog = "raceresults";
             SqlConnection scon = new SqlConnection(conb.ConnectionString);
             scon.Open();
+            SqlTransaction stran = scon.BeginTransaction();
 
-            SqlCommand scom = new SqlCommand(@"SELECT date, height, [current] FROM tidedata WHERE date >= @start AND date < @end");
+            //SqlCommand scom = new SqlCommand(@"SELECT date, height, [current] FROM tidedata WHERE date >= @start AND date < @end");
+            //scom.Connection = scon;
+            //scom.Parameters.AddWithValue("start", new DateTime(2014, 1, 1));
+            //scom.Parameters.AddWithValue("end", new DateTime(2015, 1, 1));
+            //SqlDataAdapter sdt = new SqlDataAdapter(scom);
+            //sdt.Fill(Tide);
+            MySqlCommand msel = new MySqlCommand("SELECT `date`, `height`, `current` FROM `tidedata` WHERE date >= '2015-01-01'");
+            msel.Connection = mcon;
+            MySqlDataAdapter mdt = new MySqlDataAdapter(msel);
+            mdt.Fill(Tide);
+
+            //scon.Close();
+            //scon.Dispose();
+
+            SqlCommand scom = new SqlCommand();
             scom.Connection = scon;
-            scom.Parameters.AddWithValue("start", new DateTime(2014, 1, 1));
-            scom.Parameters.AddWithValue("end", new DateTime(2015, 1, 1));
-            SqlDataAdapter sdt = new SqlDataAdapter(scom);
-            DataTable Tide = new DataTable();
-            sdt.Fill(Tide);
+            scom.Transaction = stran;
+
+            scom.CommandText = "DELETE FROM [tidedata] WHERE [date] >= '01 Jan 2015'";
+
+            scom.ExecuteNonQuery();
+
+            DataTable transition = Tide.Clone();
+
+            int blocks = (int) Math.Ceiling(Tide.Rows.Count / 1000.0);
+
+            for (int i = 0; i < blocks; i++)
+            {
+                transition.Rows.Clear();
+
+                for (int j = i * 1000; j < Math.Min((i + 1) * 1000, Tide.Rows.Count); j++)
+                    transition.ImportRow(Tide.Rows[j]);
+
+                StringBuilder msql = new StringBuilder("INSERT INTO [tidedata] ([date],[height],[current]) VALUES ");
+
+                BuildInsertData(transition, msql);
+
+                scom.CommandText = msql.ToString();
+                scom.ExecuteNonQuery();
+            }
+
+            stran.Commit();
 
             scon.Close();
             scon.Dispose();
-
-            MySqlCommand mcom = new MySqlCommand();
-            mcom.Connection = mcon;
-
-            mcom.CommandText = "DELETE FROM `tidedata` WHERE date >= @sdate AND date <= @edate";
-            mcom.Parameters.AddWithValue("sdate", Tide.Rows[0]["date"]);
-            mcom.Parameters.AddWithValue("edate", Tide.Rows[Tide.Rows.Count - 1]["date"]);
-
-            mcom.ExecuteNonQuery();
-
-            StringBuilder msql = new StringBuilder("INSERT INTO `tidedata` (`date`,`height`,`current`) VALUES ");
-
-            BuildInsertData(Tide, msql);
-
-            mcom.CommandText = msql.ToString();
-            mcom.ExecuteNonQuery();
-
-            mtrn.Commit();
-
-            mcon.Close();
-            mcon.Dispose();
         }
 
         protected static void BuildInsertData(DataTable d, StringBuilder msql)
