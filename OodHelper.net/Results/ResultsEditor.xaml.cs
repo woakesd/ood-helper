@@ -503,6 +503,7 @@ namespace OodHelper.Results
                 case CalendarModel.RaceTypes.SternChase:
                     RaceDataTable.Columns["place"].ReadOnly = false;
                     RaceDataTable.Columns["override_points"].ReadOnly = false;
+                    RaceDataTable.Columns["finish_code"].ReadOnly = false;
                     break;
             }
         }

@@ -290,7 +290,11 @@ namespace OodHelper.Results
             }
             set
             {
-                _row["place"] = ValueParsers.ReadInt(value);
+                int? _tmp = ValueParsers.ReadInt(value);
+                if (_tmp.HasValue)
+                    _row["place"] = _tmp;
+                else
+                    _row["place"] = DBNull.Value;
                 OnPropertyChanged("Place");
             }
         }
