@@ -198,7 +198,7 @@ namespace OodHelper.Website
                         new_rolling_handicap,performance_index,a,c
                         FROM races 
                         WHERE rid IN (SELECT rid FROM calendar WHERE raced = 1)
-                        AND (finish_date IS NOT NULL OR finish_code IS NOT NULL)");
+                        AND (place IS NOT NULL OR finish_date IS NOT NULL OR finish_code IS NOT NULL)");
             d = c.GetData(null);
             c.Dispose();
 
