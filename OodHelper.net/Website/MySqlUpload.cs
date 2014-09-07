@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Data;
 using System.Text;
+using System.Windows;
 using MySql.Data.MySqlClient;
 using System.ComponentModel;
 
@@ -11,8 +9,8 @@ namespace OodHelper.Website
 {
     class MySqlUpload
     {
-        private Working p;
-        private BackgroundWorker upload;
+        private readonly Working _p;
+        private readonly BackgroundWorker _upload;
 
         public MySqlUpload() : this(false)
         {
@@ -21,26 +19,29 @@ namespace OodHelper.Website
 
         public MySqlUpload(bool run)
         {
-            upload = new BackgroundWorker();
-            upload.DoWork += new DoWorkEventHandler(Process);
-            p = new Working(App.Current.MainWindow, upload);
-            upload.RunWorkerCompleted += new RunWorkerCompletedEventHandler(upload_RunWorkerCompleted);
+            _upload = new BackgroundWorker();
+            _upload.DoWork += Process;
+            _p = new Working(Application.Current.MainWindow, _upload);
+            _upload.RunWorkerCompleted += upload_RunWorkerCompleted;
         }
 
         public void Run()
         {
-            upload.RunWorkerAsync();
-            p.ShowDialog();
+            _upload.RunWorkerAsync();
+            _p.ShowDialog();
         }
 
         protected virtual void upload_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled)
-                System.Windows.MessageBox.Show("Upload Cancelled", "Cancel", System.Windows.MessageBoxButton.OK,
-                    System.Windows.MessageBoxImage.Information);
+                MessageBox.Show("Upload Cancelled", "Cancel", MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            else if (e.Result is bool && !(bool)e.Result)
+                MessageBox.Show("Upload Failed", "Failed", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             else
-                System.Windows.MessageBox.Show("Upload Complete", "Finished", System.Windows.MessageBoxButton.OK,
-                    System.Windows.MessageBoxImage.Information);
+                MessageBox.Show("Upload Complete", "Finished", MessageBoxButton.OK,
+                    MessageBoxImage.Information);
         }
 
         protected void CancelDownload(DoWorkEventArgs e)
@@ -48,19 +49,18 @@ namespace OodHelper.Website
             e.Cancel = true;
             try
             {
-                mtrn.Commit();
-                mtrn.Dispose();
-                mcon.Close();
-                mcon.Dispose();
+                Mtrn.Rollback();
+                Mtrn.Dispose();
+                Mcon.Close();
+                Mcon.Dispose();
             }
             catch
             {
             }
-            return;
         }
 
-        protected MySqlConnection mcon;
-        protected MySqlTransaction mtrn;
+        protected MySqlConnection Mcon;
+        protected MySqlTransaction Mtrn;
 
         protected virtual void DoTheWork(object sender, DoWorkEventArgs e)
         {
@@ -68,9 +68,12 @@ namespace OodHelper.Website
 
         private void Process(object sender, DoWorkEventArgs e)
         {
+            e.Result = false;
             try
             {
-                BackgroundWorker w = sender as BackgroundWorker;
+                var w = sender as BackgroundWorker;
+                if (w == null)
+                    return;
 
                 if (w.CancellationPending)
                 {
@@ -81,29 +84,29 @@ namespace OodHelper.Website
                 w.ReportProgress(0, "Connecting to Website");
 
                 string mysql = Settings.Mysql;
-                MySqlConnectionStringBuilder mcsb = new MySqlConnectionStringBuilder(mysql);
+                var mcsb = new MySqlConnectionStringBuilder(mysql);
                 mysql = mcsb.ConnectionString;
-                mcon = new MySqlConnection(mysql);
-                mcon.Open();
-                mtrn = mcon.BeginTransaction();
+                Mcon = new MySqlConnection(mysql);
+                Mcon.Open();
+                Mtrn = Mcon.BeginTransaction();
 
                 DoTheWork(sender, e);
 
                 if (!e.Cancel)
                 {
-                    mtrn.Commit();
+                    Mtrn.Commit();
 
-                    mcon.Close();
-                    mcon.Dispose();
+                    Mcon.Close();
+                    Mcon.Dispose();
 
                     w.ReportProgress(100, "All done");
 
                     PushResultNotification.ResultPublished();
                 }
+                e.Result = true;
             }
             catch (Exception exp)
             {
-                ShowException.DoShow(exp);
                 ErrorLogger.LogException(exp);
             }
         }
@@ -117,8 +120,8 @@ namespace OodHelper.Website
                 msql.Append("(");
                 for (int j = 0; j < d.Columns.Count; j++)
                 {
-                    string _colType = d.Columns[j].DataType.ToString();
-                    switch (_colType)
+                    string colType = d.Columns[j].DataType.ToString();
+                    switch (colType)
                     {
                         case "System.String":
                             if (dr[j] != DBNull.Value)

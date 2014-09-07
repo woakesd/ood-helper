@@ -44,7 +44,7 @@ namespace OodHelper.Website
             w.ReportProgress(50, "Uploading Sun Data");
 
             MySqlCommand mcom = new MySqlCommand();
-            mcom.Connection = mcon;
+            mcom.Connection = Mcon;
             StringBuilder msql = new StringBuilder();
 
             mcom.CommandText = "DELETE FROM `sun` WHERE date >= @start AND date <= @end";

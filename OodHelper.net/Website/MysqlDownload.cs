@@ -1,38 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Data;
-using System.Text;
-using MySql.Data.MySqlClient;
-using System.Data.SqlClient;
 using System.ComponentModel;
+using System.Data;
+using System.Data.SqlClient;
+using System.Windows;
+using MySql.Data.MySqlClient;
 
 namespace OodHelper.Website
 {
-    class MySqlDownload
+    internal class MySqlDownload
     {
+        protected MySqlConnection Mcon;
+        protected SqlConnection Scon;
+        protected SqlTransaction Strn;
+
         public MySqlDownload()
         {
-            BackgroundWorker download = new BackgroundWorker();
-            download.DoWork += new DoWorkEventHandler(Process);
-            Working w = new Working(App.Current.MainWindow, download);
-            download.RunWorkerCompleted += new RunWorkerCompletedEventHandler(download_RunWorkerCompleted);
+            var download = new BackgroundWorker();
+            download.DoWork += Process;
+            var w = new Working(Application.Current.MainWindow, download);
+            download.RunWorkerCompleted += download_RunWorkerCompleted;
             download.RunWorkerAsync();
             w.ShowDialog();
         }
-        
-        protected SqlConnection scon;
-        protected SqlTransaction strn;
-        protected MySqlConnection mcon;
 
         protected virtual void download_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled)
-                System.Windows.MessageBox.Show("Download Cancelled", "Cancel", System.Windows.MessageBoxButton.OK,
-                    System.Windows.MessageBoxImage.Information);
+                MessageBox.Show("Download Cancelled", "Cancel", MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            else if (e.Result is bool && !(bool)e.Result)
+                MessageBox.Show("Download Failed", "Failed", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             else
-                System.Windows.MessageBox.Show("Download Complete", "Finished", System.Windows.MessageBoxButton.OK,
-                    System.Windows.MessageBoxImage.Information);
+                MessageBox.Show("Download Complete", "Finished", MessageBoxButton.OK,
+                    MessageBoxImage.Information);
         }
 
         protected void CancelDownload(DoWorkEventArgs e)
@@ -40,17 +41,16 @@ namespace OodHelper.Website
             e.Cancel = true;
             try
             {
-                strn.Rollback();
-                strn.Dispose();
-                scon.Close();
-                scon.Dispose();
-                mcon.Close();
-                mcon.Dispose();
+                Strn.Rollback();
+                Strn.Dispose();
+                Scon.Close();
+                Scon.Dispose();
+                Mcon.Close();
+                Mcon.Dispose();
             }
             catch
             {
             }
-            return;
         }
 
         protected virtual void DoTheWork(object sender, DoWorkEventArgs e)
@@ -59,22 +59,24 @@ namespace OodHelper.Website
 
         private void Process(object sender, DoWorkEventArgs e)
         {
+            e.Result = false;
             try
             {
-                BackgroundWorker p = sender as BackgroundWorker;
+                var p = sender as BackgroundWorker;
+                if (p == null)
+                    return;
 
-                scon = new SqlConnection();
-                scon.ConnectionString = Db.DatabaseConstr;
-                scon.Open();
-                strn = scon.BeginTransaction();
+                Scon = new SqlConnection {ConnectionString = Db.DatabaseConstr};
+                Scon.Open();
+                Strn = Scon.BeginTransaction();
 
                 p.ReportProgress(0, "Connecting to website");
 
                 string mysql = Settings.Mysql;
-                MySqlConnectionStringBuilder mcsb = new MySqlConnectionStringBuilder(mysql);
+                var mcsb = new MySqlConnectionStringBuilder(mysql);
                 mysql = mcsb.ConnectionString;
-                mcon = new MySqlConnection(mysql);
-                mcon.Open();
+                Mcon = new MySqlConnection(mysql);
+                Mcon.Open();
 
                 if (p.CancellationPending)
                 {
@@ -86,22 +88,22 @@ namespace OodHelper.Website
 
                 if (!e.Cancel)
                 {
-                    strn.Commit();
+                    Strn.Commit();
                 }
-                strn.Dispose();
-                scon.Close();
-                scon.Dispose();
+                Strn.Dispose();
+                Scon.Close();
+                Scon.Dispose();
 
                 Db.ReseedDatabase();
 
-                mcon.Close();
-                mcon.Dispose();
-                
+                Mcon.Close();
+                Mcon.Dispose();
+
                 p.ReportProgress(100, "All done");
+                e.Result = true;
             }
             catch (Exception ex)
             {
-                ShowException.DoShow(ex);
                 ErrorLogger.LogException(ex);
             }
         }
@@ -114,7 +116,6 @@ namespace OodHelper.Website
                 {
                     ins.Parameters.AddWithValue(rc.ColumnName, rrow[rc.ColumnName]);
                 }
-                SqlParameter p1 = ins.Parameters[1];
                 ins.ExecuteNonQuery();
                 ins.Parameters.Clear();
             }

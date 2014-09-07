@@ -43,7 +43,7 @@ namespace OodHelper.Website
             w.ReportProgress(0, "Uploading Tide Data");
 
             MySqlCommand mcom = new MySqlCommand();
-            mcom.Connection = mcon;
+            mcom.Connection = Mcon;
             StringBuilder msql = new StringBuilder();
 
             mcom.CommandText = "DELETE FROM `tidedata` WHERE date >= @sdate AND date <= @edate";
