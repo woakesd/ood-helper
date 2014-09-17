@@ -1,33 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="{5BFFBF30-89EE-4260-8D26-A20391555A95}" Name="OodHelper" Language="1033" Version="1.0.0.28" Manufacturer="David Woakes" UpgradeCode="{586CAE3C-1E00-4522-ABD5-DFEAE4C5DA54}">
-		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+  <Product Id="{5BFFBF30-89EE-4260-8D26-A20391555A95}" Name="OodHelper" Language="1033" Version="1.0.0.28" Manufacturer="David Woakes" UpgradeCode="{586CAE3C-1E00-4522-ABD5-DFEAE4C5DA54}">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+    <Upgrade Id="{5EEFDE71-510C-409F-A0DF-2274A6A7CEEE}">
+      <UpgradeVersion OnlyDetect="no" Minimum="1.0.0.0" IncludeMinimum="yes" Property="PREVIOUSFOUND"/>
+    </Upgrade>
 
-		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-		<MediaTemplate EmbedCab="yes" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" />
 
-		<Feature Id="ProductFeature" Title="OodHelperInstaller" Level="1">
+    <Feature Id="ProductFeature" Title="OodHelperInstaller" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
-		</Feature>
-	</Product>
+    </Feature>
+  </Product>
 
-	<Fragment>
-		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Directory Id="ProgramFilesFolder">
-				<Directory Id="INSTALLFOLDER" Name="OodHelper">
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="OodHelper">
         </Directory>
-			</Directory>
+      </Directory>
       <Directory Id="ProgramMenuFolder" Name="Programs" />
       <Directory Id="DesktopFolder" Name="Desktop" />
     </Directory>
   </Fragment>
 
-	<Fragment>
-		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
       <Component Id="ProgramFilesFolder" Guid="{AA426A21-58BC-4DE5-89F7-21FC16A1CE11}">
         <RemoveFolder Id="ProgramFilesFolder" On="uninstall" />
       </Component>
-			<Component Id="MainExecutable" Guid="{188A6779-EEE5-43A0-B638-F2FF936E9C08}">
+      <Component Id="MainExecutable" Guid="{188A6779-EEE5-43A0-B638-F2FF936E9C08}">
         <File Id="OodHelperEXE" Name="OodHeler.exe" Source="$(var.OodHelper.net.TargetPath)" KeyPath="yes" >
           <Shortcut Id="StartMenuOodHelper" WorkingDirectory="INSTALLFOLDER" Directory="ProgramMenuFolder" Name="OodHelper" Advertise="yes" />
           <Shortcut Id="DesktopOodHelper" WorkingDirectory="INSTALLFOLDER" Directory="DesktopFolder" Name="OodHelper" Advertise="yes" />
@@ -36,6 +39,6 @@
       <Component Id="MySqlDataDLL" Guid="{1C10CC45-3874-4345-B21F-FD568C68BA0B}">
         <File Id="MySqlDataDLL" Name="mysql.data.dll" Source="$(var.OodHelper.net.TargetDir)\mysql.data.dll" KeyPath="yes" />
       </Component>
-		</ComponentGroup>
-	</Fragment>
+    </ComponentGroup>
+  </Fragment>
 </Wix>
