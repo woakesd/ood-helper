@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Product Id="{5BFFBF30-89EE-4260-8D26-A20391555A95}" Name="OodHelper" Language="1033" Version="1.0.0.28" Manufacturer="David Woakes" UpgradeCode="{586CAE3C-1E00-4522-ABD5-DFEAE4C5DA54}">
-    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+    <Package Id="{875E1CD4-6533-49DD-AA9F-E75BEA440360}" InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
     <Upgrade Id="{5EEFDE71-510C-409F-A0DF-2274A6A7CEEE}">
       <UpgradeVersion OnlyDetect="no" Minimum="1.0.0.0" IncludeMinimum="yes" Property="PREVIOUSFOUND"/>
     </Upgrade>
