@@ -45,12 +45,12 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.ColumnSpan="3" HorizontalAlignment="Center">Port Edgar Yacht Club Race Results</TextBlock>
-        <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Name="RaceDate">Date of Race: 12/05/2010</TextBlock>
-        <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Name="EventDescription">Wed A Series 3 - Division 1</TextBlock>
+        <TextBlock FontSize="16" FontWeight="Bold" Grid.ColumnSpan="3" HorizontalAlignment="Center">Port Edgar Yacht Club Race Results</TextBlock>
+        <TextBlock FontSize="16" FontWeight="Bold" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Name="RaceDate">Date of Race: 12/05/2010</TextBlock>
+        <TextBlock FontSize="16" FontWeight="Bold" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Name="EventDescription">Wed A Series 3 - Division 1</TextBlock>
         <TextBlock Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right" Name="OodName">Race Officer: Gajima</TextBlock>
-        <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Name="Start">Start: 19.00</TextBlock>
-        <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Name="Handicapping">Open Handicap used</TextBlock>
+        <TextBlock FontSize="16" FontWeight="Bold" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Name="Start">Start: 19.00</TextBlock>
+        <TextBlock FontSize="16" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Name="Handicapping">Open Handicap used</TextBlock>
         <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" Name="Sct">SCT: 00:00:00.00</TextBlock>
         <DataGrid Margin="0,12,0,0" Grid.ColumnSpan="3" Grid.Row="3" GridLinesVisibility="None" Name="Results" 
                   ColumnHeaderStyle="{StaticResource ResourceKey=ColumnHeader}"
