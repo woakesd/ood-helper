@@ -12,12 +12,7 @@ namespace OodHelper.Website
         private readonly Working _p;
         private readonly BackgroundWorker _upload;
 
-        public MySqlUpload() : this(false)
-        {
-            Run();
-        }
-
-        public MySqlUpload(bool run)
+        public MySqlUpload()
         {
             _upload = new BackgroundWorker();
             _upload.DoWork += Process;

@@ -1,53 +1,36 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
 namespace OodHelper
 {
-    class Common
+    internal class Common
     {
         public static List<T> FindVisualChild<T>(UIElement element) where T : UIElement
         {
-            List<T> r = new List<T>();
-            UIElement child = element;
-            if (child != null)
+            var r = new List<T>();
+            var child = element;
+            if (child == null) return r;
+            var correctlyTyped = child as T;
+            if (correctlyTyped != null)
             {
-                T correctlyTyped = child as T;
-                if (correctlyTyped != null)
-                {
-                    r.Add(correctlyTyped);
-                }
+                r.Add(correctlyTyped);
+            }
 
-                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(child); i++)
-                {
-                    UIElement subchild = VisualTreeHelper.GetChild(child, i) as UIElement;
-                    List<T> subList = FindVisualChild<T>(subchild);
-                    r.InsertRange(r.Count, subList);
-                }
+            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(child); i++)
+            {
+                var subchild = VisualTreeHelper.GetChild(child, i) as UIElement;
+                var subList = FindVisualChild<T>(subchild);
+                r.InsertRange(r.Count, subList);
             }
             return r;
         }
 
         public static string HMS(double t)
         {
-            if (t != 999999)
-            {
-                int s = (int)t % 60;
-                int m = (int)t / 60;
-                int h = m / 60;
-                m = m % 60;
-                return h.ToString().PadLeft(2, '0') + ':' +
-                    m.ToString().PadLeft(2, '0') + ':' +
-                    s.ToString().PadLeft(2, '0');
-            }
-            else
-                return string.Empty;
+            var tmp = new TimeSpan((long)(t * 10 * 1000 * 1000));
+            return tmp.ToString(@"hh\:mm\:ss");
         }
     }
 }
