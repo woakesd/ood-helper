@@ -1,63 +1,50 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace OodHelper.Rules
 {
     /// <summary>
-    /// Interaction logic for SetupRules.xaml
+    ///     Interaction logic for SetupRules.xaml
     /// </summary>
-    public partial class SelectRuleEdit : Window
+    public partial class SelectRuleEdit
     {
-        private BoatSelectRule Root;
+        private readonly BoatSelectRule _root;
 
         public SelectRuleEdit(Guid? id)
         {
             InitializeComponent();
-            Root = new BoatSelectRule();
+            _root = new BoatSelectRule();
             if (id.HasValue)
             {
-                Root = new BoatSelectRule(id);
-                RuleName.Text = Root.Name;
+                _root = new BoatSelectRule(id);
+                RuleName.Text = _root.Name;
             }
             else
             {
-                Root.Application = Apply.Any;
-                BoatSelectRule c = new BoatSelectRule();
-                c.Condition = ConditionType.Equals;
-                Root.Add(c);
+                _root.Application = Apply.Any;
+                var c = new BoatSelectRule {Condition = ConditionType.Equals};
+                _root.Add(c);
             }
 
-            List<SelectRuleModelView> rm = new List<SelectRuleModelView>();
-            rm.Add(new SelectRuleModelView(Root));
+            var rm = new List<SelectRuleModelView> {new SelectRuleModelView(_root)};
             Rules.ItemsSource = rm;
-
-            Array values = System.Enum.GetValues(typeof(ConditionType));
         }
 
         private void ComboBox_Loaded(object sender, RoutedEventArgs e)
         {
-            ComboBox me = sender as ComboBox;
+            var me = sender as ComboBox;
             if (me != null)
             {
-                Size inf = new Size(double.PositiveInfinity, double.PositiveInfinity);
+                var inf = new Size(double.PositiveInfinity, double.PositiveInfinity);
                 double cbWidth = 0.0;
                 double selectedItemWidth = 0.0;
                 foreach (object s in me.Items)
                 {
-                    ComboBoxItem i = new ComboBoxItem();
-                    i.Content = s;
+                    var i = new ComboBoxItem {Content = s};
                     i.Measure(inf);
                     if (i.DesiredSize.Width > cbWidth)
                         cbWidth = i.DesiredSize.Width;
@@ -69,12 +56,12 @@ namespace OodHelper.Rules
             }
         }
 
-        static T FindVisualParent<T>(UIElement element) where T : UIElement
+        private static T FindVisualParent<T>(UIElement element) where T : UIElement
         {
             UIElement parent = element;
             while (parent != null)
             {
-                T correctlyTyped = parent as T;
+                var correctlyTyped = parent as T;
                 if (correctlyTyped != null)
                 {
                     return correctlyTyped;
@@ -84,15 +71,16 @@ namespace OodHelper.Rules
             }
             return null;
         }
-        
+
         private void AddSibling_Click(object sender, RoutedEventArgs e)
         {
-            TreeViewItem t = FindVisualParent<TreeViewItem>(sender as UIElement);
+            var t = FindVisualParent<TreeViewItem>(sender as UIElement);
             if (t != null)
             {
-                SelectRuleModelView s = t.DataContext as SelectRuleModelView;
-                BoatSelectRule parent = s.Rule.Parent; 
-                BoatSelectRule b = new BoatSelectRule();
+                var s = t.DataContext as SelectRuleModelView;
+                if (s == null) return;
+                var parent = s.Rule.Parent;
+                var b = new BoatSelectRule();
                 parent.Add(b);
                 s.AddSibling(new SelectRuleModelView(b, s.Parent));
             }
@@ -100,10 +88,10 @@ namespace OodHelper.Rules
 
         private void RemoveMe_Click(object sender, RoutedEventArgs e)
         {
-            TreeViewItem t = FindVisualParent<TreeViewItem>(sender as UIElement);
+            var t = FindVisualParent<TreeViewItem>(sender as UIElement);
             if (t != null)
             {
-                SelectRuleModelView b = t.DataContext as SelectRuleModelView;
+                var b = t.DataContext as SelectRuleModelView;
                 if (b != null)
                     b.RemoveFromParent();
             }
@@ -111,14 +99,15 @@ namespace OodHelper.Rules
 
         private void AddParentSibling_Click(object sender, RoutedEventArgs e)
         {
-            TreeViewItem t = FindVisualParent<TreeViewItem>(sender as UIElement);
+            var t = FindVisualParent<TreeViewItem>(sender as UIElement);
             if (t != null)
             {
-                SelectRuleModelView s = t.DataContext as SelectRuleModelView;
-                BoatSelectRule parent = s.Rule.Parent;
-                BoatSelectRule b = new BoatSelectRule();
+                var s = t.DataContext as SelectRuleModelView;
+                if (s == null) return;
+                var parent = s.Rule.Parent;
+                var b = new BoatSelectRule();
                 parent.Add(b);
-                BoatSelectRule c = new BoatSelectRule();
+                var c = new BoatSelectRule();
                 b.Add(c);
                 s.AddSibling(new SelectRuleModelView(b, s.Parent));
             }
@@ -126,7 +115,7 @@ namespace OodHelper.Rules
 
         private void TextBoxUpdateSource(string name, ContentPresenter cp)
         {
-            TextBox tb = Rules.ItemTemplate.FindName(name, cp) as TextBox;
+            var tb = Rules.ItemTemplate.FindName(name, cp) as TextBox;
             if (tb != null)
             {
                 BindingExpression be = tb.GetBindingExpression(TextBox.TextProperty);
@@ -136,14 +125,14 @@ namespace OodHelper.Rules
 
         private void RecurseControls(TreeViewItem tvi, SelectRuleModelView mv)
         {
-            ContentPresenter cp = FindVisualChild<ContentPresenter>(tvi);
+            var cp = FindVisualChild<ContentPresenter>(tvi);
             TextBoxUpdateSource("Bound1", cp);
             TextBoxUpdateSource("Bound2", cp);
             TextBoxUpdateSource("StringValue", cp);
 
             foreach (SelectRuleModelView ch in mv.Children)
             {
-                TreeViewItem childtvi = (TreeViewItem)tvi.ItemContainerGenerator.ContainerFromItem(ch);
+                var childtvi = (TreeViewItem) tvi.ItemContainerGenerator.ContainerFromItem(ch);
                 RecurseControls(childtvi, ch);
             }
         }
@@ -152,30 +141,27 @@ namespace OodHelper.Rules
         {
             foreach (SelectRuleModelView mv in Rules.Items)
             {
-                TreeViewItem tvi = (TreeViewItem)Rules.ItemContainerGenerator.ContainerFromItem(mv);
+                var tvi = (TreeViewItem) Rules.ItemContainerGenerator.ContainerFromItem(mv);
                 RecurseControls(tvi, mv);
             }
 
-            Root.Name = RuleName.Text;
-            Root.Save();
+            _root.Name = RuleName.Text;
+            _root.Save();
             DialogResult = true;
             Close();
         }
 
-        private childItem FindVisualChild<childItem>(DependencyObject obj)
-            where childItem : DependencyObject
+        private TChildItem FindVisualChild<TChildItem>(DependencyObject obj)
+            where TChildItem : DependencyObject
         {
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
             {
                 DependencyObject child = VisualTreeHelper.GetChild(obj, i);
-                if (child != null && child is childItem)
-                    return (childItem)child;
-                else
-                {
-                    childItem childOfChild = FindVisualChild<childItem>(child);
-                    if (childOfChild != null)
-                        return childOfChild;
-                }
+                if (child is TChildItem)
+                    return (TChildItem) child;
+                var childOfChild = FindVisualChild<TChildItem>(child);
+                if (childOfChild != null)
+                    return childOfChild;
             }
             return null;
         }

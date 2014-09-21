@@ -24,14 +24,14 @@ namespace OodHelper.Rules
             }
             else if (entityType == typeof(string))
             {
-                conditions = new ConditionType[] { ConditionType.Not_Equal, ConditionType.Equals, 
-                    ConditionType.Start_With, ConditionType.Contains, ConditionType.Ends_With };
+                conditions = new ConditionType[] { ConditionType.NotEqual, ConditionType.Equals, 
+                    ConditionType.StartWith, ConditionType.Contains, ConditionType.EndsWith };
             }
             else if (entityType == typeof(int))
             {
-                conditions = new ConditionType[] { ConditionType.Equals, ConditionType.Not_Equal, 
-                    ConditionType.Between, ConditionType.Greater_Than, ConditionType.Greater_Than_Or_Equal_To, 
-                    ConditionType.Less_Than, ConditionType.Less_Than_Or_Equal_To };
+                conditions = new ConditionType[] { ConditionType.Equals, ConditionType.NotEqual, 
+                    ConditionType.Between, ConditionType.GreaterThan, ConditionType.GreaterThanOrEqualTo, 
+                    ConditionType.LessThan, ConditionType.LessThanOrEqualTo };
             }
         }
 

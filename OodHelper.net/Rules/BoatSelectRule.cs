@@ -4,25 +4,63 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
-using System.Text;
 
 namespace OodHelper.Rules
 {
-    public enum FieldType { ftInt, ftString, ftBoolean }
-    public enum RuleType { Simple, Compound }
-    public enum Apply { Any, All }
+    public enum FieldType
+    {
+        FtInt,
+        FtString,
+        FtBoolean
+    }
+
+    public enum RuleType
+    {
+        Simple,
+        Compound
+    }
+
+    public enum Apply
+    {
+        Any,
+        All
+    }
+
     public enum ConditionType
     {
-        Equals, Not_Equal, 
-        Less_Than, Less_Than_Or_Equal_To, 
-        Greater_Than, Greater_Than_Or_Equal_To, 
-        Contains, Start_With, Ends_With, 
-        Between, True, False
+        Equals,
+        NotEqual,
+        LessThan,
+        LessThanOrEqualTo,
+        GreaterThan,
+        GreaterThanOrEqualTo,
+        Contains,
+        StartWith,
+        EndsWith,
+        Between,
+        True,
+        False
     }
-    public enum EventType { MembersOnly, Open }
+
+    public enum EventType
+    {
+        MembersOnly,
+        Open
+    }
 
     public class BoatSelectRule
     {
+        public static List<Field> Fields = new List<Field>
+        {
+            new Field("Boat class", "boatclass", typeof (string)),
+            new Field("Dinghy", "dinghy", typeof (bool)),
+            new Field("Open handicap", "open_handicap", typeof (int)),
+            new Field("Hull Type", "hulltype", typeof (string))
+        };
+
+        private readonly List<BoatSelectRule> _children = new List<BoatSelectRule>();
+        private readonly List<BoatSelectRule> _deletedChildren = new List<BoatSelectRule>();
+
         public BoatSelectRule()
         {
         }
@@ -30,15 +68,17 @@ namespace OodHelper.Rules
         public BoatSelectRule(Guid? id)
             : this()
         {
-            Db c = new Db(@"SELECT [name], [application]
+            var c = new Db(@"SELECT [name], [application]
                 FROM [select_rules]
                 WHERE [id] = @id");
-            Hashtable p = new Hashtable();
+            var p = new Hashtable();
             p["id"] = id;
             Hashtable d = c.GetHashtable(p);
             Name = d["name"] as string;
             Rule = RuleType.Compound;
-            Application = (d["application"] != null) ? (Apply?)System.Enum.GetValues(typeof(Apply)).GetValue((int)d["application"]) : null;
+            Application = (d["application"] != null)
+                ? (Apply?) Enum.GetValues(typeof (Apply)).GetValue((int) d["application"])
+                : null;
             Id = id;
             AddChildren(this);
         }
@@ -46,49 +86,82 @@ namespace OodHelper.Rules
         public BoatSelectRule(string name)
             : this()
         {
-            Db c = new Db(@"SELECT [id], [application]
+            var c = new Db(@"SELECT [id], [application]
                 FROM [select_rules]
                 WHERE [name] = @name");
-            Hashtable p = new Hashtable();
+            var p = new Hashtable();
             p["name"] = name;
             Hashtable d = c.GetHashtable(p);
             Id = d["id"] as Guid?;
             Rule = RuleType.Compound;
-            Application = (d["application"] != null) ? (Apply?)System.Enum.GetValues(typeof(Apply)).GetValue((int)d["application"]) : null;
+            Application = (d["application"] != null)
+                ? (Apply?) Enum.GetValues(typeof (Apply)).GetValue((int) d["application"])
+                : null;
             Name = name;
             AddChildren(this);
         }
 
+        public BoatSelectRule Parent { get; set; }
+
+        public Guid? Id { get; set; }
+        public string Name { get; set; }
+        public RuleType Rule { get; set; }
+        //
+        // For simple rules the following will be used.
+        //
+        public Field Field { get; set; }
+        public ConditionType Condition { get; set; }
+        public string StringValue { get; set; }
+        public decimal? Bound1 { get; set; }
+        public decimal? Bound2 { get; set; }
+
+        //
+        // For a compound rule only these will be used.
+        //
+        public Apply? Application { get; set; }
+
+        public ReadOnlyCollection<BoatSelectRule> Children
+        {
+            get { return new ReadOnlyCollection<BoatSelectRule>(_children); }
+        }
+
+        public ReadOnlyCollection<BoatSelectRule> DeletedChildren
+        {
+            get { return new ReadOnlyCollection<BoatSelectRule>(_deletedChildren); }
+        }
+
         public void Delete()
         {
-            Db del = new Db("DELETE FROM select_rules " +
-                "WHERE id = @id");
-            Hashtable d = new Hashtable();
+            var del = new Db("DELETE FROM select_rules " +
+                             "WHERE id = @id");
+            var d = new Hashtable();
             d["id"] = Id;
             del.ExecuteNonQuery(d);
             foreach (BoatSelectRule b in Children)
+                b.Delete();
+            foreach (BoatSelectRule b in DeletedChildren)
                 b.Delete();
         }
 
         private void AddChildren(BoatSelectRule parent)
         {
-            Db c = new Db(@"SELECT [id], [application], [field], [condition],
+            var c = new Db(@"SELECT [id], [application], [field], [condition],
                     [string_value], [number_bound1], [number_bound2]
                     FROM [select_rules]
                     WHERE [parent] = @parent");
-            Hashtable p = new Hashtable();
+            var p = new Hashtable();
             p["parent"] = parent.Id;
             DataTable d = c.GetData(p);
             foreach (DataRow r in d.Rows)
             {
-                BoatSelectRule child = new BoatSelectRule();
-                child.Id = r["id"] as Guid?;
+                var child = new BoatSelectRule {Id = r["id"] as Guid?};
                 if (r["field"] != DBNull.Value)
                 {
-                    child.Field = (from n in BoatSelectRule.Fields 
-                                   where n.Name.Equals(r["field"] as string) 
-                                   select n).First<Field>();
-                    child.Condition = (ConditionType)System.Enum.GetValues(typeof(ConditionType)).GetValue((int)r["condition"]);
+                    child.Field = (from n in Fields
+                        where n.Name.Equals(r["field"] as string)
+                        select n).First<Field>();
+                    child.Condition =
+                        (ConditionType) Enum.GetValues(typeof (ConditionType)).GetValue((int) r["condition"]);
                     child.Rule = RuleType.Simple;
                     child.StringValue = r["string_value"] as string;
                     child.Bound1 = r["number_bound1"] as decimal?;
@@ -99,7 +172,7 @@ namespace OodHelper.Rules
                     child.Rule = RuleType.Compound;
                     try
                     {
-                        child.Application = (Apply)System.Enum.GetValues(typeof(Apply)).GetValue((int)r["application"]);
+                        child.Application = (Apply) Enum.GetValues(typeof (Apply)).GetValue((int) r["application"]);
                     }
                     catch
                     {
@@ -119,19 +192,9 @@ namespace OodHelper.Rules
                     switch (Application)
                     {
                         case Apply.All:
-                            foreach (BoatSelectRule c in Children)
-                            {
-                                if (!c.AppliesToBoat(boat))
-                                    return false;
-                            }
-                            return true;
+                            return Children.All(c => c.AppliesToBoat(boat));
                         case Apply.Any:
-                            foreach (BoatSelectRule c in Children)
-                            {
-                                if (c.AppliesToBoat(boat))
-                                    return true;
-                            }
-                            return false;
+                            return Children.Any(c => c.AppliesToBoat(boat));
                     }
                     break;
                 case RuleType.Simple:
@@ -140,52 +203,52 @@ namespace OodHelper.Rules
                     {
                         switch (Condition)
                         {
-                            case ConditionType.Greater_Than:
-                                if ((int)val > Bound1)
+                            case ConditionType.GreaterThan:
+                                if ((int) val > Bound1)
                                     return true;
                                 break;
-                            case ConditionType.Greater_Than_Or_Equal_To:
-                                if ((int)val >= Bound1)
+                            case ConditionType.GreaterThanOrEqualTo:
+                                if ((int) val >= Bound1)
                                     return true;
                                 break;
                             case ConditionType.Between:
-                                if ((int)val >= Bound1 && (int)val <= Bound2)
+                                if ((int) val >= Bound1 && (int) val <= Bound2)
                                     return true;
                                 break;
-                            case ConditionType.Less_Than:
-                                if ((int)val < Bound1)
+                            case ConditionType.LessThan:
+                                if ((int) val < Bound1)
                                     return true;
                                 break;
-                            case ConditionType.Less_Than_Or_Equal_To:
-                                if ((int)val <= Bound1)
+                            case ConditionType.LessThanOrEqualTo:
+                                if ((int) val <= Bound1)
                                     return true;
                                 break;
                             case ConditionType.Contains:
-                                if (((string)val).ToLower().Contains(StringValue.ToLower()))
+                                if (((string) val).ToLower().Contains(StringValue.ToLower()))
                                     return true;
                                 break;
-                            case ConditionType.Ends_With:
-                                if (((string)val).ToLower().EndsWith(StringValue.ToLower()))
+                            case ConditionType.EndsWith:
+                                if (((string) val).ToLower().EndsWith(StringValue.ToLower()))
                                     return true;
                                 break;
-                            case ConditionType.Start_With:
-                                if (((string)val).ToLower().StartsWith(StringValue.ToLower()))
+                            case ConditionType.StartWith:
+                                if (((string) val).ToLower().StartsWith(StringValue.ToLower()))
                                     return true;
                                 break;
                             case ConditionType.Equals:
-                                if (((string)val).ToLower().Equals(StringValue.ToLower()))
+                                if (((string) val).ToLower().Equals(StringValue.ToLower()))
                                     return true;
                                 break;
-                            case ConditionType.Not_Equal:
-                                if (!((string)val).ToLower().Equals(StringValue.ToLower()))
+                            case ConditionType.NotEqual:
+                                if (!((string) val).ToLower().Equals(StringValue.ToLower()))
                                     return true;
                                 break;
                             case ConditionType.False:
-                                if (!(bool)val)
+                                if (!(bool) val)
                                     return true;
                                 break;
                             case ConditionType.True:
-                                if ((bool)val)
+                                if ((bool) val)
                                     return true;
                                 break;
                         }
@@ -194,15 +257,6 @@ namespace OodHelper.Rules
             }
             return false;
         }
-
-        public static List<Field> Fields = new List<Field>() { 
-            new Rules.Field("Boat class", "boatclass", typeof(string)),
-            new Rules.Field("Dinghy", "dinghy", typeof(bool)),
-            new Rules.Field("Open handicap", "open_handicap", typeof(int)),
-            new Rules.Field("Hull Type", "hulltype", typeof(string))
-        };
-
-        public BoatSelectRule Parent { get; set; }
 
         public void Add(BoatSelectRule bsr)
         {
@@ -213,28 +267,7 @@ namespace OodHelper.Rules
         public void RemoveFromParent()
         {
             Parent._children.Remove(this);
-        }
-
-        public Guid? Id { get; set; }
-        public string Name { get; set; }
-        public RuleType Rule { get; set; }
-        //
-        // For simple rules the following will be used.
-        //
-        public Field Field { get; set; }
-        public ConditionType Condition { get; set; }
-        public string StringValue { get; set; }
-        public decimal? Bound1 { get; set; }
-        public decimal? Bound2 { get; set; }
-
-        //
-        // For a compound rule only these will be used.
-        //
-        public Apply? Application { get; set; }
-        private List<BoatSelectRule> _children = new List<BoatSelectRule>();
-        public ReadOnlyCollection<BoatSelectRule> Children
-        {
-            get { return new ReadOnlyCollection<BoatSelectRule>(_children); }
+            Parent._deletedChildren.Add(this);
         }
 
         //
@@ -243,7 +276,7 @@ namespace OodHelper.Rules
         public void Save()
         {
             Db c;
-            Hashtable p = new Hashtable();
+            var p = new Hashtable();
             if (Id.HasValue)
             {
                 c = new Db(@"UPDATE select_rules
@@ -278,6 +311,9 @@ namespace OodHelper.Rules
 
             foreach (BoatSelectRule child in Children)
                 child.Save();
+
+            foreach (var child in _deletedChildren)
+                child.Delete();
         }
     }
 }
