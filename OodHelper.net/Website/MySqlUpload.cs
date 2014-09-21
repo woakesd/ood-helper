@@ -18,6 +18,8 @@ namespace OodHelper.Website
             _upload.DoWork += Process;
             _p = new Working(Application.Current.MainWindow, _upload);
             _upload.RunWorkerCompleted += upload_RunWorkerCompleted;
+            _upload.RunWorkerAsync();
+            _p.ShowDialog();
         }
 
         public void Run()
