@@ -1,95 +1,57 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections;
+using System.ComponentModel;
 using System.Data;
-using System.IO;
-using System.Text;
+using System.Printing;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Markup;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using OodHelper.Maintain;
-using OodHelper.Website;
-using OodHelper.Sun;
-using System.Printing;
 using System.Windows.Xps;
+using OodHelper.LoadTide;
+using OodHelper.Maintain;
+using OodHelper.Membership;
 using OodHelper.Results;
+using OodHelper.Rules;
+using OodHelper.Sun;
+using OodHelper.Website;
 
 namespace OodHelper
 {
     /// <summary>
-    /// Interaction logic for Window1.xaml
+    ///     Interaction logic for Window1.xaml
     /// </summary>
-    public partial class OodHelperWindow : Window
+    public partial class OodHelperWindow
     {
+        private readonly Data _data = new Data();
+
         public OodHelperWindow()
         {
             InitializeComponent();
-            DataContext = dc;
+            DataContext = _data;
         }
-
-        private class Data : NotifyPropertyChanged
-        {
-            bool _ShowPrivilegedItems = false;
-            public bool ShowPrivilegedItems
-            {
-                get
-                {
-                    return _ShowPrivilegedItems;
-                }
-                set
-                {
-                    _ShowPrivilegedItems = value;
-                    OnPropertyChanged("ShowPrivilegedItems");
-                    OnPropertyChanged("HideNonPrivilegedItems");
-                }
-            }
-
-            public bool HideNonPrivilegedItems
-            {
-                get
-                {
-                    return !_ShowPrivilegedItems;
-                }
-            }
-        }
-
-        private Data dc = new Data();
 
         private void Results_Click(object sender, RoutedEventArgs e)
         {
-            RaceChooser rc = new RaceChooser();
-            if (rc.ShowDialog().Value)
-            {
-                int[] rids = rc.Rids;
-                if (rids != null)
-                {
-                    Results.RaceResults r = new Results.RaceResults(rids);
-                    TabItem rp = new TabItem();
-                    rp.Content = r;
-                    rp.Header = "Race Results";
-                    dock.Items.Add(rp);
-                    dock.SelectedItem = rp;
-                }
-            }
-        }
+            var rc = new RaceChooser();
+            var val = rc.ShowDialog();
+            if (!val.HasValue || !val.Value) return;
 
-        private void Admin_Click(object sender, RoutedEventArgs e)
-        {
+            var rids = rc.Rids;
+            if (rids == null) return;
+
+            var r = new RaceResults(rids);
+            var rp = new TabItem {Content = r, Header = "Race Results"};
+            dock.Items.Add(rp);
+            dock.SelectedItem = rp;
         }
 
         private void Download_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("Click OK to confirm downloading database from Website", "Confirm Download", 
+            if (MessageBox.Show("Click OK to confirm downloading database from Website", "Confirm Download",
                 MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.OK) == MessageBoxResult.OK)
             {
-                DownloadResults dtask = new DownloadResults();
+                // ReSharper disable once ObjectCreationAsStatement
+                new DownloadResults();
             }
         }
 
@@ -98,7 +60,8 @@ namespace OodHelper
             if (MessageBox.Show("Click OK to confirm uploading database to Website", "Confirm Upload",
                 MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.OK) == MessageBoxResult.OK)
             {
-                UploadResults utask = new UploadResults();
+                // ReSharper disable once ObjectCreationAsStatement
+                new UploadResults();
             }
         }
 
@@ -109,7 +72,7 @@ namespace OodHelper
 
         private void Boats_Click(object sender, RoutedEventArgs e)
         {
-            Boats b = new Boats();
+            var b = new Boats();
             b.ShowDialog();
             b.HorizontalAlignment = HorizontalAlignment.Stretch;
             b.VerticalAlignment = VerticalAlignment.Stretch;
@@ -117,23 +80,23 @@ namespace OodHelper
 
         private void Series_Click(object sender, RoutedEventArgs e)
         {
-            Series b = new Series();
+            var b = new Series();
             b.ShowDialog();
         }
 
         private void Calendar_Click(object sender, RoutedEventArgs e)
         {
-            Races b = new Races();
+            var b = new Races();
             b.ShowDialog();
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
         }
 
         private void People_Click(object sender, RoutedEventArgs e)
         {
-            PeopleList p = new PeopleList();
+            var p = new PeopleList();
             p.ShowDialog();
             p.HorizontalAlignment = HorizontalAlignment.Stretch;
             p.VerticalAlignment = VerticalAlignment.Stretch;
@@ -141,102 +104,98 @@ namespace OodHelper
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void About_Click(object sender, RoutedEventArgs e)
         {
-            About a = new About();
+            var a = new About();
             a.ShowDialog();
         }
 
         private void importPY_Click(object sender, RoutedEventArgs e)
         {
-            PNImport pni = new PNImport();
+            var pni = new PNImport();
             pni.ShowDialog();
         }
 
-        private delegate void myDelegate();
-        
         private void SeriesResults_Click(object sender, RoutedEventArgs e)
         {
-            SeriesChooser _chooser = new SeriesChooser();
-            if (_chooser.ShowDialog().Value)
+            var chooser = new SeriesChooser();
+            var val = chooser.ShowDialog();
+            if (!val.HasValue || !val.Value) return;
+
+            RaceSeriesResult rs = null;
+            myDelegate uiDelegate = delegate
             {
-                RaceSeriesResult rs = null;
-                myDelegate _uiDelegate = delegate()
-                {
-                    SeriesDisplayByClass _ResultDisplayByClass = new SeriesDisplayByClass(rs);
-                    TabItem _seriesDisplayTab = new TabItem();
-                    _seriesDisplayTab.Content = _ResultDisplayByClass;
-                    _seriesDisplayTab.Header = "Series Result";
-                    dock.Items.Add(_seriesDisplayTab);
-                    dock.SelectedItem = _seriesDisplayTab;
-                };
-                rs = new RaceSeriesResult(_chooser.Sid, _uiDelegate);
-            }
+                var resultDisplayByClass = new SeriesDisplayByClass(rs);
+                var seriesDisplayTab = new TabItem {Content = resultDisplayByClass, Header = "Series Result"};
+                dock.Items.Add(seriesDisplayTab);
+                dock.SelectedItem = seriesDisplayTab;
+            };
+            rs = new RaceSeriesResult(chooser.Sid, uiDelegate);
         }
 
         private void Configuration_Click(object sender, RoutedEventArgs e)
         {
-            Configure f = new Configure();
+            var f = new Configure();
             f.ShowDialog();
         }
 
         private void Handicaps_Click(object sender, RoutedEventArgs e)
         {
-            Handicaps h = new Handicaps();
+            var h = new Handicaps();
             h.ShowDialog();
         }
 
         private void Login_Click(object sender, RoutedEventArgs e)
         {
-            dc.ShowPrivilegedItems = true; 
+            _data.ShowPrivilegedItems = true;
         }
 
         private void Logout_Click(object sender, RoutedEventArgs e)
         {
-            dc.ShowPrivilegedItems = false;
+            _data.ShowPrivilegedItems = false;
         }
 
         private void EntrySheets_Click(object sender, RoutedEventArgs e)
         {
-            EntrySheetSelector sel = new EntrySheetSelector();
+            var sel = new EntrySheetSelector();
             sel.ShowDialog();
         }
 
         private void Foxpro_Click(object sender, RoutedEventArgs e)
         {
-            FoxproImport fx = new FoxproImport();
-
+            var fx = new FoxproImport();
         }
 
         private void Rule_Click(object sender, RoutedEventArgs e)
         {
-            (new Rules.SelectRules()).ShowDialog();
+            (new SelectRules()).ShowDialog();
         }
 
         private void Tide_Click(object sender, RoutedEventArgs e)
         {
-            LoadTide.ReadData rd = new LoadTide.ReadData();
+            var rd = new ReadData();
             rd.ShowDialog();
         }
 
         private void Sun_Click(object sender, RoutedEventArgs e)
         {
-            DoSunSetRise sd = new DoSunSetRise();
+            var sd = new DoSunSetRise();
             sd.ShowDialog();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            CheckForUpdates c = new CheckForUpdates();
+            var c = new CheckForUpdates();
             if (c.LocalDate < c.RemoteDate)
             {
-                if (MessageBox.Show("Website results are more up to date\nWould you like to download from Website", "Confirm Download",
+                if (MessageBox.Show("Website results are more up to date\nWould you like to download from Website",
+                    "Confirm Download",
                     MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.OK) == MessageBoxResult.OK)
                 {
-                    DownloadResults dtask = new DownloadResults();
+                    var dtask = new DownloadResults();
                 }
             }
         }
@@ -247,13 +206,13 @@ namespace OodHelper
 
         private void PrintMembershipCards_Click(object sender, RoutedEventArgs e)
         {
-            PrintDialog pd = new PrintDialog();
+            var pd = new PrintDialog();
             //pd.PrintTicket.PageMediaSize = new System.Printing.PageMediaSize(1718.4, 1228.8);
             //pd.PrintTicket.PageOrientation = PageOrientation.Landscape;
 
             if (pd.ShowDialog() == true)
             {
-                Db d = new Db(@"SELECT id, main_id, firstname, surname, firstname as order2, surname as order1, member
+                var d = new Db(@"SELECT id, main_id, firstname, surname, firstname as order2, surname as order1, member
                     FROM people
                     WHERE cp = 1
                     AND main_id = id
@@ -265,30 +224,24 @@ namespace OodHelper
                     ORDER BY order1, order2");
                 DataTable data = d.GetData(null);
 
-                Working w = new Working(this);
-                int pages = (int)Math.Floor(data.Rows.Count / 10.0);
-                if (data.Rows.Count > pages * 10) pages++;
+                var w = new Working(this);
+                var pages = (int) Math.Floor(data.Rows.Count/10.0);
+                if (data.Rows.Count > pages*10) pages++;
                 w.SetRange(0, pages + 1);
                 w.Show();
-                Size ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
+                var ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
                 XpsDocumentWriter write = PrintQueue.CreateXpsDocumentWriter(pd.PrintQueue);
-                VisualsToXpsDocument collator = write.CreateVisualsCollator() as VisualsToXpsDocument;
+                var collator = write.CreateVisualsCollator() as VisualsToXpsDocument;
 
-                System.Threading.Tasks.Task t = System.Threading.Tasks.Task.Factory.StartNew(() =>
+                Task t = Task.Factory.StartNew(() =>
                 {
-                    Dispatcher.Invoke(new Action(delegate()
-                    {
-                        collator.BeginBatchWrite();
-                    }));
+                    Dispatcher.Invoke(delegate { collator.BeginBatchWrite(); });
 
                     w.SetProgress("Printing ", 0);
-                    System.Threading.Thread.Sleep(50);
+                    Thread.Sleep(50);
 
-                    Membership.CardPage cp = null;
-                    Dispatcher.Invoke(new Action(delegate()
-                    {
-                        cp = new Membership.CardPage();
-                    }));
+                    CardPage cp = null;
+                    Dispatcher.Invoke(delegate { cp = new CardPage(); });
 
                     int grow = 0;
                     int gcol = 0;
@@ -296,59 +249,60 @@ namespace OodHelper
 
                     for (index = 0; index < data.Rows.Count; index++)
                     {
-                        grow = index % 5;
-                        gcol = (index % 10 - grow) / 5;
+                        grow = index%5;
+                        gcol = (index%10 - grow)/5;
 
                         if (index > 0 && grow == 0 && gcol == 0)
                         {
-                            w.SetProgress("Printing ", index / 10);
-                            System.Threading.Thread.Sleep(50);
-                            Dispatcher.Invoke(new Action(delegate()
+                            w.SetProgress("Printing ", index/10);
+                            Thread.Sleep(50);
+                            Dispatcher.Invoke(delegate
                             {
-                                Size pageSize = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
+                                var pageSize = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
                                 cp.Measure(pageSize);
                                 cp.Arrange(new Rect(new Point(0, 0), pageSize));
                                 cp.UpdateLayout();
                                 collator.Write(cp, pd.PrintTicket);
-                                cp = new Membership.CardPage();
-                            }));
+                                cp = new CardPage();
+                            });
                         }
 
-                        Dispatcher.Invoke(new Action(delegate()
+                        Dispatcher.Invoke(delegate
                         {
                             DataRow dr = data.Rows[index];
-                            Membership.Card c = new Membership.Card(string.Format("{0} {1}", new object[] { dr["firstname"], dr["surname"] }), (int)dr["id"], (int)dr["main_id"], dr["member"] as string);
-                            Size cardSize = new Size(324, 204);
+                            var c = new Card(string.Format("{0} {1}", new[] {dr["firstname"], dr["surname"]}),
+                                (int) dr["id"], (int) dr["main_id"], dr["member"] as string);
+                            var cardSize = new Size(324, 204);
                             c.Measure(cardSize);
                             c.Arrange(new Rect(new Point(0, 0), cardSize));
                             c.UpdateLayout();
                             cp.Cards.Children.Add(c);
                             Grid.SetColumn(c, gcol);
                             Grid.SetRow(c, grow);
-                        }));
+                        });
                     }
 
                     if (index > 0)
                     {
-                        Dispatcher.Invoke(new Action(delegate()
+                        Dispatcher.Invoke(delegate
                         {
-                            Size pageSize = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
+                            var pageSize = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
                             cp.Measure(pageSize);
                             cp.Arrange(new Rect(new Point(0, 0), pageSize));
                             cp.UpdateLayout();
                             collator.Write(cp, pd.PrintTicket);
-                        }));
+                        });
                     }
 
-                    Dispatcher.Invoke(new Action(delegate()
+                    Dispatcher.Invoke(delegate
                     {
-                        cp = new Membership.CardPage();
+                        cp = new CardPage();
                         for (grow = 0; grow < 5; grow++)
                         {
                             for (gcol = 0; gcol < 2; gcol++)
                             {
-                                Membership.Card c = new Membership.Card();
-                                Size cardSize = new Size(324, 204);
+                                var c = new Card();
+                                var cardSize = new Size(324, 204);
                                 c.Measure(cardSize);
                                 c.Arrange(new Rect(new Point(0, 0), cardSize));
                                 c.UpdateLayout();
@@ -358,18 +312,41 @@ namespace OodHelper
                             }
                         }
 
-                        Size pageSize = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
+                        var pageSize = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
                         cp.Measure(pageSize);
                         cp.Arrange(new Rect(new Point(0, 0), pageSize));
                         cp.UpdateLayout();
                         collator.Write(cp, pd.PrintTicket);
                         collator.Write(cp, pd.PrintTicket);
                         collator.EndBatchWrite();
-                    }));
+                    });
 
                     w.CloseWindow();
                 });
             }
         }
+
+        private class Data : NotifyPropertyChanged
+        {
+            private bool _ShowPrivilegedItems;
+
+            public bool ShowPrivilegedItems
+            {
+                get { return _ShowPrivilegedItems; }
+                set
+                {
+                    _ShowPrivilegedItems = value;
+                    OnPropertyChanged("ShowPrivilegedItems");
+                    OnPropertyChanged("HideNonPrivilegedItems");
+                }
+            }
+
+            public bool HideNonPrivilegedItems
+            {
+                get { return !_ShowPrivilegedItems; }
+            }
+        }
+
+        private delegate void myDelegate();
     }
 }

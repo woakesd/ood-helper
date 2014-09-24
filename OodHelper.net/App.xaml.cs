@@ -35,7 +35,6 @@ namespace OodHelper
             FrameworkElement.DataContextProperty.OverrideMetadata(typeof(DataGrid),
                 new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits,
                     OnDataContextChanged));
-            throw new Exception("Aha");
         }
 
         static void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
