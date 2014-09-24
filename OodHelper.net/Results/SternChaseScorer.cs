@@ -5,8 +5,8 @@ namespace OodHelper.Results
 {
     class SternChaseScorer : IRaceScore
     {
-        //private Db _racedb;
-        //private System.Data.DataTable _racedata;
+        private Db _racedb;
+        private System.Data.DataTable _racedata;
 
         public double StandardCorrectedTime
         {
