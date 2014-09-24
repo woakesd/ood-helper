@@ -115,7 +115,7 @@ namespace OodHelper
 
         private void importPY_Click(object sender, RoutedEventArgs e)
         {
-            var pni = new PNImport();
+            var pni = new PnImport();
             pni.ShowDialog();
         }
 

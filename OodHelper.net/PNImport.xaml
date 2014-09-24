@@ -1,4 +1,4 @@
-﻿<Window x:Class="OodHelper.PNImport"
+﻿<Window x:Class="OodHelper.PnImport"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="PNImport" Height="292" Width="546">
