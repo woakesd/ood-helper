@@ -126,7 +126,7 @@ namespace OodHelper
             if (!val.HasValue || !val.Value) return;
 
             RaceSeriesResult rs = null;
-            myDelegate uiDelegate = delegate
+            MyDelegate uiDelegate = delegate
             {
                 var resultDisplayByClass = new SeriesDisplayByClass(rs);
                 var seriesDisplayTab = new TabItem {Content = resultDisplayByClass, Header = "Series Result"};
@@ -164,11 +164,6 @@ namespace OodHelper
             sel.ShowDialog();
         }
 
-        private void Foxpro_Click(object sender, RoutedEventArgs e)
-        {
-            var fx = new FoxproImport();
-        }
-
         private void Rule_Click(object sender, RoutedEventArgs e)
         {
             (new SelectRules()).ShowDialog();
@@ -195,7 +190,7 @@ namespace OodHelper
                     "Confirm Download",
                     MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.OK) == MessageBoxResult.OK)
                 {
-                    var dtask = new DownloadResults();
+                    new DownloadResults();
                 }
             }
         }
@@ -229,13 +224,14 @@ namespace OodHelper
                 if (data.Rows.Count > pages*10) pages++;
                 w.SetRange(0, pages + 1);
                 w.Show();
-                var ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
                 XpsDocumentWriter write = PrintQueue.CreateXpsDocumentWriter(pd.PrintQueue);
+                
                 var collator = write.CreateVisualsCollator() as VisualsToXpsDocument;
+                if (collator == null) return;
 
-                Task t = Task.Factory.StartNew(() =>
+                using (Task.Factory.StartNew(() =>
                 {
-                    Dispatcher.Invoke(delegate { collator.BeginBatchWrite(); });
+                    Dispatcher.Invoke(collator.BeginBatchWrite);
 
                     w.SetProgress("Printing ", 0);
                     Thread.Sleep(50);
@@ -243,9 +239,9 @@ namespace OodHelper
                     CardPage cp = null;
                     Dispatcher.Invoke(delegate { cp = new CardPage(); });
 
-                    int grow = 0;
-                    int gcol = 0;
-                    int index = 0;
+                    int grow;
+                    int gcol;
+                    int index;
 
                     for (index = 0; index < data.Rows.Count; index++)
                     {
@@ -270,8 +266,7 @@ namespace OodHelper
                         Dispatcher.Invoke(delegate
                         {
                             DataRow dr = data.Rows[index];
-                            var c = new Card(string.Format("{0} {1}", new[] {dr["firstname"], dr["surname"]}),
-                                (int) dr["id"], (int) dr["main_id"], dr["member"] as string);
+                            var c = new Card(string.Format("{0} {1}", new[] {dr["firstname"], dr["surname"]}), (int) dr["id"], (int) dr["main_id"], dr["member"] as string);
                             var cardSize = new Size(324, 204);
                             c.Measure(cardSize);
                             c.Arrange(new Rect(new Point(0, 0), cardSize));
@@ -322,31 +317,28 @@ namespace OodHelper
                     });
 
                     w.CloseWindow();
-                });
+                }))
+                {
+                }
             }
         }
 
         private class Data : NotifyPropertyChanged
         {
-            private bool _ShowPrivilegedItems;
+            private bool _showPrivilegedItems;
 
             public bool ShowPrivilegedItems
             {
-                get { return _ShowPrivilegedItems; }
+                get { return _showPrivilegedItems; }
                 set
                 {
-                    _ShowPrivilegedItems = value;
+                    _showPrivilegedItems = value;
                     OnPropertyChanged("ShowPrivilegedItems");
                     OnPropertyChanged("HideNonPrivilegedItems");
                 }
             }
-
-            public bool HideNonPrivilegedItems
-            {
-                get { return !_ShowPrivilegedItems; }
-            }
         }
 
-        private delegate void myDelegate();
+        private delegate void MyDelegate();
     }
 }
