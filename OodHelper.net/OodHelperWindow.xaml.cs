@@ -61,7 +61,8 @@ namespace OodHelper
                 MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.OK) == MessageBoxResult.OK)
             {
                 // ReSharper disable once ObjectCreationAsStatement
-                new UploadResults();
+                var worker = new UploadResults();
+                worker.Run();
             }
         }
 

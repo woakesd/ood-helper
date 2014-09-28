@@ -45,7 +45,7 @@
             </MenuItem>
             <MenuItem Header="_Admin">
                 <MenuItem Header="Tide" Name="Tide" Click="Tide_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" />
-                <!--<MenuItem Header="Sun" Name="Sun" Click="Sun_Click" />-->
+                <MenuItem Header="Sun" Name="Sun" Click="Sun_Click" />
                 <MenuItem Header="_Configuration" Name="Configuration" Click="Configuration_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                     <MenuItem.Icon>
                         <Image Width="16" Height="16" Margin="1" Source="/OodHelper;component/Images/Spanner-16.png" />
