@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -10,17 +7,15 @@ namespace OodHelper
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App
     {
-        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private static void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            DataGrid d = sender as DataGrid;
-            if (d != null)
+            var d = sender as DataGrid;
+            if (d == null) return;
+            foreach (var c in d.Columns)
             {
-                foreach (DataGridColumn c in d.Columns)
-                {
-                    c.SetValue(FrameworkElement.DataContextProperty, e.NewValue);
-                }
+                c.SetValue(FrameworkElement.DataContextProperty, e.NewValue);
             }
         }
 
@@ -30,8 +25,8 @@ namespace OodHelper
             //
             // This ensures that the SQL Server DB is created.
             //
-            Db C = new Db("SELECT 1");
-            C.Dispose();
+            var db = new Db("SELECT 1");
+            db.Dispose();
             //
             // This allows DataColumns to have DataContext properties as per their DataGrid.
             //
@@ -39,14 +34,13 @@ namespace OodHelper
 
             FrameworkElement.DataContextProperty.OverrideMetadata(typeof(DataGrid),
                 new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits,
-                    new PropertyChangedCallback(OnDataContextChanged)));
+                    OnDataContextChanged));
         }
 
-        void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        static void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             ErrorLogger.LogException(e.Exception);
-            ShowException.DoShow(e.Exception);
-            App.Current.Shutdown();
+            Current.Shutdown();
         }
     }
 }

@@ -1,37 +1,30 @@
-﻿using MySql.Data.MySqlClient;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using MySql.Data.MySqlClient;
 
 namespace LoadTide
 {
-    class Program
+    internal class Program
     {
-        protected static MySqlConnection mcon;
-        protected static MySqlTransaction mtrn;
-        
-        static void Main(string[] args)
+        protected static MySqlConnection Mcon;
+
+        private static void Main()
         {
-            DataTable Tide = new DataTable();
+            var tide = new DataTable();
 
             string mysql = "server=peycrace.info;User Id=peycrace;" +
-                "password=5c8gbE7stjH4;database=peycrace;Use Compression=True;" +
-                "port=7506;Ssl Mode=VerifyFull";
-            MySqlConnectionStringBuilder mcsb = new MySqlConnectionStringBuilder(mysql);
+                           "password=5c8gbE7stjH4;database=peycrace;Use Compression=True;" +
+                           "port=7506;Ssl Mode=VerifyFull";
+            var mcsb = new MySqlConnectionStringBuilder(mysql);
             mysql = mcsb.ConnectionString;
-            mcon = new MySqlConnection(mysql);
-            mcon.Open();
+            Mcon = new MySqlConnection(mysql);
+            Mcon.Open();
             //mtrn = mcon.BeginTransaction();
 
-            SqlConnectionStringBuilder conb = new SqlConnectionStringBuilder();
-            conb.DataSource = "(localdb)\\v11.0";
-            conb.InitialCatalog = "raceresults";
-            SqlConnection scon = new SqlConnection(conb.ConnectionString);
+            var conb = new SqlConnectionStringBuilder {DataSource = "(localdb)\\v11.0", InitialCatalog = "raceresults"};
+            var scon = new SqlConnection(conb.ConnectionString);
             scon.Open();
             SqlTransaction stran = scon.BeginTransaction();
 
@@ -41,34 +34,37 @@ namespace LoadTide
             //scom.Parameters.AddWithValue("end", new DateTime(2015, 1, 1));
             //SqlDataAdapter sdt = new SqlDataAdapter(scom);
             //sdt.Fill(Tide);
-            MySqlCommand msel = new MySqlCommand("SELECT `date`, `height`, `current` FROM `tidedata` WHERE date >= '2015-01-01'");
-            msel.Connection = mcon;
-            MySqlDataAdapter mdt = new MySqlDataAdapter(msel);
-            mdt.Fill(Tide);
+            var msel = new MySqlCommand("SELECT `date`, `height`, `current` FROM `tidedata` WHERE date >= '2015-01-01'")
+            {
+                Connection = Mcon
+            };
+            var mdt = new MySqlDataAdapter(msel);
+            mdt.Fill(tide);
 
             //scon.Close();
             //scon.Dispose();
 
-            SqlCommand scom = new SqlCommand();
-            scom.Connection = scon;
-            scom.Transaction = stran;
-
-            scom.CommandText = "DELETE FROM [tidedata] WHERE [date] >= '01 Jan 2015'";
+            var scom = new SqlCommand
+            {
+                Connection = scon,
+                Transaction = stran,
+                CommandText = "DELETE FROM [tidedata] WHERE [date] >= '01 Jan 2015'"
+            };
 
             scom.ExecuteNonQuery();
 
-            DataTable transition = Tide.Clone();
+            DataTable transition = tide.Clone();
 
-            int blocks = (int) Math.Ceiling(Tide.Rows.Count / 1000.0);
+            var blocks = (int) Math.Ceiling(tide.Rows.Count/1000.0);
 
             for (int i = 0; i < blocks; i++)
             {
                 transition.Rows.Clear();
 
-                for (int j = i * 1000; j < Math.Min((i + 1) * 1000, Tide.Rows.Count); j++)
-                    transition.ImportRow(Tide.Rows[j]);
+                for (int j = i*1000; j < Math.Min((i + 1)*1000, tide.Rows.Count); j++)
+                    transition.ImportRow(tide.Rows[j]);
 
-                StringBuilder msql = new StringBuilder("INSERT INTO [tidedata] ([date],[height],[current]) VALUES ");
+                var msql = new StringBuilder("INSERT INTO [tidedata] ([date],[height],[current]) VALUES ");
 
                 BuildInsertData(transition, msql);
 
@@ -91,8 +87,8 @@ namespace LoadTide
                 msql.Append("(");
                 for (int j = 0; j < d.Columns.Count; j++)
                 {
-                    string _colType = d.Columns[j].DataType.ToString();
-                    switch (_colType)
+                    string colType = d.Columns[j].DataType.ToString();
+                    switch (colType)
                     {
                         case "System.String":
                             if (dr[j] != DBNull.Value)
@@ -107,7 +103,7 @@ namespace LoadTide
                                 msql.Append("NULL");
                             break;
                         case "System.Double":
-                            if (dr[j] != DBNull.Value && !Double.IsNaN((double)dr[j]))
+                            if (dr[j] != DBNull.Value && !Double.IsNaN((double) dr[j]))
                                 msql.AppendFormat("{0}", dr[j]);
                             else
                                 msql.Append("NULL");
@@ -121,7 +117,7 @@ namespace LoadTide
                         case "System.Boolean":
                             if (dr[j] == DBNull.Value)
                                 msql.Append("NULL");
-                            else if ((bool)dr[j])
+                            else if ((bool) dr[j])
                                 msql.Append("1");
                             else
                                 msql.Append("0");
@@ -146,5 +142,4 @@ namespace LoadTide
             }
         }
     }
-
 }

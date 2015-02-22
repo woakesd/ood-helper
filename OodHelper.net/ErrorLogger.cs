@@ -1,22 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.IO;
-using System.Text;
+using System.Reflection;
 
 namespace OodHelper
 {
     class ErrorLogger
     {
-        private static string FileName = "Errors.log";
-        private static object _locker = new object();
+        private static readonly string FileFolder = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+
+        private static readonly string FileName = Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().Location) + "-Errors.log";
+
+        private static readonly object Locker = new object();
+
         public static void LogException(Exception ex)
         {
-            lock (_locker)
+            lock (Locker)
             {
-                using (StreamWriter sw = new StreamWriter(FileName, true))
+                using (var sw = new StreamWriter(FileFolder + Path.DirectorySeparatorChar + FileName, true))
                 {
-                    sw.WriteLine(string.Format("{0:yyyy-MM-ddTHH:mm:ss} \"{1}\"", new object[] { DateTime.Now, ex.Message }));
+                    sw.WriteLine(@"{0:yyyy-MM-ddTHH:mm:ss} {1}", new object[] { DateTime.Now, ex.Message });
 
                     sw.WriteLine(ex.StackTrace);
                     sw.WriteLine();

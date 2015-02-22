@@ -21,7 +21,7 @@ namespace OodHelper.Results
     /// <summary>
     /// Interaction logic for TestPage.xaml
     /// </summary>
-    public partial class OpenHandicapResultsPage : Page, IResultsPage
+    public partial class OpenHandicapResultsPage : IResultsPage
     {
         DataTable rd;
 
@@ -30,7 +30,7 @@ namespace OodHelper.Results
             InitializeComponent();
 
             red.Scorer.Calculate(red.Rid);
-            RaceDate.Text = "Date of Race: " + red.StartDate.Value.ToShortDateString();
+            RaceDate.Text = "Date of Race: " + red.StartDate.ToShortDateString();
             EventDescription.Text = red.RaceName;
             OodName.Text = "OOD: " + red.Ood;
             Start.Text = "Start: " + red.StartTime.ToString("hh\\:mm");

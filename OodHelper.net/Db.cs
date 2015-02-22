@@ -1,133 +1,133 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Reflection;
 
 namespace OodHelper
 {
-    class Db : IDisposable
+    internal class Db : IDisposable
     {
-        private const string MasterConnection = @"Data Source=(LocalDB)\v11.0;Initial Catalog=master;Integrated Security=True";
+        private const string MasterConnection =
+            @"Data Source=(LocalDB)\v11.0;Initial Catalog=master;Integrated Security=True";
 
-        private static string DatabaseName = "OodHelper";
-        private static string DatabaseFolder;
-        private static string DataFileName;
-        private static string LogFileName;
-        private static string _DatabaseConstr;
-
-        public static string DatabaseConstr { get { return _DatabaseConstr; } }
+        private const string DatabaseName = "OodHelper";
+        private static readonly string DatabaseFolder;
+        private static readonly string DataFileName;
+        private readonly SqlConnection _con;
+        private SqlDataAdapter _adapt;
+        private SqlCommand _cmd;
 
         static Db()
         {
-            Assembly _ass = Assembly.GetAssembly(typeof(App));
-            AssemblyName _an = _ass.GetName();
-            DatabaseFolder = string.Format(@"{0}\{1}\data", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), _an.Name);
+            Assembly ass = Assembly.GetAssembly(typeof (App));
+            AssemblyName an = ass.GetName();
+            DatabaseFolder = string.Format(@"{0}\{1}\data",
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), an.Name);
 
             DataFileName = string.Format(@"{0}\{1}.mdf", DatabaseFolder, DatabaseName);
-            LogFileName = string.Format(@"{0}\{1}.ldf", DatabaseFolder, DatabaseName);
-            _DatabaseConstr = string.Format(@"Data Source=(LocalDB)\v11.0;Initial Catalog={1};Integrated Security=True;", DataFileName, DatabaseName);
+            DatabaseConstr = string.Format(
+                @"Data Source=(LocalDB)\v11.0;Initial Catalog={0};Integrated Security=True;", DatabaseName);
         }
 
-        public static void SetSingleUser(string DbName)
+        public Db(string sqlCommand) : this()
         {
-            using (SqlConnection _conn = new SqlConnection(MasterConnection))
-            {
-                try
-                {
-                    _conn.Open();
-                    SqlCommand _cmd = _conn.CreateCommand();
-                    _cmd.CommandText = string.Format("ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE", DbName);
-                    _cmd.ExecuteNonQuery();
-                    _cmd.CommandText = string.Format("ALTER DATABASE [{0}] SET SINGLE_USER", DbName);
-                    _cmd.ExecuteNonQuery();
-
-                }
-                finally
-                {
-                    _conn.Close();
-                }
-            }
-        }
-
-        public static void SetMultiUser(string DbName)
-        {
-            using (SqlConnection _conn = new SqlConnection(MasterConnection))
-            {
-                try
-                {
-                    _conn.Open();
-                    SqlCommand _cmd = _conn.CreateCommand();
-                    _cmd.CommandText = string.Format("ALTER DATABASE [{0}] SET MULTI_USER", DbName);
-                    _cmd.ExecuteNonQuery();
-
-                }
-                finally
-                {
-                    _conn.Close();
-                }
-            }
-        }
-
-        public Db(string SqlCommand) : this()
-        {
-            Sql = SqlCommand;
+            Sql = sqlCommand;
         }
 
         public Db()
         {
-            mCon = new SqlConnection();
-            mCon.ConnectionString = DatabaseConstr;
+            _con = new SqlConnection {ConnectionString = DatabaseConstr};
             if (!File.Exists(DataFileName))
             {
-                Db.CreateDb();
+                CreateDb();
             }
         }
+
+        public static string DatabaseConstr { get; private set; }
 
         public string Sql
         {
             set
             {
-                mCmd = mCon.CreateCommand();
-                mCmd.CommandText = value;
+                _cmd = _con.CreateCommand();
+                _cmd.CommandText = value;
             }
 
-            get
+            get { return _cmd.CommandText; }
+        }
+
+        public IDbConnection Connection
+        {
+            get { return _con; }
+        }
+
+        public void Dispose()
+        {
+            if (_cmd != null) _cmd.Dispose();
+            if (_con != null) _con.Dispose();
+        }
+
+        public static void SetSingleUser(string dbName)
+        {
+            using (var conn = new SqlConnection(MasterConnection))
             {
-                return mCmd.CommandText;
+                try
+                {
+                    conn.Open();
+                    SqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = string.Format("ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE",
+                        dbName);
+                    cmd.ExecuteNonQuery();
+                    cmd.CommandText = string.Format("ALTER DATABASE [{0}] SET SINGLE_USER", dbName);
+                    cmd.ExecuteNonQuery();
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+        }
+
+        public static void SetMultiUser(string dbName)
+        {
+            using (var conn = new SqlConnection(MasterConnection))
+            {
+                try
+                {
+                    conn.Open();
+                    var cmd = conn.CreateCommand();
+                    cmd.CommandText = string.Format("ALTER DATABASE [{0}] SET MULTI_USER", dbName);
+                    cmd.ExecuteNonQuery();
+                }
+                finally
+                {
+                    conn.Close();
+                }
             }
         }
 
         public static bool CreateDatabase(string dbName, string dbFileName)
         {
-            try
+            using (var conn = new SqlConnection(MasterConnection))
             {
-                using (var _conn = new SqlConnection(MasterConnection))
-                {
-                    _conn.Open();
-                    SqlCommand _cmd = _conn.CreateCommand();
+                conn.Open();
+                SqlCommand cmd = conn.CreateCommand();
 
-                    _cmd.CommandText = string.Format("IF DB_ID('{0}') IS NOT NULL DROP DATABASE [{0}]", dbName);
-                    _cmd.ExecuteNonQuery();
+                cmd.CommandText = string.Format("IF DB_ID('{0}') IS NOT NULL DROP DATABASE [{0}]", dbName);
+                cmd.ExecuteNonQuery();
 
-                    _cmd.CommandText = string.Format("CREATE DATABASE [{0}] ON (NAME = N'{0}', FILENAME = '{1}')", dbName, dbFileName);
-                    _cmd.ExecuteNonQuery();
-                }
-
-                if (File.Exists(dbFileName)) return true;
-                else return false;
+                cmd.CommandText = string.Format("CREATE DATABASE [{0}] ON (NAME = N'{0}', FILENAME = '{1}')", dbName,
+                    dbFileName);
+                cmd.ExecuteNonQuery();
             }
-            catch (Exception ex)
-            {
-                ShowException.DoShow(ex);
-                throw;
-            }
+
+            if (File.Exists(dbFileName)) return true;
+            return false;
         }
 
-        public static void BackupDatabase(string DbName, string Location)
+        public static void BackupDatabase(string dbName, string location)
         {
             using (var connection = new SqlConnection(MasterConnection))
             {
@@ -135,17 +135,13 @@ namespace OodHelper
                 {
                     connection.Open();
                     SqlCommand cmd = connection.CreateCommand();
-                    cmd.CommandText = String.Format(@"BACKUP DATABASE [{0}] TO  DISK = N'{1}\{0}.bak' WITH NOFORMAT, INIT,  NAME = N'{0}-Full Database Backup', SKIP, NOREWIND, NOUNLOAD;
+                    cmd.CommandText =
+                        String.Format(@"BACKUP DATABASE [{0}] TO  DISK = N'{1}\{0}.bak' WITH NOFORMAT, INIT,  NAME = N'{0}-Full Database Backup', SKIP, NOREWIND, NOUNLOAD;
 declare @backupSetId as int
 select @backupSetId = position from msdb..backupset where database_name=N'{0}' and backup_set_id=(select max(backup_set_id) from msdb..backupset where database_name=N'{0}' )
 if @backupSetId is null begin raiserror(N'Verify failed. Backup information for database ''{0}'' not found.', 16, 1) end
-RESTORE VERIFYONLY FROM  DISK = N'{1}\{0}.bak' WITH  FILE = @backupSetId,  NOUNLOAD,  NOREWIND;", DbName, Location);
+RESTORE VERIFYONLY FROM  DISK = N'{1}\{0}.bak' WITH  FILE = @backupSetId,  NOUNLOAD,  NOREWIND;", dbName, location);
                     cmd.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    ShowException.DoShow(ex);
-                    throw;
                 }
                 finally
                 {
@@ -169,7 +165,7 @@ RESTORE VERIFYONLY FROM  DISK = N'{1}\{0}.bak' WITH  FILE = @backupSetId,  NOUNL
 
             CreateDatabase(DatabaseName, DataFileName);
 
-            SqlConnection con = new SqlConnection(constr);
+            var con = new SqlConnection(constr);
             try
             {
                 con.Open();
@@ -428,81 +424,68 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
         {
             try
             {
-                addCommandParameters(p);
-                mCon.Open();
-                return mCmd.ExecuteNonQuery();
+                AddCommandParameters(p);
+                _con.Open();
+                return _cmd.ExecuteNonQuery();
             }
             finally
             {
-                if (mCon.State != ConnectionState.Closed)
-                    mCon.Close();
-            }
-        }
-
-        private SqlDataAdapter mAdapt;
-        private SqlConnection mCon;
-        private SqlCommand mCmd;
-
-        public IDbConnection Connection
-        {
-            get
-            {
-                return mCon;
+                if (_con.State != ConnectionState.Closed)
+                    _con.Close();
             }
         }
 
         public Object GetScalar(Hashtable p)
         {
-            DataTable d = new DataTable();
-            addCommandParameters(p);
-            mAdapt = new SqlDataAdapter(mCmd);
-            mCon.Open();
+            var d = new DataTable();
+            AddCommandParameters(p);
+            _adapt = new SqlDataAdapter(_cmd);
+            _con.Open();
             try
             {
-                mAdapt.Fill(d);
+                _adapt.Fill(d);
             }
             finally
             {
-                mCon.Close();
+                _con.Close();
             }
 
             if (d.Rows.Count > 0)
                 return d.Rows[0][0];
-            else
-                return DBNull.Value;
+            return DBNull.Value;
         }
 
-        private void addCommandParameters(Hashtable p)
+        private void AddCommandParameters(Hashtable p)
         {
-            mCmd.Parameters.Clear();
+            _cmd.Parameters.Clear();
             if (p != null)
             {
                 foreach (string k in p.Keys)
                 {
-                    if (p[k] == null || (p[k]).GetType() == typeof(string) && p[k] as string == string.Empty)
-                        mCmd.Parameters.Add(new SqlParameter(k, DBNull.Value));
+                    if (p[k] == null || p[k] is string && p[k] as string == string.Empty)
+                        _cmd.Parameters.Add(new SqlParameter(k, DBNull.Value));
                     else
-                        mCmd.Parameters.Add(new SqlParameter(k, p[k]));
+                        _cmd.Parameters.Add(new SqlParameter(k, p[k]));
                 }
             }
         }
 
         public Hashtable GetHashtable(Hashtable p)
         {
-            DataTable d = new DataTable();
-            addCommandParameters(p);
-            mAdapt = new SqlDataAdapter(mCmd);
-            mCon.Open();
+            var d = new DataTable();
+            AddCommandParameters(p);
+            _adapt = new SqlDataAdapter(_cmd);
+            _con.Open();
             try
             {
-                mAdapt.Fill(d);
+                _adapt.Fill(d);
             }
             finally
             {
-                mCon.Close();
+                _con.Close();
             }
 
-            Hashtable h = new Hashtable();
+            var h = new Hashtable();
             if (d.Rows.Count > 0)
             {
                 foreach (DataColumn c in d.Columns)
@@ -513,59 +496,58 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
 
         public void Fill(DataTable d, Hashtable p)
         {
-            addCommandParameters(p);
-            mAdapt = new SqlDataAdapter(mCmd);
-            mCon.Open();
+            AddCommandParameters(p);
+            _adapt = new SqlDataAdapter(_cmd);
+            _con.Open();
             try
             {
-                mAdapt.Fill(d);
+                _adapt.Fill(d);
             }
             finally
             {
-                mCon.Close();
+                _con.Close();
             }
         }
 
         public DataTable GetData(Hashtable p)
         {
-            DataTable t = new DataTable();
-            addCommandParameters(p);
-            mAdapt = new SqlDataAdapter(mCmd);
-            mCon.Open();
+            var t = new DataTable();
+            AddCommandParameters(p);
+            _adapt = new SqlDataAdapter(_cmd);
+            _con.Open();
             try
             {
-                mAdapt.Fill(t);
+                _adapt.Fill(t);
             }
             finally
             {
-                mCon.Close();
+                _con.Close();
             }
             return t;
         }
 
         public int GetNextIdentity(string table)
         {
-            mCon.Open();
+            _con.Open();
             try
             {
-                SqlCommand cmd = mCon.CreateCommand();
+                SqlCommand cmd = _con.CreateCommand();
                 cmd.CommandText = @"SELECT IDENT_CURRENT(@table)";
                 cmd.Parameters.AddWithValue("table", table);
-                
-                decimal _nextId = (decimal) cmd.ExecuteScalar();
-                return (int)_nextId + 1;
+
+                var nextId = (decimal) cmd.ExecuteScalar();
+                return (int) nextId + 1;
             }
             finally
             {
-                mCon.Close();
+                _con.Close();
             }
         }
 
         public static void ReseedDatabase()
         {
-            int b = 1, t;
-            b = Settings.BottomSeed;
-            t = Settings.TopSeed;
+            var b = Settings.BottomSeed;
+            var t = Settings.TopSeed;
 
             ReseedTable("boats", "bid", b, t);
             ReseedTable("people", "id", b, t);
@@ -577,17 +559,17 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
         {
             if (b < t && b != 0 && t != 0)
             {
-                Db s = new Db("SELECT MAX(" + ident + ") " +
-                    "FROM " + tname + " " +
-                    "WHERE " + ident + " BETWEEN @b AND @_task");
-                Hashtable p = new Hashtable();
+                var s = new Db("SELECT MAX(" + ident + ") " +
+                               "FROM " + tname + " " +
+                               "WHERE " + ident + " BETWEEN @b AND @_task");
+                var p = new Hashtable();
                 p["b"] = b;
                 p["_task"] = t;
                 object o;
                 int seedvalue;
                 if ((o = s.GetScalar(p)) != DBNull.Value)
                 {
-                    seedvalue = ((int)o) + 1;
+                    seedvalue = ((int) o) + 1;
                 }
                 else
                 {
@@ -600,13 +582,13 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
 
         private static void ReseedTable(string tname, string ident)
         {
-            Db s = new Db("SELECT MAX(" + ident + ") " +
-                "FROM " + tname);
+            var s = new Db("SELECT MAX(" + ident + ") " +
+                           "FROM " + tname);
             object o;
             int seedvalue;
             if ((o = s.GetScalar(null)) != DBNull.Value)
             {
-                seedvalue = ((int)o) + 1;
+                seedvalue = ((int) o) + 1;
             }
             else
             {
@@ -614,12 +596,6 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
             }
             s = new Db(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1})", tname, seedvalue));
             s.ExecuteNonQuery(null);
-        }
-
-        public void Dispose()
-        {
-            if (mCmd != null) mCmd.Dispose();
-            if (mCon != null) mCon.Dispose();
         }
     }
 }

@@ -1,41 +1,25 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Data;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace OodHelper.Results
 {
     /// <summary>
-    /// Interaction logic for SelectedBoats.xaml
+    ///     Interaction logic for SelectedBoats.xaml
     /// </summary>
-    public partial class SelectedBoats : UserControl
+    public partial class SelectedBoats
     {
-        int raceId;
-
-        public int RaceId
-        {
-            get { return raceId; }
-        }
+        private readonly int _raceId;
 
         public SelectedBoats(int rid)
         {
             InitializeComponent();
-            raceId = rid;
+            _raceId = rid;
         }
 
-        private void Remove_Click(object sender, RoutedEventArgs e)
+        public int RaceId
         {
-            RemoveBoats();
+            get { return _raceId; }
         }
 
         private void Boats_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -45,16 +29,16 @@ namespace OodHelper.Results
 
         public void RemoveBoats()
         {
-            IList x = Boats.SelectedItems;
-            DataRow[] rows = new DataRow[x.Count];
-            int i = 0;
+            var x = Boats.SelectedItems;
+            var rows = new DataRow[x.Count];
+            var i = 0;
             foreach (DataRowView rv in x)
             {
                 rows[i++] = rv.Row;
             }
-            foreach (DataRow r in rows)
+            foreach (var r in rows)
             {
-                ((DataView)Boats.ItemsSource).Table.Rows.Remove(r);
+                ((DataView) Boats.ItemsSource).Table.Rows.Remove(r);
             }
         }
     }

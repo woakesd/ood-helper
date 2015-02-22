@@ -1,39 +1,36 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Data;
 using System.Text;
+using System.Windows;
 using MySql.Data.MySqlClient;
-using System.ComponentModel;
-using OodHelper;
-using OodHelper.LoadTide;
 
 namespace OodHelper.Website
 {
-    class UploadSun : MySqlUpload
+    internal class UploadSun : MySqlUpload
     {
-        private DataTable SunData;
+        private readonly DataTable _sunData;
 
-        public UploadSun(DataTable dt) : base(false)
+        public UploadSun(DataTable dt)
         {
-            SunData = dt;
+            _sunData = dt;
             Run();
         }
 
         protected override void upload_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled)
-                System.Windows.MessageBox.Show("Sun Data Upload Cancelled", "Cancel", System.Windows.MessageBoxButton.OK,
-                    System.Windows.MessageBoxImage.Information);
+                MessageBox.Show("Sun Data Upload Cancelled", "Cancel", MessageBoxButton.OK,
+                    MessageBoxImage.Information);
             else
-                System.Windows.MessageBox.Show("Sun Data Upload Complete", "Finished", System.Windows.MessageBoxButton.OK,
-                    System.Windows.MessageBoxImage.Information);
+                MessageBox.Show("Sun Data Upload Complete", "Finished", MessageBoxButton.OK,
+                    MessageBoxImage.Information);
         }
 
         protected override void DoTheWork(object sender, DoWorkEventArgs e)
         {
-            BackgroundWorker w = sender as BackgroundWorker;
+            var w = sender as BackgroundWorker;
+            
+            if (w == null) return;
 
             if (w.CancellationPending)
             {
@@ -43,13 +40,12 @@ namespace OodHelper.Website
 
             w.ReportProgress(50, "Uploading Sun Data");
 
-            MySqlCommand mcom = new MySqlCommand();
-            mcom.Connection = mcon;
-            StringBuilder msql = new StringBuilder();
+            var mcom = new MySqlCommand {Connection = Mcon};
+            var msql = new StringBuilder();
 
             mcom.CommandText = "DELETE FROM `sun` WHERE date >= @start AND date <= @end";
-            mcom.Parameters.AddWithValue("start", SunData.Rows[0]["date"]);
-            mcom.Parameters.AddWithValue("end", SunData.Rows[SunData.Rows.Count-1]["date"]);
+            mcom.Parameters.AddWithValue("start", _sunData.Rows[0]["date"]);
+            mcom.Parameters.AddWithValue("end", _sunData.Rows[_sunData.Rows.Count - 1]["date"]);
             mcom.ExecuteNonQuery();
 
             mcom.CommandText = "ALTER TABLE `sun` DISABLE KEYS";
@@ -58,7 +54,7 @@ namespace OodHelper.Website
             msql.Clear();
             msql.Append("INSERT INTO `sun` (`date`,`sunrise`,`sunset`) VALUES ");
 
-            BuildInsertData(SunData, msql);
+            BuildInsertData(_sunData, msql);
 
             mcom.CommandText = msql.ToString();
             mcom.ExecuteNonQuery();
@@ -69,7 +65,6 @@ namespace OodHelper.Website
             if (w.CancellationPending)
             {
                 CancelDownload(e);
-                return;
             }
         }
     }
