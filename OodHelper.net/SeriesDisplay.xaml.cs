@@ -42,7 +42,7 @@ namespace OodHelper
 
             Result = r;
             seriesName.Content = Result.SeriesName;
-            entries.Text = Result._Results.Count.ToString();
+            entries.Text = Result.Results.Count.ToString();
 
             LoadGrid();
         }
@@ -67,7 +67,7 @@ namespace OodHelper
             rd.Columns.Add("place", typeof(int));
             rd.Columns.Add("score", typeof(double));
 
-            events = new List<SeriesEvent>(Result._SeriesData.Values);
+            events = new List<SeriesEvent>(Result.SeriesData.Values);
             events.Sort(CompareByDate);
             int i = 1;
             foreach (SeriesEvent se in events)
@@ -104,15 +104,15 @@ namespace OodHelper
                 "FROM boats " +
                 "WHERE bid = @bid");
             Hashtable p = new Hashtable();
-            foreach (BoatSeriesResult bsr in Result._Results)
+            foreach (BoatSeriesResult bsr in Result.Results)
             {
                 DataRow r = rd.NewRow();
-                r["bid"] = bsr.bid;
-                r["entered"] = bsr.count;
-                r["score"] = bsr.nett;
-                r["place"] = bsr.place;
+                r["bid"] = bsr.Bid;
+                r["entered"] = bsr.Count;
+                r["score"] = bsr.Net;
+                r["place"] = bsr.Place;
 
-                p["bid"] = bsr.bid;
+                p["bid"] = bsr.Bid;
                 Hashtable bd = c.GetHashtable(p);
                 if (bd.Count > 0)
                 {
@@ -122,7 +122,7 @@ namespace OodHelper
                 }
 
                 i = 1;
-                foreach (SeriesEntry sent in bsr.dateSortedPoints)
+                foreach (SeriesEntry sent in bsr.DateSortedPoints)
                 {
                     r["r" + i] = sent;
                     i++;
