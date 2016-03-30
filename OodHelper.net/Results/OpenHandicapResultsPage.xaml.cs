@@ -37,7 +37,8 @@ namespace OodHelper.Results
             Sct.Text = "SCT: " + Common.HMS(red.Scorer.StandardCorrectedTime);
             PrintedDate.Text = string.Format("Printed on {0:dd MMM yyyy} at {0:HH:mm:ss}", DateTime.Now);
 
-            Db c = new Db(@"SELECT 0 [order], b.boatname Boat, b.boatclass [Class], b.sailno [Sail No], r.open_handicap as Hcap,
+            Db c = new Db(@"SELECT 0 [order], b.boatname + case when r.restricted_sail = 1 then ' (RS)' else '' end  Boat,
+                b.boatclass [Class], b.sailno [Sail No], r.open_handicap as Hcap,
                 r.finish_code, r.finish_date, '' AS Finish, r.elapsed Elapsed, r.laps Laps, r.corrected Corrected, r.place Pos,
                 ISNULL(override_points, points) Pts,
                 r.achieved_handicap Achp, r.new_rolling_handicap [nhcp],

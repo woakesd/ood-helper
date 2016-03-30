@@ -309,6 +309,7 @@ CREATE TABLE [dbo].[races](
 	[finish_code] [nvarchar](5) NULL,
 	[finish_date] [datetime] NULL,
 	[interim_date] [datetime] NULL,
+    [restricted_sail] [bit] NULL,
 	[last_edit] [datetime] NULL,
 	[laps] [int] NULL,
 	[place] [int] NULL,

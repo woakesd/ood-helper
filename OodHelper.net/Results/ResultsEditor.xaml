@@ -164,6 +164,7 @@
                                         IsReadOnly="{Binding Path=(FrameworkElement.DataContext).LapsReadOnly,RelativeSource={x:Static RelativeSource.Self}}"/>
                     <DataGridTextColumn Binding="{Binding FinishCode}" Header="Code" CellStyle="{StaticResource Editable}"  />
                     <DataGridTextColumn Binding="{Binding OverridePoints,UpdateSourceTrigger=LostFocus}" Header="Override Points" CellStyle="{StaticResource Editable}" />
+                    <DataGridCheckBoxColumn Binding="{Binding RestrictedSail,UpdateSourceTrigger=LostFocus}" Header="Restricted Sail" />
                     <DataGridTextColumn Binding="{Binding Elapsed}" Header="Elapsed" IsReadOnly="True" CellStyle="{StaticResource ReadOnly}" />
                     <DataGridTextColumn Binding="{Binding StandardCorrected}" Header="Std Corrected" IsReadOnly="True" CellStyle="{StaticResource ReadOnly}" 
                                         Visibility="{Binding Path=(FrameworkElement.DataContext).StdCorrectedVisible,RelativeSource={x:Static RelativeSource.Self}}"/>

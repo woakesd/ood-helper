@@ -580,7 +580,7 @@ namespace OodHelper.Results
             CreateScorer();
 
             _rddb = new Db("SELECT r.rid, r.bid, boatname, boatclass, sailno, r.start_date, " +
-                          "r.finish_code, r.finish_date, r.interim_date, r.laps, r.override_points, r.elapsed, r.standard_corrected, r.corrected, r.place, " +
+                          "r.finish_code, r.finish_date, r.interim_date, r.restricted_sail, r.laps, r.override_points, r.elapsed, r.standard_corrected, r.corrected, r.place, " +
                           "r.points, r.open_handicap, r.rolling_handicap, r.achieved_handicap, " +
                           "r.new_rolling_handicap, r.handicap_status, r.c, r.a, r.performance_index " +
                           "FROM races r INNER JOIN boats ON boats.bid = r.bid " +
@@ -592,7 +592,7 @@ namespace OodHelper.Results
             SetEditableColumns();
 
             Races.ItemsSource = (from DataRow r in _raceDataTable.Rows
-                select new ResultModel(r, StartDate)).ToList<ResultModel>();
+                select new ResultModel(r, StartDate)).ToList();
             DataContext = this;
         }
 
@@ -643,11 +643,17 @@ namespace OodHelper.Results
                     _raceDataTable.Columns["override_points"].ReadOnly = false;
                     _raceDataTable.Columns["finish_code"].ReadOnly = false;
                     _raceDataTable.Columns["laps"].ReadOnly = false;
+                    _raceDataTable.Columns["restricted_sail"].ReadOnly = false;
+                    _raceDataTable.Columns["open_handicap"].ReadOnly = false;
+                    _raceDataTable.Columns["rolling_handicap"].ReadOnly = false;
                     break;
                 case CalendarModel.RaceTypes.FixedLength:
                     _raceDataTable.Columns["finish_date"].ReadOnly = false;
                     _raceDataTable.Columns["override_points"].ReadOnly = false;
                     _raceDataTable.Columns["finish_code"].ReadOnly = false;
+                    _raceDataTable.Columns["restricted_sail"].ReadOnly = false;
+                    _raceDataTable.Columns["open_handicap"].ReadOnly = false;
+                    _raceDataTable.Columns["rolling_handicap"].ReadOnly = false;
                     break;
                 case CalendarModel.RaceTypes.HybridOld:
                 case CalendarModel.RaceTypes.Hybrid:
@@ -656,17 +662,26 @@ namespace OodHelper.Results
                     _raceDataTable.Columns["finish_code"].ReadOnly = false;
                     _raceDataTable.Columns["interim_date"].ReadOnly = false;
                     _raceDataTable.Columns["laps"].ReadOnly = false;
+                    _raceDataTable.Columns["restricted_sail"].ReadOnly = false;
+                    _raceDataTable.Columns["open_handicap"].ReadOnly = false;
+                    _raceDataTable.Columns["rolling_handicap"].ReadOnly = false;
                     break;
                 case CalendarModel.RaceTypes.TimeGate:
                     _raceDataTable.Columns["start_date"].ReadOnly = false;
                     _raceDataTable.Columns["finish_date"].ReadOnly = false;
                     _raceDataTable.Columns["override_points"].ReadOnly = false;
                     _raceDataTable.Columns["finish_code"].ReadOnly = false;
+                    _raceDataTable.Columns["restricted_sail"].ReadOnly = false;
+                    _raceDataTable.Columns["open_handicap"].ReadOnly = false;
+                    _raceDataTable.Columns["rolling_handicap"].ReadOnly = false;
                     break;
                 case CalendarModel.RaceTypes.SternChase:
                     _raceDataTable.Columns["place"].ReadOnly = false;
                     _raceDataTable.Columns["override_points"].ReadOnly = false;
                     _raceDataTable.Columns["finish_code"].ReadOnly = false;
+                    _raceDataTable.Columns["restricted_sail"].ReadOnly = false;
+                    _raceDataTable.Columns["open_handicap"].ReadOnly = false;
+                    _raceDataTable.Columns["rolling_handicap"].ReadOnly = false;
                     break;
             }
         }
@@ -677,13 +692,10 @@ namespace OodHelper.Results
             p["rid"] = e.Row["rid"];
             p["bid"] = e.Row["bid"];
             var sql = new StringBuilder("UPDATE races SET last_edit = GETDATE()");
-            foreach (DataColumn c in e.Row.Table.Columns)
+            foreach (DataColumn c in from DataColumn c in e.Row.Table.Columns where !c.ReadOnly select c)
             {
-                if (!c.ReadOnly)
-                {
-                    p[c.ColumnName] = e.Row[c.ColumnName];
-                    sql.AppendFormat(",{0} = @{0}", c.ColumnName);
-                }
+                p[c.ColumnName] = e.Row[c.ColumnName];
+                sql.AppendFormat(",{0} = @{0}", c.ColumnName);
             }
             sql.Append(" WHERE rid = @rid AND bid = @bid");
             var d = new Db(sql.ToString());
@@ -712,7 +724,7 @@ namespace OodHelper.Results
         }
 
         //
-        // Will hold the list found below so that if the user says yes to auto population we don'_task need to select
+        // Will hold the list found below so that if the user says yes to auto population we don't need to select
         // again.
         //
 

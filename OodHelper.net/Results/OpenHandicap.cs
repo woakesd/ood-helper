@@ -240,7 +240,7 @@ namespace OodHelper.Results
 
         protected virtual void CorrectedTime()
         {
-            EnumerableRowCollection<DataRow> query = (from r in Racedata.AsEnumerable()
+            var query = (from r in Racedata.AsEnumerable()
                 where r.Field<string>("finish_code") != "DNF"
                       && r.Field<string>("finish_code") != "DSQ"
                       && r.Field<DateTime?>("start_date") != null
@@ -257,12 +257,12 @@ namespace OodHelper.Results
             //
             // Average laps
             //
-            double avgLaps = Math.Round(query.Average(r => (r.Field<int?>("laps")) ?? 0), 1);
+            var avgLaps = Math.Round(query.Average(r => (r.Field<int?>("laps")) ?? 0), 1);
 
             //
             // Select all boats and work out elapsed, corrected and stdcorr
             //
-            foreach (DataRow dr in query)
+            foreach (var dr in query)
             {
                 var start = dr["start_date"] as DateTime?;
                 var finish = dr["finish_date"] as DateTime?;
@@ -274,7 +274,7 @@ namespace OodHelper.Results
                 {
                 }
 
-                TimeSpan? elapsed = finish - start;
+                var elapsed = finish - start;
                 dr["elapsed"] = elapsed.Value.TotalSeconds;
 
                 var laps = dr["laps"] as int?;
@@ -597,6 +597,11 @@ namespace OodHelper.Results
                             (int)
                                 Math.Round((int) dr["rolling_handicap"] + (working - (int) dr["rolling_handicap"])*0.15);
 
+                        //
+                        // if rectricted sail was used then new handicap needs to be adjusted to remove the 4% increase
+                        //
+                        if (dr["restricted_sail"] != DBNull.Value)
+                            newhc = (int)Math.Round(newhc / 1.04);
                         //
                         // And keep it if it's inside the band.
                         //

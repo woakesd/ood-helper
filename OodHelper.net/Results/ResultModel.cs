@@ -139,6 +139,33 @@ namespace OodHelper.Results
             }
         }
 
+        public bool RestrictedSail
+        {
+            get { return _row["restricted_sail"] != DBNull.Value && (bool) _row["restricted_sail"]; }
+
+            set
+            {
+                if (value)
+                {
+                    _row["restricted_sail"] = true;
+                    if (_row["open_handicap"] != DBNull.Value)
+                        _row["open_handicap"] = (int) Math.Round((int) _row["open_handicap"]*1.04);
+                    if (_row["rolling_handicap"] != DBNull.Value)
+                        _row["rolling_handicap"] = (int) Math.Round((int) _row["rolling_handicap"]*1.04);
+                }
+                else
+                {
+                    _row["restricted_sail"] = DBNull.Value;
+                    if (_row["open_handicap"] != DBNull.Value)
+                        _row["open_handicap"] = (int)Math.Round((int)_row["open_handicap"] / 1.04);
+                    if (_row["rolling_handicap"] != DBNull.Value)
+                        _row["rolling_handicap"] = (int)Math.Round((int)_row["rolling_handicap"] / 1.04);
+                }
+                OnPropertyChanged("OpenHandicap");
+                OnPropertyChanged("RollingHandicap");
+            }
+        }
+
         public string OverridePoints
         {
             get

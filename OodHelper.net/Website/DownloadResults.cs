@@ -144,12 +144,12 @@ namespace OodHelper.Website
             //
             p.ReportProgress((int) ((progress++)*factor), "Loading Races");
             ins.CommandText =
-                "INSERT INTO [races] ([rid], [bid], [start_date], [finish_date], [interim_date], [last_edit], [finish_code], [laps], [elapsed], [corrected], [standard_corrected], [handicap_status], [open_handicap], [rolling_handicap], [achieved_handicap], [new_rolling_handicap], [place], [points], [override_points], [performance_index], [a], [c]) " +
-                "VALUES (@rid, @bid, @start_date, @finish_date, @interim_date, @last_edit, @finish_code, @laps, @elapsed, @corrected, @standard_corrected, @handicap_status, @open_handicap, @rolling_handicap, @achieved_handicap, @new_rolling_handicap, @place, @points, @override_points, @performance_index, @a, @c)";
+                "INSERT INTO [races] ([rid], [bid], [start_date], [finish_date], [interim_date], [restricted_sail], [last_edit], [finish_code], [laps], [elapsed], [corrected], [standard_corrected], [handicap_status], [open_handicap], [rolling_handicap], [achieved_handicap], [new_rolling_handicap], [place], [points], [override_points], [performance_index], [a], [c]) " +
+                "VALUES (@rid, @bid, @start_date, @finish_date, @interim_date, @restricted_sail, @last_edit, @finish_code, @laps, @elapsed, @corrected, @standard_corrected, @handicap_status, @open_handicap, @rolling_handicap, @achieved_handicap, @new_rolling_handicap, @place, @points, @override_points, @performance_index, @a, @c)";
 
             myadp =
                 new MySqlDataAdapter(
-                    "SELECT `rid`, `bid`, `start_date`, `finish_date`, `interim_date`, `last_edit`, `finish_code`, `laps`, `elapsed`, `corrected`, `standard_corrected`, `handicap_status`, `open_handicap`, `rolling_handicap`, `achieved_handicap`, `new_rolling_handicap`, `place`, `points`, `override_points`, `performance_index`, `a`, `c` FROM races_new",
+                    "SELECT `rid`, `bid`, `start_date`, `finish_date`, `interim_date`, `restricted_sail`, `last_edit`, `finish_code`, `laps`, `elapsed`, `corrected`, `standard_corrected`, `handicap_status`, `open_handicap`, `rolling_handicap`, `achieved_handicap`, `new_rolling_handicap`, `place`, `points`, `override_points`, `performance_index`, `a`, `c` FROM races_new",
                     Mcon);
             mtable = new DataTable();
             myadp.Fill(mtable);
