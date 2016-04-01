@@ -486,12 +486,12 @@ namespace OodHelper.Results
             //
             // This routine sets the new rolling handicap column.
             //
-            EnumerableRowCollection<DataRow> query = from r in Racedata.AsEnumerable()
+            var query = from r in Racedata.AsEnumerable()
                 where r.Field<int?>("place") != 999
                 select r;
             if (StandardCorrectedTime > 0)
             {
-                foreach (DataRow dr in query)
+                foreach (var dr in query)
                 {
                     //
                     // Initially assume that achieved and new handicap are the current rolling handicap
@@ -518,8 +518,8 @@ namespace OodHelper.Results
                     // Next we look to see if the performance falls outside the +/- 5% band 
                     // (ie is an exceptional fast or slow result)
                     //
-                    bool sperf = false;
-                    bool sperfover = false;
+                    var sperf = false;
+                    var sperfover = false;
                     if ((double) dr["standard_corrected"] >= SlowLimit || (double) dr["standard_corrected"] <= FastLimit)
                     {
                         if ((double) dr["standard_corrected"] >= SlowLimit)
@@ -540,9 +540,7 @@ namespace OodHelper.Results
                         param["bid"] = dr["bid"];
                         param["rid"] = Rid;
                         param["bstart"] = dr["start_date"];
-                        var sl =
-                            new Db(
-                                @"SELECT TOP(1) CONVERT(FLOAT,(achieved_handicap - open_handicap))/open_handicap * 100
+                        var sl = new Db(@"SELECT TOP(1) CONVERT(FLOAT,(achieved_handicap - open_handicap))/open_handicap * 100
                             FROM races INNER JOIN calendar ON races.rid = calendar.rid
                             WHERE bid = @bid
                             AND races.rid != @rid
@@ -573,7 +571,7 @@ namespace OodHelper.Results
                     dr["performance_index"] = (int) dr["achieved_handicap"] - (int) dr["open_handicap"];
 
                     //
-                    // if this doesn'_task count as a slow race then adjust the handicap if the new value
+                    // if this doesn't count as a slow race then adjust the handicap if the new value
                     // falls between +/- 5% of open.
                     //
                     if (!sperf || sperfover)
@@ -600,7 +598,7 @@ namespace OodHelper.Results
                         //
                         // if rectricted sail was used then new handicap needs to be adjusted to remove the 4% increase
                         //
-                        if (dr["restricted_sail"] != DBNull.Value)
+                        if (dr["restricted_sail"] != DBNull.Value && (bool)dr["restricted_sail"])
                             newhc = (int)Math.Round(newhc / 1.04);
                         //
                         // And keep it if it's inside the band.

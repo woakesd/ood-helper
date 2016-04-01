@@ -179,6 +179,7 @@ WHERE is_race = 1 ");
         {
             DialogResult = true;
             int rowIndex = CalGrid.SelectedIndex;
+            if (CalGrid.SelectedItem == null) return;
             int r = (int) ((DataRowView)CalGrid.SelectedItem).Row["rid"];
             DateTime rd = (DateTime) ((DataRowView) CalGrid.SelectedItem).Row["start_date"];
             TimeSpan st = rd.TimeOfDay;

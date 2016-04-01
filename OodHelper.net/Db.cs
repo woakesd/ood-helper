@@ -223,7 +223,7 @@ CREATE TABLE [dbo].[calendar](
 	[class] [nvarchar](20) NULL,
 	[event] [nvarchar](34) NULL,
 	[price_code] [nvarchar](1) NULL,
-	[course] [nvarchar](9) NULL,
+	[course] [nvarchar](15) NULL,
 	[ood] [nvarchar](30) NULL,
 	[venue] [nvarchar](11) NULL,
 	[racetype] [nvarchar](20) NULL,
