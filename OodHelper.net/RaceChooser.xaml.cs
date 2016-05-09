@@ -47,15 +47,6 @@ namespace OodHelper
             DateSel.SelectedDate = lr;
         }
 
-        void b_DoWork(object sender, DoWorkEventArgs e)
-        {
-            Db d = new Db("SELECT rid, start_date, event, class, raced " +
-                "FROM calendar " +
-                "WHERE is_race = 1 " +
-                "ORDER BY start_date");
-            cal = d.GetData(null);
-        }
-
         private void SetGridSource()
         {
             CalGrid.ItemsSource = cal.DefaultView;
