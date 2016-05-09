@@ -43,7 +43,7 @@ namespace OodHelper.Results
                 ROUND((r.achieved_handicap - r.open_handicap) * 100.0 / r.open_handicap, 1) [%], r.c C, r.a A,
                 r.handicap_status PY
                 FROM boats b INNER JOIN races r ON r.bid = b.bid
-                WHERE r.rid = 2
+                WHERE r.rid = @rid
                 AND (finish_date IS NOT NULL OR finish_code IS NOT NULL)
                 ORDER BY place");
             var p = new Hashtable();
