@@ -21,17 +21,15 @@ namespace OodHelper.Maintain
     /// </summary>
     public partial class PeopleList : Window, INotifyPropertyChanged
     {
-        private const int PAGESIZE = 20;
-
         public PeopleList()
         {
-            Owner = App.Current.MainWindow;
+            Owner = Application.Current.MainWindow;
             InitializeComponent();
             SelectMode = false;
             DataContext = this;
-            Width = System.Windows.SystemParameters.VirtualScreenWidth * 0.8;
-            Height = System.Windows.SystemParameters.VirtualScreenHeight * 0.8;
-            WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+            Width = SystemParameters.MaximizedPrimaryScreenWidth * 0.8;
+            Height = SystemParameters.MaximizedPrimaryScreenHeight * 0.8;
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
         public int? Id { get; private set; }

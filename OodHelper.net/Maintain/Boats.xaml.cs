@@ -22,11 +22,11 @@ namespace OodHelper.Maintain
     {
         public Boats()
         {
-            Owner = App.Current.MainWindow;
+            Owner = Application.Current.MainWindow;
             InitializeComponent();
-            Width = System.Windows.SystemParameters.VirtualScreenWidth * 0.8;
-            Height = System.Windows.SystemParameters.VirtualScreenHeight * 0.8;
-            WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+            Width = SystemParameters.MaximizedPrimaryScreenWidth * 0.8;
+            Height = SystemParameters.MaximizedPrimaryScreenHeight * 0.8;
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
         private void LoadGrid()

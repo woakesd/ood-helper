@@ -32,8 +32,8 @@ namespace OodHelper.Results
         {
             Owner = Application.Current.MainWindow;
             InitializeComponent();
-            Width = SystemParameters.VirtualScreenWidth*0.8;
-            Height = SystemParameters.VirtualScreenHeight*0.8;
+            Width = SystemParameters.MaximizedPrimaryScreenWidth*0.8;
+            Height = SystemParameters.MaximizedPrimaryScreenHeight*0.8;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
             _reds = raceEdits;
