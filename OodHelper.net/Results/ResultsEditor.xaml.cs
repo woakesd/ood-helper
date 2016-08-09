@@ -740,8 +740,8 @@ namespace OodHelper.Results
                            "INNER JOIN calendar_series_join AS cs2 ON cs2.sid = cs1.sid " +
                            "INNER JOIN calendar AS c2 ON c2.rid = cs2.rid AND c1.rid <> c2.rid AND c1.class = c2.class " +
                            "INNER JOIN races AS r ON r.rid = c2.rid " +
-                           "WHERE c1.rid = @rid " +
-                           "AND c1.event = c2.event");
+                           "INNER JOIN series AS s ON s.sid = cs1.sid AND c1.event LIKE s.sname + '%' " +
+                           "WHERE c1.rid = @rid ");
             var p = new Hashtable();
             p["rid"] = Rid;
             _autoPopulateData = c.GetData(p);
