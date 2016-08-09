@@ -34,7 +34,7 @@
         <RemoveFolder Id="ProgramFilesFolder" On="uninstall" />
       </Component>
       <Component Id="MainExecutable" Guid="*">
-        <File Id="OodHelperEXE" Name="OodHeler.exe" Source="$(var.OodHelper.net.TargetPath)" KeyPath="yes" >
+        <File Id="OodHelperEXE" Name="OodHelper.exe" Source="$(var.OodHelper.net.TargetPath)" KeyPath="yes" >
           <Shortcut Id="StartMenuOodHelper" WorkingDirectory="INSTALLFOLDER" Directory="ProgramMenuFolder" Name="OodHelper" Advertise="yes" />
           <Shortcut Id="DesktopOodHelper" WorkingDirectory="INSTALLFOLDER" Directory="DesktopFolder" Name="OodHelper" Advertise="yes" />
         </File>
