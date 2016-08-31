@@ -99,9 +99,9 @@ namespace OodHelper
                         case "RET":
                         case "RTD":
                         case "DSQ":
+                        case "DNE":
                         case "OCS":
                         case "RAF":
-                        case "DNE":
                             seriesEntry.points = seriesEvent.NumberOfRacingEntries + 1;
                             break;
                         case "DNC":
@@ -114,34 +114,33 @@ namespace OodHelper
                     where seriesEvent.Entrants.ContainsKey(bid)
                     select seriesEvent.Entrants[bid]).ToList();
                 events.Sort(new PreAverageComparer());
-                //var entries =
-                double averagePoints = 0;
-                if (events.Any(evnt => evnt.IsAverageScore))
-                {
-                    var total = 0.0;
 
-                    var cnt = 0;
-                    var countable = events.Count - discardCount;
-                    for (var i = 0; i < events.Count; i++)
+                double averagePoints;
+                var total = 0.0;
+
+                var cnt = 0;
+                var countable = events.Count - discardCount;
+                for (var i = 0; i < events.Count; i++)
+                {
+                    if (!events[i].IsAverageScore && i < countable)
                     {
-                        if (!events[i].IsAverageScore && i < countable)
-                        {
-                            total += events[i].Points;
-                            cnt++;
-                        }
-                        if (i >= countable && cnt == 0)
-                        {
-                            total = events[i].Points;
-                            cnt++;
-                        }
+                        total += events[i].Points;
+                        cnt++;
                     }
-                    if (cnt == 0)
-                    {
-                        total = _bids.Count + 1;
-                        cnt = 1;
-                    }
-                    averagePoints = total / cnt;
+                    if (i < countable) continue;
+
+                    events[i].discard = true;
+                    if (cnt != 0) continue;
+
+                    total = events[i].Points;
+                    cnt++;
                 }
+                if (cnt == 0)
+                {
+                    total = _bids.Count + 1;
+                    cnt = 1;
+                }
+                averagePoints = total / cnt;
 
                 //
                 // For each boat loop through the events and add up all non DNC and average score codes.
@@ -197,16 +196,12 @@ namespace OodHelper
             {
                 var boatEntries = boatResults[bid];
                 var bsr = _resultsLookUp[bid];
-                bsr.PerformanceSortedPoints = new List<SeriesEntry>(boatEntries.Values);
+                bsr.PerformanceSortedPoints = new List<SeriesEntry>(boatEntries.Values.Where(ent => !ent.Discard));
                 bsr.PerformanceSortedPoints.Sort(new PerformanceComparer());
                 bsr.DateSortedPoints = new List<SeriesEntry>(boatEntries.Values);
                 bsr.DateSortedPoints.Sort(new DateComparer());
-                for (var i = 0; i < bsr.PerformanceSortedPoints.Count - discardCount; i++)
-                    bsr.Net += bsr.PerformanceSortedPoints[i].Points;
-                for (var i = bsr.PerformanceSortedPoints.Count - discardCount;
-                    i < bsr.PerformanceSortedPoints.Count;
-                    i++)
-                    bsr.PerformanceSortedPoints[i].discard = true;
+                foreach (var entry in bsr.PerformanceSortedPoints)
+                    bsr.Net += entry.Points;
             }
 
             Results.Sort(new NettComparer());

@@ -11,6 +11,7 @@ namespace OodHelper.Results
             EnumerableRowCollection<DataRow> query = (from r in Racedata.AsEnumerable()
                 where r.Field<string>("finish_code") != "DNF"
                       && r.Field<string>("finish_code") != "DSQ"
+                      && r.Field<string>("finish_code") != "DNE"
                       && r.Field<DateTime?>("start_date") != null
                       && r.Field<DateTime?>("finish_date") != null
                       &&
