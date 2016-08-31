@@ -1,33 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OodHelper
 {
     public class SeriesEntry
     {
-        public int rid;
         public int bid;
-        public double? points = null;
-        public double? override_points = null;
-        public bool discard = false;
         public string code;
         public DateTime date;
+        public bool discard = false;
+        public double? override_points = null;
+        public double? points = null;
+        public int rid;
 
-        public bool Discard
+        public bool IsAverageScore
         {
             get
             {
-                return discard;
+                switch (code)
+                {
+                    case "OOD":
+                    case "AVG":
+                    case "RSC":
+                        return true;
+                    default:
+                        return false;
+                }
             }
         }
+
+        public bool Discard => discard;
 
         public string CodeDisplay
         {
             get
             {
-                if (code != null && code != string.Empty)
+                if (!string.IsNullOrEmpty(code))
                     return "(" + code + ")";
                 return string.Empty;
             }
@@ -39,12 +46,10 @@ namespace OodHelper
             {
                 if (override_points != null && override_points != 0.0)
                     return override_points.Value;
-                else if (points.HasValue)
+                if (points.HasValue)
                     return points.Value;
-                else
-                    return Double.NaN;
+                return double.NaN;
             }
         }
     }
-
 }

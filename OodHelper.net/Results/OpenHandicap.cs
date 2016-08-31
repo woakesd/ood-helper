@@ -10,10 +10,9 @@ namespace OodHelper.Results
 {
     internal class OpenHandicap : IRaceScore
     {
+        private BackgroundWorker _back;
         protected DataTable Racedata;
         protected Db Racedb;
-
-        private BackgroundWorker _back;
         public CalendarModel.RaceTypes RaceType { get; private set; }
         public int Rid { get; private set; }
 
@@ -40,8 +39,7 @@ namespace OodHelper.Results
             try
             {
                 Rid = r;
-                var p = new Hashtable();
-                p["rid"] = Rid;
+                var p = new Hashtable {["rid"] = Rid};
 
                 var c =
                     new Db(
@@ -56,13 +54,10 @@ namespace OodHelper.Results
                 WHEN 'F' THEN time_limit_fixed
                 WHEN 'D' THEN DATEADD(SECOND, time_limit_delta, c.start_date)
                 END, extension");
-                Hashtable res = c.GetHashtable(p);
+                var res = c.GetHashtable(p);
 
                 CalendarModel.RaceTypes racetype;
-                if (Enum.TryParse(res["racetype"].ToString(), out racetype))
-                    RaceType = racetype;
-                else
-                    RaceType = CalendarModel.RaceTypes.Undefined;
+                RaceType = Enum.TryParse(res["racetype"].ToString(), out racetype) ? racetype : CalendarModel.RaceTypes.Undefined;
 
                 var dsct = res["standard_corrected_time"] as double?;
                 StandardCorrectedTime = 0;
@@ -78,34 +73,34 @@ namespace OodHelper.Results
                     Racedb = new Db(@"SELECT * FROM races WHERE rid = @rid");
                     Racedata = Racedb.GetData(p);
 
-                    if (_back != null) _back.ReportProgress(0, "Deleting DNC");
+                    _back?.ReportProgress(0, "Deleting DNC");
                     DeleteDidNotCompete();
 
-                    if (_back != null) _back.ReportProgress(10, "Checking for finishers");
+                    _back?.ReportProgress(10, "Checking for finishers");
                     if (HasFinishers())
                     {
-                        if (_back != null) _back.ReportProgress(20, "Flagging up DNFs");
+                        _back?.ReportProgress(20, "Flagging up DNFs");
                         FlagDidNotFinish();
-                        if (_back != null) _back.ReportProgress(30, "Initialising");
+                        _back?.ReportProgress(30, "Initialising");
                         InitialiseFields();
-                        if (_back != null) _back.ReportProgress(40, "Do corrected time");
+                        _back?.ReportProgress(40, "Do corrected time");
                         CorrectedTime();
-                        if (_back != null) _back.ReportProgress(50, "Calculating SCT");
+                        _back?.ReportProgress(50, "Calculating SCT");
                         CalculateSct();
-                        if (_back != null) _back.ReportProgress(60, "Setting places and points");
+                        _back?.ReportProgress(60, "Setting places and points");
                         Score();
-                        if (_back != null) _back.ReportProgress(70, "Updating rolling handicaps");
+                        _back?.ReportProgress(70, "Updating rolling handicaps");
                         UpdateHandicaps();
-                        if (_back != null) _back.ReportProgress(80, "Commit changes");
+                        _back?.ReportProgress(80, "Commit changes");
                         CommitChanges();
-                        if (_back != null) _back.ReportProgress(90, "Updating calendar");
+                        _back?.ReportProgress(90, "Updating calendar");
 
                         c = new Db(@"UPDATE calendar
                         SET result_calculated = GETDATE(),
                         raced = 1
                         WHERE rid = @rid");
                         c.ExecuteNonQuery(p);
-                        if (_back != null) _back.ReportProgress(100, "Completed");
+                        _back?.ReportProgress(100, "Completed");
                     }
                 }
             }
@@ -119,7 +114,7 @@ namespace OodHelper.Results
 
         private void CommitChanges()
         {
-            bool first = true;
+            var first = true;
             var sql = new StringBuilder("UPDATE races SET ");
             foreach (DataColumn c in Racedata.Columns)
             {
@@ -156,7 +151,7 @@ namespace OodHelper.Results
                     TimeLimit = TimeLimit.Value.AddSeconds(Extension.Value);
 
                 foreach (
-                    DataRow r in
+                    var r in
                         (from r in Racedata.AsEnumerable() where r.Field<DateTime?>("finish_date") > TimeLimit select r)
                     )
                 {
@@ -176,7 +171,7 @@ namespace OodHelper.Results
             //
             // update all boats setting elapsed, corrected, stdcorr, place and pts.
             //
-            foreach (DataRow r in (from r in Racedata.AsEnumerable() select r))
+            foreach (var r in (from r in Racedata.AsEnumerable() select r))
             {
                 r["elapsed"] = DBNull.Value;
                 r["corrected"] = DBNull.Value;
@@ -185,9 +180,11 @@ namespace OodHelper.Results
                 r["points"] = DBNull.Value;
                 if (r["rolling_handicap"] == DBNull.Value)
                 {
-                    var p = new Hashtable();
-                    p["bid"] = r["bid"];
-                    p["rid"] = Rid;
+                    var p = new Hashtable
+                    {
+                        ["bid"] = r["bid"],
+                        ["rid"] = Rid
+                    };
                     var hc = new Db(@"SELECT r3.new_rolling_handicap
                         FROM races r1
                         INNER JOIN races r2 ON r2.bid = r1.bid AND r2.start_date < r1.start_date
@@ -200,9 +197,9 @@ namespace OodHelper.Results
                         nrh = (int) r["open_handicap"];
                     r["rolling_handicap"] = nrh.Value;
                 }
-                var newhc = (int)r["rolling_handicap"];
-                if (r["restricted_sail"] != DBNull.Value && (bool)r["restricted_sail"])
-                    newhc = (int)Math.Round(newhc / 1.04);
+                var newhc = (int) r["rolling_handicap"];
+                if (r["restricted_sail"] != DBNull.Value && (bool) r["restricted_sail"])
+                    newhc = (int) Math.Round(newhc/1.04);
 
                 r["new_rolling_handicap"] = newhc;
                 r["achieved_handicap"] = r["rolling_handicap"];
@@ -224,8 +221,7 @@ namespace OodHelper.Results
         private void DeleteDidNotCompete()
         {
             var c = new Db("DELETE FROM races WHERE rid = @rid AND finish_code IN ('DNC', 'BAD')");
-            var p = new Hashtable();
-            p["rid"] = Rid;
+            var p = new Hashtable {["rid"] = Rid};
             c.ExecuteNonQuery(p);
         }
 
@@ -324,7 +320,7 @@ namespace OodHelper.Results
             // Club numbers (handicaps).  These will be called good boats in the comments.
             //
 
-            OrderedEnumerableRowCollection<DataRow> query = from r in Racedata.AsEnumerable()
+            var query = from r in Racedata.AsEnumerable()
                 where r.Field<int?>("place") == 0
                       && r.Field<string>("handicap_status") != "TN"
                 orderby r.Field<double?>("standard_corrected")
@@ -334,7 +330,7 @@ namespace OodHelper.Results
             // if we have fewer than 2 good boats there is no
             // corrected time.
             //
-            int qual = query.Count();
+            var qual = query.Count();
             if (qual < 2)
             {
                 StandardCorrectedTime = 0;
@@ -348,29 +344,29 @@ namespace OodHelper.Results
                 double total = 0;
                 var n = (int) Math.Round(qual*0.67);
 
-                for (int i = 0; i < n; i++)
+                for (var i = 0; i < n; i++)
                 {
                     total = total + query.ElementAt(i).Field<double?>("standard_corrected").Value;
                     //total = total + (double) UpdateUIDelegate.Rows[_interim]["standard_corrected"];
                 }
 
-                double averageCorrectedTime = total/n;
+                var averageCorrectedTime = total/n;
 
                 //
                 // The average slow limit is the average corrected time + 5%.
                 //
-                double avgSlowLimit = averageCorrectedTime*1.05;
+                var avgSlowLimit = averageCorrectedTime*1.05;
 
                 //
                 // Next count the number of good boats that beat the slow time.
                 // Also sum their standard corrected times.
                 //
-                int goodBoats = 0;
+                var goodBoats = 0;
                 StandardCorrectedTime = 0;
-                DataRow[] rows = query.ToArray();
-                for (int i = 0; i < rows.Count(); i++)
+                var rows = query.ToArray();
+                for (var i = 0; i < rows.Length; i++)
                 {
-                    DataRow row = rows.ElementAt(i);
+                    var row = rows.ElementAt(i);
                     if (((double) row["standard_corrected"]) < avgSlowLimit)
                     {
                         row["a"] = DBNull.Value;
@@ -405,9 +401,11 @@ namespace OodHelper.Results
                     FastLimit = 0;
                 }
             }
-            var param = new Hashtable();
-            param["rid"] = Rid;
-            param["sct"] = StandardCorrectedTime;
+            var param = new Hashtable
+            {
+                ["rid"] = Rid,
+                ["sct"] = StandardCorrectedTime
+            };
 
             var up = new Db(@"UPDATE calendar SET standard_corrected_time = @sct, raced = 1 WHERE rid = @rid");
             up.ExecuteNonQuery(param);
@@ -422,12 +420,12 @@ namespace OodHelper.Results
             //
             // First give everyone a placing.
             //
-            DataRow[] query = (from r in Racedata.AsEnumerable()
+            var query = (from r in Racedata.AsEnumerable()
                 where r.Field<int?>("place") == 0
                 orderby r.Field<double?>("corrected")
-                select r).ToArray<DataRow>();
+                select r).ToArray();
 
-            for (int i = 0; i < query.Count(); i++)
+            for (var i = 0; i < query.Length; i++)
             {
                 //
                 // NB tied boats are given the same place, so if two boats are tied in 3rd
@@ -450,9 +448,9 @@ namespace OodHelper.Results
                         //
                         query.ElementAt(i)["place"] = query.ElementAt(i - 1)["place"];
                     else
-                        //
-                        // Not tied so assign place.
-                        //
+                    //
+                    // Not tied so assign place.
+                    //
                         query.ElementAt(i)["place"] = i + 1;
                 }
             }
@@ -464,10 +462,10 @@ namespace OodHelper.Results
             //
             // If 3 boats tie in 3rd the points are the average of 3, 4 and 5 which is 4, and so on.
             //
-            int j = 0;
-            while (j < query.Count())
+            var j = 0;
+            while (j < query.Length)
             {
-                int k = j + 1;
+                var k = j + 1;
                 double psum = k;
                 while (k < query.Count())
                 {
@@ -477,8 +475,8 @@ namespace OodHelper.Results
                     psum = psum + k;
                 }
 
-                double avg = Math.Round(psum/(k - j), 2);
-                for (int l = j; l < k; l++)
+                var avg = Math.Round(psum/(k - j), 2);
+                for (var l = j; l < k; l++)
                     query.ElementAt(l)["points"] = avg;
                 j = k;
             }
@@ -501,9 +499,9 @@ namespace OodHelper.Results
                     // Initially assume that achieved and new handicap are the current rolling handicap
                     //
                     dr["achieved_handicap"] = dr["open_handicap"];
-                    var oldhc = (int)dr["rolling_handicap"];
-                    if (dr["restricted_sail"] != DBNull.Value && (bool)dr["restricted_sail"])
-                        dr["new_rolling_handicap"] = (int)Math.Round(oldhc / 1.04);
+                    var oldhc = (int) dr["rolling_handicap"];
+                    if (dr["restricted_sail"] != DBNull.Value && (bool) dr["restricted_sail"])
+                        dr["new_rolling_handicap"] = (int) Math.Round(oldhc/1.04);
                     else
                         dr["new_rolling_handicap"] = oldhc;
 
@@ -544,11 +542,15 @@ namespace OodHelper.Results
                         // handicap to change (if it would change).
                         //
 
-                        var param = new Hashtable();
-                        param["bid"] = dr["bid"];
-                        param["rid"] = Rid;
-                        param["bstart"] = dr["start_date"];
-                        var sl = new Db(@"SELECT TOP(1) CONVERT(FLOAT,(achieved_handicap - open_handicap))/open_handicap * 100
+                        var param = new Hashtable
+                        {
+                            ["bid"] = dr["bid"],
+                            ["rid"] = Rid,
+                            ["bstart"] = dr["start_date"]
+                        };
+                        var sl =
+                            new Db(
+                                @"SELECT TOP(1) CONVERT(FLOAT,(achieved_handicap - open_handicap))/open_handicap * 100
                             FROM races INNER JOIN calendar ON races.rid = calendar.rid
                             WHERE bid = @bid
                             AND races.rid != @rid
@@ -556,7 +558,7 @@ namespace OodHelper.Results
                             AND standard_corrected_time <> 0
                             AND races.start_date <= @bstart
                             ORDER BY races.start_date DESC");
-                        DataTable slow = sl.GetData(param);
+                        var slow = sl.GetData(param);
 
                         if (slow.Rows.Count >= 1)
                         {
@@ -590,7 +592,7 @@ namespace OodHelper.Results
                         // this calculation.  This is how we avoid letting the rolling handicap
                         // go outside the 5% band.
                         //
-                        int working = achhc;
+                        var working = achhc;
                         if (achhc > (int) dr["open_handicap"]*1.05)
                             working = (int) Math.Round(1.05*(int) dr["open_handicap"], 0);
                         if (achhc < (int) dr["open_handicap"]*0.95)
@@ -606,8 +608,8 @@ namespace OodHelper.Results
                         //
                         // if rectricted sail was used then new handicap needs to be adjusted to remove the 4% increase
                         //
-                        if (dr["restricted_sail"] != DBNull.Value && (bool)dr["restricted_sail"])
-                            newhc = (int)Math.Round(newhc / 1.04);
+                        if (dr["restricted_sail"] != DBNull.Value && (bool) dr["restricted_sail"])
+                            newhc = (int) Math.Round(newhc/1.04);
                         //
                         // And keep it if it's inside the band.
                         //
@@ -630,7 +632,7 @@ namespace OodHelper.Results
                     AND r2.start_date > r1.start_date)");
 
             p["rid"] = Rid;
-            foreach (DataRow dr in query)
+            foreach (var dr in query)
             {
                 p["new_rolling_handicap"] = dr["new_rolling_handicap"];
                 p["bid"] = dr["bid"];
