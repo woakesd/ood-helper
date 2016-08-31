@@ -200,7 +200,11 @@ namespace OodHelper.Results
                         nrh = (int) r["open_handicap"];
                     r["rolling_handicap"] = nrh.Value;
                 }
-                r["new_rolling_handicap"] = r["rolling_handicap"];
+                var newhc = (int)r["rolling_handicap"];
+                if (r["restricted_sail"] != DBNull.Value && (bool)r["restricted_sail"])
+                    newhc = (int)Math.Round(newhc / 1.04);
+
+                r["new_rolling_handicap"] = newhc;
                 r["achieved_handicap"] = r["rolling_handicap"];
                 r["performance_index"] = DBNull.Value;
                 r["c"] = DBNull.Value;
@@ -497,7 +501,11 @@ namespace OodHelper.Results
                     // Initially assume that achieved and new handicap are the current rolling handicap
                     //
                     dr["achieved_handicap"] = dr["open_handicap"];
-                    dr["new_rolling_handicap"] = dr["rolling_handicap"];
+                    var oldhc = (int)dr["rolling_handicap"];
+                    if (dr["restricted_sail"] != DBNull.Value && (bool)dr["restricted_sail"])
+                        dr["new_rolling_handicap"] = (int)Math.Round(oldhc / 1.04);
+                    else
+                        dr["new_rolling_handicap"] = oldhc;
 
                     //
                     // we have a a standard corrected time for the race so we use this to work out
