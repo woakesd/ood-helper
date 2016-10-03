@@ -57,18 +57,17 @@ namespace OodHelper.Maintain
             //
             VisualHelper.UpdateTextBoxSources(this);
 
-            BoatModel dc = DataContext as BoatModel;
-            if (dc != null)
+            var dc = DataContext as BoatModel;
+            if (dc == null) return;
+
+            string msg;
+            if ((msg = dc.CommitChanges()) == string.Empty)
             {
-                string msg;
-                if ((msg = dc.CommitChanges()) == string.Empty)
-                {
-                    DialogResult = true;
-                    Close();
-                }
-                else
-                    MessageBox.Show(msg, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                DialogResult = true;
+                Close();
             }
+            else
+                MessageBox.Show(msg, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

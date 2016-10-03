@@ -17,9 +17,8 @@ namespace OodHelper.Maintain
                 "rolling_handicap, small_cat_handicap_rating, engine_propeller, keel, deviations, boatmemo " +
                 "FROM boats " +
                 "WHERE bid = @bid");
-            Hashtable p = new Hashtable();
-            p["bid"] = b;
-            DataTable d = get.GetData(p);
+            var p = new Hashtable {["bid"] = b};
+            var d = get.GetData(p);
             Values = new Hashtable();
             if (d.Rows.Count > 0)
                 foreach (DataColumn c in d.Columns)
@@ -188,19 +187,16 @@ namespace OodHelper.Maintain
         {
             get
             {
-                if (Id.HasValue)
+                if (!Id.HasValue) return string.Empty;
+
+                var c = new Db("SELECT firstname, surname " +
+                               "FROM people " +
+                               "WHERE id = @id");
+                var p = new Hashtable {["id"] = Id.Value};
+                var owner = c.GetHashtable(p);
+                if (owner.Count > 0)
                 {
-                    Db c = new Db("SELECT firstname, surname " +
-                        "FROM people " +
-                        "WHERE id = @id");
-                    Hashtable p = new Hashtable();
-                    p["id"] = Id.Value;
-                    Hashtable owner = c.GetHashtable(p);
-                    if (owner.Count > 0)
-                    {
-                        return string.Format("{0} {1}", new object[] { owner["firstname"], owner["surname"] });
-                    }
-                    return string.Empty;
+                    return string.Format("{0} {1}", new object[] { owner["firstname"], owner["surname"] });
                 }
                 return string.Empty;
             }
@@ -273,9 +269,11 @@ namespace OodHelper.Maintain
 
         public string CommitChanges()
         {
-            StringBuilder errors = new StringBuilder(string.Empty);
+            var errors = new StringBuilder(string.Empty);
             if (BoatName.Trim() == string.Empty)
                 errors.Append("Boat name required\n");
+            ValidateRequiredInteger(OpenHandicap, "Open handicap", errors);
+            ValidateRequiredInteger(RollingHandicap, "Rolling handicap", errors);
 
             if (errors.ToString() == string.Empty)
             {
@@ -313,6 +311,15 @@ namespace OodHelper.Maintain
             }
             else
                 return errors.ToString();
+        }
+
+        private static void ValidateRequiredInteger(string value, string valueName, StringBuilder errors)
+        {
+            int tmp;
+            if (string.IsNullOrWhiteSpace(value))
+                errors.Append($"{valueName} must be entered");
+            else if (!int.TryParse(value, out tmp))
+                errors.Append($"{valueName} must be integer value");
         }
     }
 }

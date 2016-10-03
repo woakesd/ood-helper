@@ -23,12 +23,11 @@ namespace OodHelper
         {
             Assembly ass = Assembly.GetAssembly(typeof (App));
             AssemblyName an = ass.GetName();
-            DatabaseFolder = string.Format(@"{0}\{1}\data",
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), an.Name);
+            DatabaseFolder =
+                $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\{an.Name}\data";
 
-            DataFileName = string.Format(@"{0}\{1}.mdf", DatabaseFolder, DatabaseName);
-            DatabaseConstr = string.Format(
-                @"Data Source=(LocalDB)\v11.0;Initial Catalog={0};Integrated Security=True;", DatabaseName);
+            DataFileName = $@"{DatabaseFolder}\{DatabaseName}.mdf";
+            DatabaseConstr = $@"Data Source=(LocalDB)\v11.0;Initial Catalog={DatabaseName};Integrated Security=True;";
         }
 
         public Db(string sqlCommand) : this()
@@ -45,7 +44,7 @@ namespace OodHelper
             }
         }
 
-        public static string DatabaseConstr { get; private set; }
+        public static string DatabaseConstr { get; }
 
         public string Sql
         {
@@ -58,15 +57,12 @@ namespace OodHelper
             get { return _cmd.CommandText; }
         }
 
-        public IDbConnection Connection
-        {
-            get { return _con; }
-        }
+        public IDbConnection Connection => _con;
 
         public void Dispose()
         {
-            if (_cmd != null) _cmd.Dispose();
-            if (_con != null) _con.Dispose();
+            _cmd?.Dispose();
+            _con?.Dispose();
         }
 
         public static void SetSingleUser(string dbName)
@@ -77,10 +73,9 @@ namespace OodHelper
                 {
                     conn.Open();
                     SqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = string.Format("ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE",
-                        dbName);
+                    cmd.CommandText = $"ALTER DATABASE [{dbName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE";
                     cmd.ExecuteNonQuery();
-                    cmd.CommandText = string.Format("ALTER DATABASE [{0}] SET SINGLE_USER", dbName);
+                    cmd.CommandText = $"ALTER DATABASE [{dbName}] SET SINGLE_USER";
                     cmd.ExecuteNonQuery();
                 }
                 finally
@@ -98,7 +93,7 @@ namespace OodHelper
                 {
                     conn.Open();
                     var cmd = conn.CreateCommand();
-                    cmd.CommandText = string.Format("ALTER DATABASE [{0}] SET MULTI_USER", dbName);
+                    cmd.CommandText = $"ALTER DATABASE [{dbName}] SET MULTI_USER";
                     cmd.ExecuteNonQuery();
                 }
                 finally
@@ -532,7 +527,7 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
             _con.Open();
             try
             {
-                SqlCommand cmd = _con.CreateCommand();
+                var cmd = _con.CreateCommand();
                 cmd.CommandText = @"SELECT IDENT_CURRENT(@table)";
                 cmd.Parameters.AddWithValue("table", table);
 
@@ -563,9 +558,11 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
                 var s = new Db("SELECT MAX(" + ident + ") " +
                                "FROM " + tname + " " +
                                "WHERE " + ident + " BETWEEN @b AND @_task");
-                var p = new Hashtable();
-                p["b"] = b;
-                p["_task"] = t;
+                var p = new Hashtable
+                {
+                    ["b"] = b,
+                    ["_task"] = t
+                };
                 object o;
                 int seedvalue;
                 if ((o = s.GetScalar(p)) != DBNull.Value)
@@ -576,7 +573,7 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
                 {
                     seedvalue = b;
                 }
-                s = new Db(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1})", tname, seedvalue));
+                s = new Db($"DBCC CHECKIDENT ({tname}, RESEED, {seedvalue})");
                 s.ExecuteNonQuery(null);
             }
         }
@@ -595,7 +592,7 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
             {
                 seedvalue = 1;
             }
-            s = new Db(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1})", tname, seedvalue));
+            s = new Db($"DBCC CHECKIDENT ({tname}, RESEED, {seedvalue})");
             s.ExecuteNonQuery(null);
         }
     }
