@@ -16,6 +16,9 @@
                     <ComboBoxItem Tag="2013" Content="2013"/>
                     <ComboBoxItem Tag="2014" Content="2014"/>
                     <ComboBoxItem Tag="2015" Content="2015"/>
+                    <ComboBoxItem Tag="2016" Content="2016"/>
+                    <ComboBoxItem Tag="2017" Content="2017"/>
+                    <ComboBoxItem Tag="2018" Content="2018"/>
                 </ComboBox>
                 <Button Name="UploadSun" Click="UploadSun_Click">
                     <Button.BorderBrush>
