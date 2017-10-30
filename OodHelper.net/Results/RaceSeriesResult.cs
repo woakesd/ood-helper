@@ -99,7 +99,7 @@ namespace OodHelper.Results
                     SeriesEntry se = new SeriesEntry();
                     se.bid = (int)re["bid"];
                     se.rid = Event.Rid;
-                    se.code = re["finish_code"].ToString().ToUpper();
+                    se.code = re["finish_code"].ToString().ToUpper().Trim();
                     se.date = (DateTime)re["start_date"];
                     if (re["points"] != DBNull.Value)
                         se.points = (double)re["points"];
