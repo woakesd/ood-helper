@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -171,7 +172,7 @@ namespace OodHelper
                 //
                 foreach (var entry in SeriesData.Values.Select(seriesEvent => seriesEvent.Entrants[bid]).Where(seriesEntry => seriesEntry.IsAverageScore))
                 {
-                    entry.points = averagePoints;
+                    entry.points = averagePoints is double.NaN ? _bids.Count + 1 : averagePoints;
                 }
             }
 
@@ -220,30 +221,37 @@ namespace OodHelper
 
         private void SaveResults()
         {
-            var p = new Hashtable
+            try
             {
-                ["sid"] = Sid,
-                ["division"] = Division
-            };
-            using (var c = new Db(@"DELETE FROM series_results
+                var p = new Hashtable
+                {
+                    ["sid"] = Sid,
+                    ["division"] = Division
+                };
+                using (var c = new Db(@"DELETE FROM series_results
                 WHERE [sid] = @sid
                 AND [division] = @division"))
-            {
-                c.ExecuteNonQuery(p);
-            }
-            using (var c = new Db(@"INSERT INTO series_results
-                ([sid], [bid], [division], [entered], [gross], [nett], [place])
-                VALUES (@sid, @bid, @division, @entered, @gross, @nett, @place)"))
-            {
-                foreach (var bsr in Results)
                 {
-                    p["bid"] = bsr.Bid;
-                    p["entered"] = bsr.Count;
-                    p["gross"] = bsr.Total;
-                    p["nett"] = bsr.Net;
-                    p["place"] = bsr.Place;
                     c.ExecuteNonQuery(p);
                 }
+                using (var c = new Db(@"INSERT INTO series_results
+                ([sid], [bid], [division], [entered], [gross], [nett], [place])
+                VALUES (@sid, @bid, @division, @entered, @gross, @nett, @place)"))
+                {
+                    foreach (var bsr in Results)
+                    {
+                        p["bid"] = bsr.Bid;
+                        p["entered"] = bsr.Count;
+                        p["gross"] = bsr.Total;
+                        p["nett"] = bsr.Net;
+                        p["place"] = bsr.Place;
+                        c.ExecuteNonQuery(p);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ErrorLogger.LogException(e);
             }
         }
 
