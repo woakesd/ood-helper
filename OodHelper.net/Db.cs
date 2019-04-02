@@ -557,11 +557,11 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
             {
                 var s = new Db("SELECT MAX(" + ident + ") " +
                                "FROM " + tname + " " +
-                               "WHERE " + ident + " BETWEEN @b AND @_task");
+                               "WHERE " + ident + " BETWEEN @b AND @t");
                 var p = new Hashtable
                 {
                     ["b"] = b,
-                    ["_task"] = t
+                    ["t"] = t
                 };
                 object o;
                 int seedvalue;

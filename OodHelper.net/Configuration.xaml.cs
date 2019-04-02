@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using MySql.Data.MySqlClient;
-using MySql.Data.MySqlClient.Properties;
 
 namespace OodHelper
 {
@@ -30,6 +19,11 @@ namespace OodHelper
             //
             BottomSeed.Text = Settings.BottomSeed.ToString();
             TopSeed.Text= Settings.TopSeed.ToString();
+
+            //
+            // Get rolling handicap coefficient
+            //
+            RHCoefficient.Text = Settings.RHCoefficieent.ToString();
 
             //
             // init mysql connection values
@@ -99,6 +93,10 @@ namespace OodHelper
                 Settings.TopSeed = t;
 
             Db.ReseedDatabase();
+
+            double _rhc = 0;
+            if (Double.TryParse(RHCoefficient.Text, out _rhc))
+                Settings.RHCoefficieent = _rhc;
 
             Settings.DefaultDiscardProfile = DefaultDiscardProfile.Text;
 

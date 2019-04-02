@@ -3,7 +3,7 @@
   <Product Id="*" 
            Name="OodHelper" 
            Language="1033" 
-           Version="1.0.37.0" 
+           Version="1.0.38.0" 
            Manufacturer="David Woakes" 
            UpgradeCode="{586CAE3C-1E00-4522-ABD5-DFEAE4C5DA54}">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
@@ -41,6 +41,15 @@
       </Component>
       <Component Id="MySqlDataDLL" Guid="*">
         <File Id="MySqlDataDLL" Name="mysql.data.dll" Source="$(var.OodHelper.net.TargetDir)\mysql.data.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="GoogleProtobuf" Guid="*">
+        <File Id="GoogleProtobuf" Name="Google.Protobuf.dll" Source="$(var.OodHelper.net.TargetDir)\Google.Protobuf.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="PresentationUIDLL" Guid="*">
+        <File Id="PresentationUIDLL" Name="PresentationUI.dll" Source="$(var.OodHelper.net.TargetDir)\PresentationUI.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="RestSharpDLL" Guid="*">
+        <File Id="RestSharpDLL" Name="RestSharp.dll" Source="$(var.OodHelper.net.TargetDir)\RestSharp.dll" KeyPath="yes" />
       </Component>
     </ComponentGroup>
   </Fragment>

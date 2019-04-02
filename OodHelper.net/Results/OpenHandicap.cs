@@ -604,7 +604,7 @@ namespace OodHelper.Results
                         //
                         var newhc =
                             (int)
-                                Math.Round((int) dr["rolling_handicap"] + (working - (int) dr["rolling_handicap"])*0.15);
+                                Math.Round((int) dr["rolling_handicap"] + (working - (int) dr["rolling_handicap"]) * Settings.RHCoefficieent);
 
                         //
                         // if rectricted sail was used then new handicap needs to be adjusted to remove the 4% increase
