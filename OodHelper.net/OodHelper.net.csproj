@@ -1,65 +1,22 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ApplicationIcon />
     <OutputType>WinExe</OutputType>
-    <StartupObject />
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="4.0.0" />
+    <PackageReference Include="MySql.Data" Version="8.0.27" />
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
-    <PackageReference Include="MySql.Data" Version="6.10.4" />
-    <PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml" Version="4.7.0" />
-  </ItemGroup>
-
-  <ItemGroup Label="PortingInfo"><!-- DO NOT REMOVE WHILE PORTING
-  C:\Users\david\.nuget\packages\bouncycastle\1.8.9\lib\BouncyCastle.Crypto.dll
-  C:\Users\david\.nuget\packages\google.protobuf\3.19.1\lib\net45\Google.Protobuf.dll
-  C:\Users\david\.nuget\packages\k4os.compression.lz4\1.2.16\lib\net46\K4os.Compression.LZ4.dll
-  C:\Users\david\.nuget\packages\k4os.compression.lz4.streams\1.2.16\lib\net46\K4os.Compression.LZ4.Streams.dll
-  C:\Users\david\.nuget\packages\k4os.hash.xxhash\1.0.7\lib\net46\K4os.Hash.xxHash.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Microsoft.CSharp.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\mscorlib.dll
-  C:\Users\david\.nuget\packages\mysql.data\8.0.27\lib\net48\MySql.Data.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\PresentationCore.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\PresentationFramework.Aero.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\PresentationFramework.dll
-  C:\Windows\Microsoft.NET\Framework\v4.0.30319\WPF\PresentationUI.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\ReachFramework.dll
-  C:\Users\david\.nuget\packages\system.buffers\4.5.1\ref\net45\System.Buffers.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.ComponentModel.DataAnnotations.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\Facades\System.ComponentModel.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Configuration.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Configuration.Install.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Core.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Data.DataSetExtensions.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Data.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Data.Linq.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Deployment.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Drawing.Design.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Drawing.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Management.dll
-  C:\Users\david\.nuget\packages\system.memory\4.5.4\lib\net461\System.Memory.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Net.Http.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Net.Http.WebRequest.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Numerics.dll
-  C:\Users\david\.nuget\packages\system.numerics.vectors\4.5.0\ref\net46\System.Numerics.Vectors.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Printing.dll
-  C:\Users\david\.nuget\packages\system.runtime.compilerservices.unsafe\6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Runtime.Serialization.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Transactions.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Web.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Windows.Forms.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Xaml.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Xml.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Xml.Linq.dll
-  C:\Users\david\.nuget\packages\mysql.data\8.0.27\lib\net48\Ubiety.Dns.Core.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\UIAutomationProvider.dll
-  C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\WindowsBase.dll
-  C:\Users\david\.nuget\packages\mysql.data\8.0.27\lib\net48\ZstdNet.dll
-  -->
-  
     <PackageReference Include="System.Windows.Extensions" Version="6.0.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Membership\" />
+    <Folder Include="Results\Membership\" />
+  </ItemGroup>
+
 </Project>

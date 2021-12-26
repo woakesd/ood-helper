@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Threading.Tasks;
 
 namespace OodHelper.Maintain
 {
@@ -324,7 +316,7 @@ ORDER BY surname, firstname");
 
         private void SelectButton_Click(object sender, RoutedEventArgs e)
         {
-            DataRowView rv = PeopleData.SelectedItem as DataRowView;
+            DataRowView? rv = PeopleData.SelectedItem as DataRowView;
             if (rv != null)
             {
                 Id = rv.Row["id"] as int?;
