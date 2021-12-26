@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
 using System.Windows;
 using MySql.Data.MySqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace OodHelper.Website
 {
@@ -12,7 +12,6 @@ namespace OodHelper.Website
         protected MySqlConnection Mcon;
         protected SqlConnection Scon;
         protected SqlTransaction Strn;
-
         public MySqlDownload()
         {
             var download = new BackgroundWorker();
@@ -26,14 +25,11 @@ namespace OodHelper.Website
         protected virtual void download_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled)
-                MessageBox.Show("Download Cancelled", "Cancel", MessageBoxButton.OK,
-                    MessageBoxImage.Information);
+                MessageBox.Show("Download Cancelled", "Cancel", MessageBoxButton.OK, MessageBoxImage.Information);
             else if (e.Result is bool && !(bool)e.Result)
-                MessageBox.Show("Download Failed", "Failed", MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                MessageBox.Show("Download Failed", "Failed", MessageBoxButton.OK, MessageBoxImage.Error);
             else
-                MessageBox.Show("Download Complete", "Finished", MessageBoxButton.OK,
-                    MessageBoxImage.Information);
+                MessageBox.Show("Download Complete", "Finished", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         protected void CancelDownload(DoWorkEventArgs e)
@@ -65,19 +61,15 @@ namespace OodHelper.Website
                 var p = sender as BackgroundWorker;
                 if (p == null)
                     return;
-
-                Scon = new SqlConnection {ConnectionString = Db.DatabaseConstr};
+                Scon = new SqlConnection{ConnectionString = Db.DatabaseConstr};
                 Scon.Open();
                 Strn = Scon.BeginTransaction();
-
                 p.ReportProgress(0, "Connecting to website");
-
                 string mysql = Settings.Mysql;
                 var mcsb = new MySqlConnectionStringBuilder(mysql);
                 mysql = mcsb.ConnectionString;
                 Mcon = new MySqlConnection(mysql);
                 Mcon.Open();
-
                 if (p.CancellationPending)
                 {
                     CancelDownload(e);
@@ -85,20 +77,17 @@ namespace OodHelper.Website
                 }
 
                 DoTheWork(sender, e);
-
                 if (!e.Cancel)
                 {
                     Strn.Commit();
                 }
+
                 Strn.Dispose();
                 Scon.Close();
                 Scon.Dispose();
-
                 Db.ReseedDatabase();
-
                 Mcon.Close();
                 Mcon.Dispose();
-
                 p.ReportProgress(100, "All done");
                 e.Result = true;
             }
@@ -116,6 +105,7 @@ namespace OodHelper.Website
                 {
                     ins.Parameters.AddWithValue(rc.ColumnName, rrow[rc.ColumnName]);
                 }
+
                 ins.ExecuteNonQuery();
                 ins.Parameters.Clear();
             }

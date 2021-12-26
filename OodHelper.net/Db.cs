@@ -1,43 +1,38 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Data;
-using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
+using Microsoft.Data.SqlClient;
 
 namespace OodHelper
 {
     internal class Db : IDisposable
     {
-        private const string MasterConnection =
-            @"Data Source=(LocalDB)\v11.0;Initial Catalog=master;Integrated Security=True";
-
+        private const string MasterConnection = @"Data Source=(LocalDB)\v11.0;Initial Catalog=master;Integrated Security=True";
         private const string DatabaseName = "OodHelper";
         private static readonly string DatabaseFolder;
         private static readonly string DataFileName;
         private readonly SqlConnection _con;
         private SqlDataAdapter _adapt;
         private SqlCommand _cmd;
-
         static Db()
         {
-            Assembly ass = Assembly.GetAssembly(typeof (App));
+            Assembly ass = Assembly.GetAssembly(typeof(App));
             AssemblyName an = ass.GetName();
-            DatabaseFolder =
-                $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\{an.Name}\data";
-
+            DatabaseFolder = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\{an.Name}\data";
             DataFileName = $@"{DatabaseFolder}\{DatabaseName}.mdf";
             DatabaseConstr = $@"Data Source=(LocalDB)\v11.0;Initial Catalog={DatabaseName};Integrated Security=True;";
         }
 
-        public Db(string sqlCommand) : this()
+        public Db(string sqlCommand): this()
         {
             Sql = sqlCommand;
         }
 
         public Db()
         {
-            _con = new SqlConnection {ConnectionString = DatabaseConstr};
+            _con = new SqlConnection{ConnectionString = DatabaseConstr};
             if (!File.Exists(DataFileName))
             {
                 CreateDb();
@@ -54,11 +49,13 @@ namespace OodHelper
                 _cmd.CommandText = value;
             }
 
-            get { return _cmd.CommandText; }
+            get
+            {
+                return _cmd.CommandText;
+            }
         }
 
         public IDbConnection Connection => _con;
-
         public void Dispose()
         {
             _cmd?.Dispose();
@@ -109,16 +106,14 @@ namespace OodHelper
             {
                 conn.Open();
                 SqlCommand cmd = conn.CreateCommand();
-
                 cmd.CommandText = string.Format("IF DB_ID('{0}') IS NOT NULL DROP DATABASE [{0}]", dbName);
                 cmd.ExecuteNonQuery();
-
-                cmd.CommandText = string.Format("CREATE DATABASE [{0}] ON (NAME = N'{0}', FILENAME = '{1}')", dbName,
-                    dbFileName);
+                cmd.CommandText = string.Format("CREATE DATABASE [{0}] ON (NAME = N'{0}', FILENAME = '{1}')", dbName, dbFileName);
                 cmd.ExecuteNonQuery();
             }
 
-            if (File.Exists(dbFileName)) return true;
+            if (File.Exists(dbFileName))
+                return true;
             return false;
         }
 
@@ -130,8 +125,7 @@ namespace OodHelper
                 {
                     connection.Open();
                     SqlCommand cmd = connection.CreateCommand();
-                    cmd.CommandText =
-                        String.Format(@"BACKUP DATABASE [{0}] TO  DISK = N'{1}\{0}.bak' WITH NOFORMAT, INIT,  NAME = N'{0}-Full Database Backup', SKIP, NOREWIND, NOUNLOAD;
+                    cmd.CommandText = String.Format(@"BACKUP DATABASE [{0}] TO  DISK = N'{1}\{0}.bak' WITH NOFORMAT, INIT,  NAME = N'{0}-Full Database Backup', SKIP, NOREWIND, NOUNLOAD;
 declare @backupSetId as int
 select @backupSetId = position from msdb..backupset where database_name=N'{0}' and backup_set_id=(select max(backup_set_id) from msdb..backupset where database_name=N'{0}' )
 if @backupSetId is null begin raiserror(N'Verify failed. Backup information for database ''{0}'' not found.', 16, 1) end
@@ -148,10 +142,8 @@ RESTORE VERIFYONLY FROM  DISK = N'{1}\{0}.bak' WITH  FILE = @backupSetId,  NOUNL
         public static void CreateDb()
         {
             string constr = DatabaseConstr;
-
             if (!Directory.Exists(DatabaseFolder))
                 Directory.CreateDirectory(DatabaseFolder);
-
             if (File.Exists(DataFileName))
             {
                 SetSingleUser(DatabaseName);
@@ -159,7 +151,6 @@ RESTORE VERIFYONLY FROM  DISK = N'{1}\{0}.bak' WITH  FILE = @backupSetId,  NOUNL
             }
 
             CreateDatabase(DatabaseName, DataFileName);
-
             var con = new SqlConnection(constr);
             try
             {
@@ -487,6 +478,7 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
                 foreach (DataColumn c in d.Columns)
                     h[c.ColumnName] = d.Rows[0][c];
             }
+
             return h;
         }
 
@@ -519,6 +511,7 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
             {
                 _con.Close();
             }
+
             return t;
         }
 
@@ -530,9 +523,8 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
                 var cmd = _con.CreateCommand();
                 cmd.CommandText = @"SELECT IDENT_CURRENT(@table)";
                 cmd.Parameters.AddWithValue("table", table);
-
-                var nextId = (decimal) cmd.ExecuteScalar();
-                return (int) nextId + 1;
+                var nextId = (decimal)cmd.ExecuteScalar();
+                return (int)nextId + 1;
             }
             finally
             {
@@ -544,7 +536,6 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
         {
             var b = Settings.BottomSeed;
             var t = Settings.TopSeed;
-
             ReseedTable("boats", "bid", b, t);
             ReseedTable("people", "id", b, t);
             ReseedTable("calendar", "rid");
@@ -555,24 +546,19 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
         {
             if (b < t && b != 0 && t != 0)
             {
-                var s = new Db("SELECT MAX(" + ident + ") " +
-                               "FROM " + tname + " " +
-                               "WHERE " + ident + " BETWEEN @b AND @t");
-                var p = new Hashtable
-                {
-                    ["b"] = b,
-                    ["t"] = t
-                };
+                var s = new Db("SELECT MAX(" + ident + ") " + "FROM " + tname + " " + "WHERE " + ident + " BETWEEN @b AND @t");
+                var p = new Hashtable{["b"] = b, ["t"] = t};
                 object o;
                 int seedvalue;
                 if ((o = s.GetScalar(p)) != DBNull.Value)
                 {
-                    seedvalue = ((int) o) + 1;
+                    seedvalue = ((int)o) + 1;
                 }
                 else
                 {
                     seedvalue = b;
                 }
+
                 s = new Db($"DBCC CHECKIDENT ({tname}, RESEED, {seedvalue})");
                 s.ExecuteNonQuery(null);
             }
@@ -580,18 +566,18 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
 
         private static void ReseedTable(string tname, string ident)
         {
-            var s = new Db("SELECT MAX(" + ident + ") " +
-                           "FROM " + tname);
+            var s = new Db("SELECT MAX(" + ident + ") " + "FROM " + tname);
             object o;
             int seedvalue;
             if ((o = s.GetScalar(null)) != DBNull.Value)
             {
-                seedvalue = ((int) o) + 1;
+                seedvalue = ((int)o) + 1;
             }
             else
             {
                 seedvalue = 1;
             }
+
             s = new Db($"DBCC CHECKIDENT ({tname}, RESEED, {seedvalue})");
             s.ExecuteNonQuery(null);
         }

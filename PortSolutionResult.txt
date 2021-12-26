@@ -1,0 +1,451 @@
+==========
+References
+==========
+<global namespace>
+System
+System.Collections
+System.Windows
+System.Windows.Media
+OodHelper
+System.Deployment.Application
+System.Deployment
+System.Reflection
+System.Windows.Controls
+System.Threading
+OodHelper.Behaviors
+System.Windows.Input
+System.Runtime
+System.Runtime.InteropServices
+OodHelper.Helpers
+System.Windows.Data
+System.Collections.Generic
+OodHelper.Maintain
+System.Data
+System.Text
+System.Timers
+System.Windows.Threading
+System.Windows.Controls.Primitives
+OodHelper.Membership
+System.Diagnostics
+OodHelper.Results
+OodHelper.Converters
+System.Text.RegularExpressions
+System.ComponentModel
+OodHelper.Rules
+System.IO
+OodHelper.LoadTide
+System.Globalization
+Microsoft
+MySql
+MySql.Data
+Microsoft.Win32
+OodHelper.Website
+MySql.Data.MySqlClient
+System.Data.Common
+OodHelper.Sun
+OodHelper.ViewModel
+System.Data.SqlClient
+System.Security
+System.Printing
+System.Windows.Xps
+System.Threading.Tasks
+System.Data.OleDb
+System.Linq
+System.Collections.ObjectModel
+System.Windows.Markup
+System.Data.Odbc
+System.Runtime.Serialization
+System.Configuration
+OodHelper.Properties
+System.CodeDom.Compiler
+System.CodeDom
+System.Runtime.CompilerServices
+System.Resources
+System.Diagnostics.CodeAnalysis
+Microsoft.Windows
+System.Windows.Documents
+System.Windows.Media.Imaging
+System.Windows.Navigation
+System.Windows.Shapes
+System.Net
+System.Security.Cryptography
+System.Xml
+System.Runtime.Serialization.Formatters
+System.Windows.Automation
+System.Windows.Ink
+System.Windows.Media.Animation
+System.Windows.Media.Effects
+System.Windows.Media.Media3D
+System.Windows.Media.TextFormatting
+System.Windows.Shell
+Microsoft.Windows.Themes
+project.all
+WebServicesGenerator
+LoadTide
+
+===============
+DownloadedFiles
+===============
+project.all.json
+system.configuration.json
+system.data.sqlclient.json
+
+==============
+ProjectResults
+==============
+----------------------
+Showing results for: C:\Users\david\source\repos\ood-helper\WebServicesGenerator\WebServicesGenerator.csproj
+----------------------
+---------------------------
+Target Versions:
+---------------------------
+net6.0
+---------------------------
+Upgrade packages:
+---------------------------
+MySql.Data,6.8.3->6.10.4
+---------------------------
+Action packages:
+---------------------------
+---------------------------
+Executed Actions for file: Project
+---------------------------
+
+Action Type: Project
+Action Name: ArchiveFiles
+Action Value: BundleConfig.cs,FilterConfig.cs,RouteConfig.cs,WebApiConfig.cs,global.asax.cs,global.asax,AssemblyInfo.cs,packages.config
+Times Run: 1
+Invalid Executions: 0
+
+Action Type: ProjectFile
+Action Name: MigrateProjectFile
+Action Value: 
+Times Run: 1
+Invalid Executions: 0
+
+
+----------------------
+Showing results for: C:\Users\david\source\repos\ood-helper\LoadTide\LoadTide.csproj
+----------------------
+---------------------------
+Target Versions:
+---------------------------
+net6.0
+---------------------------
+Upgrade packages:
+---------------------------
+MySql.Data,6.8.3->6.10.4
+---------------------------
+Action packages:
+---------------------------
+Microsoft.Data.SqlClient,*
+---------------------------
+Executed Actions for file: Project
+---------------------------
+
+Action Type: Project
+Action Name: ArchiveFiles
+Action Value: BundleConfig.cs,FilterConfig.cs,RouteConfig.cs,WebApiConfig.cs,global.asax.cs,global.asax,AssemblyInfo.cs,packages.config
+Times Run: 1
+Invalid Executions: 0
+
+Action Type: ProjectFile
+Action Name: MigrateProjectFile
+Action Value: 
+Times Run: 1
+Invalid Executions: 0
+
+---------------------------
+Executed Actions for file: C:\Users\david\source\repos\ood-helper\LoadTide\Program.cs
+---------------------------
+
+Action Type: Using
+Action Name: AddDirective
+Action Value: Microsoft.Data.SqlClient
+Times Run: 1
+Invalid Executions: 0
+
+Action Type: Using
+Action Name: RemoveDirective
+Action Value: System.Data.SqlClient
+Times Run: 1
+Invalid Executions: 0
+
+
+----------------------
+Showing results for: C:\Users\david\source\repos\ood-helper\OodHelper.net\OodHelper.net.csproj
+----------------------
+---------------------------
+Target Versions:
+---------------------------
+net6.0
+---------------------------
+Upgrade packages:
+---------------------------
+MySql.Data,6.8.3->6.10.4
+---------------------------
+Action packages:
+---------------------------
+Microsoft.Data.SqlClient,*
+---------------------------
+Executed Actions for file: C:\Users\david\source\repos\ood-helper\OodHelper.net\Db.cs
+---------------------------
+
+Action Type: Using
+Action Name: AddDirective
+Action Value: Microsoft.Data.SqlClient
+Times Run: 1
+Invalid Executions: 0
+
+Action Type: Using
+Action Name: RemoveDirective
+Action Value: System.Data.SqlClient
+Times Run: 1
+Invalid Executions: 0
+
+---------------------------
+Executed Actions for file: Project
+---------------------------
+
+Action Type: Project
+Action Name: ArchiveFiles
+Action Value: BundleConfig.cs,FilterConfig.cs,RouteConfig.cs,WebApiConfig.cs,global.asax.cs,global.asax,AssemblyInfo.cs,packages.config
+Times Run: 1
+Invalid Executions: 0
+
+Action Type: ProjectFile
+Action Name: MigrateProjectFile
+Action Value: 
+Times Run: 1
+Invalid Executions: 0
+
+---------------------------
+Executed Actions for file: C:\Users\david\source\repos\ood-helper\OodHelper.net\Website\DownloadResults.cs
+---------------------------
+
+Action Type: Using
+Action Name: AddDirective
+Action Value: Microsoft.Data.SqlClient
+Times Run: 1
+Invalid Executions: 0
+
+Action Type: Using
+Action Name: RemoveDirective
+Action Value: System.Data.SqlClient
+Times Run: 1
+Invalid Executions: 0
+
+---------------------------
+Executed Actions for file: C:\Users\david\source\repos\ood-helper\OodHelper.net\Website\MysqlDownload.cs
+---------------------------
+
+Action Type: Using
+Action Name: AddDirective
+Action Value: Microsoft.Data.SqlClient
+Times Run: 1
+Invalid Executions: 0
+
+Action Type: Using
+Action Name: RemoveDirective
+Action Value: System.Data.SqlClient
+Times Run: 1
+Invalid Executions: 0
+
+---------------------------
+Executed Actions for file: C:\Users\david\source\repos\ood-helper\OodHelper.net\Website\CheckForUpdates.cs
+---------------------------
+
+Action Type: Using
+Action Name: AddDirective
+Action Value: Microsoft.Data.SqlClient
+Times Run: 1
+Invalid Executions: 0
+
+Action Type: Using
+Action Name: RemoveDirective
+Action Value: System.Data.SqlClient
+Times Run: 1
+Invalid Executions: 0
+
+
+----------------------
+Showing results for: C:\Users\david\source\repos\ood-helper\WebServicesGenerator\WebServicesGenerator.csproj
+----------------------
+---------------------------
+Target Versions:
+---------------------------
+net6.0
+---------------------------
+Upgrade packages:
+---------------------------
+MySql.Data,6.8.3->6.10.4
+---------------------------
+Action packages:
+---------------------------
+---------------------------
+Executed Actions for file: Project
+---------------------------
+
+Action Type: Project
+Action Name: ArchiveFiles
+Action Value: BundleConfig.cs,FilterConfig.cs,RouteConfig.cs,WebApiConfig.cs,global.asax.cs,global.asax,AssemblyInfo.cs,packages.config
+Times Run: 1
+Invalid Executions: 0
+
+Action Type: ProjectFile
+Action Name: MigrateProjectFile
+Action Value: 
+Times Run: 1
+Invalid Executions: 0
+
+
+----------------------
+Showing results for: C:\Users\david\source\repos\ood-helper\LoadTide\LoadTide.csproj
+----------------------
+---------------------------
+Target Versions:
+---------------------------
+net6.0
+---------------------------
+Upgrade packages:
+---------------------------
+MySql.Data,6.8.3->6.10.4
+---------------------------
+Action packages:
+---------------------------
+Microsoft.Data.SqlClient,*
+---------------------------
+Executed Actions for file: Project
+---------------------------
+
+Action Type: Project
+Action Name: ArchiveFiles
+Action Value: BundleConfig.cs,FilterConfig.cs,RouteConfig.cs,WebApiConfig.cs,global.asax.cs,global.asax,AssemblyInfo.cs,packages.config
+Times Run: 1
+Invalid Executions: 0
+
+Action Type: ProjectFile
+Action Name: MigrateProjectFile
+Action Value: 
+Times Run: 1
+Invalid Executions: 0
+
+---------------------------
+Executed Actions for file: C:\Users\david\source\repos\ood-helper\LoadTide\Program.cs
+---------------------------
+
+Action Type: Using
+Action Name: AddDirective
+Action Value: Microsoft.Data.SqlClient
+Times Run: 1
+Invalid Executions: 0
+
+Action Type: Using
+Action Name: RemoveDirective
+Action Value: System.Data.SqlClient
+Times Run: 1
+Invalid Executions: 0
+
+
+----------------------
+Showing results for: C:\Users\david\source\repos\ood-helper\OodHelper.net\OodHelper.net.csproj
+----------------------
+---------------------------
+Target Versions:
+---------------------------
+net6.0
+---------------------------
+Upgrade packages:
+---------------------------
+MySql.Data,6.8.3->6.10.4
+---------------------------
+Action packages:
+---------------------------
+Microsoft.Data.SqlClient,*
+---------------------------
+Executed Actions for file: C:\Users\david\source\repos\ood-helper\OodHelper.net\Db.cs
+---------------------------
+
+Action Type: Using
+Action Name: AddDirective
+Action Value: Microsoft.Data.SqlClient
+Times Run: 1
+Invalid Executions: 0
+
+Action Type: Using
+Action Name: RemoveDirective
+Action Value: System.Data.SqlClient
+Times Run: 1
+Invalid Executions: 0
+
+---------------------------
+Executed Actions for file: Project
+---------------------------
+
+Action Type: Project
+Action Name: ArchiveFiles
+Action Value: BundleConfig.cs,FilterConfig.cs,RouteConfig.cs,WebApiConfig.cs,global.asax.cs,global.asax,AssemblyInfo.cs,packages.config
+Times Run: 1
+Invalid Executions: 0
+
+Action Type: ProjectFile
+Action Name: MigrateProjectFile
+Action Value: 
+Times Run: 1
+Invalid Executions: 0
+
+---------------------------
+Executed Actions for file: C:\Users\david\source\repos\ood-helper\OodHelper.net\Website\DownloadResults.cs
+---------------------------
+
+Action Type: Using
+Action Name: AddDirective
+Action Value: Microsoft.Data.SqlClient
+Times Run: 1
+Invalid Executions: 0
+
+Action Type: Using
+Action Name: RemoveDirective
+Action Value: System.Data.SqlClient
+Times Run: 1
+Invalid Executions: 0
+
+---------------------------
+Executed Actions for file: C:\Users\david\source\repos\ood-helper\OodHelper.net\Website\MysqlDownload.cs
+---------------------------
+
+Action Type: Using
+Action Name: AddDirective
+Action Value: Microsoft.Data.SqlClient
+Times Run: 1
+Invalid Executions: 0
+
+Action Type: Using
+Action Name: RemoveDirective
+Action Value: System.Data.SqlClient
+Times Run: 1
+Invalid Executions: 0
+
+---------------------------
+Executed Actions for file: C:\Users\david\source\repos\ood-helper\OodHelper.net\Website\CheckForUpdates.cs
+---------------------------
+
+Action Type: Using
+Action Name: AddDirective
+Action Value: Microsoft.Data.SqlClient
+Times Run: 1
+Invalid Executions: 0
+
+Action Type: Using
+Action Name: RemoveDirective
+Action Value: System.Data.SqlClient
+Times Run: 1
+Invalid Executions: 0
+
+
+
+===========
+BuildErrors
+===========
+
+

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Data;
-using System.Printing;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Xps;
 using OodHelper.LoadTide;
 using OodHelper.Maintain;
 using OodHelper.Membership;
@@ -30,7 +27,7 @@ namespace OodHelper
             DataContext = _data;
         }
 
-        private void Results_Click(object sender, RoutedEventArgs e)
+        private void Results_Click(object sender, ExecutedRoutedEventArgs e)
         {
             var rc = new RaceChooser();
             var val = rc.ShowDialog();
