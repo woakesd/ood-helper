@@ -13,11 +13,11 @@ namespace OodHelper;
 /// <summary>
 ///     Interaction logic for Window1.xaml
 /// </summary>
-public partial class OodHelperWindow
+public partial class MainWindow
 {
     private readonly Data _data = new Data();
 
-    public OodHelperWindow()
+    public MainWindow()
     {
         InitializeComponent();
         DataContext = _data;
