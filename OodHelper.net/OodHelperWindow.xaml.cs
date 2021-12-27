@@ -30,7 +30,7 @@ namespace OodHelper
             DataContext = _data;
         }
 
-        private void Results_Click(object sender, ExecutedRoutedEventArgs e)
+        private void Results_Click(object sender, RoutedEventArgs e)
         {
             var rc = new RaceChooser();
             var val = rc.ShowDialog();

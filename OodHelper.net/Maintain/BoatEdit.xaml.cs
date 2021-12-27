@@ -281,7 +281,7 @@ public partial class BoatEdit : Window
                     "handicap_status, rolling_handicap, small_cat_handicap_rating, " +
                     "engine_propeller, keel, deviations, boatmemo) " +
                     "VALUES (@id, @boatname, @boatclass, @sailno, @dngy, @h, @ohp, @ohstat, @rhp, @schr, @eng, @kl, @deviations, @boatmemo)");
-            dc.Bid = save.GetNextIdentity("boats", "bid");
+            dc.Bid = save.GetNextIdentity("boats");
         }
         else
             save = new Db("UPDATE boats " +
@@ -308,14 +308,14 @@ public partial class BoatEdit : Window
     {
         if (dc.Bid == 0)
         {
-            object o = DbSettings.GetSetting("topseed");
+            object o = Settings.TopSeed;
             if (o != null)
             {
                 int topseed, nextval;
                 topseed = (int)o;
 
                 Db seed = new Db(string.Empty);
-                nextval = seed.GetNextIdentity("boats", "bid");
+                nextval = seed.GetNextIdentity("boats");
 
                 if (nextval > topseed)
                 {
@@ -330,7 +330,7 @@ public partial class BoatEdit : Window
 
     private void SelectPerson_Click(object sender, RoutedEventArgs e)
     {
-        People ppl = new People(true, 0);
+        var ppl = new PeopleList(true, 0);
         if (ppl.ShowDialog() == true)
         {
             if (!dc.Id.HasValue || ppl.Id.HasValue && dc.Id.Value != ppl.Id)
@@ -348,7 +348,7 @@ public partial class BoatEdit : Window
         {
             Hashtable p = new Hashtable();
             p["id"] = cls.Id;
-            HandicapDb hdb = new HandicapDb("SELECT * FROM portsmouth_numbers WHERE id = @id");
+            var hdb = new Db("SELECT * FROM portsmouth_numbers WHERE id = @id");
             Hashtable data = hdb.GetHashtable(p);
 
             boatClass.Text = data["class_name"].ToString();

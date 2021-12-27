@@ -70,7 +70,7 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="_About" Click="About_Click" >
+                <MenuItem Header="_About" Click="AboutOod_Click" >
                     <MenuItem.Icon>
                         <Image Source="/OodHelper;component/Images/Info-16.png" />
                     </MenuItem.Icon>

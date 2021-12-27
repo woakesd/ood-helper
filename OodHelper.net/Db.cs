@@ -5,158 +5,159 @@ using System.IO;
 using System.Reflection;
 using Microsoft.Data.SqlClient;
 
-namespace OodHelper
+namespace OodHelper;
+
+internal class Db : IDisposable
 {
-    internal class Db : IDisposable
+    private const string MasterConnection = @"Data Source=(LocalDB)\v11.0;Initial Catalog=master;Integrated Security=True";
+    private const string DatabaseName = "OodHelper";
+    private static readonly string DatabaseFolder;
+    private static readonly string DataFileName;
+    private readonly SqlConnection _con;
+    private SqlDataAdapter _adapt;
+    private SqlCommand _cmd;
+
+    static Db()
     {
-        private const string MasterConnection = @"Data Source=(LocalDB)\v11.0;Initial Catalog=master;Integrated Security=True";
-        private const string DatabaseName = "OodHelper";
-        private static readonly string DatabaseFolder;
-        private static readonly string DataFileName;
-        private readonly SqlConnection _con;
-        private SqlDataAdapter _adapt;
-        private SqlCommand _cmd;
-        static Db()
+        Assembly? ass = Assembly.GetEntryAssembly();
+        AssemblyName an = ass.GetName();
+        DatabaseFolder = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\{an.Name}\data";
+        DataFileName = $@"{DatabaseFolder}\{DatabaseName}.mdf";
+        DatabaseConstr = $@"Data Source=(LocalDB)\v11.0;Initial Catalog={DatabaseName};Integrated Security=True;";
+    }
+
+    public Db(string sqlCommand) : this()
+    {
+        Sql = sqlCommand;
+    }
+
+    public Db()
+    {
+        _con = new SqlConnection { ConnectionString = DatabaseConstr };
+        if (!File.Exists(DataFileName))
         {
-            Assembly ass = Assembly.GetAssembly(typeof(App));
-            AssemblyName an = ass.GetName();
-            DatabaseFolder = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\{an.Name}\data";
-            DataFileName = $@"{DatabaseFolder}\{DatabaseName}.mdf";
-            DatabaseConstr = $@"Data Source=(LocalDB)\v11.0;Initial Catalog={DatabaseName};Integrated Security=True;";
+            CreateDb();
+        }
+    }
+
+    public static string DatabaseConstr { get; }
+
+    public string Sql
+    {
+        set
+        {
+            _cmd = _con.CreateCommand();
+            _cmd.CommandText = value;
         }
 
-        public Db(string sqlCommand): this()
+        get
         {
-            Sql = sqlCommand;
+            return _cmd.CommandText;
         }
+    }
 
-        public Db()
+    public IDbConnection Connection => _con;
+    public void Dispose()
+    {
+        _cmd?.Dispose();
+        _con?.Dispose();
+    }
+
+    public static void SetSingleUser(string dbName)
+    {
+        using (var conn = new SqlConnection(MasterConnection))
         {
-            _con = new SqlConnection{ConnectionString = DatabaseConstr};
-            if (!File.Exists(DataFileName))
-            {
-                CreateDb();
-            }
-        }
-
-        public static string DatabaseConstr { get; }
-
-        public string Sql
-        {
-            set
-            {
-                _cmd = _con.CreateCommand();
-                _cmd.CommandText = value;
-            }
-
-            get
-            {
-                return _cmd.CommandText;
-            }
-        }
-
-        public IDbConnection Connection => _con;
-        public void Dispose()
-        {
-            _cmd?.Dispose();
-            _con?.Dispose();
-        }
-
-        public static void SetSingleUser(string dbName)
-        {
-            using (var conn = new SqlConnection(MasterConnection))
-            {
-                try
-                {
-                    conn.Open();
-                    SqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = $"ALTER DATABASE [{dbName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE";
-                    cmd.ExecuteNonQuery();
-                    cmd.CommandText = $"ALTER DATABASE [{dbName}] SET SINGLE_USER";
-                    cmd.ExecuteNonQuery();
-                }
-                finally
-                {
-                    conn.Close();
-                }
-            }
-        }
-
-        public static void SetMultiUser(string dbName)
-        {
-            using (var conn = new SqlConnection(MasterConnection))
-            {
-                try
-                {
-                    conn.Open();
-                    var cmd = conn.CreateCommand();
-                    cmd.CommandText = $"ALTER DATABASE [{dbName}] SET MULTI_USER";
-                    cmd.ExecuteNonQuery();
-                }
-                finally
-                {
-                    conn.Close();
-                }
-            }
-        }
-
-        public static bool CreateDatabase(string dbName, string dbFileName)
-        {
-            using (var conn = new SqlConnection(MasterConnection))
+            try
             {
                 conn.Open();
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = string.Format("IF DB_ID('{0}') IS NOT NULL DROP DATABASE [{0}]", dbName);
+                cmd.CommandText = $"ALTER DATABASE [{dbName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE";
                 cmd.ExecuteNonQuery();
-                cmd.CommandText = string.Format("CREATE DATABASE [{0}] ON (NAME = N'{0}', FILENAME = '{1}')", dbName, dbFileName);
+                cmd.CommandText = $"ALTER DATABASE [{dbName}] SET SINGLE_USER";
                 cmd.ExecuteNonQuery();
             }
+            finally
+            {
+                conn.Close();
+            }
+        }
+    }
 
-            if (File.Exists(dbFileName))
-                return true;
-            return false;
+    public static void SetMultiUser(string dbName)
+    {
+        using (var conn = new SqlConnection(MasterConnection))
+        {
+            try
+            {
+                conn.Open();
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = $"ALTER DATABASE [{dbName}] SET MULTI_USER";
+                cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+    }
+
+    public static bool CreateDatabase(string dbName, string dbFileName)
+    {
+        using (var conn = new SqlConnection(MasterConnection))
+        {
+            conn.Open();
+            SqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = string.Format("IF DB_ID('{0}') IS NOT NULL DROP DATABASE [{0}]", dbName);
+            cmd.ExecuteNonQuery();
+            cmd.CommandText = string.Format("CREATE DATABASE [{0}] ON (NAME = N'{0}', FILENAME = '{1}')", dbName, dbFileName);
+            cmd.ExecuteNonQuery();
         }
 
-        public static void BackupDatabase(string dbName, string location)
+        if (File.Exists(dbFileName))
+            return true;
+        return false;
+    }
+
+    public static void BackupDatabase(string dbName, string location)
+    {
+        using (var connection = new SqlConnection(MasterConnection))
         {
-            using (var connection = new SqlConnection(MasterConnection))
+            try
             {
-                try
-                {
-                    connection.Open();
-                    SqlCommand cmd = connection.CreateCommand();
-                    cmd.CommandText = String.Format(@"BACKUP DATABASE [{0}] TO  DISK = N'{1}\{0}.bak' WITH NOFORMAT, INIT,  NAME = N'{0}-Full Database Backup', SKIP, NOREWIND, NOUNLOAD;
+                connection.Open();
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = String.Format(@"BACKUP DATABASE [{0}] TO  DISK = N'{1}\{0}.bak' WITH NOFORMAT, INIT,  NAME = N'{0}-Full Database Backup', SKIP, NOREWIND, NOUNLOAD;
 declare @backupSetId as int
 select @backupSetId = position from msdb..backupset where database_name=N'{0}' and backup_set_id=(select max(backup_set_id) from msdb..backupset where database_name=N'{0}' )
 if @backupSetId is null begin raiserror(N'Verify failed. Backup information for database ''{0}'' not found.', 16, 1) end
 RESTORE VERIFYONLY FROM  DISK = N'{1}\{0}.bak' WITH  FILE = @backupSetId,  NOUNLOAD,  NOREWIND;", dbName, location);
-                    cmd.ExecuteNonQuery();
-                }
-                finally
-                {
-                    connection.Close();
-                }
+                cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                connection.Close();
             }
         }
+    }
 
-        public static void CreateDb()
+    public static void CreateDb()
+    {
+        string constr = DatabaseConstr;
+        if (!Directory.Exists(DatabaseFolder))
+            Directory.CreateDirectory(DatabaseFolder);
+        if (File.Exists(DataFileName))
         {
-            string constr = DatabaseConstr;
-            if (!Directory.Exists(DatabaseFolder))
-                Directory.CreateDirectory(DatabaseFolder);
-            if (File.Exists(DataFileName))
-            {
-                SetSingleUser(DatabaseName);
-                BackupDatabase(DatabaseName, DatabaseFolder);
-            }
+            SetSingleUser(DatabaseName);
+            BackupDatabase(DatabaseName, DatabaseFolder);
+        }
 
-            CreateDatabase(DatabaseName, DataFileName);
-            var con = new SqlConnection(constr);
-            try
-            {
-                con.Open();
-                SqlCommand cmd = con.CreateCommand();
-                cmd.CommandText = @"
+        CreateDatabase(DatabaseName, DataFileName);
+        var con = new SqlConnection(constr);
+        try
+        {
+            con.Open();
+            SqlCommand cmd = con.CreateCommand();
+            cmd.CommandText = @"
 CREATE TABLE [dbo].[boat_crew](
 	[id] [int] NOT NULL,
 	[bid] [int] NOT NULL,
@@ -399,187 +400,186 @@ ON DELETE CASCADE;
 
 ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
 ";
-                cmd.ExecuteNonQuery();
-            }
-            finally
-            {
-                con.Close();
-            }
+            cmd.ExecuteNonQuery();
         }
-
-        public int ExecuteNonQuery(Hashtable p)
+        finally
         {
-            try
-            {
-                AddCommandParameters(p);
-                _con.Open();
-                return _cmd.ExecuteNonQuery();
-            }
-            finally
-            {
-                if (_con.State != ConnectionState.Closed)
-                    _con.Close();
-            }
+            con.Close();
         }
+    }
 
-        public Object GetScalar(Hashtable p)
-        {
-            var d = new DataTable();
-            AddCommandParameters(p);
-            _adapt = new SqlDataAdapter(_cmd);
-            _con.Open();
-            try
-            {
-                _adapt.Fill(d);
-            }
-            finally
-            {
-                _con.Close();
-            }
-
-            if (d.Rows.Count > 0)
-                return d.Rows[0][0];
-            return DBNull.Value;
-        }
-
-        private void AddCommandParameters(Hashtable p)
-        {
-            _cmd.Parameters.Clear();
-            if (p != null)
-            {
-                foreach (string k in p.Keys)
-                {
-                    if (p[k] == null || p[k] is string && p[k] as string == string.Empty)
-                        _cmd.Parameters.Add(new SqlParameter(k, DBNull.Value));
-                    else
-                        _cmd.Parameters.Add(new SqlParameter(k, p[k]));
-                }
-            }
-        }
-
-        public Hashtable GetHashtable(Hashtable p)
-        {
-            var d = new DataTable();
-            AddCommandParameters(p);
-            _adapt = new SqlDataAdapter(_cmd);
-            _con.Open();
-            try
-            {
-                _adapt.Fill(d);
-            }
-            finally
-            {
-                _con.Close();
-            }
-
-            var h = new Hashtable();
-            if (d.Rows.Count > 0)
-            {
-                foreach (DataColumn c in d.Columns)
-                    h[c.ColumnName] = d.Rows[0][c];
-            }
-
-            return h;
-        }
-
-        public void Fill(DataTable d, Hashtable p)
+    public int ExecuteNonQuery(Hashtable p)
+    {
+        try
         {
             AddCommandParameters(p);
-            _adapt = new SqlDataAdapter(_cmd);
             _con.Open();
-            try
-            {
-                _adapt.Fill(d);
-            }
-            finally
-            {
+            return _cmd.ExecuteNonQuery();
+        }
+        finally
+        {
+            if (_con.State != ConnectionState.Closed)
                 _con.Close();
-            }
+        }
+    }
+
+    public Object GetScalar(Hashtable p)
+    {
+        var d = new DataTable();
+        AddCommandParameters(p);
+        _adapt = new SqlDataAdapter(_cmd);
+        _con.Open();
+        try
+        {
+            _adapt.Fill(d);
+        }
+        finally
+        {
+            _con.Close();
         }
 
-        public DataTable GetData(Hashtable p)
-        {
-            var t = new DataTable();
-            AddCommandParameters(p);
-            _adapt = new SqlDataAdapter(_cmd);
-            _con.Open();
-            try
-            {
-                _adapt.Fill(t);
-            }
-            finally
-            {
-                _con.Close();
-            }
+        if (d.Rows.Count > 0)
+            return d.Rows[0][0];
+        return DBNull.Value;
+    }
 
-            return t;
-        }
-
-        public int GetNextIdentity(string table)
+    private void AddCommandParameters(Hashtable p)
+    {
+        _cmd.Parameters.Clear();
+        if (p != null)
         {
-            _con.Open();
-            try
+            foreach (string k in p.Keys)
             {
-                var cmd = _con.CreateCommand();
-                cmd.CommandText = @"SELECT IDENT_CURRENT(@table)";
-                cmd.Parameters.AddWithValue("table", table);
-                var nextId = (decimal)cmd.ExecuteScalar();
-                return (int)nextId + 1;
-            }
-            finally
-            {
-                _con.Close();
-            }
-        }
-
-        public static void ReseedDatabase()
-        {
-            var b = Settings.BottomSeed;
-            var t = Settings.TopSeed;
-            ReseedTable("boats", "bid", b, t);
-            ReseedTable("people", "id", b, t);
-            ReseedTable("calendar", "rid");
-            ReseedTable("series", "sid");
-        }
-
-        private static void ReseedTable(string tname, string ident, int b, int t)
-        {
-            if (b < t && b != 0 && t != 0)
-            {
-                var s = new Db("SELECT MAX(" + ident + ") " + "FROM " + tname + " " + "WHERE " + ident + " BETWEEN @b AND @t");
-                var p = new Hashtable{["b"] = b, ["t"] = t};
-                object o;
-                int seedvalue;
-                if ((o = s.GetScalar(p)) != DBNull.Value)
-                {
-                    seedvalue = ((int)o) + 1;
-                }
+                if (p[k] == null || p[k] is string && p[k] as string == string.Empty)
+                    _cmd.Parameters.Add(new SqlParameter(k, DBNull.Value));
                 else
-                {
-                    seedvalue = b;
-                }
-
-                s = new Db($"DBCC CHECKIDENT ({tname}, RESEED, {seedvalue})");
-                s.ExecuteNonQuery(null);
+                    _cmd.Parameters.Add(new SqlParameter(k, p[k]));
             }
         }
+    }
 
-        private static void ReseedTable(string tname, string ident)
+    public Hashtable GetHashtable(Hashtable p)
+    {
+        var d = new DataTable();
+        AddCommandParameters(p);
+        _adapt = new SqlDataAdapter(_cmd);
+        _con.Open();
+        try
         {
-            var s = new Db("SELECT MAX(" + ident + ") " + "FROM " + tname);
+            _adapt.Fill(d);
+        }
+        finally
+        {
+            _con.Close();
+        }
+
+        var h = new Hashtable();
+        if (d.Rows.Count > 0)
+        {
+            foreach (DataColumn c in d.Columns)
+                h[c.ColumnName] = d.Rows[0][c];
+        }
+
+        return h;
+    }
+
+    public void Fill(DataTable d, Hashtable p)
+    {
+        AddCommandParameters(p);
+        _adapt = new SqlDataAdapter(_cmd);
+        _con.Open();
+        try
+        {
+            _adapt.Fill(d);
+        }
+        finally
+        {
+            _con.Close();
+        }
+    }
+
+    public DataTable GetData(Hashtable p)
+    {
+        var t = new DataTable();
+        AddCommandParameters(p);
+        _adapt = new SqlDataAdapter(_cmd);
+        _con.Open();
+        try
+        {
+            _adapt.Fill(t);
+        }
+        finally
+        {
+            _con.Close();
+        }
+
+        return t;
+    }
+
+    public int GetNextIdentity(string table)
+    {
+        _con.Open();
+        try
+        {
+            var cmd = _con.CreateCommand();
+            cmd.CommandText = @"SELECT IDENT_CURRENT(@table)";
+            cmd.Parameters.AddWithValue("table", table);
+            var nextId = (decimal)cmd.ExecuteScalar();
+            return (int)nextId + 1;
+        }
+        finally
+        {
+            _con.Close();
+        }
+    }
+
+    public static void ReseedDatabase()
+    {
+        var b = Settings.BottomSeed;
+        var t = Settings.TopSeed;
+        ReseedTable("boats", "bid", b, t);
+        ReseedTable("people", "id", b, t);
+        ReseedTable("calendar", "rid");
+        ReseedTable("series", "sid");
+    }
+
+    private static void ReseedTable(string tname, string ident, int b, int t)
+    {
+        if (b < t && b != 0 && t != 0)
+        {
+            var s = new Db("SELECT MAX(" + ident + ") " + "FROM " + tname + " " + "WHERE " + ident + " BETWEEN @b AND @t");
+            var p = new Hashtable { ["b"] = b, ["t"] = t };
             object o;
             int seedvalue;
-            if ((o = s.GetScalar(null)) != DBNull.Value)
+            if ((o = s.GetScalar(p)) != DBNull.Value)
             {
                 seedvalue = ((int)o) + 1;
             }
             else
             {
-                seedvalue = 1;
+                seedvalue = b;
             }
 
             s = new Db($"DBCC CHECKIDENT ({tname}, RESEED, {seedvalue})");
             s.ExecuteNonQuery(null);
         }
+    }
+
+    private static void ReseedTable(string tname, string ident)
+    {
+        var s = new Db("SELECT MAX(" + ident + ") " + "FROM " + tname);
+        object o;
+        int seedvalue;
+        if ((o = s.GetScalar(null)) != DBNull.Value)
+        {
+            seedvalue = ((int)o) + 1;
+        }
+        else
+        {
+            seedvalue = 1;
+        }
+
+        s = new Db($"DBCC CHECKIDENT ({tname}, RESEED, {seedvalue})");
+        s.ExecuteNonQuery(null);
     }
 }
