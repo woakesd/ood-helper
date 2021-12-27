@@ -10,7 +10,6 @@ using System.Windows.Input;
 using System.Windows.Xps;
 using OodHelper.LoadTide;
 using OodHelper.Maintain;
-using OodHelper.Membership;
 using OodHelper.Results;
 using OodHelper.Rules;
 using OodHelper.Sun;
