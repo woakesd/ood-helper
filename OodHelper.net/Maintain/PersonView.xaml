@@ -46,7 +46,7 @@
             <Label Content="Crews on" />
             <Button Name="Edit" Click="Edit_Click" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Width="80">
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="/OodHelper;component/Images/Add.png" />
+                    <Image Source="/Images/Add.png" />
                     <TextBlock Text="Edit" Margin="5,0" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
@@ -91,13 +91,13 @@
                 </Grid.ColumnDefinitions>
                 <Button Name="CancelButton" IsCancel="True" Click="cancel_Click" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Width="80">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/OodHelper;component/Images/Cancel.png" />
+                        <Image Source="/Images/Cancel.png" />
                         <TextBlock Text="Cancel" Margin="5,0" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
                 <Button Name="OKButton" IsDefault="True" Click="ok_Click" Grid.Column="1" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Width="80">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/OodHelper;component/Images/Ok.png" />
+                        <Image Source="/Images/Ok.png" />
                         <TextBlock Text="OK" Margin="5,0"  VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>

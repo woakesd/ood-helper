@@ -11,31 +11,31 @@
             <ToolBar>
                 <Button Name="LoadFile" Click="LoadFile_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/OodHelper;component/Images/Add.png" />
+                        <Image Source="/Images/Add.png" />
                         <Label>_Load file</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="ReadDB" Click="ReadDB_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/OodHelper;component/Images/Add.png" />
+                        <Image Source="/Images/Add.png" />
                         <Label>_Read DB</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="DoFlowTide" Click="DoFlowTide_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/OodHelper;component/Images/Calc.png" />
+                        <Image Source="/Images/Calc.png" />
                         <Label>_Ebb &amp; Tide</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="Upload" Click="Upload_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/OodHelper;component/Images/Upload.png" />
+                        <Image Source="/Images/Upload.png" />
                         <Label>_Upload</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="CloseButton" Click="CloseButton_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/OodHelper;component/Images/Cancel.png" />
+                        <Image Source="/Images/Cancel.png" />
                         <Label>_Close</Label>
                     </StackPanel>
                 </Button>

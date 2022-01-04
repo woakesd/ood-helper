@@ -16,19 +16,19 @@
             <ToolBar>
                 <Button Name="SelectAll" Click="SelectAll_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Height="24" Width="24" Source="/OodHelper;component/Images/Add.png"/>
+                        <Image Height="24" Width="24" Source="/Images/Add.png"/>
                         <Label MinWidth="50">Select All</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="OKButton" Click="OKButton_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Height="24" Width="24" Source="/OodHelper;component/Images/OK.png"/>
+                        <Image Height="24" Width="24" Source="/Images/OK.png"/>
                         <Label MinWidth="50" HorizontalContentAlignment="Center">OK</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="CancelButton" Click="CancelButton_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Height="24" Width="24" Source="/OodHelper;component/Images/Cancel.png"/>
+                        <Image Height="24" Width="24" Source="/Images/Cancel.png"/>
                         <Label MinWidth="60" HorizontalContentAlignment="Center">Cancel</Label>
                     </StackPanel>
                 </Button>

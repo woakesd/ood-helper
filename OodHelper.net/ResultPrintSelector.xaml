@@ -14,13 +14,13 @@
             <ToolBar>
                 <Button Click="Print_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Grid.Column="0" Source="/OodHelper;component/Images/Printer.png" />
+                        <Image Grid.Column="0" Source="/Images/Printer.png" />
                         <Label Grid.Column="1">Print</Label>
                     </StackPanel>
                 </Button>
                 <Button Name="CloseButton" Click="Close_Click" Margin="4,0,0,0">
                     <StackPanel Orientation="Horizontal">
-                        <Image Grid.Column="0" Source="/OodHelper;component/Images/Cancel.png" />
+                        <Image Grid.Column="0" Source="/Images/Cancel.png" />
                         <Label Grid.Column="1">Close</Label>
                     </StackPanel>
                 </Button>

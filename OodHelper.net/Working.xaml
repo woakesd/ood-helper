@@ -11,7 +11,7 @@
         <ProgressBar Grid.Row="1" Margin="5" Height="15" MinWidth="200" Name="Progress" />
         <Button Margin="100,5" Click="Cancel_Click" Name="CancelButton" Visibility="Collapsed">
             <StackPanel Orientation="Horizontal">
-                <Image Source="/OodHelper;component/Images/Cancel.png" />
+                <Image Source="/Images/Cancel.png" />
                 <Label>Cancel</Label>
             </StackPanel>
         </Button>
