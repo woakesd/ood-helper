@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Data;
-using System.Linq;
 using System.Text;
 using System.Timers;
 using System.Windows;
@@ -26,7 +23,7 @@ namespace OodHelper.Results
         private readonly SelectedBoats[] _sbt;
 
         private StringBuilder _boatsSql;
-        private Timer _timer;
+        private System.Timers.Timer _timer;
 
         public SelectBoats(ResultsEditor[] raceEdits)
         {
@@ -110,7 +107,7 @@ namespace OodHelper.Results
         {
             if (_timer == null)
             {
-                _timer = new Timer(500);
+                _timer = new System.Timers.Timer(500);
                 _timer.Elapsed += TimerElapsed;
             }
             else

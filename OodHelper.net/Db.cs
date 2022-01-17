@@ -9,7 +9,7 @@ namespace OodHelper;
 
 internal class Db : IDisposable
 {
-    private const string MasterConnection = @"Data Source=(LocalDB)\v11.0;Initial Catalog=master;Integrated Security=True";
+    private const string MasterConnection = @"Data Source=(LocalDB)\v15.0;Initial Catalog=master;Integrated Security=True";
     private const string DatabaseName = "OodHelper";
     private static readonly string DatabaseFolder;
     private static readonly string DataFileName;

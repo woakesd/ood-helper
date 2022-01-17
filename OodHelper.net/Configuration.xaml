@@ -21,15 +21,16 @@
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="112.243"/>
+                        <ColumnDefinition Width="41.757"/>
                     </Grid.ColumnDefinitions>
-                    <Label>Bottom seed</Label>
-                    <Label Grid.Row="1">Top seed</Label>
-                    <Label Grid.Row="2">RH Coefficient</Label>
-                    <TextBox Grid.Column="1" Name="BottomSeed" Margin="2" Width="150"/>
-                    <TextBox Grid.Column="1" Name="TopSeed" Margin="2" Grid.Row="1" Width="150"/>
-                    <TextBox Grid.Column="1" Name="RHCoefficient" Margin="2" Grid.Row="2" Width="150"/>
-                    <Grid Grid.ColumnSpan="2" Grid.Row="3" Grid.Column="0">
+                    <Label Grid.ColumnSpan="2" Margin="0,0,112,26" Grid.RowSpan="2">Bottom seed</Label>
+                    <Label Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,112,26" Grid.RowSpan="2">Top seed</Label>
+                    <Label Grid.Row="2" Grid.ColumnSpan="2" Margin="0,0,112,30" Grid.RowSpan="2">RH Coefficient</Label>
+                    <TextBox Grid.Column="1" Name="BottomSeed" Margin="2,2,2,2" Width="150" Grid.ColumnSpan="2"/>
+                    <TextBox Grid.Column="1" Name="TopSeed" Margin="2,2,2,2" Grid.Row="1" Width="150" Grid.ColumnSpan="2"/>
+                    <TextBox Grid.Column="1" Name="RHCoefficient" Margin="2,2,2,2" Grid.Row="2" Width="150" Grid.ColumnSpan="2"/>
+                    <Grid Grid.ColumnSpan="3" Grid.Row="3" Grid.Column="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
@@ -87,16 +88,6 @@
                     <Label>Default discard profile</Label>
                     <TextBox Margin="2" Grid.Row="1" Name="DefaultDiscardProfile" />
                 </Grid>
-            </TabItem>
-            <TabItem Name="Pusher" Header="Pusher">
-                <StackPanel Orientation="Vertical">
-                    <Label>Pusher App Id</Label>
-                    <TextBox Margin="2" Name="PusherAppId" />
-                    <Label>Pusher App Key</Label>
-                    <TextBox Margin="2" Name="PusherAppKey" />
-                    <Label>Pusher App Secret</Label>
-                    <TextBox Margin="2" Name="PusherAppSecret" />
-                </StackPanel>
             </TabItem>
         </TabControl>
         <Grid Grid.Column="0" Grid.Row="1">
