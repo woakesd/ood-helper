@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OodHelper.net", "OodHelper.net\OodHelper.net.csproj", "{EEAC0779-A0D7-4584-BBEC-F593A61EEB5A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebServicesGenerator", "WebServicesGenerator\WebServicesGenerator.csproj", "{E0E5C5F6-B4A4-4887-A9FA-56C38E25D913}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoadTide", "LoadTide\LoadTide.csproj", "{30B9D6D3-7BAA-40A6-BFFD-166A61C764F0}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "OodHelperInstaller", "OodHelperInstaller\OodHelperInstaller.wixproj", "{A6B9FF9F-1470-4796-A8EB-FC3C3E5A29F4}"
@@ -33,16 +31,6 @@ Global
 		{EEAC0779-A0D7-4584-BBEC-F593A61EEB5A}.Release|Mixed Platforms.Build.0 = Release|x86
 		{EEAC0779-A0D7-4584-BBEC-F593A61EEB5A}.Release|x86.ActiveCfg = Release|x86
 		{EEAC0779-A0D7-4584-BBEC-F593A61EEB5A}.Release|x86.Build.0 = Release|x86
-		{E0E5C5F6-B4A4-4887-A9FA-56C38E25D913}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E0E5C5F6-B4A4-4887-A9FA-56C38E25D913}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E0E5C5F6-B4A4-4887-A9FA-56C38E25D913}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{E0E5C5F6-B4A4-4887-A9FA-56C38E25D913}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{E0E5C5F6-B4A4-4887-A9FA-56C38E25D913}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{E0E5C5F6-B4A4-4887-A9FA-56C38E25D913}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E0E5C5F6-B4A4-4887-A9FA-56C38E25D913}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E0E5C5F6-B4A4-4887-A9FA-56C38E25D913}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{E0E5C5F6-B4A4-4887-A9FA-56C38E25D913}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{E0E5C5F6-B4A4-4887-A9FA-56C38E25D913}.Release|x86.ActiveCfg = Release|Any CPU
 		{30B9D6D3-7BAA-40A6-BFFD-166A61C764F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{30B9D6D3-7BAA-40A6-BFFD-166A61C764F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30B9D6D3-7BAA-40A6-BFFD-166A61C764F0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

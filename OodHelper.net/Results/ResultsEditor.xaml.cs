@@ -562,8 +562,13 @@ namespace OodHelper.Results
             RefreshHandicapsEnabled = false;
             c = new Db(@"SELECT COUNT(1)
                 FROM races r1 
-                INNER JOIN races r2 ON r2.bid = r1.bid AND r2.rid <> r1.rid AND r2.start_date < r1.start_date AND r2.last_edit > r1.last_edit
-                INNER JOIN races r3 ON r3.bid = r1.bid AND r3.rid <> r1.rid
+                INNER JOIN races r2 
+                    ON r2.bid = r1.bid
+                        AND r2.rid <> r1.rid
+                        AND r2.start_date < r1.start_date
+                        AND r2.last_edit > r1.last_edit
+                INNER JOIN races r3
+                    ON r3.bid = r1.bid AND r3.rid <> r1.rid
                 WHERE r1.rid = @rid
                 GROUP BY r1.bid, r3.start_date, r3.new_rolling_handicap
                 HAVING r3.start_date = MAX(r2.start_date)");
