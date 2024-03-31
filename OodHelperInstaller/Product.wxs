@@ -1,12 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" 
-           Name="OodHelper" 
-           Language="1033" 
-           Version="1.0.38.0" 
-           Manufacturer="David Woakes" 
-           UpgradeCode="{586CAE3C-1E00-4522-ABD5-DFEAE4C5DA54}">
-    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="OodHelper" Language="1033" Version="1.1.0.0" Manufacturer="David Woakes" UpgradeCode="{586CAE3C-1E00-4522-ABD5-DFEAE4C5DA54}" InstallerVersion="200">
+    
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     
@@ -15,42 +9,91 @@
     <Feature Id="ProductFeature" Title="OodHelperInstaller" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
     </Feature>
-  </Product>
+  </Package>
 
   <Fragment>
-    <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="ProgramFilesFolder">
+      <StandardDirectory Id="ProgramFilesFolder">
         <Directory Id="INSTALLFOLDER" Name="OodHelper">
         </Directory>
-      </Directory>
-      <Directory Id="ProgramMenuFolder" Name="Programs" />
-      <Directory Id="DesktopFolder" Name="Desktop" />
-    </Directory>
-  </Fragment>
+      </StandardDirectory>
+      <StandardDirectory Id="ProgramMenuFolder" />
+      <StandardDirectory Id="DesktopFolder" />
+    </Fragment>
 
   <Fragment>
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
       <Component Id="ProgramFilesFolder" Guid="{AA426A21-58BC-4DE5-89F7-21FC16A1CE11}">
         <RemoveFolder Id="ProgramFilesFolder" On="uninstall" />
       </Component>
-      <Component Id="MainExecutable" Guid="*">
-        <File Id="OodHelperEXE" Name="OodHelper.exe" Source="$(var.OodHelper.net.TargetPath)" KeyPath="yes" >
+      <Component Id="MainExecutable">
+        <File Id="OodHelperEXE" Name="OodHelper.exe" Source="$(var.OodHelper.net.TargetPath)" KeyPath="yes">
           <Shortcut Id="StartMenuOodHelper" WorkingDirectory="INSTALLFOLDER" Directory="ProgramMenuFolder" Name="OodHelper" Advertise="yes" />
           <Shortcut Id="DesktopOodHelper" WorkingDirectory="INSTALLFOLDER" Directory="DesktopFolder" Name="OodHelper" Advertise="yes" />
         </File>
       </Component>
-      <Component Id="MySqlDataDLL" Guid="*">
-        <File Id="MySqlDataDLL" Name="mysql.data.dll" Source="$(var.OodHelper.net.TargetDir)\mysql.data.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="GoogleProtobuf" Guid="*">
-        <File Id="GoogleProtobuf" Name="Google.Protobuf.dll" Source="$(var.OodHelper.net.TargetDir)\Google.Protobuf.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="PresentationUIDLL" Guid="*">
-        <File Id="PresentationUIDLL" Name="PresentationUI.dll" Source="$(var.OodHelper.net.TargetDir)\PresentationUI.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="RestSharpDLL" Guid="*">
-        <File Id="RestSharpDLL" Name="RestSharp.dll" Source="$(var.OodHelper.net.TargetDir)\RestSharp.dll" KeyPath="yes" />
-      </Component>
-    </ComponentGroup>
+		<Component Id="BouncyCastleCryptographyDLL">
+			<File Id="BouncyCastleCryptographyDLL" Name="BouncyCastle.Cryptography.dll" Source="$(var.OodHelper.net.TargetDir)\BouncyCastle.Cryptography.dll" KeyPath="yes" />
+		</Component>
+		<Component Id="GoogleProtobuf">
+			<File Id="GoogleProtobuf" Name="Google.Protobuf.dll" Source="$(var.OodHelper.net.TargetDir)\Google.Protobuf.dll" KeyPath="yes" />
+		</Component>
+		<Component Id="K4osCompressionLZ4DLL">
+			<File Id="K4osCompressionLZ4DLL" Name="K4os.Compression.LZ4.dll" Source="$(var.OodHelper.net.TargetDir)\K4os.Compression.LZ4.dll" KeyPath="yes" />
+		</Component>
+		<Component Id="K4osCompressionLZ4StreamsDLL">
+			<File Id="K4osCompressionLZ4StreamsDLL" Name="K4os.Compression.LZ4.Streams.dll" Source="$(var.OodHelper.net.TargetDir)\K4os.Compression.LZ4.Streams.dll" KeyPath="yes" />
+		</Component>
+		<Component Id="K4osHashxxHashDLL">
+			<File Id="K4osHashxxHashDLL" Name="K4os.Hash.xxHash.dll" Source="$(var.OodHelper.net.TargetDir)\K4os.Hash.xxHash.dll" KeyPath="yes" />
+		</Component>
+		<Component Id="MicrosoftBclAsyncInterfacesDLL">
+			<File Id="MicrosoftBclAsyncInterfacesDLL" Name="Microsoft.Bcl.AsyncInterfaces.dll" Source="$(var.OodHelper.net.TargetDir)\Microsoft.Bcl.AsyncInterfaces.dll" KeyPath="yes" />
+		</Component>
+		<Component Id="MySqlDataDLL">
+          <File Id="MySqlDataDLL" Name="mysql.data.dll" Source="$(var.OodHelper.net.TargetDir)\mysql.data.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="PresentationUIDLL">
+          <File Id="PresentationUIDLL" Name="PresentationUI.dll" Source="$(var.OodHelper.net.TargetDir)\PresentationUI.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="RestSharpDLL">
+          <File Id="RestSharpDLL" Name="RestSharp.dll" Source="$(var.OodHelper.net.TargetDir)\RestSharp.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="SystemBuffersDLL">
+          <File Id="SystemBuffersDLL" Name="System.Buffers.dll" Source="$(var.OodHelper.net.TargetDir)\System.Buffers.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="System.Configuration.ConfigurationManagerDLL">
+          <File Id="SystemConfigurationConfigurationManagerDLL" Name="System.Configuration.ConfigurationManager.dll" Source="$(var.OodHelper.net.TargetDir)\System.Configuration.ConfigurationManager.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="SystemDiagnosticsDiagnosticSourceDLL">
+          <File Id="SystemDiagnosticsDiagnosticSourceDLL" Name="System.Diagnostics.DiagnosticSource.dll" Source="$(var.OodHelper.net.TargetDir)\System.Diagnostics.DiagnosticSource.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="SystemIOPipelinesDLL">
+          <File Id="SystemIOPipelinesDLL" Name="System.IO.Pipelines.dll" Source="$(var.OodHelper.net.TargetDir)\System.IO.Pipelines.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="SystemMemoryDLL">
+          <File Id="SystemMemoryDLL" Name="System.Memory.dll" Source="$(var.OodHelper.net.TargetDir)\System.Memory.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="SystemNumericsVectorsDLL">
+          <File Id="SystemNumericsVectorsDLL" Name="System.Numerics.Vectors.dll" Source="$(var.OodHelper.net.TargetDir)\System.Numerics.Vectors.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="SystemRuntimeCompilerServicesUnsafeDLL">
+          <File Id="SystemRuntimeCompilerServicesUnsafeDLL" Name="System.Runtime.CompilerServices.Unsafe.dll" Source="$(var.OodHelper.net.TargetDir)\System.Runtime.CompilerServices.Unsafe.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="SystemTextEncodingsWebDLL">
+          <File Id="SystemTextEncodingsWebDLL" Name="System.Text.Encodings.Web.dll" Source="$(var.OodHelper.net.TargetDir)\System.Text.Encodings.Web.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="SystemTextJsonDLL">
+          <File Id="SystemTextJsonDLL" Name="System.Text.Json.dll" Source="$(var.OodHelper.net.TargetDir)\System.Text.Json.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="SystemThreadingTasksExtensionsDLL">
+          <File Id="SystemThreadingTasksExtensionsDLL" Name="System.Threading.Tasks.Extensions.dll" Source="$(var.OodHelper.net.TargetDir)\System.Threading.Tasks.Extensions.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="SystemValueTupleDLL">
+          <File Id="SystemValueTupleDLL" Name="System.ValueTuple.dll" Source="$(var.OodHelper.net.TargetDir)\System.ValueTuple.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="ZstdSharpDLL">
+          <File Id="ZstdSharpDLL" Name="ZstdSharpDLL" Source="$(var.OodHelper.net.TargetDir)\ZstdSharp.dll" KeyPath="yes" />
+        </Component>
+	</ComponentGroup>
   </Fragment>
 </Wix>
