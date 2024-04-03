@@ -3,13 +3,14 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 
 namespace OodHelper.Website
 {
     internal class MySqlDownload
     {
         protected MySqlConnection Mcon;
+        protected MySqlTransaction Mtrn;
         protected SqlConnection Scon;
         protected SqlTransaction Strn;
 
@@ -77,6 +78,7 @@ namespace OodHelper.Website
                 mysql = mcsb.ConnectionString;
                 Mcon = new MySqlConnection(mysql);
                 Mcon.Open();
+                Mtrn = Mcon.BeginTransaction();
 
                 if (p.CancellationPending)
                 {

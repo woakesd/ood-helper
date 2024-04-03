@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Data;
 using System.Text;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using System.ComponentModel;
 
 namespace OodHelper.Website
@@ -26,7 +26,7 @@ namespace OodHelper.Website
 
             w.ReportProgress(0, "Uploading boats");
 
-            var mcom = new MySqlCommand("DELETE FROM boats") {Connection = Mcon};
+            var mcom = new MySqlCommand("DELETE FROM boats") {Connection = Mcon, Transaction = Mtrn};
             mcom.ExecuteNonQuery();
 
             var msql = new StringBuilder("INSERT INTO `boats` (`boatname`,`boatclass`,`sailno`,`dngy`,`h`,`bid`,");
@@ -344,7 +344,7 @@ namespace OodHelper.Website
 
             w.ReportProgress(900/steps, "Uploading portsmouth numbers");
 
-            mcom = new MySqlCommand("DELETE FROM `portsmouth_numbers`") {Connection = Mcon};
+            mcom = new MySqlCommand("DELETE FROM `portsmouth_numbers`") {Connection = Mcon, Transaction = Mtrn};
             mcom.ExecuteNonQuery();
 
             msql.Clear();

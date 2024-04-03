@@ -19,7 +19,10 @@ namespace OodHelper
                 using (var sw = new StreamWriter(FileFolder + Path.DirectorySeparatorChar + FileName, true))
                 {
                     sw.WriteLine(@"{0:yyyy-MM-ddTHH:mm:ss} {1}", new object[] { DateTime.Now, ex.Message });
-
+                    if (ex.InnerException != null)
+                    {
+                        sw.WriteLine(@"{0:yyyy-MM-ddTHH:mm:ss} {1}", new object[] { DateTime.Now, ex.InnerException.Message });
+                    }
                     sw.WriteLine(ex.StackTrace);
                     sw.WriteLine();
                     sw.Close();

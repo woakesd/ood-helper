@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 
 namespace OodHelper.Website
 {
@@ -33,26 +33,11 @@ namespace OodHelper.Website
             //
             // Find max update row from website db and local db
             //
-            var myadp = new MySqlDataAdapter("SELECT MAX(upload) FROM updates", Mcon);
-            var mtable = new DataTable();
-            myadp.Fill(mtable);
-            myadp.Dispose();
+            var cmd = new MySqlCommand("SELECT MAX(upload) FROM updates", Mcon, Mtrn);
+            var RemoteDate = cmd.ExecuteScalar() as DateTime?;
 
-            if (mtable.Rows.Count > 0)
-            {
-                RemoteDate = mtable.Rows[0][0] as DateTime?;
-            }
-
-            var sqadp = new SqlDataAdapter(new SqlCommand("SELECT MAX(upload) FROM updates", Scon, Strn));
-
-            var stable = new DataTable();
-            sqadp.Fill(stable);
-            sqadp.Dispose();
-
-            if (mtable.Rows.Count > 0)
-            {
-                LocalDate = stable.Rows[0][0] as DateTime?;
-            }
+            var localCmd = new SqlCommand("SELECT MAX(upload) FROM updates", Scon, Strn);
+            var LocalDate = cmd.ExecuteScalar() as DateTime?;
 
             if (p.CancellationPending)
             {

@@ -2,7 +2,7 @@
 using System.Data;
 using System.Text;
 using System.Windows;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 
 namespace OodHelper.Website
 {
@@ -40,7 +40,7 @@ namespace OodHelper.Website
 
             w.ReportProgress(0, "Uploading Tide Data");
 
-            var mcom = new MySqlCommand {Connection = Mcon};
+            var mcom = new MySqlCommand {Connection = Mcon, Transaction = Mtrn };
             var msql = new StringBuilder();
 
             mcom.CommandText = "DELETE FROM `tidedata` WHERE date >= @sdate AND date <= @edate";

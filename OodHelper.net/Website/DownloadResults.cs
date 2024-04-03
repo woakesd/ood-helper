@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 
 namespace OodHelper.Website
 {
@@ -43,12 +43,12 @@ namespace OodHelper.Website
                 "@is_race, @raced, @approved, @course_choice, @laps_completed, @wind_speed, @wind_direction, " +
                 "@standard_corrected_time, @result_calculated)";
 
-            var myadp = new MySqlDataAdapter(
+            var myadp = new MySqlDataAdapter(new MySqlCommand(
                 "SELECT `rid`, `start_date`, `class`, `event`, `price_code`, `course`, `ood`, `venue`, " +
                 "`racetype`, `handicapping`, `visitors`, `flag`, `time_limit_type`, `time_limit_fixed`, " +
                 "`time_limit_delta`, `extension`, `memo`, `is_race`, `raced`, `approved`, `course_choice`, `laps_completed`, " +
                 "`wind_speed`, `wind_direction`, `standard_corrected_time`, `result_calculated` FROM calendar_new",
-                Mcon);
+                Mcon, Mtrn));
             var mtable = new DataTable();
             myadp.Fill(mtable);
 
@@ -77,7 +77,7 @@ namespace OodHelper.Website
                 "INSERT INTO [PEOPLE] ([id], [main_id], [firstname], [surname], [address1], [address2], [address3], [address4], [postcode], [hometel], [worktel], [mobile], [email], [club], [member], [cp], [s], [manmemo], [novice], [uid], [papernewsletter], [handbookexclude]) " +
                 "VALUES (@id, @sid, @firstname, @surname, @address1, @address2, @address3, @address4, @postcode, @hometel, @worktel, @mobile, @email, @club, @member, @cp, @s, @manmemo, @novice,@uid,@papernewsletter,@handbookexclude)";
 
-            myadp = new MySqlDataAdapter("SELECT * FROM people", Mcon);
+            myadp = new MySqlDataAdapter(new MySqlCommand("SELECT * FROM people", Mcon, Mtrn));
             mtable = new DataTable();
             myadp.Fill(mtable);
 
@@ -96,8 +96,8 @@ namespace OodHelper.Website
             // Boats
             //
             p.ReportProgress((int) ((progress++)*factor), "Loading Boats");
-
-            myadp = new MySqlDataAdapter("SELECT * FROM boats", Mcon);
+            
+            myadp = new MySqlDataAdapter(new MySqlCommand("SELECT * FROM boats", Mcon, Mtrn));
             mtable = new DataTable();
             myadp.Fill(mtable);
 
@@ -130,7 +130,7 @@ namespace OodHelper.Website
             ins.CommandText = "INSERT INTO [boat_crew] ([id], [bid]) " +
                               "VALUES (@id, @bid)";
 
-            myadp = new MySqlDataAdapter("SELECT * FROM boat_crew", Mcon);
+            myadp = new MySqlDataAdapter(new MySqlCommand("SELECT * FROM boat_crew", Mcon, Mtrn));
             mtable = new DataTable();
             myadp.Fill(mtable);
 
@@ -147,10 +147,8 @@ namespace OodHelper.Website
                 "INSERT INTO [races] ([rid], [bid], [start_date], [finish_date], [interim_date], [restricted_sail], [last_edit], [finish_code], [laps], [elapsed], [corrected], [standard_corrected], [handicap_status], [open_handicap], [rolling_handicap], [achieved_handicap], [new_rolling_handicap], [place], [points], [override_points], [performance_index], [a], [c]) " +
                 "VALUES (@rid, @bid, @start_date, @finish_date, @interim_date, @restricted_sail, @last_edit, @finish_code, @laps, @elapsed, @corrected, @standard_corrected, @handicap_status, @open_handicap, @rolling_handicap, @achieved_handicap, @new_rolling_handicap, @place, @points, @override_points, @performance_index, @a, @c)";
 
-            myadp =
-                new MySqlDataAdapter(
-                    "SELECT `rid`, `bid`, `start_date`, `finish_date`, `interim_date`, `restricted_sail`, `last_edit`, `finish_code`, `laps`, `elapsed`, `corrected`, `standard_corrected`, `handicap_status`, `open_handicap`, `rolling_handicap`, `achieved_handicap`, `new_rolling_handicap`, `place`, `points`, `override_points`, `performance_index`, `a`, `c` FROM races_new",
-                    Mcon);
+            myadp = new MySqlDataAdapter(
+                new MySqlCommand("SELECT `rid`, `bid`, `start_date`, `finish_date`, `interim_date`, `restricted_sail`, `last_edit`, `finish_code`, `laps`, `elapsed`, `corrected`, `standard_corrected`, `handicap_status`, `open_handicap`, `rolling_handicap`, `achieved_handicap`, `new_rolling_handicap`, `place`, `points`, `override_points`, `performance_index`, `a`, `c` FROM races_new", Mcon, Mtrn));
             mtable = new DataTable();
             myadp.Fill(mtable);
 
@@ -171,7 +169,7 @@ namespace OodHelper.Website
             p.ReportProgress((int) ((progress++)*factor), "Loading Series");
             ins.CommandText = "INSERT INTO [series] ([sid], [sname], [discards]) " +
                               "VALUES (@sid, @sname, @discards)";
-            myadp = new MySqlDataAdapter("SELECT sid, sname, discards FROM series", Mcon);
+            myadp = new MySqlDataAdapter(new MySqlCommand("SELECT sid, sname, discards FROM series", Mcon, Mtrn));
             mtable = new DataTable();
             myadp.Fill(mtable);
 
@@ -198,7 +196,7 @@ namespace OodHelper.Website
             p.ReportProgress((int) ((progress++)*factor), "Loading Series links");
             ins.CommandText = "INSERT INTO [calendar_series_join] ([sid], [rid]) " +
                               "VALUES (@sid, @rid)";
-            myadp = new MySqlDataAdapter("SELECT * FROM calendar_series_join", Mcon);
+            myadp = new MySqlDataAdapter(new MySqlCommand("SELECT * FROM calendar_series_join", Mcon, Mtrn));
             mtable = new DataTable();
             myadp.Fill(mtable);
 
@@ -220,7 +218,7 @@ namespace OodHelper.Website
             ins.CommandText =
                 "INSERT INTO [series_results] ([sid], [bid], [division], [entered], [gross], [nett], [place]) " +
                 "VALUES (@sid, @bid, @division, @entered, @gross, @nett, @place)";
-            myadp = new MySqlDataAdapter("SELECT * FROM series_results", Mcon);
+            myadp = new MySqlDataAdapter(new MySqlCommand("SELECT * FROM series_results", Mcon, Mtrn));
             mtable = new DataTable();
             myadp.Fill(mtable);
 
@@ -242,7 +240,7 @@ namespace OodHelper.Website
             ins.CommandText =
                 "INSERT INTO [select_rules] ([id], [name], [parent], [application], [field], [condition], [string_value], [number_bound1], [number_bound2]) " +
                 "VALUES (@id, @name, @parent, @application, @field, @condition, @string_value, @number_bound1, @number_bound2)";
-            myadp = new MySqlDataAdapter("SELECT * FROM select_rules", Mcon);
+            myadp = new MySqlDataAdapter(new MySqlCommand("SELECT * FROM select_rules", Mcon, Mtrn));
             mtable = new DataTable();
             myadp.Fill(mtable);
 
@@ -264,7 +262,7 @@ namespace OodHelper.Website
             ins.CommandText = @"INSERT INTO [portsmouth_numbers] 
 ([id], [class_name], [no_of_crew], [rig], [spinnaker], [engine], [keel], [number], [status], [notes])
 VALUES (@id, @class_name, @no_of_crew, @rig, @spinnaker, @engine, @keel, @number, @status, @notes)";
-            myadp = new MySqlDataAdapter("SELECT * FROM portsmouth_numbers", Mcon);
+            myadp = new MySqlDataAdapter(new MySqlCommand("SELECT * FROM portsmouth_numbers", Mcon, Mtrn));
             mtable = new DataTable();
             myadp.Fill(mtable);
 
@@ -276,7 +274,7 @@ VALUES (@id, @class_name, @no_of_crew, @rig, @spinnaker, @engine, @keel, @number
             //
             // Find max update row from website db and insert into local db.
             //
-            myadp = new MySqlDataAdapter("SELECT MAX(upload) FROM updates", Mcon);
+            myadp = new MySqlDataAdapter(new MySqlCommand("SELECT MAX(upload) FROM updates", Mcon, Mtrn));
             mtable = new DataTable();
             myadp.Fill(mtable);
 

@@ -2,7 +2,7 @@
 using System.Data;
 using System.Text;
 using System.Windows;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 
 namespace OodHelper.Website
 {
@@ -40,7 +40,7 @@ namespace OodHelper.Website
 
             w.ReportProgress(50, "Uploading Sun Data");
 
-            var mcom = new MySqlCommand {Connection = Mcon};
+            var mcom = new MySqlCommand {Connection = Mcon, Transaction = Mtrn};
             var msql = new StringBuilder();
 
             mcom.CommandText = "DELETE FROM `sun` WHERE date >= @start AND date <= @end";
