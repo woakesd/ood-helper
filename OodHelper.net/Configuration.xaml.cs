@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 
 namespace OodHelper
 {

@@ -2,7 +2,7 @@
 using System.Data;
 using System.Text;
 using System.Windows;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using System.ComponentModel;
 
 namespace OodHelper.Website
