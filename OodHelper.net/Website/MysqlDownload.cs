@@ -19,12 +19,12 @@ namespace OodHelper.Website
             var download = new BackgroundWorker();
             download.DoWork += Process;
             var w = new Working(Application.Current.MainWindow, download);
-            download.RunWorkerCompleted += download_RunWorkerCompleted;
+            download.RunWorkerCompleted += RunWorkerCompleted;
             download.RunWorkerAsync();
             w.ShowDialog();
         }
 
-        protected virtual void download_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        protected virtual void RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled)
                 MessageBox.Show("Download Cancelled", "Cancel", MessageBoxButton.OK,
