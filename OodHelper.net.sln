@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.0.32014.148
+VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OodHelper.net", "OodHelper.net\OodHelper.net.csproj", "{EEAC0779-A0D7-4584-BBEC-F593A61EEB5A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoadTide", "LoadTide\LoadTide.csproj", "{30B9D6D3-7BAA-40A6-BFFD-166A61C764F0}"
-EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "OodHelperInstaller", "OodHelperInstaller\OodHelperInstaller.wixproj", "{A6B9FF9F-1470-4796-A8EB-FC3C3E5A29F4}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "OodHelperSetup", "OodHelperSetup\OodHelperSetup.vdproj", "{C37E6F9B-30C4-4CE1-892E-26694E72F29A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,31 +29,17 @@ Global
 		{EEAC0779-A0D7-4584-BBEC-F593A61EEB5A}.Release|Mixed Platforms.Build.0 = Release|x86
 		{EEAC0779-A0D7-4584-BBEC-F593A61EEB5A}.Release|x86.ActiveCfg = Release|x86
 		{EEAC0779-A0D7-4584-BBEC-F593A61EEB5A}.Release|x86.Build.0 = Release|x86
-		{30B9D6D3-7BAA-40A6-BFFD-166A61C764F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{30B9D6D3-7BAA-40A6-BFFD-166A61C764F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{30B9D6D3-7BAA-40A6-BFFD-166A61C764F0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{30B9D6D3-7BAA-40A6-BFFD-166A61C764F0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{30B9D6D3-7BAA-40A6-BFFD-166A61C764F0}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{30B9D6D3-7BAA-40A6-BFFD-166A61C764F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{30B9D6D3-7BAA-40A6-BFFD-166A61C764F0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{30B9D6D3-7BAA-40A6-BFFD-166A61C764F0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{30B9D6D3-7BAA-40A6-BFFD-166A61C764F0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{30B9D6D3-7BAA-40A6-BFFD-166A61C764F0}.Release|x86.ActiveCfg = Release|Any CPU
-		{A6B9FF9F-1470-4796-A8EB-FC3C3E5A29F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A6B9FF9F-1470-4796-A8EB-FC3C3E5A29F4}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{A6B9FF9F-1470-4796-A8EB-FC3C3E5A29F4}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{A6B9FF9F-1470-4796-A8EB-FC3C3E5A29F4}.Debug|x86.ActiveCfg = Debug|x86
-		{A6B9FF9F-1470-4796-A8EB-FC3C3E5A29F4}.Debug|x86.Build.0 = Debug|x86
-		{A6B9FF9F-1470-4796-A8EB-FC3C3E5A29F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A6B9FF9F-1470-4796-A8EB-FC3C3E5A29F4}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{A6B9FF9F-1470-4796-A8EB-FC3C3E5A29F4}.Release|Mixed Platforms.Build.0 = Release|x86
-		{A6B9FF9F-1470-4796-A8EB-FC3C3E5A29F4}.Release|x86.ActiveCfg = Release|x86
-		{A6B9FF9F-1470-4796-A8EB-FC3C3E5A29F4}.Release|x86.Build.0 = Release|x86
+		{C37E6F9B-30C4-4CE1-892E-26694E72F29A}.Debug|Any CPU.ActiveCfg = Debug
+		{C37E6F9B-30C4-4CE1-892E-26694E72F29A}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{C37E6F9B-30C4-4CE1-892E-26694E72F29A}.Debug|x86.ActiveCfg = Debug
+		{C37E6F9B-30C4-4CE1-892E-26694E72F29A}.Release|Any CPU.ActiveCfg = Release
+		{C37E6F9B-30C4-4CE1-892E-26694E72F29A}.Release|Mixed Platforms.ActiveCfg = Release
+		{C37E6F9B-30C4-4CE1-892E-26694E72F29A}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {7AAB1D93-E9BD-4D2E-8308-19F13423773D}
+		SolutionGuid = {E621359B-E45C-4B03-8568-954EB41E127A}
 	EndGlobalSection
 EndGlobal

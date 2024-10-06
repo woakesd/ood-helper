@@ -12,7 +12,7 @@ namespace OodHelper.Website
 
         public DateTime? LocalDate { get; set; }
 
-        protected override void download_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        protected override void RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled)
                 MessageBox.Show("Check For Updates Cancelled", "Cancel", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -30,10 +30,10 @@ namespace OodHelper.Website
             // Find max update row from website db and local db
             //
             var cmd = new MySqlCommand("SELECT MAX(upload) FROM updates", Mcon, Mtrn);
-            var RemoteDate = cmd.ExecuteScalar() as DateTime?;
+            RemoteDate = cmd.ExecuteScalar() as DateTime?;
 
             var localCmd = new SqlCommand("SELECT MAX(upload) FROM updates", Scon, Strn);
-            var LocalDate = cmd.ExecuteScalar() as DateTime?;
+            LocalDate = cmd.ExecuteScalar() as DateTime?;
 
             if (p.CancellationPending)
             {
