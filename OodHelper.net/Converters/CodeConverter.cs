@@ -9,7 +9,7 @@ namespace OodHelper.Converters
         {
             if (value != DBNull.Value && value != null)
             {
-                return value.ToString();
+                return value.ToString()!;
             }
             else
             {

@@ -21,7 +21,7 @@ namespace OodHelper
             for (var i = 0; i < VisualTreeHelper.GetChildrenCount(child); i++)
             {
                 var subchild = VisualTreeHelper.GetChild(child, i) as UIElement;
-                var subList = FindVisualChild<T>(subchild);
+                var subList = FindVisualChild<T>(subchild!);
                 r.InsertRange(r.Count, subList);
             }
             return r;

@@ -14,9 +14,9 @@ namespace OodHelper.Website
             var p = sender as BackgroundWorker;
             if (p == null)
                 return;
-            SqlCommand scmd = Scon.CreateCommand();
+            var scmd = Scon!.CreateCommand();
             scmd.Transaction = Strn;
-            SqlCommand ins = Scon.CreateCommand();
+            var ins = Scon.CreateCommand();
             ins.Transaction = Strn;
             int progress = 0;
             //

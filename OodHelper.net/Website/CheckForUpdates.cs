@@ -1,7 +1,8 @@
 using System;
-\\using System.ComponentModel;
+using System.ComponentModel;
 using System.Data;
 using System.Windows;
+using Microsoft.Data.SqlClient;
 using MySqlConnector;
 
 namespace OodHelper.Website

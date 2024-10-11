@@ -21,7 +21,7 @@ namespace OodHelper
         {
             InitializeComponent();
             var _rev = System.Reflection.Assembly.GetExecutingAssembly()
-                                                 .GetName().Version
+                                                 .GetName().Version!
                                                  .ToString();
 
             aboutBlock.Text = string.Format("Revision: {0}\nOOD Helper by David Woakes", _rev);

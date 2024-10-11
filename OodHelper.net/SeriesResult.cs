@@ -257,9 +257,9 @@ namespace OodHelper
 
         private class PreAverageComparer : IComparer<SeriesEntry>
         {
-            public int Compare(SeriesEntry x, SeriesEntry y)
+            public int Compare(SeriesEntry? x, SeriesEntry? y)
             {
-                if (x.code != y.code)
+                if (x!.code != y!.code)
                 {
                     if (x.code == "DNE")
                         return -1;

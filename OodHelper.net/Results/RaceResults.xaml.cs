@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
+﻿using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Markup;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Printing;
 using System.Windows.Xps;
 using OodHelper.Maintain;
@@ -96,34 +85,36 @@ namespace OodHelper.Results
 
             #region ICommand Members
 
-            public bool CanExecute(object parameter)
+            public bool CanExecute(object? parameter)
             {
                 return true;
             }
 
             // disable unused event warning
 #pragma warning disable 67
-            public event EventHandler CanExecuteChanged;
+            public event EventHandler? CanExecuteChanged;
 #pragma warning restore 67
 
-            public void Execute(object parameter)
+            public void Execute(object? parameter)
             {
                 bool reload = false;
-                ResultsEditor rr = (ResultsEditor)parameter;
+                ResultsEditor rr = (ResultsEditor)parameter!;
                 IList<DataGridCellInfo> cc = rr.Races.SelectedCells;
 
                 foreach (DataGridCellInfo inf in rr.Races.SelectedCells)
                 {
-                    ResultModel rv = inf.Item as ResultModel;
-                    int bid = rv.Bid;
+                    ResultModel? rv = inf.Item as ResultModel;
+                    int bid = rv!.Bid;
                     BoatView edit = new BoatView(bid);
-                    if (edit.ShowDialog().Value)
+                    if (edit.ShowDialog()!.Value)
                     {
                         Db c = new Db(@"SELECT bid, rolling_handicap, handicap_status, open_handicap
                                 FROM boats WHERE bid = @bid");
-                        Hashtable p = new Hashtable();
-                        p["bid"] = bid;
-                        Hashtable d = c.GetHashtable(p);
+                        var p = new Hashtable
+                        {
+                            ["bid"] = bid
+                        };
+                        var d = c.GetHashtable(p);
                         foreach (object o in d.Keys)
                             p[o] = d[o];
                         p["rid"] = rr.Rid;
@@ -158,28 +149,30 @@ namespace OodHelper.Results
 
             #region ICommand Members
 
-            public bool CanExecute(object parameter)
+            public bool CanExecute(object? parameter)
             {
                 return true;
             }
 
             // disable unused event warning
 #pragma warning disable 67
-            public event EventHandler CanExecuteChanged;
+            public event EventHandler? CanExecuteChanged;
 #pragma warning restore 67
 
-            public void Execute(object parameter)
+            public void Execute(object? parameter)
             {
-                DataGrid races = (DataGrid)parameter;
+                DataGrid races = (DataGrid)parameter!;
                 if (races.SelectedCells.Count > 0)
                 {
                     Db s = new Db(@"SELECT start_date
                             FROM calendar
                             WHERE rid = @torid");
-                    Hashtable p = new Hashtable();
-                    p["torid"] = toRid;
-                    DateTime rstart = (DateTime)s.GetScalar(p);
-                    Db c = new Db(@"UPDATE races
+                    Hashtable p = new Hashtable
+                    {
+                        ["torid"] = toRid
+                    };
+                    var rstart = (DateTime)s.GetScalar(p);
+                    var c = new Db(@"UPDATE races
                             SET rid = @torid
                             , start_date = @start_date
                             WHERE rid = @fromrid
@@ -188,8 +181,8 @@ namespace OodHelper.Results
                     p["start_date"] = rstart;
                     foreach (DataGridCellInfo inf in races.SelectedCells)
                     {
-                        ResultModel drv = inf.Item as ResultModel;
-                        p["bid"] = drv.Bid;
+                        var drv = inf.Item as ResultModel;
+                        p["bid"] = drv!.Bid;
                         c.ExecuteNonQuery(p);
                     }
 
@@ -212,10 +205,10 @@ namespace OodHelper.Results
                     Working w = new Working(App.Current.MainWindow);
                     w.Show();
                     XpsDocumentWriter write = PrintQueue.CreateXpsDocumentWriter(pd.PrintQueue);
-                    VisualsToXpsDocument collator = write.CreateVisualsCollator() as VisualsToXpsDocument;
+                    var collator = write.CreateVisualsCollator() as VisualsToXpsDocument;
                     Size ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
-                    collator.BeginBatchWrite();
-                    System.Threading.Tasks.Task t = System.Threading.Tasks.Task.Factory.StartNew(() =>
+                    collator!.BeginBatchWrite();
+                    Task t = Task.Factory.StartNew(() =>
                         {
                             w.SetRange(0, reds.Length);
                             for (int i = 0; i < reds.Length; i++)
@@ -223,7 +216,7 @@ namespace OodHelper.Results
                                 ResultsEditor red = reds[i];
                                 if (red.PrintInclude)
                                 {
-                                    string msg = null;
+                                    string msg = "";
                                     Dispatcher.Invoke(new Action(delegate()
                                     {
                                         msg = string.Format("Printing {0}", red.RaceName);
@@ -232,17 +225,19 @@ namespace OodHelper.Results
                                     System.Threading.Thread.Sleep(50);
                                     Dispatcher.Invoke(new Action(delegate()
                                     {
-                                        Page p = null;
-                                        IResultsPage rp = null;
+                                        Page p;
+                                        IResultsPage? rp;
 
                                         switch (red.Handicap)
                                         {
                                             case "o":
-                                                p = (Page)new OpenHandicapResultsPage(red);
+                                                p = new OpenHandicapResultsPage(red);
                                                 break;
                                             case "r":
-                                                p = (Page)new RollingHandicapResultsPage(red);
+                                                p = new RollingHandicapResultsPage(red);
                                                 break;
+                                            default:
+                                                return;
                                         }
                                         rp = p as IResultsPage;
                                         p.Width = pd.PrintableAreaWidth;
@@ -251,7 +246,7 @@ namespace OodHelper.Results
                                         p.UpdateLayout();
 
                                         int pno = 1;
-                                        while (rp.PrintPage(collator, pno)) pno++;
+                                        while (rp!.PrintPage(collator, pno)) pno++;
                                     }));
                                 }
                             }
@@ -267,14 +262,13 @@ namespace OodHelper.Results
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
-            DockPanel d = Parent as DockPanel;
+            var d = Parent as DockPanel;
             if (d != null)
                 d.Children.Remove(this);
             else
             {
-                TabItem t = Parent as TabItem;
-                TabControl tc = t.Parent as TabControl;
-                if (tc != null)
+                var t = Parent as TabItem;
+                if (t!.Parent is TabControl tc)
                     tc.Items.Remove(t);
                 t.Content = null;
             }

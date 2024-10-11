@@ -16,24 +16,28 @@ namespace OodHelper.Results
     {
         private readonly int _rid;
         private DateTime _limitDate = DateTime.Now;
-        private DataTable _raceDataTable;
+        private DataTable? _raceDataTable;
 
-        public IRaceScore Scorer;
+        public IRaceScore? Scorer;
         private CalendarModel.RaceTypes _raceType;
-        private DataTable _autoPopulateData;
-        private Hashtable _caldata;
-        private string _eventname;
+        private DataTable? _autoPopulateData;
+        private Hashtable? _caldata;
+        private string? _eventname;
         private int _extension;
 
-        private string _course;
-        private string _handicap;
+        private string? _course;
+        private string? _handicap;
         private int? _laps;
-        private string _windDirection;
+        private string? _windDirection;
 
-        private string _windSpeed;
-        private Db _rddb;
+        private string? _windSpeed;
+        private Db? _rddb;
         private int? _timeLimitDelta;
         private DateTime? _timeLimitFixed;
+
+        public string? RaceClass { get; set; }
+        public string? RaceName { get; set; }
+        public DateTime? StartDate { get; set; }
 
         public ResultsEditor(int r)
         {
@@ -46,7 +50,7 @@ namespace OodHelper.Results
             SetColumnAttributes();
         }
 
-        public string Course
+        public string? Course
         {
             get { return _course; }
 
@@ -54,15 +58,17 @@ namespace OodHelper.Results
             {
                 _course = value;
                 var c = new Db(@"UPDATE calendar SET course_choice = @course WHERE rid = @rid");
-                var p = new Hashtable();
-                p["rid"] = Rid;
-                p["course"] = _course;
+                var p = new Hashtable
+                {
+                    ["rid"] = Rid,
+                    ["course"] = _course
+                };
                 c.ExecuteNonQuery(p);
                 c.Dispose();
             }
         }
 
-        public string WindSpeed
+        public string? WindSpeed
         {
             get { return _windSpeed; }
 
@@ -70,15 +76,17 @@ namespace OodHelper.Results
             {
                 _windSpeed = value;
                 var c = new Db(@"UPDATE calendar SET wind_speed = @wind_speed WHERE rid = @rid");
-                var p = new Hashtable();
-                p["rid"] = Rid;
-                p["wind_speed"] = _windSpeed;
+                var p = new Hashtable
+                {
+                    ["rid"] = Rid,
+                    ["wind_speed"] = _windSpeed
+                };
                 c.ExecuteNonQuery(p);
                 c.Dispose();
             }
         }
 
-        public string WindDirection
+        public string? WindDirection
         {
             get { return _windDirection; }
 
@@ -86,21 +94,23 @@ namespace OodHelper.Results
             {
                 _windDirection = value;
                 var c = new Db(@"UPDATE calendar SET wind_direction = @wind_direction WHERE rid = @rid");
-                var p = new Hashtable();
-                p["rid"] = Rid;
-                p["wind_direction"] = _windDirection;
+                var p = new Hashtable
+                {
+                    ["rid"] = Rid,
+                    ["wind_direction"] = _windDirection
+                };
                 c.ExecuteNonQuery(p);
                 c.Dispose();
             }
         }
 
-        public string Laps
+        public string? Laps
         {
             get { return _laps.ToString(); }
 
             set
             {
-                _laps = ValueParsers.ReadInt(value);
+                _laps = ValueParsers.ReadInt(value!);
 
                 var c = new Db(@"UPDATE calendar SET laps_completed = @laps WHERE rid = @rid");
                 var p = new Hashtable();
@@ -152,12 +162,6 @@ namespace OodHelper.Results
             get { return RaceType != CalendarModel.RaceTypes.AverageLap; }
         }
 
-        public string RaceClass { get; set; }
-
-        public string RaceName { get; set; }
-
-        public DateTime StartDate { get; set; }
-
         public string RaceStart
         {
             get { return StartTime.ToString("hh\\:mm"); }
@@ -165,18 +169,18 @@ namespace OodHelper.Results
 
         public TimeSpan StartTime
         {
-            get { return StartDate.TimeOfDay; }
+            get { return StartDate!.Value.TimeOfDay; }
 
             set
             {
-                if (value > TimeSpan.FromDays(1.0) || StartDate.Date + value >= StartDate.AddDays(1))
+                if (value > TimeSpan.FromDays(1.0) || StartDate!.Value.Date + value >= StartDate!.Value.AddDays(1))
                     MessageBox.Show("You cannot set the start time to this value", "Error", MessageBoxButton.OK,
                         MessageBoxImage.Error);
                 else
                 {
-                    if (StartDate.TimeOfDay != value)
+                    if (StartDate!.Value.TimeOfDay != value)
                     {
-                        StartDate = StartDate.Date + value;
+                        StartDate = StartDate!.Value.Date + value;
                         var u = new Db(@"UPDATE races
                         SET start_date = @start_date
                         , last_edit = GETDATE()
@@ -197,7 +201,7 @@ namespace OodHelper.Results
             }
         }
 
-        public string Ood { get; set; }
+        public string? Ood { get; set; }
 
         public bool CalculateEnabled { get; set; }
         public bool RefreshHandicapsEnabled { get; set; }
@@ -207,7 +211,7 @@ namespace OodHelper.Results
             get { return _rid; }
         }
 
-        public string Handicap
+        public string? Handicap
         {
             get { return _handicap; }
         }
@@ -250,7 +254,7 @@ namespace OodHelper.Results
                             MessageBoxImage.Error);
                     else
                     {
-                        _timeLimitDelta = (int) value.Value.TotalSeconds;
+                        _timeLimitDelta = (int) value!.Value.TotalSeconds;
                         var u = new Db(@"UPDATE calendar
                         SET time_limit_delta = @_timeLimitDelta
                         WHERE rid = @rid");
@@ -272,9 +276,11 @@ namespace OodHelper.Results
                 var u = new Db(@"UPDATE calendar
                         SET extension = @extension
                         WHERE rid = @rid");
-                var p = new Hashtable();
-                p["extension"] = _extension;
-                p["rid"] = Rid;
+                var p = new Hashtable
+                {
+                    ["extension"] = _extension,
+                    ["rid"] = Rid
+                };
                 u.ExecuteNonQuery(p);
             }
         }
@@ -298,7 +304,7 @@ namespace OodHelper.Results
             // If time limit date is not the same day as start date then we show
             // start and finish dates as well as time.
             //
-            get { return StartDate.Date != _limitDate.Date; }
+            get { return StartDate!.Value.Date != _limitDate.Date; }
         }
 
         //
@@ -342,12 +348,11 @@ namespace OodHelper.Results
         {
             get
             {
-                switch (RaceType)
+                return RaceType switch
                 {
-                    case CalendarModel.RaceTypes.SternChase:
-                        return true;
-                }
-                return false;
+                    CalendarModel.RaceTypes.SternChase => true,
+                    _ => false,
+                };
             }
         }
 
@@ -475,17 +480,17 @@ namespace OodHelper.Results
 
         public string PrintIncludeDescription
         {
-            get { return RaceName; }
+            get { return RaceName ?? ""; }
 
             set { }
         }
 
         public int PrintIncludeGroup { get; set; }
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public void OnPropertyChanged(string name)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            PropertyChangedEventHandler? handler = PropertyChanged!;
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(name));
@@ -503,7 +508,7 @@ namespace OodHelper.Results
             p["rid"] = Rid;
             _caldata = c.GetHashtable(p);
 
-            StartDate = (DateTime) _caldata["start_date"];
+            StartDate = (DateTime)_caldata["start_date"]!;
 
             _timeLimitFixed = _caldata["time_limit_fixed"] as DateTime?;
             _timeLimitDelta = _caldata["time_limit_delta"] as int?;
@@ -511,13 +516,13 @@ namespace OodHelper.Results
             if (_timeLimitFixed.HasValue)
                 _limitDate = _timeLimitFixed.Value;
             else if (_timeLimitDelta.HasValue)
-                _limitDate = StartDate.AddSeconds(_timeLimitDelta.Value);
+                _limitDate = StartDate!.Value.AddSeconds(_timeLimitDelta.Value);
 
             if (_caldata["extension"] != DBNull.Value)
-                _extension = (int) _caldata["extension"];
+                _extension = (int)_caldata["extension"]!;
 
-            raceName.Content = StartDate.ToString("ddd dd MMM yyyy") + " (";
-            switch (_caldata["handicapping"].ToString())
+            raceName.Content = StartDate!.Value.ToString("ddd dd MMM yyyy") + " (";
+            switch (_caldata["handicapping"]!.ToString())
             {
                 case "r":
                     raceName.Content += "Rolling Handicap";
@@ -531,19 +536,19 @@ namespace OodHelper.Results
             }
             raceName.Content += ")";
 
-            _eventname = _caldata["event"].ToString().Trim();
-            RaceName = _eventname + " - " + _caldata["class"].ToString().Trim();
-            RaceClass = _caldata["class"].ToString().Trim();
-            Ood = _caldata["ood"].ToString();
+            _eventname = _caldata["event"]!.ToString()!.Trim();
+            RaceName = _eventname + " - " + _caldata["class"]!.ToString()!.Trim();
+            RaceClass = _caldata["class"]!.ToString()!.Trim();
+            Ood = _caldata["ood"]!.ToString()!;
             if (_caldata["handicapping"] != DBNull.Value)
-                _handicap = (string) _caldata["handicapping"];
+                _handicap = (string)_caldata["handicapping"]!;
             var dsct = _caldata["standard_corrected_time"] as double?;
             if (dsct.HasValue)
                 sct.Text = Common.HMS(dsct.Value);
 
             if (_caldata["racetype"] != DBNull.Value)
             {
-                if (!Enum.TryParse(_caldata["racetype"].ToString(), out _raceType))
+                if (!Enum.TryParse(_caldata["racetype"]!.ToString(), out _raceType))
                     _raceType = CalendarModel.RaceTypes.Undefined;
             }
 
@@ -555,7 +560,7 @@ namespace OodHelper.Results
             Hashtable calc = c.GetHashtable(p);
             if (calc["result_calculated"] == DBNull.Value ||
                 calc["last_edit"] != DBNull.Value &&
-                (DateTime) calc["result_calculated"] <= (DateTime) calc["last_edit"])
+                (DateTime) calc["result_calculated"]! <= (DateTime) calc["last_edit"]!)
                 CalculateEnabled = true;
             OnPropertyChanged("CalculateEnabled");
 
@@ -577,9 +582,9 @@ namespace OodHelper.Results
                 RefreshHandicapsEnabled = true;
             OnPropertyChanged("RefreshHandicapsEnabled");
 
-            _course = _caldata["course_choice"] as string;
-            _windSpeed = _caldata["wind_speed"] as string;
-            _windDirection = _caldata["wind_direction"] as string;
+            _course = (string)_caldata["course_choice"]!;
+            _windSpeed = (string)_caldata["wind_speed"]!;
+            _windDirection = (string)_caldata["wind_direction"]!;
             _laps = _caldata["laps_completed"] as int?;
 
             CreateScorer();
@@ -597,13 +602,12 @@ namespace OodHelper.Results
             SetEditableColumns();
 
             Races.ItemsSource = (from DataRow r in _raceDataTable.Rows
-                select new ResultModel(r, StartDate)).ToList();
+                select new ResultModel(r, StartDate!.Value)).ToList();
             DataContext = this;
         }
 
         private void CreateScorer()
         {
-            Scorer = null;
             switch (RaceType)
             {
                 case CalendarModel.RaceTypes.AverageLap:
@@ -633,7 +637,7 @@ namespace OodHelper.Results
             // Set the columns which are to be editable as not being read only 
             // in the dataset.
             //
-            foreach (DataColumn col in _raceDataTable.Columns)
+            foreach (DataColumn col in _raceDataTable!.Columns)
             {
                 col.ReadOnly = true;
             }
@@ -644,49 +648,49 @@ namespace OodHelper.Results
             switch (RaceType)
             {
                 case CalendarModel.RaceTypes.AverageLap:
-                    _raceDataTable.Columns["finish_date"].ReadOnly = false;
-                    _raceDataTable.Columns["override_points"].ReadOnly = false;
-                    _raceDataTable.Columns["finish_code"].ReadOnly = false;
-                    _raceDataTable.Columns["laps"].ReadOnly = false;
-                    _raceDataTable.Columns["restricted_sail"].ReadOnly = false;
-                    _raceDataTable.Columns["open_handicap"].ReadOnly = false;
-                    _raceDataTable.Columns["rolling_handicap"].ReadOnly = false;
+                    _raceDataTable.Columns["finish_date"]!.ReadOnly = false;
+                    _raceDataTable.Columns["override_points"]!.ReadOnly = false;
+                    _raceDataTable.Columns["finish_code"]!.ReadOnly = false;
+                    _raceDataTable.Columns["laps"]!.ReadOnly = false;
+                    _raceDataTable.Columns["restricted_sail"]!.ReadOnly = false;
+                    _raceDataTable.Columns["open_handicap"]!.ReadOnly = false;
+                    _raceDataTable.Columns["rolling_handicap"]!.ReadOnly = false;
                     break;
                 case CalendarModel.RaceTypes.FixedLength:
-                    _raceDataTable.Columns["finish_date"].ReadOnly = false;
-                    _raceDataTable.Columns["override_points"].ReadOnly = false;
-                    _raceDataTable.Columns["finish_code"].ReadOnly = false;
-                    _raceDataTable.Columns["restricted_sail"].ReadOnly = false;
-                    _raceDataTable.Columns["open_handicap"].ReadOnly = false;
-                    _raceDataTable.Columns["rolling_handicap"].ReadOnly = false;
+                    _raceDataTable.Columns["finish_date"]!.ReadOnly = false;
+                    _raceDataTable.Columns["override_points"]!.ReadOnly = false;
+                    _raceDataTable.Columns["finish_code"]!.ReadOnly = false;
+                    _raceDataTable.Columns["restricted_sail"]!.ReadOnly = false;
+                    _raceDataTable.Columns["open_handicap"]!.ReadOnly = false;
+                    _raceDataTable.Columns["rolling_handicap"]!.ReadOnly = false;
                     break;
                 case CalendarModel.RaceTypes.HybridOld:
                 case CalendarModel.RaceTypes.Hybrid:
-                    _raceDataTable.Columns["finish_date"].ReadOnly = false;
-                    _raceDataTable.Columns["override_points"].ReadOnly = false;
-                    _raceDataTable.Columns["finish_code"].ReadOnly = false;
-                    _raceDataTable.Columns["interim_date"].ReadOnly = false;
-                    _raceDataTable.Columns["laps"].ReadOnly = false;
-                    _raceDataTable.Columns["restricted_sail"].ReadOnly = false;
-                    _raceDataTable.Columns["open_handicap"].ReadOnly = false;
-                    _raceDataTable.Columns["rolling_handicap"].ReadOnly = false;
+                    _raceDataTable.Columns["finish_date"]!.ReadOnly = false;
+                    _raceDataTable.Columns["override_points"]!.ReadOnly = false;
+                    _raceDataTable.Columns["finish_code"]!.ReadOnly = false;
+                    _raceDataTable.Columns["interim_date"]!.ReadOnly = false;
+                    _raceDataTable.Columns["laps"]!.ReadOnly = false;
+                    _raceDataTable.Columns["restricted_sail"]!.ReadOnly = false;
+                    _raceDataTable.Columns["open_handicap"]!.ReadOnly = false;
+                    _raceDataTable.Columns["rolling_handicap"]!.ReadOnly = false;
                     break;
                 case CalendarModel.RaceTypes.TimeGate:
-                    _raceDataTable.Columns["start_date"].ReadOnly = false;
-                    _raceDataTable.Columns["finish_date"].ReadOnly = false;
-                    _raceDataTable.Columns["override_points"].ReadOnly = false;
-                    _raceDataTable.Columns["finish_code"].ReadOnly = false;
-                    _raceDataTable.Columns["restricted_sail"].ReadOnly = false;
-                    _raceDataTable.Columns["open_handicap"].ReadOnly = false;
-                    _raceDataTable.Columns["rolling_handicap"].ReadOnly = false;
+                    _raceDataTable.Columns["start_date"]!.ReadOnly = false;
+                    _raceDataTable.Columns["finish_date"]!.ReadOnly = false;
+                    _raceDataTable.Columns["override_points"]!.ReadOnly = false;
+                    _raceDataTable.Columns["finish_code"]!.ReadOnly = false;
+                    _raceDataTable.Columns["restricted_sail"]!.ReadOnly = false;
+                    _raceDataTable.Columns["open_handicap"]!.ReadOnly = false;
+                    _raceDataTable.Columns["rolling_handicap"]!.ReadOnly = false;
                     break;
                 case CalendarModel.RaceTypes.SternChase:
-                    _raceDataTable.Columns["place"].ReadOnly = false;
-                    _raceDataTable.Columns["override_points"].ReadOnly = false;
-                    _raceDataTable.Columns["finish_code"].ReadOnly = false;
-                    _raceDataTable.Columns["restricted_sail"].ReadOnly = false;
-                    _raceDataTable.Columns["open_handicap"].ReadOnly = false;
-                    _raceDataTable.Columns["rolling_handicap"].ReadOnly = false;
+                    _raceDataTable.Columns["place"]!.ReadOnly = false;
+                    _raceDataTable.Columns["override_points"]!.ReadOnly = false;
+                    _raceDataTable.Columns["finish_code"]!.ReadOnly = false;
+                    _raceDataTable.Columns["restricted_sail"]!.ReadOnly = false;
+                    _raceDataTable.Columns["open_handicap"]!.ReadOnly = false;
+                    _raceDataTable.Columns["rolling_handicap"]!.ReadOnly = false;
                     break;
             }
         }
@@ -764,9 +768,11 @@ namespace OodHelper.Results
                     FROM boats b, calendar c
                     WHERE b.bid = @bid
                     AND c.rid = @rid");
-            var a = new Hashtable();
-            a["rid"] = Rid;
-            foreach (DataRow r in _autoPopulateData.Rows)
+            var a = new Hashtable
+            {
+                ["rid"] = Rid
+            };
+            foreach (DataRow r in _autoPopulateData!.Rows)
             {
                 a["bid"] = r["bid"];
                 add.ExecuteNonQuery(a);
@@ -784,9 +790,9 @@ namespace OodHelper.Results
             if (Scorer != null)
             {
                 var calc = new BackgroundWorker();
-                calc.DoWork += Scorer.Calculate;
+                calc.DoWork += Scorer.Calculate!;
                 var w = new Working(Application.Current.MainWindow, calc);
-                calc.RunWorkerCompleted += calc_RunWorkerCompleted;
+                calc.RunWorkerCompleted += calc_RunWorkerCompleted!;
                 calc.RunWorkerAsync(_rid);
                 w.ShowDialog();
             }
@@ -816,8 +822,10 @@ namespace OodHelper.Results
                 WHERE r1.rid = @rid
                 GROUP BY r1.bid, r3.start_date, r3.new_rolling_handicap
                 HAVING r3.start_date = MAX(r2.start_date)");
-            var p = new Hashtable();
-            p["rid"] = Rid;
+            var p = new Hashtable
+            {
+                ["rid"] = Rid
+            };
             DataTable d = c.GetData(p);
             c = new Db(@"UPDATE races
                 SET last_edit = GETDATE()

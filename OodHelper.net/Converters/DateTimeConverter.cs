@@ -31,14 +31,14 @@ namespace OodHelper.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            string strValue = value as string;
+            string? strValue = value as string;
             if (strValue != null)
             {
                 TimeSpan resultTime;
                 DateTime resultDate;
                 if (TimeSpan.TryParseExact(strValue, "hh\\:mm\\:ss", null, out resultTime) || TimeSpan.TryParseExact(strValue, "hh\\ mm\\ ss", null, out resultTime))
                 {
-                    return _date + resultTime;
+                    return _date! + resultTime;
                 }
                 if (DateTime.TryParseExact(strValue, "dd MMM yyyy HH mm ss", null, System.Globalization.DateTimeStyles.None, out resultDate)
                     || DateTime.TryParseExact(strValue, "dd MMM yyyy HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out resultDate))

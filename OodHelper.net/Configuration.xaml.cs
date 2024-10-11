@@ -28,7 +28,7 @@ namespace OodHelper
             //
             // init mysql connection values
             //
-            string myconstring = Settings.Mysql;
+            string myconstring = Settings.Mysql!;
             MySqlConnectionStringBuilder mcsb = new MySqlConnectionStringBuilder(myconstring);
             Server.Text = mcsb.Server;
             Username.Text = mcsb.UserID;

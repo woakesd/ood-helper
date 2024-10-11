@@ -370,7 +370,7 @@ OR surname LIKE @filter) ");
 
             #region ICommand Members
 
-            public bool CanExecute(object parameter)
+            public bool CanExecute(object? parameter)
             {
                 return true;
             }

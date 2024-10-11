@@ -50,20 +50,20 @@ namespace OodHelper
         #region ICommand Members
 
         [DebuggerStepThrough]
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
-            return _canExecute == null ? true : _canExecute(parameter);
+            return _canExecute == null || _canExecute(parameter!);
         }
 
-        public event EventHandler CanExecuteChanged
+        public event EventHandler? CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
-            _execute(parameter);
+            _execute(parameter!);
         }
 
         #endregion // ICommand Members

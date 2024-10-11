@@ -1,17 +1,17 @@
-using System;
 using System.ComponentModel;
 using System.Data;
 using System.Windows;
+using Microsoft.Data.SqlClient;
 using MySqlConnector;
 
 namespace OodHelper.Website
 {
     internal class MySqlDownload
     {
-        protected MySqlConnection Mcon;
-        protected MySqlTransaction Mtrn;
-        protected SqlConnection Scon;
-        protected SqlTransaction Strn;
+        protected MySqlConnection? Mcon;
+        protected MySqlTransaction? Mtrn;
+        protected SqlConnection? Scon;
+        protected SqlTransaction? Strn;
         public MySqlDownload()
         {
             var download = new BackgroundWorker();
@@ -37,12 +37,12 @@ namespace OodHelper.Website
             e.Cancel = true;
             try
             {
-                Strn.Rollback();
-                Strn.Dispose();
-                Scon.Close();
-                Scon.Dispose();
-                Mcon.Close();
-                Mcon.Dispose();
+                Strn!.Rollback();
+                Strn!.Dispose();
+                Scon!.Close();
+                Scon!.Dispose();
+                Mcon!.Close();
+                Mcon!.Dispose();
             }
             catch
             {

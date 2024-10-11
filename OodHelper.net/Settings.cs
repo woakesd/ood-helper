@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.IO;
+using System.Reflection;
 using Microsoft.Extensions.Configuration;
 
 namespace OodHelper
@@ -23,12 +24,16 @@ namespace OodHelper
             AssemblyName _an = _ass.GetName();
             CreateSettingsDb();
             _customSettings = string.Format($"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\{_an.Name}");
-            _oodHelperSettings = new ConfigurationBuilder()
+            if (!Directory.Exists(_customSettings))
+            {
+                Directory.CreateDirectory(_customSettings);
+            }
+            var builder = new ConfigurationBuilder()
                 .SetBasePath(_customSettings)
-                .AddJsonFile("appSettings.json", true, true)
-                .Build().Get<OodHelperSettings>();
-            if (_oodHelperSettings == null)
-                _oodHelperSettings = new OodHelperSettings();
+                .AddJsonFile("appSettings.json", true, true);
+            var configRoot = builder.Build();
+            _oodHelperSettings = configRoot.Get<OodHelperSettings>()!;
+            _oodHelperSettings ??= new OodHelperSettings();
         }
 
         private static void CreateSettingsDb()
