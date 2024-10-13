@@ -37,7 +37,7 @@ namespace OodHelper.Website
             RemoteDate = cmd.ExecuteScalar() as DateTime?;
 
             var localCmd = new SqlCommand("SELECT MAX(upload) FROM updates", Scon, Strn);
-            LocalDate = cmd.ExecuteScalar() as DateTime?;
+            LocalDate = localCmd.ExecuteScalar() as DateTime?;
 
             if (p.CancellationPending)
             {
