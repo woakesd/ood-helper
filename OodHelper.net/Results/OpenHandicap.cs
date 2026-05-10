@@ -56,8 +56,7 @@ namespace OodHelper.Results
                 END, extension");
                 var res = c.GetHashtable(p);
 
-                CalendarModel.RaceTypes racetype;
-                RaceType = Enum.TryParse(res["racetype"].ToString(), out racetype) ? racetype : CalendarModel.RaceTypes.Undefined;
+                RaceType = Enum.TryParse(res["racetype"].ToString(), out CalendarModel.RaceTypes racetype) ? racetype : CalendarModel.RaceTypes.Undefined;
 
                 var dsct = res["standard_corrected_time"] as double?;
                 StandardCorrectedTime = 0;
@@ -347,8 +346,7 @@ namespace OodHelper.Results
 
                 for (var i = 0; i < n; i++)
                 {
-                    total = total + query.ElementAt(i).Field<double?>("standard_corrected").Value;
-                    //total = total + (double) UpdateUIDelegate.Rows[_interim]["standard_corrected"];
+                    total += query.ElementAt(i).Field<double?>("standard_corrected").Value;
                 }
 
                 var averageCorrectedTime = total/n;
@@ -372,7 +370,7 @@ namespace OodHelper.Results
                     {
                         row["a"] = DBNull.Value;
                         goodBoats++;
-                        StandardCorrectedTime = StandardCorrectedTime + (double) row["standard_corrected"];
+                        StandardCorrectedTime += (double) row["standard_corrected"];
                     }
                 }
 
@@ -473,7 +471,7 @@ namespace OodHelper.Results
                     if (query.ElementAt(j)["place"].ToString() != query.ElementAt(k)["place"].ToString())
                         break;
                     k++;
-                    psum = psum + k;
+                    psum += k;
                 }
 
                 var avg = Math.Round(psum/(k - j), 2);
@@ -610,7 +608,7 @@ namespace OodHelper.Results
                         // if rectricted sail was used then new handicap needs to be adjusted to remove the 4% increase
                         //
                         if (dr["restricted_sail"] != DBNull.Value && (bool) dr["restricted_sail"])
-                            newhc = (int) Math.Round(newhc/1.04);
+                            newhc = (int) Math.Round(newhc/1.03);
                         //
                         // And keep it if it's inside the band.
                         //
