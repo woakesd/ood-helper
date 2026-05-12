@@ -199,7 +199,7 @@ namespace OodHelper.Results
                 }
                 var newhc = (int) r["rolling_handicap"];
                 if (r["restricted_sail"] != DBNull.Value && (bool) r["restricted_sail"])
-                    newhc = (int) Math.Round(newhc/1.04);
+                    newhc = (int) Math.Round(newhc/Settings.RSCoefficieent);
 
                 r["new_rolling_handicap"] = newhc;
                 r["achieved_handicap"] = r["rolling_handicap"];
@@ -502,7 +502,7 @@ namespace OodHelper.Results
                     dr["achieved_handicap"] = dr["open_handicap"];
                     var oldhc = (int) dr["rolling_handicap"];
                     if (dr["restricted_sail"] != DBNull.Value && (bool) dr["restricted_sail"])
-                        dr["new_rolling_handicap"] = (int) Math.Round(oldhc/1.04);
+                        dr["new_rolling_handicap"] = (int) Math.Round(oldhc/Settings.RSCoefficieent);
                     else
                         dr["new_rolling_handicap"] = oldhc;
 
@@ -610,7 +610,7 @@ namespace OodHelper.Results
                         // if rectricted sail was used then new handicap needs to be adjusted to remove the 4% increase
                         //
                         if (dr["restricted_sail"] != DBNull.Value && (bool) dr["restricted_sail"])
-                            newhc = (int) Math.Round(newhc/1.04);
+                            newhc = (int) Math.Round(newhc/Settings.RSCoefficieent);
                         //
                         // And keep it if it's inside the band.
                         //

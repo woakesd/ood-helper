@@ -17,6 +17,7 @@ namespace OodHelper
         private const string settBottomSeed = "bottomseed";
         private const string settTopSeed = "topseed";
         private const string rhCoefficient = "rhCoefficient";
+        private const string rsCoefficient = "rsCoefficient";
 
         private const string settResultsWebServiceBaseURL = "ResultsWebServiceBaseURL";
         private const string settResultsWebServiceBaseUsername = "ResultsWebServiceBaseUsername";
@@ -163,6 +164,23 @@ namespace OodHelper
             set
             {
                 AddSetting(rhCoefficient, value.ToString());
+            }
+        }
+
+        private const double _rsCoefficient = 1.03;
+
+        public static double RSCoefficieent
+        {
+            get
+            {
+                double _tmp = 0;
+                if (Double.TryParse(GetSetting(rsCoefficient), out _tmp))
+                    return _tmp;
+                return _rsCoefficientDefault;
+            }
+            set
+            {
+                AddSetting(rsCoefficient, value.ToString());
             }
         }
 
