@@ -172,7 +172,7 @@ namespace OodHelper
         public static double RSCoefficieent
         {
             get
-            {`
+            {
                 double _tmp = 0;
                 if (Double.TryParse(GetSetting(rsCoefficient), out _tmp))
                     return _tmp;
