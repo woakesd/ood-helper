@@ -167,12 +167,12 @@ namespace OodHelper
             }
         }
 
-        private const double _rsCoefficient = 1.03;
+        private const double _rsCoefficientDefault = 1.03;
 
         public static double RSCoefficieent
         {
             get
-            {
+            {`
                 double _tmp = 0;
                 if (Double.TryParse(GetSetting(rsCoefficient), out _tmp))
                     return _tmp;
