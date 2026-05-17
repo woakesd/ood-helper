@@ -157,9 +157,9 @@ namespace OodHelper.Results
                 {
                     _row["restricted_sail"] = DBNull.Value;
                     if (_row["open_handicap"] != DBNull.Value)
-                        _row["open_handicap"] = (int)Math.Round((int)_row["open_handicap"] * Settings.RSCoefficieent);
+                        _row["open_handicap"] = (int)Math.Round((int)_row["open_handicap"] / Settings.RSCoefficieent);
                     if (_row["rolling_handicap"] != DBNull.Value)
-                        _row["rolling_handicap"] = (int)Math.Round((int)_row["rolling_handicap"] * Settings.RSCoefficieent);
+                        _row["rolling_handicap"] = (int)Math.Round((int)_row["rolling_handicap"] / Settings.RSCoefficieent);
                 }
                 OnPropertyChanged("OpenHandicap");
                 OnPropertyChanged("RollingHandicap");

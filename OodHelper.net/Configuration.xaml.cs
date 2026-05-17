@@ -26,6 +26,11 @@ namespace OodHelper
             RHCoefficient.Text = Settings.RHCoefficieent.ToString();
 
             //
+            // Get rolling handicap coefficient
+            //
+            RSCoefficient.Text = Settings.RSCoefficieent.ToString();
+
+            //
             // init mysql connection values
             //
             string myconstring = Settings.Mysql;
@@ -65,15 +70,17 @@ namespace OodHelper
 
         private void OK_Click(object sender, RoutedEventArgs e)
         {
-            MySqlConnectionStringBuilder mcsb = new MySqlConnectionStringBuilder();
-            mcsb.Server = Server.Text;
-            mcsb.UserID = Username.Text;
-            mcsb.Password = Password.Text;
-            mcsb.Database = Database.Text;
-            mcsb.UseCompression = UseCompression.IsChecked.Value;
-            uint port = mcsb.Port;
-            UInt32.TryParse(Port.Text, out port);
-            mcsb.Port = port;
+            MySqlConnectionStringBuilder mcsb = new MySqlConnectionStringBuilder
+            {
+                Server = Server.Text,
+                UserID = Username.Text,
+                Password = Password.Text,
+                Database = Database.Text,
+                UseCompression = UseCompression.IsChecked.Value
+            };
+            
+            if (uint.TryParse(Port.Text, out uint port))
+                mcsb.Port = port;
             if (SSL.SelectedValue == SslPreferred)
                 mcsb.SslMode = MySqlSslMode.Preferred;
             if (SSL.SelectedValue == SslRequired)
@@ -86,17 +93,19 @@ namespace OodHelper
 
             int b = 0, t = 0;
 
-            if (Int32.TryParse(BottomSeed.Text, out b) && b != 0)
+            if (int.TryParse(BottomSeed.Text, out b) && b != 0)
                 Settings.BottomSeed = b;
 
-            if (Int32.TryParse(TopSeed.Text, out t) && t != 0)
+            if (int.TryParse(TopSeed.Text, out t) && t != 0)
                 Settings.TopSeed = t;
 
             Db.ReseedDatabase();
 
-            double _rhc = 0;
-            if (Double.TryParse(RHCoefficient.Text, out _rhc))
+            if (double.TryParse(RHCoefficient.Text, out double _rhc))
                 Settings.RHCoefficieent = _rhc;
+
+            if (double.TryParse(RSCoefficient.Text, out double _rsc))
+                Settings.RSCoefficieent = _rsc;
 
             Settings.DefaultDiscardProfile = DefaultDiscardProfile.Text;
 

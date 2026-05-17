@@ -148,12 +148,12 @@ namespace OodHelper.Results
         {
             private int toRid;
             private int fromRid;
-            private RaceResults rr;
+            private RaceResults raceResults;
             public FleetChanger(RaceResults r, int from, int to)
             {
                 fromRid = from;
                 toRid = to;
-                rr = r;
+                raceResults = r;
             }
 
             #region ICommand Members
@@ -193,8 +193,8 @@ namespace OodHelper.Results
                         c.ExecuteNonQuery(p);
                     }
 
-                    for (int i = 0; i < rr.reds.Length; i++)
-                        rr.reds[i].LoadGrid();
+                    for (int i = 0; i < raceResults.reds.Length; i++)
+                        raceResults.reds[i].LoadGrid();
                 }
             }
 
