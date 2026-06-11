@@ -20,11 +20,7 @@ namespace OodHelper
         public About()
         {
             InitializeComponent();
-            string _rev;
-            if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
-                _rev = System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
-            else
-                _rev = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            string _rev = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             aboutBlock.Text = string.Format("Revision: {0}\nOOD Helper by David Woakes", _rev);
         }
