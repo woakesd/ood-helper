@@ -28,10 +28,10 @@
                     <Label Grid.Row="1">Top seed</Label>
                     <Label Grid.Row="2">Rolling Hcp Coefficient</Label>
                     <Label Grid.Row="3">Restricted Sail Coefficient</Label>
-                    <TextBox Grid.Column="1" Name="BottomSeed" Margin="2" Width="150"/>
-                    <TextBox Grid.Column="1" Name="TopSeed" Margin="2" Grid.Row="1" Width="150"/>
-                    <TextBox Grid.Column="1" Name="RHCoefficient" Margin="2" Grid.Row="2" Width="150"/>
-                    <TextBox Grid.Column="1" Name="RSCoefficient" Margin="2" Grid.Row="3" Width="150"/>
+                    <TextBox Grid.Column="1" Name="BottomSeed" Margin="2" Width="150" Text="{Binding BottomSeed, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Grid.Column="1" Name="TopSeed" Margin="2" Grid.Row="1" Width="150" Text="{Binding TopSeed, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Grid.Column="1" Name="RHCoefficient" Margin="2" Grid.Row="2" Width="150" Text="{Binding RhCoefficient, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Grid.Column="1" Name="RSCoefficient" Margin="2" Grid.Row="3" Width="150" Text="{Binding RsCoefficient, UpdateSourceTrigger=PropertyChanged}"/>
                     <Grid Grid.ColumnSpan="2" Grid.Row="4" Grid.Column="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -39,7 +39,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Button Content="Clear" Click="clear_Click" Grid.Column="3" Margin="5" Name="clear" />
+                        <Button Content="Clear" Command="{Binding ClearSeedsCommand}" Grid.Column="3" Margin="5" Name="clear" />
                     </Grid>
                 </Grid>
             </TabItem>
@@ -67,13 +67,13 @@
                     <Label Grid.Column="0" Grid.Row="4">Use Compression</Label>
                     <Label Grid.Column="0" Grid.Row="5">Port</Label>
                     <Label Grid.Column="0" Grid.Row="6">SSL Mode</Label>
-                    <TextBox Grid.Column="1" Grid.Row="0" Margin="1" Width="150" Name="Server" />
-                    <TextBox Grid.Column="1" Grid.Row="1" Margin="1" Width="150" Name="Username" />
-                    <TextBox Grid.Column="1" Grid.Row="2" Margin="1" Width="150" Name="Password" />
-                    <TextBox Grid.Column="1" Grid.Row="3" Margin="1" Width="150" Name="Database" />
-                    <CheckBox Grid.Column="1" Grid.Row="4" Margin="6" Name="UseCompression"/>
-                    <TextBox Grid.Column="1" Grid.Row="5" Margin="1" Width="150" Name="Port" />
-                    <ComboBox Grid.Column="1" Grid.Row="6" Margin="1" SelectedIndex="0" Name="SSL">
+                    <TextBox Grid.Column="1" Grid.Row="0" Margin="1" Width="150" Name="Server" Text="{Binding Server, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Grid.Column="1" Grid.Row="1" Margin="1" Width="150" Name="Username" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Grid.Column="1" Grid.Row="2" Margin="1" Width="150" Name="Password" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Grid.Column="1" Grid.Row="3" Margin="1" Width="150" Name="Database" Text="{Binding Database, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox Grid.Column="1" Grid.Row="4" Margin="6" Name="UseCompression" IsChecked="{Binding UseCompression}"/>
+                    <TextBox Grid.Column="1" Grid.Row="5" Margin="1" Width="150" Name="Port" Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}" />
+                    <ComboBox Grid.Column="1" Grid.Row="6" Margin="1" SelectedIndex="{Binding SslModeIndex}" Name="SSL">
                         <ComboBoxItem Name="SslNone">Don't use</ComboBoxItem>
                         <ComboBoxItem Name="SslPreferred">Preferred</ComboBoxItem>
                         <ComboBoxItem Name="SslRequired">Required</ComboBoxItem>
@@ -89,17 +89,17 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Label>Default discard profile</Label>
-                    <TextBox Margin="2" Grid.Row="1" Name="DefaultDiscardProfile" />
+                    <TextBox Margin="2" Grid.Row="1" Name="DefaultDiscardProfile" Text="{Binding DefaultDiscardProfile, UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
             </TabItem>
             <TabItem Name="Pusher" Header="Pusher">
                 <StackPanel Orientation="Vertical">
                     <Label>Pusher App Id</Label>
-                    <TextBox Margin="2" Name="PusherAppId" />
+                    <TextBox Margin="2" Name="PusherAppId" Text="{Binding PusherAppId, UpdateSourceTrigger=PropertyChanged}" />
                     <Label>Pusher App Key</Label>
-                    <TextBox Margin="2" Name="PusherAppKey" />
+                    <TextBox Margin="2" Name="PusherAppKey" Text="{Binding PusherAppKey, UpdateSourceTrigger=PropertyChanged}" />
                     <Label>Pusher App Secret</Label>
-                    <TextBox Margin="2" Name="PusherAppSecret" />
+                    <TextBox Margin="2" Name="PusherAppSecret" Text="{Binding PusherAppSecret, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
             </TabItem>
         </TabControl>
@@ -109,7 +109,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button Margin="6" IsCancel="True" Grid.Column="0" Name="Cancel">Cancel</Button>
-            <Button Margin="6" IsDefault="True" Grid.Column="1" Name="OK" Click="OK_Click">OK</Button>
+            <Button Margin="6" IsDefault="True" Grid.Column="1" Name="OK" Command="{Binding SaveCommand}">OK</Button>
         </Grid>
     </Grid>
 </Window>
