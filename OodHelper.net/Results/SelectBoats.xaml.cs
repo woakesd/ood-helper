@@ -8,6 +8,8 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Microsoft.Extensions.DependencyInjection;
+using OodHelper.Data;
 using OodHelper.Maintain;
 using OodHelper.Rules;
 
@@ -41,6 +43,10 @@ namespace OodHelper.Results
 
             _sbt = new SelectedBoats[_reds.Length];
             _rules = new BoatSelectRule[_reds.Length];
+
+            // SelectBoats stays on the legacy Db helper; the rule trees come from the EF
+            // repository, resolved here because this window is not constructed through DI.
+            var ruleRepo = App.Services.GetRequiredService<ISelectRuleRepository>();
 
             for (int i = 0; i < _reds.Length; i++)
             {
@@ -86,7 +92,7 @@ namespace OodHelper.Results
                 _sbt[i].Boats.IsReadOnly = true;
                 _sbt[i].Boats.ContextMenu = new ContextMenu();
 
-                _rules[i] = new BoatSelectRule(_reds[i].RaceClass);
+                _rules[i] = ruleRepo.GetTree(_reds[i].RaceClass);
             }
 
             for (int i = 0; i < _sbt.Length; i++)

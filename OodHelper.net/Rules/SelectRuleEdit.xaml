@@ -1,8 +1,9 @@
-﻿<Window x:Class="OodHelper.Rules.SelectRuleEdit"
+<Window x:Class="OodHelper.Rules.SelectRuleEdit"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:rules="clr-namespace:OodHelper.Rules"
+        xmlns:behaviors="clr-namespace:OodHelper.Behaviors"
         Title="Select Rule Edit" Height="300" Width="600">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
@@ -27,13 +28,13 @@
         </Grid.RowDefinitions>
         <ToolBarTray>
             <ToolBar>
-                <Button Name="Save" Click="Add_Click">
+                <Button Name="Save" Command="{Binding SaveCommand}">
                     <StackPanel Orientation="Horizontal">
                         <Image Grid.Column="0" Source="/OodHelper;component/Images/Add.png" />
                         <Label Grid.Column="1">Save</Label>
                     </StackPanel>
                 </Button>
-                <Button Name="CloseButton" Click="CloseButton_Click">
+                <Button Name="CloseButton" Command="{Binding CancelCommand}">
                     <StackPanel Orientation="Horizontal">
                         <Image Grid.Column="0" Source="/OodHelper;component/Images/Cancel.png" />
                         <Label Grid.Column="1">Cancel</Label>
@@ -43,9 +44,9 @@
         </ToolBarTray>
         <StackPanel Orientation="Horizontal" Grid.Row="1">
             <TextBlock VerticalAlignment="Center" Text="Name "/>
-            <TextBox Name="RuleName" Width="200" Margin="0,2" />
+            <TextBox Name="RuleName" Width="200" Margin="0,2" Text="{Binding RuleName, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
-        <TreeView Name="Rules" Grid.Row="2">
+        <TreeView Name="Rules" Grid.Row="2" ItemsSource="{Binding Rules}">
             <TreeView.ItemContainerStyle>
                 <Style>
                     <Setter Property="TreeViewItem.IsExpanded" Value="True"/>
@@ -57,23 +58,23 @@
                 <HierarchicalDataTemplate ItemsSource="{Binding Path=Children}">
                     <StackPanel Orientation="Horizontal" MinWidth="400">
                         <StackPanel Orientation="Horizontal" Visibility="{Binding Path=HasChildren,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
-                            <ComboBox Margin="2" Loaded="ComboBox_Loaded" ItemsSource="{Binding Source={StaticResource ResourceKey=DataFromApply}}" SelectedValue="{Binding Path=Application}"/>
+                            <ComboBox Margin="2" behaviors:ComboBoxAutoWidth.Enabled="True" ItemsSource="{Binding Source={StaticResource ResourceKey=DataFromApply}}" SelectedValue="{Binding Path=Application}"/>
                             <TextBlock Margin="2" VerticalAlignment="Center" Text=" of the following rules:"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Visibility="{Binding Path=HasNoChildren,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
-                            <ComboBox Margin="2" ItemsSource="{Binding Path=EntityFields}" SelectedValue="{Binding Path=Field}" Loaded="ComboBox_Loaded"/>
-                            <ComboBox Margin="2" ItemsSource="{Binding Path=Conditions,Converter={StaticResource ResourceKey=ConditionNameListConverter}}" 
+                            <ComboBox Margin="2" ItemsSource="{Binding Path=EntityFields}" SelectedValue="{Binding Path=Field}" behaviors:ComboBoxAutoWidth.Enabled="True"/>
+                            <ComboBox Margin="2" ItemsSource="{Binding Path=Conditions,Converter={StaticResource ResourceKey=ConditionNameListConverter}}"
                                       SelectedValue="{Binding Path=Condition,Converter={StaticResource ResourceKey=ConditionNameConverter}}"
-                                      Loaded="ComboBox_Loaded"/>
-                            <TextBox Margin="2" MinWidth="120" Name="StringValue" Text="{Binding Path=StringValue}" Visibility="{Binding Path=StringValueVisible}"/>
-                            <TextBox Margin="2" MinWidth="60" Name="Bound1" Text="{Binding Path=Bound1}" Visibility="{Binding Path=Bound1Visible}"/>
+                                      behaviors:ComboBoxAutoWidth.Enabled="True"/>
+                            <TextBox Margin="2" MinWidth="120" Name="StringValue" Text="{Binding Path=StringValue, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding Path=StringValueVisible}"/>
+                            <TextBox Margin="2" MinWidth="60" Name="Bound1" Text="{Binding Path=Bound1, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding Path=Bound1Visible}"/>
                             <TextBlock Margin="2"  VerticalAlignment="Center" Text=" and " Visibility="{Binding Path=Bound2Visible}"/>
-                            <TextBox Margin="2" MinWidth="60" Name="Bound2" Text="{Binding Path=Bound2}" Visibility="{Binding Path=Bound2Visible}"/>
+                            <TextBox Margin="2" MinWidth="60" Name="Bound2" Text="{Binding Path=Bound2, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding Path=Bound2Visible}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Visibility="{Binding Path=ButtonVisibility}">
-                            <Button Margin="2" Name="AddSibling" Click="AddSibling_Click">+</Button>
-                            <Button Margin="2" Name="RemoveMe" Visibility="{Binding Path=RemoveMeVisibility}" Click="RemoveMe_Click">-</Button>
-                            <Button Margin="2" Name="AddParentSibling" Click="AddParentSibling_Click">...</Button>
+                            <Button Margin="2" Name="AddSibling" Command="{Binding AddSiblingCommand}">+</Button>
+                            <Button Margin="2" Name="RemoveMe" Visibility="{Binding Path=RemoveMeVisibility}" Command="{Binding RemoveMeCommand}">-</Button>
+                            <Button Margin="2" Name="AddParentSibling" Command="{Binding AddParentSiblingCommand}">...</Button>
                         </StackPanel>
                     </StackPanel>
                 </HierarchicalDataTemplate>

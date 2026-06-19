@@ -121,7 +121,7 @@ namespace OodHelper.ViewModels
         [RelayCommand]
         private void OpenRules()
         {
-            new SelectRules().ShowDialog();
+            _dialogs.ShowDialog<SelectRules>();
         }
 
         [RelayCommand]

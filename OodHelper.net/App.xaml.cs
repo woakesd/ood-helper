@@ -68,6 +68,7 @@ namespace OodHelper
             services.AddSingleton<IDatabaseMaintenanceService, DatabaseMaintenanceService>();
             services.AddSingleton<Data.IBoatRepository, Data.BoatRepository>();
             services.AddSingleton<Data.IRaceResultsRepository, Data.RaceResultsRepository>();
+            services.AddSingleton<Data.ISelectRuleRepository, Data.SelectRuleRepository>();
 
             //
             // The race-results view-models need a runtime race id, so they are created through
@@ -87,12 +88,21 @@ namespace OodHelper
             services.AddTransient<Func<int[], Results.RaceResults>>(sp => rids =>
                 new Results.RaceResults(sp.GetRequiredService<Func<int[], Results.RaceResultsViewModel>>()(rids)));
 
+            //
+            // The rule editor needs a runtime rule id (null for a new rule), so it is created
+            // through a factory delegate, like the race-results view-models above.
+            //
+            services.AddTransient<Func<Guid?, SelectRuleEditViewModel>>(sp => id =>
+                new SelectRuleEditViewModel(sp.GetRequiredService<Data.ISelectRuleRepository>(), id));
+
             services.AddTransient<OodHelperWindowViewModel>();
             services.AddSingleton<OodHelperWindow>();
             services.AddTransient<BoatsViewModel>();
             services.AddTransient<Maintain.Boats>();
             services.AddTransient<ConfigurationViewModel>();
             services.AddTransient<Configure>();
+            services.AddTransient<SelectRulesViewModel>();
+            services.AddTransient<Rules.SelectRules>();
         }
 
         protected override void OnExit(ExitEventArgs e)

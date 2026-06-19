@@ -1,3 +1,4 @@
+using System;
 using System.Windows;
 
 namespace OodHelper.Services
@@ -18,5 +19,7 @@ namespace OodHelper.Services
         BoatEditResult ShowBoatEditor(int bid);
         int[] ShowRaceChooser();
         int? ShowSeriesChooser();
+        /// <summary>Opens the rule editor (new rule when id is null). Returns true if saved.</summary>
+        bool ShowSelectRuleEditor(Guid? id);
     }
 }

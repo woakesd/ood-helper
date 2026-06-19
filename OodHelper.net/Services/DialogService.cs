@@ -2,6 +2,8 @@ using System;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using OodHelper.Maintain;
+using OodHelper.Rules;
+using OodHelper.ViewModels;
 
 namespace OodHelper.Services
 {
@@ -66,6 +68,13 @@ namespace OodHelper.Services
             var chooser = new SeriesChooser();
             if (chooser.ShowDialog() != true) return null;
             return chooser.Sid;
+        }
+
+        public bool ShowSelectRuleEditor(Guid? id)
+        {
+            var vm = _services.GetRequiredService<Func<Guid?, SelectRuleEditViewModel>>()(id);
+            var view = new SelectRuleEdit(vm) { Owner = Application.Current.MainWindow };
+            return view.ShowDialog() == true;
         }
     }
 }
