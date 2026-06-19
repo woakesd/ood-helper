@@ -1,8 +1,9 @@
 using System.Collections.Generic;
-using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 using NSubstitute;
 using OodHelper.Data;
+using OodHelper.Data.Entities;
 using OodHelper.Services;
 using OodHelper.ViewModels;
 using Xunit;
@@ -19,20 +20,15 @@ namespace OodHelper.Tests
             return new BoatsViewModel(_boats, _dialogs) { DebounceMilliseconds = 0 };
         }
 
-        private static DataTable BoatTable(params (int Bid, string Name)[] boats)
+        private static IReadOnlyList<Boat> Boats(params (int Bid, string Name)[] boats)
         {
-            var table = new DataTable();
-            table.Columns.Add("bid", typeof(int));
-            table.Columns.Add("boatname", typeof(string));
-            foreach (var boat in boats)
-                table.Rows.Add(boat.Bid, boat.Name);
-            return table;
+            return boats.Select(b => new Boat { Bid = b.Bid, Boatname = b.Name }).ToList();
         }
 
         [Fact]
         public async Task SettingFilterText_SearchesAndPopulatesRows()
         {
-            _boats.Search("fire").Returns(BoatTable((1, "Firefly")));
+            _boats.Search("fire").Returns(Boats((1, "Firefly")));
             var vm = CreateViewModel();
 
             vm.FilterText = "fire";
@@ -46,7 +42,7 @@ namespace OodHelper.Tests
         [Fact]
         public async Task SettingFilterTextToWhitespace_ClearsRows()
         {
-            _boats.Search("fire").Returns(BoatTable((1, "Firefly")));
+            _boats.Search("fire").Returns(Boats((1, "Firefly")));
             var vm = CreateViewModel();
             vm.FilterText = "fire";
             await vm.FilterTask;
@@ -62,7 +58,7 @@ namespace OodHelper.Tests
         public void Add_WhenAccepted_RefiltersByNewBoatName()
         {
             _dialogs.ShowBoatEditor(0).Returns(new BoatEditResult { Accepted = true, BoatName = "Osprey" });
-            _boats.Search("Osprey").Returns(BoatTable((7, "Osprey")));
+            _boats.Search("Osprey").Returns(Boats((7, "Osprey")));
             var vm = CreateViewModel();
 
             vm.AddCommand.Execute(null);
@@ -87,7 +83,7 @@ namespace OodHelper.Tests
         [Fact]
         public async Task Edit_WithSelectedRow_OpensEditorForThatBoat()
         {
-            _boats.Search("fire").Returns(BoatTable((42, "Firefly")));
+            _boats.Search("fire").Returns(Boats((42, "Firefly")));
             _dialogs.ShowBoatEditor(42).Returns(new BoatEditResult { Accepted = true, BoatName = "Firefly" });
             var vm = CreateViewModel();
             vm.FilterText = "fire";
@@ -113,11 +109,11 @@ namespace OodHelper.Tests
         [Fact]
         public async Task Delete_ConfirmsPerRow_AndHonoursYesNoCancel()
         {
-            _boats.Search("b").Returns(BoatTable((1, "Alpha"), (2, "Bravo"), (3, "Charlie")));
+            _boats.Search("b").Returns(Boats((1, "Alpha"), (2, "Bravo"), (3, "Charlie")));
             var vm = CreateViewModel();
             vm.FilterText = "b";
             await vm.FilterTask;
-            var selected = new List<DataRowView> { vm.Rows[0], vm.Rows[1], vm.Rows[2] };
+            var selected = new List<Boat> { vm.Rows[0], vm.Rows[1], vm.Rows[2] };
 
             // Yes for Alpha, No for Bravo, Cancel at Charlie
             _dialogs.ConfirmYesNoCancel(Arg.Is<string>(m => m.Contains("Alpha")), Arg.Any<string>()).Returns(true);
@@ -138,7 +134,7 @@ namespace OodHelper.Tests
         {
             var vm = CreateViewModel();
 
-            vm.DeleteCommand.Execute(new List<DataRowView>());
+            vm.DeleteCommand.Execute(new List<Boat>());
 
             _dialogs.DidNotReceive().ConfirmYesNoCancel(Arg.Any<string>(), Arg.Any<string>());
             _boats.DidNotReceive().Delete(Arg.Any<int>());

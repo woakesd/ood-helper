@@ -96,9 +96,6 @@
       <Component Id="SystemDataOdbcDLL">
         <File Id="SystemDataOdbcDLL" Name="System.Data.Odbc.dll" Source="$(var.OodHelper.net.TargetDir)\System.Data.Odbc.dll" KeyPath="yes" />
       </Component>
-      <Component Id="SystemDataOleDbDLL">
-        <File Id="SystemDataOleDbDLL" Name="System.Data.OleDb.dll" Source="$(var.OodHelper.net.TargetDir)\System.Data.OleDb.dll" KeyPath="yes" />
-      </Component>
       <Component Id="SystemIdentityModelTokensJwtDLL">
         <File Id="SystemIdentityModelTokensJwtDLL" Name="System.IdentityModel.Tokens.Jwt.dll" Source="$(var.OodHelper.net.TargetDir)\System.IdentityModel.Tokens.Jwt.dll" KeyPath="yes" />
       </Component>

@@ -1,32 +1,38 @@
-using System.Collections;
-using System.Data;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using OodHelper.Data.Entities;
 
 namespace OodHelper.Data
 {
     internal sealed class BoatRepository : IBoatRepository
     {
-        public DataTable Search(string filter)
+        private readonly IDbContextFactory<OodHelperContext> _contextFactory;
+
+        public BoatRepository(IDbContextFactory<OodHelperContext> contextFactory)
         {
-            using (Db c = new Db(@"SELECT *
-FROM boats
-WHERE boatname LIKE @filter
-or sailno LIKE @filter
-or boatclass LIKE @filter
-ORDER BY boatname"))
+            _contextFactory = contextFactory;
+        }
+
+        public IReadOnlyList<Boat> Search(string filter)
+        {
+            string pattern = $"%{filter}%";
+            using (var ctx = _contextFactory.CreateDbContext())
             {
-                Hashtable p = new Hashtable();
-                p["filter"] = string.Format("%{0}%", filter);
-                return c.GetData(p);
+                return ctx.Boats
+                    .Where(b => EF.Functions.Like(b.Boatname, pattern)
+                                || EF.Functions.Like(b.Sailno, pattern)
+                                || EF.Functions.Like(b.Boatclass, pattern))
+                    .OrderBy(b => b.Boatname)
+                    .ToList();
             }
         }
 
         public void Delete(int bid)
         {
-            using (Db del = new Db("DELETE FROM boats WHERE bid = @bid"))
+            using (var ctx = _contextFactory.CreateDbContext())
             {
-                Hashtable p = new Hashtable();
-                p["bid"] = bid;
-                del.ExecuteNonQuery(p);
+                ctx.Boats.Where(b => b.Bid == bid).ExecuteDelete();
             }
         }
     }

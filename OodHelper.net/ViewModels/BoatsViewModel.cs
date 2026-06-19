@@ -1,12 +1,13 @@
-using System;
 using System.Collections;
-using System.Data;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OodHelper.Data;
+using OodHelper.Data.Entities;
 using OodHelper.Services;
 
 namespace OodHelper.ViewModels
@@ -31,10 +32,10 @@ namespace OodHelper.ViewModels
         private string _filterText;
 
         [ObservableProperty]
-        private DataView _rows;
+        private ObservableCollection<Boat> _rows;
 
         [ObservableProperty]
-        private DataRowView _selectedRow;
+        private Boat _selectedRow;
 
         partial void OnFilterTextChanged(string value)
         {
@@ -59,7 +60,7 @@ namespace OodHelper.ViewModels
         public void Load()
         {
             if (FilterText != null && FilterText.Trim() != string.Empty)
-                Rows = _boats.Search(FilterText).DefaultView;
+                Rows = new ObservableCollection<Boat>(_boats.Search(FilterText));
             else
                 Rows = null;
         }
@@ -79,7 +80,7 @@ namespace OodHelper.ViewModels
         private void Edit()
         {
             if (SelectedRow == null) return;
-            var result = _dialogs.ShowBoatEditor((int)SelectedRow.Row["bid"]);
+            var result = _dialogs.ShowBoatEditor(SelectedRow.Bid);
             if (result.Accepted)
                 Load();
         }
@@ -89,15 +90,14 @@ namespace OodHelper.ViewModels
         {
             if (selectedItems == null || selectedItems.Count == 0) return;
             var change = false;
-            foreach (var item in selectedItems.Cast<DataRowView>().ToArray())
+            foreach (var boat in selectedItems.Cast<Boat>().ToArray())
             {
-                string name = item.Row["boatname"].ToString();
                 bool? result = _dialogs.ConfirmYesNoCancel(
-                    "Are you sure you want to delete " + name + "?", "Confirm Delete");
+                    "Are you sure you want to delete " + boat.Boatname + "?", "Confirm Delete");
                 if (result == null) break;
                 if (result == true)
                 {
-                    _boats.Delete((int)item.Row["bid"]);
+                    _boats.Delete(boat.Bid);
                     change = true;
                 }
             }

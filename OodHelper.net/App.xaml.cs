@@ -1,6 +1,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using OodHelper.Services;
 using OodHelper.ViewModels;
@@ -51,6 +52,15 @@ namespace OodHelper
 
         private static void ConfigureServices(IServiceCollection services)
         {
+            //
+            // EF Core context factory. A factory (rather than a scoped context) suits WPF:
+            // there is no per-request scope, so each unit of work creates a short-lived
+            // context, mirroring the existing `using (Db ...)` pattern. The connection string
+            // is shared with the legacy Db helper during coexistence.
+            //
+            services.AddDbContextFactory<Data.OodHelperContext>(opt =>
+                opt.UseSqlServer(Db.DatabaseConstr));
+
             services.AddSingleton<ISettingsService, SettingsService>();
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<ITabHost, TabHost>();
