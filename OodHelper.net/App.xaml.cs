@@ -67,6 +67,25 @@ namespace OodHelper
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<IDatabaseMaintenanceService, DatabaseMaintenanceService>();
             services.AddSingleton<Data.IBoatRepository, Data.BoatRepository>();
+            services.AddSingleton<Data.IRaceResultsRepository, Data.RaceResultsRepository>();
+
+            //
+            // The race-results view-models need a runtime race id, so they are created through
+            // factory delegates rather than direct DI resolution. The editor factory loads its
+            // data eagerly so RaceResults can inspect the rows (e.g. for auto-populate) on open.
+            //
+            services.AddTransient<Func<int, Results.ResultsEditorViewModel>>(sp => rid =>
+            {
+                var vm = new Results.ResultsEditorViewModel(rid, sp.GetRequiredService<Data.IRaceResultsRepository>());
+                vm.Load();
+                return vm;
+            });
+            services.AddTransient<Func<int[], Results.RaceResultsViewModel>>(sp => rids =>
+                new Results.RaceResultsViewModel(rids,
+                    sp.GetRequiredService<Data.IRaceResultsRepository>(),
+                    sp.GetRequiredService<Func<int, Results.ResultsEditorViewModel>>()));
+            services.AddTransient<Func<int[], Results.RaceResults>>(sp => rids =>
+                new Results.RaceResults(sp.GetRequiredService<Func<int[], Results.RaceResultsViewModel>>()(rids)));
 
             services.AddTransient<OodHelperWindowViewModel>();
             services.AddSingleton<OodHelperWindow>();

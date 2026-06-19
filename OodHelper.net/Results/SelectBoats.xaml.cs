@@ -54,7 +54,7 @@ namespace OodHelper.Results
                 ti.Content = _sbt[i];
                 Fleets.Items.Add(ti);
 
-                var d = _reds[i].Races.ItemsSource as IList<ResultModel>;
+                IReadOnlyList<ResultRowViewModel> d = _reds[i].Rows;
                 var bts = new DataTable {TableName = "boats"};
                 bts.Columns.Add(new DataColumn("bid", typeof (int)));
                 var pk = new DataColumn[1];
@@ -269,7 +269,7 @@ OR surname LIKE @filter) ");
             DialogResult = true;
             for (var i = 0; i < _sbt.Length; i++)
             {
-                var resultModels = _reds[i].Races.ItemsSource as IList<ResultModel>;
+                IReadOnlyList<ResultRowViewModel> resultModels = _reds[i].Rows;
                 a["rid"] = _sbt[i].RaceId;
                 DataTable sb = ((DataView) _sbt[i].Boats.ItemsSource).Table;
                 var selectedBids = new Hashtable();
