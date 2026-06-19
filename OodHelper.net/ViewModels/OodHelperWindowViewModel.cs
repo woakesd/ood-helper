@@ -95,16 +95,16 @@ namespace OodHelper.ViewModels
             _dialogs.ShowDialog<Configure>();
         }
 
+        [RelayCommand]
+        private void OpenCalendar()
+        {
+            _dialogs.ShowDialog<Races>();
+        }
+
         //
         // The windows below have not been converted to MVVM/DI yet; they are
         // constructed directly, exactly as the old Click handlers did.
         //
-
-        [RelayCommand]
-        private void OpenCalendar()
-        {
-            new Races().ShowDialog();
-        }
 
         [RelayCommand]
         private void OpenSeries()

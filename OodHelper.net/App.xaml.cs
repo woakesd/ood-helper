@@ -71,6 +71,7 @@ namespace OodHelper
             services.AddSingleton<Data.ISelectRuleRepository, Data.SelectRuleRepository>();
             services.AddSingleton<Data.IPortsmouthNumberRepository, Data.PortsmouthNumberRepository>();
             services.AddSingleton<Data.ISeriesRepository, Data.SeriesRepository>();
+            services.AddSingleton<Data.ICalendarRepository, Data.CalendarRepository>();
 
             //
             // The race-results view-models need a runtime race id, so they are created through
@@ -112,6 +113,14 @@ namespace OodHelper
             services.AddTransient<Func<int, SeriesRaceSelectViewModel>>(sp => sid =>
                 new SeriesRaceSelectViewModel(sp.GetRequiredService<Data.ISeriesRepository>(), sid));
 
+            //
+            // The race editor needs a runtime rid (0 for a new race).
+            //
+            services.AddTransient<Func<int, RaceEditViewModel>>(sp => rid =>
+                new RaceEditViewModel(sp.GetRequiredService<Data.ICalendarRepository>(),
+                    sp.GetRequiredService<Data.IPortsmouthNumberRepository>(),
+                    sp.GetRequiredService<IDialogService>(), rid));
+
             services.AddTransient<OodHelperWindowViewModel>();
             services.AddSingleton<OodHelperWindow>();
             services.AddTransient<BoatsViewModel>();
@@ -128,6 +137,8 @@ namespace OodHelper
             services.AddTransient<SeriesViewModel>();
             services.AddTransient<Maintain.Series>();
             services.AddTransient<SeriesChooserViewModel>();
+            services.AddTransient<RacesViewModel>();
+            services.AddTransient<Maintain.Races>();
         }
 
         protected override void OnExit(ExitEventArgs e)

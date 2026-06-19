@@ -23,6 +23,8 @@ namespace OodHelper.Services
         bool ShowSeriesEditor(int sid);
         /// <summary>Opens the series race-membership picker. Returns true if saved.</summary>
         bool ShowSeriesRaceSelect(int sid);
+        /// <summary>Opens the race editor (new race when rid is 0). Returns true if saved.</summary>
+        bool ShowRaceEditor(int rid);
         /// <summary>Opens the rule editor (new rule when id is null). Returns true if saved.</summary>
         bool ShowSelectRuleEditor(Guid? id);
         /// <summary>Opens the handicap (class) editor (new class when id is null). Returns true if saved.</summary>
