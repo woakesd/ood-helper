@@ -20,11 +20,7 @@ public partial class OodHelperContext : DbContext
 
     public virtual DbSet<Boat> Boats { get; set; }
 
-    public virtual DbSet<BoatCrew> BoatCrews { get; set; }
-
     public virtual DbSet<Calendar> Calendars { get; set; }
-
-    public virtual DbSet<Person> People { get; set; }
 
     public virtual DbSet<PortsmouthNumber> PortsmouthNumbers { get; set; }
 
@@ -61,9 +57,6 @@ public partial class OodHelperContext : DbContext
                 .HasMaxLength(20)
                 .HasColumnName("boatname");
             entity.Property(e => e.CrewSkillFactor).HasColumnName("crew_skill_factor");
-            entity.Property(e => e.Crewname)
-                .HasMaxLength(30)
-                .HasColumnName("crewname");
             entity.Property(e => e.Deviations)
                 .HasMaxLength(30)
                 .HasColumnName("deviations");
@@ -79,7 +72,6 @@ public partial class OodHelperContext : DbContext
             entity.Property(e => e.Hulltype)
                 .HasMaxLength(1)
                 .HasColumnName("hulltype");
-            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Keel)
                 .HasMaxLength(2)
                 .HasColumnName("keel");
@@ -99,21 +91,6 @@ public partial class OodHelperContext : DbContext
                 .HasMaxLength(26)
                 .HasColumnName("subscription");
             entity.Property(e => e.Uid).HasColumnName("uid");
-
-            entity.HasOne(d => d.IdNavigation).WithMany(p => p.Boats)
-                .HasForeignKey(d => d.Id)
-                .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("FK_boats_people");
-        });
-
-        modelBuilder.Entity<BoatCrew>(entity =>
-        {
-            entity.HasKey(e => new { e.Id, e.Bid });
-
-            entity.ToTable("boat_crew");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Bid).HasColumnName("bid");
         });
 
         modelBuilder.Entity<Calendar>(entity =>
@@ -182,62 +159,6 @@ public partial class OodHelperContext : DbContext
             entity.Property(e => e.WindSpeed)
                 .HasMaxLength(10)
                 .HasColumnName("wind_speed");
-        });
-
-        modelBuilder.Entity<Person>(entity =>
-        {
-            entity.ToTable("people");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Address1)
-                .HasMaxLength(30)
-                .HasColumnName("address1");
-            entity.Property(e => e.Address2)
-                .HasMaxLength(30)
-                .HasColumnName("address2");
-            entity.Property(e => e.Address3)
-                .HasMaxLength(30)
-                .HasColumnName("address3");
-            entity.Property(e => e.Address4)
-                .HasMaxLength(30)
-                .HasColumnName("address4");
-            entity.Property(e => e.Club)
-                .HasMaxLength(10)
-                .HasColumnName("club");
-            entity.Property(e => e.Cp).HasColumnName("cp");
-            entity.Property(e => e.Email)
-                .HasMaxLength(45)
-                .HasColumnName("email");
-            entity.Property(e => e.Firstname)
-                .HasMaxLength(20)
-                .HasColumnName("firstname");
-            entity.Property(e => e.Handbookexclude).HasColumnName("handbookexclude");
-            entity.Property(e => e.Hometel)
-                .HasMaxLength(20)
-                .HasColumnName("hometel");
-            entity.Property(e => e.MainId).HasColumnName("main_id");
-            entity.Property(e => e.Manmemo)
-                .HasColumnType("ntext")
-                .HasColumnName("manmemo");
-            entity.Property(e => e.Member)
-                .HasMaxLength(6)
-                .HasColumnName("member");
-            entity.Property(e => e.Mobile)
-                .HasMaxLength(20)
-                .HasColumnName("mobile");
-            entity.Property(e => e.Novice).HasColumnName("novice");
-            entity.Property(e => e.Papernewsletter).HasColumnName("papernewsletter");
-            entity.Property(e => e.Postcode)
-                .HasMaxLength(9)
-                .HasColumnName("postcode");
-            entity.Property(e => e.S).HasColumnName("s");
-            entity.Property(e => e.Surname)
-                .HasMaxLength(28)
-                .HasColumnName("surname");
-            entity.Property(e => e.Uid).HasColumnName("uid");
-            entity.Property(e => e.Worktel)
-                .HasMaxLength(20)
-                .HasColumnName("worktel");
         });
 
         modelBuilder.Entity<PortsmouthNumber>(entity =>

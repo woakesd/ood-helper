@@ -64,39 +64,10 @@ namespace OodHelper.Website
             scmd.ExecuteNonQuery();
 
             //
-            // People
-            //
-            if (p.CancellationPending)
-            {
-                CancelDownload(e);
-                return;
-            }
-
-            p.ReportProgress((int) ((progress++)*factor), "Loading People");
-            ins.CommandText =
-                "INSERT INTO [PEOPLE] ([id], [main_id], [firstname], [surname], [address1], [address2], [address3], [address4], [postcode], [hometel], [worktel], [mobile], [email], [club], [member], [cp], [s], [manmemo], [novice], [uid], [papernewsletter], [handbookexclude]) " +
-                "VALUES (@id, @sid, @firstname, @surname, @address1, @address2, @address3, @address4, @postcode, @hometel, @worktel, @mobile, @email, @club, @member, @cp, @s, @manmemo, @novice,@uid,@papernewsletter,@handbookexclude)";
-
-            myadp = new MySqlDataAdapter(new MySqlCommand("SELECT * FROM people", Mcon, Mtrn));
-            mtable = new DataTable();
-            myadp.Fill(mtable);
-
-            scmd.CommandText = "DELETE FROM people";
-            scmd.ExecuteNonQuery();
-
-            scmd.CommandText = "SET IDENTITY_INSERT people ON";
-            scmd.ExecuteNonQuery();
-
-            CopyData(mtable, ins);
-
-            scmd.CommandText = "SET IDENTITY_INSERT people OFF";
-            scmd.ExecuteNonQuery();
-
-            //
             // Boats
             //
             p.ReportProgress((int) ((progress++)*factor), "Loading Boats");
-            
+
             myadp = new MySqlDataAdapter(new MySqlCommand("SELECT * FROM boats", Mcon, Mtrn));
             mtable = new DataTable();
             myadp.Fill(mtable);
@@ -105,9 +76,9 @@ namespace OodHelper.Website
             scmd.ExecuteNonQuery();
 
             ins.CommandText = "INSERT INTO [boats] " +
-                              "([bid], [id], [boatname], [boatclass], [sailno], [dinghy], [hulltype], [distance], [crewname], [open_handicap], [handicap_status], [rolling_handicap], [crew_skill_factor], [engine_propeller], [keel], [deviations], [subscription], [berth], [boatmemo], [hired], [p], [s], [beaten],[uid]) " +
+                              "([bid], [boatname], [boatclass], [sailno], [dinghy], [hulltype], [distance], [open_handicap], [handicap_status], [rolling_handicap], [crew_skill_factor], [engine_propeller], [keel], [deviations], [subscription], [berth], [boatmemo], [hired], [p], [s], [beaten],[uid]) " +
                               "VALUES " +
-                              "(@bid, @id, @boatname, @boatclass, @sailno, @dngy, @h, @distance, @crewname, @ohp, @ohstat, @rhp, @csf, @eng, @kl, @deviations, @subscriptn, @berth, @boatmemo, @hired, @p, @s, @beaten, @uid)";
+                              "(@bid, @boatname, @boatclass, @sailno, @dngy, @h, @distance, @ohp, @ohstat, @rhp, @csf, @eng, @kl, @deviations, @subscriptn, @berth, @boatmemo, @hired, @p, @s, @beaten, @uid)";
 
             scmd.CommandText = "SET IDENTITY_INSERT boats ON";
             scmd.ExecuteNonQuery();
@@ -116,28 +87,6 @@ namespace OodHelper.Website
 
             scmd.CommandText = "SET IDENTITY_INSERT boats OFF";
             scmd.ExecuteNonQuery();
-
-            //
-            // Boat Crew
-            //
-            if (p.CancellationPending)
-            {
-                CancelDownload(e);
-                return;
-            }
-
-            p.ReportProgress((int) ((progress++)*factor), "Loading Boat Crew");
-            ins.CommandText = "INSERT INTO [boat_crew] ([id], [bid]) " +
-                              "VALUES (@id, @bid)";
-
-            myadp = new MySqlDataAdapter(new MySqlCommand("SELECT * FROM boat_crew", Mcon, Mtrn));
-            mtable = new DataTable();
-            myadp.Fill(mtable);
-
-            scmd.CommandText = "DELETE FROM boat_crew";
-            scmd.ExecuteNonQuery();
-
-            CopyData(mtable, ins);
 
             //
             // Races

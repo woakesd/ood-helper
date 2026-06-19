@@ -30,7 +30,6 @@
         </Grid.ColumnDefinitions>
         <Label Content="Boat name" Grid.Row="0" Grid.Column="0"/>
         <Label Content="Boat class" Grid.Row="1" Grid.Column="0"/>
-        <Label Content="Boat owner" Grid.Row="2" Grid.Column="0"/>
         <Label Content="Sail number" Grid.Row="3" Grid.Column="0"/>
         <Label Content="Dinghy" Grid.Row="4" Grid.Column="0"/>
         <Label Content="Hull type" Grid.Row="5" Grid.Column="0"/>
@@ -50,14 +49,6 @@
             </Grid.ColumnDefinitions>
             <TextBox Grid.Column="0" Text="{Binding BoatClass}" Width="120" MaxLength="20" Margin="2" />
             <Button Grid.Column="1" Content="Select Class" Click="SelectClass_Click" Name="SelectClass" Margin="2" Padding="14,0,15,0" />
-        </Grid>
-        <Grid Grid.Row="2" Grid.Column="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
-            </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" Text="{Binding Owner,Mode=OneWay}" IsReadOnly="True" Width="120" MaxLength="20" Margin="2" />
-            <Button Grid.Column="1" Content="Select Person" Name="SelectPerson" Margin="2" Padding="10,0" Click="SelectPerson_Click" />
         </Grid>
         <TextBox Text="{Binding SailNumber}" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Width="120" MaxLength="8" Margin="2,2,0,2" />
         <CheckBox IsChecked="{Binding Dinghy}" Grid.Row="4" Grid.Column="1" Content="" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="2" />

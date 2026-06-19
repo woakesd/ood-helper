@@ -16,7 +16,7 @@ namespace OodHelper.Website
             if (w == null)
                 return;
 
-            const int steps = 10;
+            const int steps = 8;
 
             if (w.CancellationPending)
             {
@@ -31,12 +31,12 @@ namespace OodHelper.Website
 
             var msql = new StringBuilder("INSERT INTO `boats` (`boatname`,`boatclass`,`sailno`,`dngy`,`h`,`bid`,");
             msql.Append(
-                "`distance`,`crewname`,`ohp`,`ohstat`,`rhp`,`csf`,`eng`,`kl`,`deviations`,`subscriptn`,`p`,`s`,");
-            msql.Append("`boatmemo`,`id`,`beaten`,`berth`,`hired`,`uid`) VALUES ");
+                "`distance`,`ohp`,`ohstat`,`rhp`,`csf`,`eng`,`kl`,`deviations`,`subscriptn`,`p`,`s`,");
+            msql.Append("`boatmemo`,`beaten`,`berth`,`hired`,`uid`) VALUES ");
 
             var c = new Db(@"SELECT boatname, boatclass, sailno, dinghy dngy, hulltype h, bid,
-                    distance, crewname, open_handicap ohp, handicap_status ohstat, rolling_handicap rhp, crew_skill_factor csf, engine_propeller eng, keel kl,
-                    deviations, subscription subscriptn, p, s, boatmemo, id, beaten, berth, hired, uid
+                    distance, open_handicap ohp, handicap_status ohstat, rolling_handicap rhp, crew_skill_factor csf, engine_propeller eng, keel kl,
+                    deviations, subscription subscriptn, p, s, boatmemo, beaten, berth, hired, uid
                     FROM boats");
             DataTable d = c.GetData(null);
             c.Dispose();
@@ -103,79 +103,7 @@ namespace OodHelper.Website
                 return;
             }
 
-            w.ReportProgress(200/steps, "Uploading people");
-
-            mcom.CommandText = "DELETE FROM `people`";
-            mcom.ExecuteNonQuery();
-
-            msql.Clear();
-            msql.Append(
-                "INSERT INTO `people` (`firstname`,`surname`,`address1`,`address2`,`address3`,`address4`,`postcode`,");
-            msql.Append(
-                "`hometel`,`worktel`,`mobile`,`email`,`club`,`member`,`cp`,`s`,`id`,`manmemo`,`sid`,`novice`,`uid`,");
-            msql.Append("`papernewsletter`,`handbookexclude`) VALUES ");
-
-            c =
-                new Db(
-                    @"SELECT firstname,surname,address1,address2,address3,address4,postcode,hometel,worktel,mobile,email,
-                        club,member,cp,s,id,manmemo,main_id sid,novice,uid,papernewsletter,handbookexclude
-                        FROM people");
-            d = c.GetData(null);
-            c.Dispose();
-
-            if (d.Rows.Count > 0)
-            {
-                mcom.CommandText = "ALTER TABLE `people` DISABLE KEYS";
-                mcom.ExecuteNonQuery();
-
-                BuildInsertData(d, msql);
-
-                mcom.CommandText = msql.ToString();
-                mcom.ExecuteNonQuery();
-
-                mcom.CommandText = "ALTER TABLE `people` ENABLE KEYS";
-                mcom.ExecuteNonQuery();
-            }
-
-            if (w.CancellationPending)
-            {
-                CancelDownload(e);
-                return;
-            }
-
-            w.ReportProgress(300/steps, "Uploading boat crew");
-
-            mcom.CommandText = "DELETE FROM `boat_crew`";
-            mcom.ExecuteNonQuery();
-
-            msql.Clear();
-            msql.Append("INSERT INTO `boat_crew` (`id`,`bid`) VALUES ");
-
-            c = new Db(@"SELECT id, bid FROM boat_crew");
-            d = c.GetData(null);
-            c.Dispose();
-
-            if (d.Rows.Count > 0)
-            {
-                mcom.CommandText = "ALTER TABLE `boat_crew` DISABLE KEYS";
-                mcom.ExecuteNonQuery();
-
-                BuildInsertData(d, msql);
-
-                mcom.CommandText = msql.ToString();
-                mcom.ExecuteNonQuery();
-
-                mcom.CommandText = "ALTER TABLE `boat_crew` ENABLE KEYS";
-                mcom.ExecuteNonQuery();
-            }
-
-            if (w.CancellationPending)
-            {
-                CancelDownload(e);
-                return;
-            }
-
-            w.ReportProgress(400/steps, "Uploading races");
+            w.ReportProgress(200/steps, "Uploading races");
 
             mcom.CommandText = "DELETE FROM `races_new`";
             mcom.ExecuteNonQuery();
@@ -217,7 +145,7 @@ namespace OodHelper.Website
                 return;
             }
 
-            w.ReportProgress(500/steps, "Uploading series");
+            w.ReportProgress(300/steps, "Uploading series");
 
             mcom.CommandText = "DELETE FROM `series`";
             mcom.ExecuteNonQuery();
@@ -249,7 +177,7 @@ namespace OodHelper.Website
                 return;
             }
 
-            w.ReportProgress(600/steps, "Uploading calendar series join");
+            w.ReportProgress(400/steps, "Uploading calendar series join");
 
             mcom.CommandText = "DELETE FROM `calendar_series_join`";
             mcom.ExecuteNonQuery();
@@ -278,7 +206,7 @@ namespace OodHelper.Website
             //
             // Series results
             //
-            w.ReportProgress(700/steps, "Uploading series results");
+            w.ReportProgress(500/steps, "Uploading series results");
 
             mcom.CommandText = "DELETE FROM `series_results`";
             mcom.ExecuteNonQuery();
@@ -314,7 +242,7 @@ namespace OodHelper.Website
             // select rules
             //
 
-            w.ReportProgress(800/steps, "Uploading select rules");
+            w.ReportProgress(600/steps, "Uploading select rules");
 
             mcom.CommandText = "DELETE FROM `select_rules`";
             mcom.ExecuteNonQuery();
@@ -342,7 +270,7 @@ namespace OodHelper.Website
                 return;
             }
 
-            w.ReportProgress(900/steps, "Uploading portsmouth numbers");
+            w.ReportProgress(700/steps, "Uploading portsmouth numbers");
 
             mcom = new MySqlCommand("DELETE FROM `portsmouth_numbers`") {Connection = Mcon, Transaction = Mtrn};
             mcom.ExecuteNonQuery();

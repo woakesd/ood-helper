@@ -33,8 +33,6 @@
 
   <!-- Files that exist on disk but were not part of the original project -->
   <ItemGroup>
-    <Compile Remove="Results\Membership\**" />
-    <Page Remove="Results\Membership\**" />
     <Compile Remove="Website\About.xaml.cs" />
     <Page Remove="Website\About.xaml" />
   </ItemGroup>

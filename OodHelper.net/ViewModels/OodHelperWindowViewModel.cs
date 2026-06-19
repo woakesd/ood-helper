@@ -101,12 +101,6 @@ namespace OodHelper.ViewModels
         //
 
         [RelayCommand]
-        private void OpenPeople()
-        {
-            new PeopleList().ShowDialog();
-        }
-
-        [RelayCommand]
         private void OpenCalendar()
         {
             new Races().ShowDialog();

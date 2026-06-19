@@ -130,9 +130,8 @@ namespace OodHelper.Results
             {
                 _boatsSql =
                     new StringBuilder(
-                        @"SELECT bid, boatname, boatclass, sailno, dinghy, handicap_status, open_handicap, rolling_handicap, firstname + ' ' + surname name
-FROM boats
-LEFT JOIN people ON boats.id = people.id ");
+                        @"SELECT bid, boatname, boatclass, sailno, dinghy, handicap_status, open_handicap, rolling_handicap
+FROM boats ");
                 bool yachts = false;
                 bool dinghies = false;
 
@@ -156,9 +155,7 @@ LEFT JOIN people ON boats.id = people.id ");
 
                 _boatsSql.Append(@"WHERE (boatname LIKE @filter
 OR sailno LIKE @filter
-OR boatclass LIKE @filter
-OR firstname LIKE @filter
-OR surname LIKE @filter) ");
+OR boatclass LIKE @filter) ");
 
                 if (!dinghies && yachts)
                     _boatsSql.Append(@"AND dinghy = 0 ");

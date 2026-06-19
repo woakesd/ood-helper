@@ -12,7 +12,7 @@ namespace OodHelper.Maintain
     {
         public BoatModel(int b)
         {
-            Db get = new Db("SELECT bid, id, boatname, boatclass, sailno, dinghy, " +
+            Db get = new Db("SELECT bid, boatname, boatclass, sailno, dinghy, " +
                 "hulltype, open_handicap, handicap_status, " +
                 "rolling_handicap, small_cat_handicap_rating, engine_propeller, keel, deviations, boatmemo " +
                 "FROM boats " +
@@ -177,31 +177,6 @@ namespace OodHelper.Maintain
             set { Values["bid"] = value; }
         }
 
-        public int? Id
-        {
-            get { return Values["id"] as int?; }
-            set { Values["id"] = value; OnPropertyChanged("Id"); OnPropertyChanged("Owner"); }
-        }
-
-        public string Owner
-        {
-            get
-            {
-                if (!Id.HasValue) return string.Empty;
-
-                var c = new Db("SELECT firstname, surname " +
-                               "FROM people " +
-                               "WHERE id = @id");
-                var p = new Hashtable {["id"] = Id.Value};
-                var owner = c.GetHashtable(p);
-                if (owner.Count > 0)
-                {
-                    return string.Format("{0} {1}", new object[] { owner["firstname"], owner["surname"] });
-                }
-                return string.Empty;
-            }
-        }
-
         public string BoatName
         {
             set
@@ -281,18 +256,17 @@ namespace OodHelper.Maintain
                 if (Bid == null)
                 {
                     save = new Db("INSERT INTO boats " +
-                            "(id, boatname, boatclass, sailno, dinghy, hulltype, open_handicap, " +
+                            "(boatname, boatclass, sailno, dinghy, hulltype, open_handicap, " +
                             "handicap_status, rolling_handicap, small_cat_handicap_rating, " +
                             "engine_propeller, keel, deviations, boatmemo) " +
-                            "VALUES (@id, @boatname, @boatclass, @sailno, @dinghy, @hulltype, @open_handicap, " +
+                            "VALUES (@boatname, @boatclass, @sailno, @dinghy, @hulltype, @open_handicap, " +
                             "@handicap_status, @rolling_handicap, @small_cat_handicap_rating, " +
                             "@engine_propeller, @keel, @deviations, @boatmemo)");
                     Bid = save.GetNextIdentity("boats");
                 }
                 else
                     save = new Db("UPDATE boats " +
-                            "SET id = @id, " +
-                            "boatname = @boatname, " +
+                            "SET boatname = @boatname, " +
                             "boatclass = @boatclass, " +
                             "sailno = @sailno, " +
                             "dinghy = @dinghy, " +

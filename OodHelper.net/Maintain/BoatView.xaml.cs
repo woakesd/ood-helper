@@ -90,19 +90,6 @@ namespace OodHelper.Maintain
             }
         }
 
-        private void SelectPerson_Click(object sender, RoutedEventArgs e)
-        {
-            PeopleList ppl = new PeopleList(true, 0);
-            if (ppl.ShowDialog() == true)
-            {
-                BoatModel dc = DataContext as BoatModel;
-                if (!dc.Id.HasValue || ppl.Id.HasValue && dc.Id.Value != ppl.Id)
-                {
-                    dc.Id = ppl.Id;
-                }
-            }
-        }
-
         private void SelectClass_Click(object sender, RoutedEventArgs e)
         {
             SelectClass cls = new SelectClass();

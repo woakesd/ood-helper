@@ -7,8 +7,6 @@ public partial class Boat
 {
     public int Bid { get; set; }
 
-    public int? Id { get; set; }
-
     public string Boatname { get; set; }
 
     public string Boatclass { get; set; }
@@ -20,8 +18,6 @@ public partial class Boat
     public string Hulltype { get; set; }
 
     public int? Distance { get; set; }
-
-    public string Crewname { get; set; }
 
     public int? OpenHandicap { get; set; }
 
@@ -54,8 +50,6 @@ public partial class Boat
     public int? Beaten { get; set; }
 
     public Guid? Uid { get; set; }
-
-    public virtual Person IdNavigation { get; set; }
 
     public virtual ICollection<Race> Races { get; set; } = new List<Race>();
 }

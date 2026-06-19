@@ -24,11 +24,6 @@
                         <Image Width="16" Height="16" Margin="1" Source="/OodHelper;component/Images/Boat-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_People" Name="People" Command="{Binding OpenPeopleCommand}" >
-                    <MenuItem.Icon>
-                        <Image Width="16" Height="16" Margin="1" Source="/OodHelper;component/Images/Man.png" />
-                    </MenuItem.Icon>
-                </MenuItem>
                 <MenuItem Header="_Calendar" Name="Calendar" Command="{Binding OpenCalendarCommand}" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                     <MenuItem.Icon>
                         <Image Width="16" Height="16" Margin="1" Source="/OodHelper;component/Images/Calendar-16.png" />
@@ -56,7 +51,6 @@
                         <Image Source="/OodHelper;component/Images/Database-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <!--<MenuItem Header="Print Membership Cards" Name="PrintMembershipCards" Click="PrintMembershipCards_Click" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" />-->
                 <MenuItem Header="Import _PY" Name="importPY" Command="{Binding ImportPyCommand}"  Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"/>
                 <MenuItem Header="_Export Results" Name="ExportResults" Command="{Binding ExportResultsCommand}" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"/>
                 <MenuItem Header="Logout" Name="Logout" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" Command="{Binding LogoutCommand}">
