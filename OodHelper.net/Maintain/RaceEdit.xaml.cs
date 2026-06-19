@@ -15,6 +15,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Markup;
 using System.Xml;
+using Microsoft.Extensions.DependencyInjection;
+using OodHelper.Data;
+using OodHelper.Services;
 
 namespace OodHelper.Maintain
 {
@@ -237,16 +240,12 @@ namespace OodHelper.Maintain
 
         private void SelectClass_Click(object sender, RoutedEventArgs e)
         {
-            SelectClass cls = new SelectClass();
-            if (cls.ShowDialog().Value)
-            {
-                Hashtable p = new Hashtable();
-                p["id"] = cls.Id;
-                Db hdb = new Db("SELECT * FROM portsmouth_numbers WHERE id = @id");
-                Hashtable data = hdb.GetHashtable(p);
+            var id = App.Services.GetRequiredService<IDialogService>().ShowClassPicker();
+            if (id == null) return;
 
-                raceClass.Text = data["class_name"].ToString();
-            }
+            var pn = App.Services.GetRequiredService<IPortsmouthNumberRepository>().Get(id.Value);
+            if (pn != null)
+                raceClass.Text = pn.ClassName;
         }
 
         private void timeFixedRadio_Checked(object sender, RoutedEventArgs e)

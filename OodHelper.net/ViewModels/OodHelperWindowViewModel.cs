@@ -109,13 +109,13 @@ namespace OodHelper.ViewModels
         [RelayCommand]
         private void OpenSeries()
         {
-            new Series().ShowDialog();
+            _dialogs.ShowDialog<Series>();
         }
 
         [RelayCommand]
         private void OpenHandicaps()
         {
-            new Handicaps().ShowDialog();
+            _dialogs.ShowDialog<Handicaps>();
         }
 
         [RelayCommand]
@@ -145,7 +145,7 @@ namespace OodHelper.ViewModels
         [RelayCommand]
         private void ImportPy()
         {
-            new PnImport().ShowDialog();
+            _dialogs.ShowDialog<PnImport>();
         }
 
         [RelayCommand]

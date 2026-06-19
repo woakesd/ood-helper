@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using OodHelper.ViewModels;
 
 namespace OodHelper
 {
@@ -19,70 +8,19 @@ namespace OodHelper
     /// </summary>
     public partial class SeriesChooser : Window
     {
-        private DataTable cal;
-        Working w;
+        private readonly SeriesChooserViewModel _viewModel;
 
-        public SeriesChooser()
+        public SeriesChooser(SeriesChooserViewModel viewModel)
         {
             InitializeComponent();
+            _viewModel = viewModel;
+            DataContext = viewModel;
+            viewModel.CloseRequested += result => DialogResult = result;
         }
 
-        private delegate void DSetGridSource();
-        private DSetGridSource dSetGridSource;
-
-        void SeriesChooser_Loaded(object sender, RoutedEventArgs e)
+        private void SeriesChooser_Loaded(object sender, RoutedEventArgs e)
         {
-            w = new Working(this);
-            w.Show();
-            System.Threading.Tasks.Task.Factory.StartNew(() =>
-                {
-                    Db d = new Db("SELECT * " +
-                        "FROM series " +
-                        "ORDER BY sname");
-                    cal = d.GetData(null);
-                    Dispatcher.Invoke(dSetGridSource = SetGridSource, null);
-                });
-        }
-
-        private void SetGridSource()
-        {
-            CalGrid.ItemsSource = cal.DefaultView;
-
-            w.Close();
-        }
-
-        void cal_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            setChosenSeries();
-        }
-
-        private void buttonResults_Click(object sender, RoutedEventArgs e)
-        {
-            setChosenSeries();
-        }
-
-        public int Sid
-        {
-            get
-            {
-                return sid;
-            }
-        }
-
-        private int sid;
-
-        private void setChosenSeries()
-        {
-            int rowIndex = CalGrid.SelectedIndex;
-            sid = (int)cal.Rows[rowIndex]["sid"];
-            this.DialogResult = true;
-            Close();
-        }
-
-        private void Close_Click(object sender, RoutedEventArgs e)
-        {
-            DialogResult = false;
-            Close();
+            _viewModel.Load();
         }
     }
 }

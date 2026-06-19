@@ -1,4 +1,4 @@
-﻿<Window x:Class="OodHelper.Handicaps"
+<Window x:Class="OodHelper.Handicaps"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Loaded="Window_Loaded"
@@ -6,7 +6,8 @@
         mc:Ignorable="d"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        d:DesignHeight="269" d:DesignWidth="431" KeyUp="Window_KeyUp">
+        d:DesignHeight="269" d:DesignWidth="431" KeyUp="Window_KeyUp"
+        FocusManager.FocusedElement="{Binding ElementName=ClassName}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -15,19 +16,20 @@
         </Grid.RowDefinitions>
         <ToolBarTray>
             <ToolBar>
-                <Button Name="Add" Click="Add_Click">
+                <Button Name="Add" Command="{Binding AddCommand}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/OodHelper;component/Images/Add.png" />
                         <Label>_Add</Label>
                     </StackPanel>
                 </Button>
-                <Button Name="Edit" Click="Edit_Click">
+                <Button Name="Edit" Command="{Binding EditCommand}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/OodHelper;component/Images/Edit.png" />
                         <Label>_Edit</Label>
                     </StackPanel>
                 </Button>
-                <Button Name="Delete" Click="Delete_Click">
+                <Button Name="Delete" Command="{Binding DeleteCommand}"
+                        CommandParameter="{Binding SelectedItems, ElementName=ClassData}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/OodHelper;component/Images/Delete.png" />
                         <Label >_Delete</Label>
@@ -43,19 +45,29 @@
         </ToolBarTray>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,2">
             <Label Margin="3,0">Find</Label>
-            <TextBox Name="ClassName" Margin="2" Width="250" TextChanged="ClassName_TextChanged" />
+            <TextBox Name="ClassName" Margin="2" Width="250" Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock VerticalAlignment="Center" Margin="4,0">Press F3 to search</TextBlock>
         </StackPanel>
         <DockPanel Grid.Row="2" >
-            <DataGrid Name="ClassData" IsReadOnly="True">
+            <DataGrid Name="ClassData" IsReadOnly="True" AutoGenerateColumns="False"
+                      ItemsSource="{Binding Rows}"
+                      SelectedItem="{Binding SelectedRow}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Class name" Binding="{Binding ClassName}" Width="*" />
+                    <DataGridTextColumn Header="Crew" Binding="{Binding NoOfCrew}" />
+                    <DataGridTextColumn Header="Number" Binding="{Binding Number}" />
+                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
+                    <DataGridTextColumn Header="Notes" Binding="{Binding Notes}" Width="*" />
+                </DataGrid.Columns>
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Edit" Click="Edit_Click">
+                        <MenuItem Header="Edit" Command="{Binding EditCommand}">
                             <MenuItem.Icon>
                                 <Image Source="/OodHelper;component/Images/Edit.png" />
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="Delete" Click="Delete_Click">
+                        <MenuItem Header="Delete" Command="{Binding DeleteCommand}"
+                                  CommandParameter="{Binding PlacementTarget.SelectedItems, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                             <MenuItem.Icon>
                                 <Image Source="/OodHelper;component/Images/Delete.png" />
                             </MenuItem.Icon>

@@ -65,9 +65,23 @@ namespace OodHelper.Services
 
         public int? ShowSeriesChooser()
         {
-            var chooser = new SeriesChooser();
-            if (chooser.ShowDialog() != true) return null;
-            return chooser.Sid;
+            var vm = _services.GetRequiredService<SeriesChooserViewModel>();
+            var view = new SeriesChooser(vm) { Owner = Application.Current.MainWindow };
+            return view.ShowDialog() == true ? vm.SelectedSid : null;
+        }
+
+        public bool ShowSeriesEditor(int sid)
+        {
+            var vm = _services.GetRequiredService<Func<int, SeriesEditViewModel>>()(sid);
+            var view = new SeriesEdit(vm) { Owner = Application.Current.MainWindow };
+            return view.ShowDialog() == true;
+        }
+
+        public bool ShowSeriesRaceSelect(int sid)
+        {
+            var vm = _services.GetRequiredService<Func<int, SeriesRaceSelectViewModel>>()(sid);
+            var view = new SeriesRaceSelect(vm) { Owner = Application.Current.MainWindow };
+            return view.ShowDialog() == true;
         }
 
         public bool ShowSelectRuleEditor(Guid? id)
@@ -75,6 +89,26 @@ namespace OodHelper.Services
             var vm = _services.GetRequiredService<Func<Guid?, SelectRuleEditViewModel>>()(id);
             var view = new SelectRuleEdit(vm) { Owner = Application.Current.MainWindow };
             return view.ShowDialog() == true;
+        }
+
+        public bool ShowHandicapEditor(Guid? id)
+        {
+            var vm = _services.GetRequiredService<Func<Guid?, HandicapEditViewModel>>()(id);
+            var view = new Handicap(vm) { Owner = Application.Current.MainWindow };
+            return view.ShowDialog() == true;
+        }
+
+        public Guid? ShowClassPicker()
+        {
+            var vm = _services.GetRequiredService<SelectClassViewModel>();
+            var view = new SelectClass(vm) { Owner = Application.Current.MainWindow };
+            return view.ShowDialog() == true ? vm.SelectedId : null;
+        }
+
+        public string PickOpenFile(string filter)
+        {
+            var dlg = new Microsoft.Win32.OpenFileDialog { Filter = filter };
+            return dlg.ShowDialog() == true ? dlg.FileName : null;
         }
     }
 }

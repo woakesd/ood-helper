@@ -69,6 +69,8 @@ namespace OodHelper
             services.AddSingleton<Data.IBoatRepository, Data.BoatRepository>();
             services.AddSingleton<Data.IRaceResultsRepository, Data.RaceResultsRepository>();
             services.AddSingleton<Data.ISelectRuleRepository, Data.SelectRuleRepository>();
+            services.AddSingleton<Data.IPortsmouthNumberRepository, Data.PortsmouthNumberRepository>();
+            services.AddSingleton<Data.ISeriesRepository, Data.SeriesRepository>();
 
             //
             // The race-results view-models need a runtime race id, so they are created through
@@ -95,6 +97,21 @@ namespace OodHelper
             services.AddTransient<Func<Guid?, SelectRuleEditViewModel>>(sp => id =>
                 new SelectRuleEditViewModel(sp.GetRequiredService<Data.ISelectRuleRepository>(), id));
 
+            //
+            // The handicap (class) editor likewise needs a runtime id (null for a new class).
+            //
+            services.AddTransient<Func<Guid?, HandicapEditViewModel>>(sp => id =>
+                new HandicapEditViewModel(sp.GetRequiredService<Data.IPortsmouthNumberRepository>(), id));
+
+            //
+            // The series editor and race-membership picker need a runtime sid (0 for a new series).
+            //
+            services.AddTransient<Func<int, SeriesEditViewModel>>(sp => sid =>
+                new SeriesEditViewModel(sp.GetRequiredService<Data.ISeriesRepository>(),
+                    sp.GetRequiredService<IDialogService>(), sid));
+            services.AddTransient<Func<int, SeriesRaceSelectViewModel>>(sp => sid =>
+                new SeriesRaceSelectViewModel(sp.GetRequiredService<Data.ISeriesRepository>(), sid));
+
             services.AddTransient<OodHelperWindowViewModel>();
             services.AddSingleton<OodHelperWindow>();
             services.AddTransient<BoatsViewModel>();
@@ -103,6 +120,14 @@ namespace OodHelper
             services.AddTransient<Configure>();
             services.AddTransient<SelectRulesViewModel>();
             services.AddTransient<Rules.SelectRules>();
+            services.AddTransient<HandicapsViewModel>();
+            services.AddTransient<Handicaps>();
+            services.AddTransient<SelectClassViewModel>();
+            services.AddTransient<PnImportViewModel>();
+            services.AddTransient<PnImport>();
+            services.AddTransient<SeriesViewModel>();
+            services.AddTransient<Maintain.Series>();
+            services.AddTransient<SeriesChooserViewModel>();
         }
 
         protected override void OnExit(ExitEventArgs e)

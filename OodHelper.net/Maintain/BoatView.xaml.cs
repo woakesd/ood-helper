@@ -14,7 +14,10 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using OodHelper.Data;
 using OodHelper.Helpers;
+using OodHelper.Services;
 
 namespace OodHelper.Maintain
 {
@@ -92,63 +95,51 @@ namespace OodHelper.Maintain
 
         private void SelectClass_Click(object sender, RoutedEventArgs e)
         {
-            SelectClass cls = new SelectClass();
-            if (cls.ShowDialog().Value)
+            var id = App.Services.GetRequiredService<IDialogService>().ShowClassPicker();
+            if (id == null) return;
+
+            BoatModel dc = DataContext as BoatModel;
+            if (dc == null) return;
+
+            var pn = App.Services.GetRequiredService<IPortsmouthNumberRepository>().Get(id.Value);
+            if (pn == null) return;
+
+            dc.BoatClass = pn.ClassName;
+            dc.OpenHandicap = pn.Number.ToString();
+            if (dc.RollingHandicap == string.Empty)
+                dc.RollingHandicap = pn.Number.ToString();
+            switch (pn.Status)
             {
-                BoatModel dc = DataContext as BoatModel;
-                if (dc != null)
-                {
-                    Hashtable p = new Hashtable();
-                    p["id"] = cls.Id;
-                    Db hdb = new Db("SELECT * FROM portsmouth_numbers WHERE id = @id");
-                    Hashtable data = hdb.GetHashtable(p);
+                case "P":
+                    dc.HandicapStatus = "PY";
+                    break;
+                case "S":
+                    dc.HandicapStatus = "SY";
+                    break;
+                case "C":
+                    dc.HandicapStatus = "CN";
+                    break;
+                case "R":
+                    dc.HandicapStatus = "RN";
+                    break;
+                case "E":
+                    dc.HandicapStatus = "TN";
+                    break;
+            }
 
-                    dc.BoatClass = data["class_name"].ToString();
-                    dc.OpenHandicap = data["number"].ToString();
-                    if (dc.RollingHandicap == string.Empty)
-                        dc.RollingHandicap = data["number"].ToString();
-                    switch (data["status"].ToString())
-                    {
-                        case "P":
-                            dc.HandicapStatus = "PY";
-                            break;
-                        case "S":
-                            dc.HandicapStatus = "SY";
-                            break;
-                        case "C":
-                            dc.HandicapStatus = "CN";
-                            break;
-                        case "R":
-                            dc.HandicapStatus = "RN";
-                            break;
-                        case "E":
-                            dc.HandicapStatus = "TN";
-                            break;
-                    }
+            dc.EnginePropeller = pn.Engine ?? "";
 
-                    if (data["engine"] != DBNull.Value)
-                    {
-                        dc.EnginePropeller = data["engine"].ToString();
-                    }
-                    else
-                        dc.EnginePropeller = "";
-
-                    if (data["keel"] != DBNull.Value)
-                    {
-                        switch (data["keel"] as int?)
-                        {
-                            case 1:
-                                dc.Keel = "F";
-                                break;
-                            case 2:
-                                dc.Keel = "2K";
-                                break;
-                            case 3:
-                                dc.Keel = "3K";
-                                break;
-                        }
-                    }
-                }
+            switch (pn.Keel)
+            {
+                case "1":
+                    dc.Keel = "F";
+                    break;
+                case "2":
+                    dc.Keel = "2K";
+                    break;
+                case "3":
+                    dc.Keel = "3K";
+                    break;
             }
         }
     }
