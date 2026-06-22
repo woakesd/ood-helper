@@ -4,7 +4,10 @@
       "Bash(dir /B)",
       "Bash(Get-ChildItem -Directory)",
       "Bash(Select-Object Name)",
-      "Bash(Remove-Item \"c:\\\\Users\\\\david\\\\source\\\\repos\\\\ood-helper\\\\OodHelper.net\\\\packages.config\" -Force)"
+      "Bash(Remove-Item \"c:\\\\Users\\\\david\\\\source\\\\repos\\\\ood-helper\\\\OodHelper.net\\\\packages.config\" -Force)",
+      "PowerShell(dotnet test *)",
+      "Bash(git *)",
+      "PowerShell(dotnet build *)"
     ]
   }
 }

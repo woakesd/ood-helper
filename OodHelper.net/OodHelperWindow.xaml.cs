@@ -22,7 +22,7 @@ namespace OodHelper
             Close();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             var c = new CheckForUpdates();
             if (c.LocalDate < c.RemoteDate)
@@ -31,7 +31,8 @@ namespace OodHelper
                     "Confirm Download",
                     MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.OK) == MessageBoxResult.OK)
                 {
-                    new DownloadResults();
+                    if (DataContext is OodHelperWindowViewModel vm)
+                        await vm.RunDownloadAsync();
                 }
             }
         }

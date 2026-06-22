@@ -72,6 +72,8 @@ namespace OodHelper
             services.AddSingleton<Data.IPortsmouthNumberRepository, Data.PortsmouthNumberRepository>();
             services.AddSingleton<Data.ISeriesRepository, Data.SeriesRepository>();
             services.AddSingleton<Data.ICalendarRepository, Data.CalendarRepository>();
+            services.AddSingleton<Data.IResultsDownloadService, Data.ResultsDownloadService>();
+            services.AddSingleton<Data.IResultsUploadService, Data.ResultsUploadService>();
 
             //
             // The race-results view-models need a runtime race id, so they are created through

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -29,6 +30,22 @@ namespace OodHelper
         }
 
         private BackgroundWorker worker { get; set; }
+
+        private CancellationTokenSource _cts;
+
+        //
+        // Async/await variant: the caller drives progress via SetProgress and cancellation flows
+        // through the supplied CancellationTokenSource (used by the EF download). The BackgroundWorker
+        // ctor below is still used by the legacy upload / check-for-updates paths.
+        //
+        public Working(Window Parent, CancellationTokenSource cts) : this(Parent)
+        {
+            _cts = cts;
+            CancelButton.Visibility = Visibility.Visible;
+            Progress.IsIndeterminate = false;
+            Progress.Minimum = 0;
+            Progress.Maximum = 100;
+        }
 
         public Working(Window Parent, BackgroundWorker w) : this(Parent)
         {
@@ -75,6 +92,7 @@ namespace OodHelper
             {
                 worker.CancelAsync();
             }
+            _cts?.Cancel();
         }
     }
 }

@@ -22,6 +22,8 @@ public partial class OodHelperContext : DbContext
 
     public virtual DbSet<Calendar> Calendars { get; set; }
 
+    public virtual DbSet<CalendarSeriesJoin> CalendarSeriesJoins { get; set; }
+
     public virtual DbSet<PortsmouthNumber> PortsmouthNumbers { get; set; }
 
     public virtual DbSet<Race> Races { get; set; }
@@ -293,21 +295,20 @@ public partial class OodHelperContext : DbContext
                 .HasColumnName("sname");
 
             entity.HasMany(d => d.Rids).WithMany(p => p.Sids)
-                .UsingEntity<Dictionary<string, object>>(
-                    "CalendarSeriesJoin",
+                .UsingEntity<CalendarSeriesJoin>(
                     r => r.HasOne<Calendar>().WithMany()
-                        .HasForeignKey("Rid")
+                        .HasForeignKey(e => e.Rid)
                         .HasConstraintName("FK_calendar_series_join_calendar"),
                     l => l.HasOne<Series>().WithMany()
-                        .HasForeignKey("Sid")
+                        .HasForeignKey(e => e.Sid)
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("FK_calendar_series_join_series"),
                     j =>
                     {
-                        j.HasKey("Sid", "Rid");
+                        j.HasKey(e => new { e.Sid, e.Rid });
                         j.ToTable("calendar_series_join");
-                        j.IndexerProperty<int>("Sid").HasColumnName("sid");
-                        j.IndexerProperty<int>("Rid").HasColumnName("rid");
+                        j.Property(e => e.Sid).HasColumnName("sid");
+                        j.Property(e => e.Rid).HasColumnName("rid");
                     });
         });
 

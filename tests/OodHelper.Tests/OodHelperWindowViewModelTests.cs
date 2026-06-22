@@ -1,4 +1,8 @@
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using NSubstitute;
+using OodHelper.Data;
 using OodHelper.Services;
 using OodHelper.ViewModels;
 using Xunit;
@@ -10,10 +14,12 @@ namespace OodHelper.Tests
         private readonly IDialogService _dialogs = Substitute.For<IDialogService>();
         private readonly INavigationService _navigation = Substitute.For<INavigationService>();
         private readonly IDatabaseMaintenanceService _dbMaintenance = Substitute.For<IDatabaseMaintenanceService>();
+        private readonly IResultsDownloadService _download = Substitute.For<IResultsDownloadService>();
+        private readonly IResultsUploadService _upload = Substitute.For<IResultsUploadService>();
 
         private OodHelperWindowViewModel CreateViewModel()
         {
-            return new OodHelperWindowViewModel(_dialogs, _navigation, _dbMaintenance);
+            return new OodHelperWindowViewModel(_dialogs, _navigation, _dbMaintenance, _download, _upload);
         }
 
         [Fact]
@@ -83,14 +89,85 @@ namespace OodHelper.Tests
         }
 
         [Fact]
-        public void Download_DoesNothing_WhenNotConfirmed()
+        public async Task Download_DoesNothing_WhenNotConfirmed()
         {
             _dialogs.Confirm(Arg.Any<string>(), Arg.Any<string>()).Returns(false);
             var vm = CreateViewModel();
 
-            vm.DownloadCommand.Execute(null);
+            await vm.DownloadCommand.ExecuteAsync(null);
 
             _dialogs.Received(1).Confirm(Arg.Any<string>(), "Confirm Download");
+            _ = _dialogs.DidNotReceive().ShowProgressAsync(Arg.Any<string>(),
+                Arg.Any<Func<IProgress<DownloadProgress>, CancellationToken, Task>>());
+        }
+
+        [Fact]
+        public async Task Download_WhenConfirmedAndCompletes_RunsProgressAndReportsComplete()
+        {
+            _dialogs.Confirm(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            _dialogs.ShowProgressAsync(Arg.Any<string>(),
+                Arg.Any<Func<IProgress<DownloadProgress>, CancellationToken, Task>>()).Returns(Task.FromResult(true));
+            var vm = CreateViewModel();
+
+            await vm.DownloadCommand.ExecuteAsync(null);
+
+            _ = _dialogs.Received(1).ShowProgressAsync(Arg.Any<string>(),
+                Arg.Any<Func<IProgress<DownloadProgress>, CancellationToken, Task>>());
+            _dialogs.Received(1).ShowInformation("Download Complete", "Finished");
+        }
+
+        [Fact]
+        public async Task Download_WhenCancelled_ReportsCancelled()
+        {
+            _dialogs.Confirm(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            _dialogs.ShowProgressAsync(Arg.Any<string>(),
+                Arg.Any<Func<IProgress<DownloadProgress>, CancellationToken, Task>>()).Returns(Task.FromResult(false));
+            var vm = CreateViewModel();
+
+            await vm.DownloadCommand.ExecuteAsync(null);
+
+            _dialogs.Received(1).ShowInformation("Download Cancelled", "Cancel");
+        }
+
+        [Fact]
+        public async Task Upload_DoesNothing_WhenNotConfirmed()
+        {
+            _dialogs.Confirm(Arg.Any<string>(), Arg.Any<string>()).Returns(false);
+            var vm = CreateViewModel();
+
+            await vm.UploadCommand.ExecuteAsync(null);
+
+            _dialogs.Received(1).Confirm(Arg.Any<string>(), "Confirm Upload");
+            _ = _dialogs.DidNotReceive().ShowProgressAsync(Arg.Any<string>(),
+                Arg.Any<Func<IProgress<DownloadProgress>, CancellationToken, Task>>());
+        }
+
+        [Fact]
+        public async Task Upload_WhenConfirmedAndCompletes_RunsProgressAndReportsComplete()
+        {
+            _dialogs.Confirm(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            _dialogs.ShowProgressAsync(Arg.Any<string>(),
+                Arg.Any<Func<IProgress<DownloadProgress>, CancellationToken, Task>>()).Returns(Task.FromResult(true));
+            var vm = CreateViewModel();
+
+            await vm.UploadCommand.ExecuteAsync(null);
+
+            _ = _dialogs.Received(1).ShowProgressAsync(Arg.Any<string>(),
+                Arg.Any<Func<IProgress<DownloadProgress>, CancellationToken, Task>>());
+            _dialogs.Received(1).ShowInformation("Upload Complete", "Finished");
+        }
+
+        [Fact]
+        public async Task Upload_WhenCancelled_ReportsCancelled()
+        {
+            _dialogs.Confirm(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            _dialogs.ShowProgressAsync(Arg.Any<string>(),
+                Arg.Any<Func<IProgress<DownloadProgress>, CancellationToken, Task>>()).Returns(Task.FromResult(false));
+            var vm = CreateViewModel();
+
+            await vm.UploadCommand.ExecuteAsync(null);
+
+            _dialogs.Received(1).ShowInformation("Upload Cancelled", "Cancel");
         }
 
         [Fact]

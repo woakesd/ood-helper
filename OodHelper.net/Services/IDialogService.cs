@@ -1,5 +1,8 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
+using OodHelper.Data;
 
 namespace OodHelper.Services
 {
@@ -15,6 +18,12 @@ namespace OodHelper.Services
         /// <summary>Yes = true, No = false, Cancel = null.</summary>
         bool? ConfirmYesNoCancel(string message, string caption);
         void ShowError(string message, string caption);
+        void ShowInformation(string message, string caption);
+        /// <summary>
+        /// Runs <paramref name="work"/> behind the modal Working dialog (with a Cancel button).
+        /// Returns true if it completed, false if the user cancelled; other exceptions propagate.
+        /// </summary>
+        Task<bool> ShowProgressAsync(string title, Func<IProgress<DownloadProgress>, CancellationToken, Task> work);
         bool? ShowDialog<TWindow>() where TWindow : Window;
         BoatEditResult ShowBoatEditor(int bid);
         int[] ShowRaceChooser();

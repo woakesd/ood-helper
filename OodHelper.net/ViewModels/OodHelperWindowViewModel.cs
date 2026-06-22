@@ -1,5 +1,8 @@
+using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using OodHelper.Data;
 using OodHelper.LoadTide;
 using OodHelper.Maintain;
 using OodHelper.Rules;
@@ -14,13 +17,18 @@ namespace OodHelper.ViewModels
         private readonly IDialogService _dialogs;
         private readonly INavigationService _navigation;
         private readonly IDatabaseMaintenanceService _dbMaintenance;
+        private readonly IResultsDownloadService _download;
+        private readonly IResultsUploadService _upload;
 
         public OodHelperWindowViewModel(IDialogService dialogs, INavigationService navigation,
-            IDatabaseMaintenanceService dbMaintenance)
+            IDatabaseMaintenanceService dbMaintenance, IResultsDownloadService download,
+            IResultsUploadService upload)
         {
             _dialogs = dialogs;
             _navigation = navigation;
             _dbMaintenance = dbMaintenance;
+            _download = download;
+            _upload = upload;
         }
 
         [ObservableProperty]
@@ -58,22 +66,58 @@ namespace OodHelper.ViewModels
         }
 
         [RelayCommand]
-        private void Download()
+        private async Task Download()
         {
-            if (_dialogs.Confirm("Click OK to confirm downloading database from Website", "Confirm Download"))
+            if (!_dialogs.Confirm("Click OK to confirm downloading database from Website", "Confirm Download"))
+                return;
+            await RunDownloadAsync();
+        }
+
+        //
+        // Shared by the Download command and the startup "website is newer" prompt: drives the EF
+        // bulk download behind the progress dialog and reports the outcome.
+        //
+        public async Task RunDownloadAsync()
+        {
+            try
             {
-                // ReSharper disable once ObjectCreationAsStatement
-                new DownloadResults();
+                var completed = await _dialogs.ShowProgressAsync("Downloading from Website",
+                    (progress, ct) => _download.DownloadAsync(progress, ct));
+                _dialogs.ShowInformation(completed ? "Download Complete" : "Download Cancelled",
+                    completed ? "Finished" : "Cancel");
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogException(ex);
+                _dialogs.ShowError("Download Failed", "Failed");
             }
         }
 
         [RelayCommand]
-        private void Upload()
+        private async Task Upload()
         {
-            if (_dialogs.Confirm("Click OK to confirm uploading database to Website", "Confirm Upload"))
+            if (!_dialogs.Confirm("Click OK to confirm uploading database to Website", "Confirm Upload"))
+                return;
+            await RunUploadAsync();
+        }
+
+        //
+        // Drives the EF read / MySQL bulk upload behind the progress dialog and reports the outcome,
+        // mirroring RunDownloadAsync.
+        //
+        public async Task RunUploadAsync()
+        {
+            try
             {
-                var worker = new UploadResults();
-                worker.Run();
+                var completed = await _dialogs.ShowProgressAsync("Uploading to Website",
+                    (progress, ct) => _upload.UploadAsync(progress, ct));
+                _dialogs.ShowInformation(completed ? "Upload Complete" : "Upload Cancelled",
+                    completed ? "Finished" : "Cancel");
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogException(ex);
+                _dialogs.ShowError("Upload Failed", "Failed");
             }
         }
 

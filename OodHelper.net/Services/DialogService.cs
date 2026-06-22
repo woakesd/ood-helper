@@ -1,6 +1,9 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using OodHelper.Data;
 using OodHelper.Maintain;
 using OodHelper.Rules;
 using OodHelper.ViewModels;
@@ -35,6 +38,42 @@ namespace OodHelper.Services
         public void ShowError(string message, string caption)
         {
             MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public void ShowInformation(string message, string caption)
+        {
+            MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        public async Task<bool> ShowProgressAsync(string title,
+            Func<IProgress<DownloadProgress>, CancellationToken, Task> work)
+        {
+            var owner = Application.Current.MainWindow;
+            using var cts = new CancellationTokenSource();
+            var dialog = new Working(owner, cts) { Title = title };
+            //
+            // Show the dialog non-modally (so we can keep awaiting) but disable the main window to give
+            // it modal feel; the Progress<T> below captures the UI SynchronizationContext, so its
+            // callback marshals progress updates back onto the dialog. The work itself runs on the
+            // thread pool via Task.Run, keeping the UI responsive and the Cancel button live.
+            //
+            if (owner != null) owner.IsEnabled = false;
+            dialog.Show();
+            try
+            {
+                var progress = new Progress<DownloadProgress>(p => dialog.SetProgress(p.Message, p.Percent));
+                await Task.Run(() => work(progress, cts.Token), cts.Token);
+                return true;
+            }
+            catch (OperationCanceledException)
+            {
+                return false;
+            }
+            finally
+            {
+                if (owner != null) owner.IsEnabled = true;
+                dialog.Close();
+            }
         }
 
         public bool? ShowDialog<TWindow>() where TWindow : Window
