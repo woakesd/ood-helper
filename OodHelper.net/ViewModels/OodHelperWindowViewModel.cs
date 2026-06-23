@@ -19,16 +19,41 @@ namespace OodHelper.ViewModels
         private readonly IDatabaseMaintenanceService _dbMaintenance;
         private readonly IResultsDownloadService _download;
         private readonly IResultsUploadService _upload;
+        private readonly IUpdateCheckService _updateCheck;
 
         public OodHelperWindowViewModel(IDialogService dialogs, INavigationService navigation,
             IDatabaseMaintenanceService dbMaintenance, IResultsDownloadService download,
-            IResultsUploadService upload)
+            IResultsUploadService upload, IUpdateCheckService updateCheck)
         {
             _dialogs = dialogs;
             _navigation = navigation;
             _dbMaintenance = dbMaintenance;
             _download = download;
             _upload = upload;
+            _updateCheck = updateCheck;
+        }
+
+        //
+        // Called once when the main window loads: if the website's results are newer than the local
+        // copy, offer to download them. Replaces the legacy CheckForUpdates BackgroundWorker; any failure
+        // is logged and swallowed so a transient website problem never blocks startup.
+        //
+        public async Task CheckForUpdatesAsync()
+        {
+            try
+            {
+                var result = await _updateCheck.CheckAsync(System.Threading.CancellationToken.None);
+                if (result.WebsiteIsNewer &&
+                    _dialogs.Confirm("Website results are more up to date\nWould you like to download from Website",
+                        "Confirm Download"))
+                {
+                    await RunDownloadAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogException(ex);
+            }
         }
 
         [ObservableProperty]

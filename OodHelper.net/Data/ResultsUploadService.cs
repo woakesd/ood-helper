@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using EFCore.BulkExtensions;
@@ -175,10 +174,8 @@ namespace OodHelper.Data
         }
 
         //
-        // Clear a website table and re-load it from the supplied rows. The insert is a parameterised
-        // multi-row INSERT in batches (replacing the legacy hand-built literal SQL, which formatted
-        // values with the current culture and was open to quoting bugs). Column names are back-ticked
-        // to dodge reserved words such as `event` / `condition`.
+        // Clear a website table and re-load it from the supplied rows. The batched, parameterised insert
+        // is shared with the other upload paths via MySqlBulkWriter.
         //
         private static async Task ReplaceTableAsync<T>(MySqlConnection con, MySqlTransaction trn,
             string table, string[] columns, IReadOnlyList<T> rows, Func<T, object[]> values, CancellationToken ct)
@@ -186,50 +183,7 @@ namespace OodHelper.Data
             await using (var del = new MySqlCommand($"DELETE FROM `{table}`", con, trn))
                 await del.ExecuteNonQueryAsync(ct);
 
-            if (rows.Count == 0)
-                return;
-
-            var colList = string.Join(",", columns.Select(c => $"`{c}`"));
-            const int batchSize = 500;
-            for (var start = 0; start < rows.Count; start += batchSize)
-            {
-                var count = Math.Min(batchSize, rows.Count - start);
-                var sb = new StringBuilder("INSERT INTO `").Append(table).Append("` (").Append(colList).Append(") VALUES ");
-                await using var cmd = new MySqlCommand { Connection = con, Transaction = trn };
-                for (var i = 0; i < count; i++)
-                {
-                    if (i > 0) sb.Append(',');
-                    sb.Append('(');
-                    var vals = values(rows[start + i]);
-                    for (var j = 0; j < columns.Length; j++)
-                    {
-                        if (j > 0) sb.Append(',');
-                        var name = "@p" + i + "_" + j;
-                        sb.Append(name);
-                        cmd.Parameters.AddWithValue(name, Normalize(vals[j]));
-                    }
-                    sb.Append(')');
-                }
-                cmd.CommandText = sb.ToString();
-                await cmd.ExecuteNonQueryAsync(ct);
-            }
-        }
-
-        //
-        // Map a CLR value onto what the website expects: NULLs and NaN doubles become NULL, bools become
-        // 1/0, and GUIDs are written in {brace} form (matching the legacy upload and the format the
-        // download's GUID reader parses back).
-        //
-        private static object Normalize(object v)
-        {
-            switch (v)
-            {
-                case null: return DBNull.Value;
-                case bool b: return b ? 1 : 0;
-                case double d when double.IsNaN(d): return DBNull.Value;
-                case Guid g: return g.ToString("B");
-                default: return v;
-            }
+            await MySqlBulkWriter.InsertRowsAsync(con, trn, table, columns, rows, values, ct);
         }
     }
 }

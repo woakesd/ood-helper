@@ -16,10 +16,12 @@ namespace OodHelper.Tests
         private readonly IDatabaseMaintenanceService _dbMaintenance = Substitute.For<IDatabaseMaintenanceService>();
         private readonly IResultsDownloadService _download = Substitute.For<IResultsDownloadService>();
         private readonly IResultsUploadService _upload = Substitute.For<IResultsUploadService>();
+        private readonly IUpdateCheckService _updateCheck = Substitute.For<IUpdateCheckService>();
 
         private OodHelperWindowViewModel CreateViewModel()
         {
-            return new OodHelperWindowViewModel(_dialogs, _navigation, _dbMaintenance, _download, _upload);
+            return new OodHelperWindowViewModel(_dialogs, _navigation, _dbMaintenance, _download, _upload,
+                _updateCheck);
         }
 
         [Fact]
@@ -168,6 +170,54 @@ namespace OodHelper.Tests
             await vm.UploadCommand.ExecuteAsync(null);
 
             _dialogs.Received(1).ShowInformation("Upload Cancelled", "Cancel");
+        }
+
+        [Fact]
+        public async Task CheckForUpdates_DoesNothing_WhenWebsiteNotNewer()
+        {
+            // Equal dates: WebsiteIsNewer is false, so no prompt and no download.
+            var now = DateTime.Now;
+            _updateCheck.CheckAsync(Arg.Any<CancellationToken>())
+                .Returns(new UpdateCheckResult(now, now));
+            var vm = CreateViewModel();
+
+            await vm.CheckForUpdatesAsync();
+
+            _dialogs.DidNotReceive().Confirm(Arg.Any<string>(), Arg.Any<string>());
+            _ = _dialogs.DidNotReceive().ShowProgressAsync(Arg.Any<string>(),
+                Arg.Any<Func<IProgress<DownloadProgress>, CancellationToken, Task>>());
+        }
+
+        [Fact]
+        public async Task CheckForUpdates_DoesNotDownload_WhenWebsiteNewerButDeclined()
+        {
+            _updateCheck.CheckAsync(Arg.Any<CancellationToken>())
+                .Returns(new UpdateCheckResult(DateTime.Now.AddDays(-1), DateTime.Now));
+            _dialogs.Confirm(Arg.Any<string>(), Arg.Any<string>()).Returns(false);
+            var vm = CreateViewModel();
+
+            await vm.CheckForUpdatesAsync();
+
+            _dialogs.Received(1).Confirm(Arg.Any<string>(), "Confirm Download");
+            _ = _dialogs.DidNotReceive().ShowProgressAsync(Arg.Any<string>(),
+                Arg.Any<Func<IProgress<DownloadProgress>, CancellationToken, Task>>());
+        }
+
+        [Fact]
+        public async Task CheckForUpdates_RunsDownload_WhenWebsiteNewerAndConfirmed()
+        {
+            _updateCheck.CheckAsync(Arg.Any<CancellationToken>())
+                .Returns(new UpdateCheckResult(DateTime.Now.AddDays(-1), DateTime.Now));
+            _dialogs.Confirm(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            _dialogs.ShowProgressAsync(Arg.Any<string>(),
+                Arg.Any<Func<IProgress<DownloadProgress>, CancellationToken, Task>>()).Returns(Task.FromResult(true));
+            var vm = CreateViewModel();
+
+            await vm.CheckForUpdatesAsync();
+
+            _ = _dialogs.Received(1).ShowProgressAsync(Arg.Any<string>(),
+                Arg.Any<Func<IProgress<DownloadProgress>, CancellationToken, Task>>());
+            _dialogs.Received(1).ShowInformation("Download Complete", "Finished");
         }
 
         [Fact]

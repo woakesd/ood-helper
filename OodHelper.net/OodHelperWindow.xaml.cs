@@ -1,7 +1,6 @@
 using System.Windows;
 using OodHelper.Services;
 using OodHelper.ViewModels;
-using OodHelper.Website;
 
 namespace OodHelper
 {
@@ -24,17 +23,8 @@ namespace OodHelper
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            var c = new CheckForUpdates();
-            if (c.LocalDate < c.RemoteDate)
-            {
-                if (MessageBox.Show("Website results are more up to date\nWould you like to download from Website",
-                    "Confirm Download",
-                    MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.OK) == MessageBoxResult.OK)
-                {
-                    if (DataContext is OodHelperWindowViewModel vm)
-                        await vm.RunDownloadAsync();
-                }
-            }
+            if (DataContext is OodHelperWindowViewModel vm)
+                await vm.CheckForUpdatesAsync();
         }
     }
 }
