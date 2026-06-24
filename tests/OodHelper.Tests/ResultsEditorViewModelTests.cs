@@ -3,6 +3,7 @@ using NSubstitute;
 using OodHelper.Data;
 using OodHelper.Data.Entities;
 using OodHelper.Results;
+using OodHelper.Services;
 using Xunit;
 
 namespace OodHelper.Tests
@@ -11,12 +12,14 @@ namespace OodHelper.Tests
     {
         private const int Rid = 5;
         private readonly IRaceResultsRepository _repo = Substitute.For<IRaceResultsRepository>();
+        private readonly IRaceScoreRepository _scoreRepo = Substitute.For<IRaceScoreRepository>();
+        private readonly IDialogService _dialogs = Substitute.For<IDialogService>();
 
         private ResultsEditorViewModel CreateLoaded(params Race[] rows)
         {
             _repo.GetCalendar(Rid).Returns(new Calendar { Rid = Rid });
             _repo.GetRaceRows(Rid).Returns(new List<Race>(rows));
-            var vm = new ResultsEditorViewModel(Rid, _repo);
+            var vm = new ResultsEditorViewModel(Rid, _repo, _scoreRepo, _dialogs);
             vm.Load();
             return vm;
         }

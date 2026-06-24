@@ -1,13 +1,16 @@
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OodHelper.Converters;
 using OodHelper.Data;
 using OodHelper.Data.Entities;
+using OodHelper.Results.Scoring;
+using OodHelper.Services;
 
 namespace OodHelper.Results
 {
@@ -16,13 +19,15 @@ namespace OodHelper.Results
     /// that used to live in the <c>ResultsEditor</c> UserControl: it loads the calendar header
     /// and race rows via <see cref="IRaceResultsRepository"/>, exposes the same property surface
     /// the XAML binds, and persists every header/cell edit immediately. The handicap scoring
-    /// engines (<see cref="IRaceScore"/>) are still driven on a <see cref="BackgroundWorker"/>
-    /// exactly as before.
+    /// engines (<see cref="IRaceScore"/>) run synchronously off the UI thread behind the progress
+    /// dialog (see <see cref="Calculate"/>).
     /// </summary>
     public partial class ResultsEditorViewModel : ObservableObject
     {
         private readonly int _rid;
         private readonly IRaceResultsRepository _repo;
+        private readonly IRaceScoreRepository _scoreRepo;
+        private readonly IDialogService _dialogs;
 
         private DateTime _limitDate = DateTime.Now;
         private CalendarModel.RaceTypes _raceType;
@@ -36,10 +41,13 @@ namespace OodHelper.Results
         private int? _timeLimitDelta;
         private DateTime? _timeLimitFixed;
 
-        public ResultsEditorViewModel(int rid, IRaceResultsRepository repo)
+        public ResultsEditorViewModel(int rid, IRaceResultsRepository repo,
+            IRaceScoreRepository scoreRepo, IDialogService dialogs)
         {
             _rid = rid;
             _repo = repo;
+            _scoreRepo = scoreRepo;
+            _dialogs = dialogs;
             PrintIncludeCopies = 1;
         }
 
@@ -421,15 +429,15 @@ namespace OodHelper.Results
                     switch (Handicap)
                     {
                         case "r":
-                            Scorer = new RollingHandicap();
+                            Scorer = new HandicapScorer(_scoreRepo, HandicapMode.Rolling);
                             break;
                         case "o":
-                            Scorer = new OpenHandicap();
+                            Scorer = new HandicapScorer(_scoreRepo, HandicapMode.Open);
                             break;
                     }
                     break;
                 case CalendarModel.RaceTypes.SternChase:
-                    Scorer = new SternChaseScorer();
+                    Scorer = new SternChaseScorer(_scoreRepo);
                     break;
             }
         }
@@ -448,16 +456,22 @@ namespace OodHelper.Results
         // -- Commands -----------------------------------------------------------------------
 
         [RelayCommand]
-        private void Calculate()
+        private async Task Calculate()
         {
             if (Scorer == null) return;
 
-            var calc = new BackgroundWorker();
-            calc.DoWork += Scorer.Calculate;
-            var w = new Working(Application.Current.MainWindow, calc);
-            calc.RunWorkerCompleted += (s, e) => Load();
-            calc.RunWorkerAsync(_rid);
-            w.ShowDialog();
+            //
+            // Scoring is synchronous and self-contained; run it off the UI thread behind the
+            // progress dialog (replaces the old BackgroundWorker + Working ctor), then reload and
+            // surface any warnings the engine collected.
+            //
+            await _dialogs.ShowProgressAsync("Calculating results",
+                (progress, ct) => Task.Run(() => Scorer.Calculate(_rid), ct));
+
+            Load();
+
+            if (Scorer.Warnings.Count > 0)
+                _dialogs.ShowInformation(string.Join("\n\n", Scorer.Warnings), "Results");
         }
 
         [RelayCommand]

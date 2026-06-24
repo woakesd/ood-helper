@@ -68,6 +68,7 @@ namespace OodHelper
             services.AddSingleton<IDatabaseMaintenanceService, DatabaseMaintenanceService>();
             services.AddSingleton<Data.IBoatRepository, Data.BoatRepository>();
             services.AddSingleton<Data.IRaceResultsRepository, Data.RaceResultsRepository>();
+            services.AddSingleton<Data.IRaceScoreRepository, Data.RaceScoreRepository>();
             services.AddSingleton<Data.ISelectRuleRepository, Data.SelectRuleRepository>();
             services.AddSingleton<Data.IPortsmouthNumberRepository, Data.PortsmouthNumberRepository>();
             services.AddSingleton<Data.ISeriesRepository, Data.SeriesRepository>();
@@ -84,7 +85,10 @@ namespace OodHelper
             //
             services.AddTransient<Func<int, Results.ResultsEditorViewModel>>(sp => rid =>
             {
-                var vm = new Results.ResultsEditorViewModel(rid, sp.GetRequiredService<Data.IRaceResultsRepository>());
+                var vm = new Results.ResultsEditorViewModel(rid,
+                    sp.GetRequiredService<Data.IRaceResultsRepository>(),
+                    sp.GetRequiredService<Data.IRaceScoreRepository>(),
+                    sp.GetRequiredService<IDialogService>());
                 vm.Load();
                 return vm;
             });

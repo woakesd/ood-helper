@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -29,14 +28,11 @@ namespace OodHelper
             Progress.IsIndeterminate = true;
         }
 
-        private BackgroundWorker worker { get; set; }
-
         private CancellationTokenSource _cts;
 
         //
         // Async/await variant: the caller drives progress via SetProgress and cancellation flows
-        // through the supplied CancellationTokenSource (used by the EF download). The BackgroundWorker
-        // ctor below is still used by the legacy upload / check-for-updates paths.
+        // through the supplied CancellationTokenSource (used by the EF download/upload and scoring).
         //
         public Working(Window Parent, CancellationTokenSource cts) : this(Parent)
         {
@@ -45,30 +41,6 @@ namespace OodHelper
             Progress.IsIndeterminate = false;
             Progress.Minimum = 0;
             Progress.Maximum = 100;
-        }
-
-        public Working(Window Parent, BackgroundWorker w) : this(Parent)
-        {
-            CancelButton.Visibility = Visibility.Visible;
-            worker = w;
-            Progress.IsIndeterminate = false;
-            Progress.Minimum = 0;
-            Progress.Maximum = 100;
-            worker.WorkerReportsProgress = true;
-            worker.WorkerSupportsCancellation = true;
-            worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
-            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
-        }
-
-        void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            Close();
-        }
-
-        void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            Progress.Value = e.ProgressPercentage;
-            Message.Text = e.UserState as string;
         }
 
         public void SetProgress(string message, int value)
@@ -88,10 +60,6 @@ namespace OodHelper
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            if (worker != null)
-            {
-                worker.CancelAsync();
-            }
             _cts?.Cancel();
         }
     }

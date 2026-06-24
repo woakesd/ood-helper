@@ -5,6 +5,9 @@ using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using Microsoft.Extensions.DependencyInjection;
+using OodHelper.Data;
+using OodHelper.Results.Scoring;
 
 namespace OodHelper.Results
 {
@@ -42,6 +45,9 @@ namespace OodHelper.Results
 
                 _worker.SetRange(0, races.Rows.Count);
 
+                // This screen is still on Db, so resolve the scoring repository from the container.
+                var scoreRepo = App.Services.GetRequiredService<IRaceScoreRepository>();
+
                 foreach (DataRow race in races.Rows)
                 {
                     CalendarModel.RaceTypes _raceType;
@@ -59,10 +65,10 @@ namespace OodHelper.Results
                                 switch (race["handicapping"].ToString().ToUpper())
                                 {
                                     case "R":
-                                        scorer = new RollingHandicap();
+                                        scorer = new HandicapScorer(scoreRepo, HandicapMode.Rolling);
                                         break;
                                     case "O":
-                                        scorer = new OpenHandicap();
+                                        scorer = new HandicapScorer(scoreRepo, HandicapMode.Open);
                                         break;
                                 }
                                 break;
