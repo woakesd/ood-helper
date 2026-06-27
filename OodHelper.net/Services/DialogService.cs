@@ -130,6 +130,13 @@ namespace OodHelper.Services
             return view.ShowDialog() == true;
         }
 
+        public bool ShowRaceNotes(int rid)
+        {
+            var vm = _services.GetRequiredService<Func<int, RaceNotesViewModel>>()(rid);
+            var view = new RaceNotes(vm) { Owner = Application.Current.MainWindow };
+            return view.ShowDialog() == true;
+        }
+
         public bool ShowSelectRuleEditor(Guid? id)
         {
             var vm = _services.GetRequiredService<Func<Guid?, SelectRuleEditViewModel>>()(id);

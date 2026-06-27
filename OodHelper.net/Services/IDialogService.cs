@@ -34,6 +34,8 @@ namespace OodHelper.Services
         bool ShowSeriesRaceSelect(int sid);
         /// <summary>Opens the race editor (new race when rid is 0). Returns true if saved.</summary>
         bool ShowRaceEditor(int rid);
+        /// <summary>Opens the race notes (memo) editor for a race. Returns true if saved.</summary>
+        bool ShowRaceNotes(int rid);
         /// <summary>Opens the rule editor (new rule when id is null). Returns true if saved.</summary>
         bool ShowSelectRuleEditor(Guid? id);
         /// <summary>Opens the handicap (class) editor (new class when id is null). Returns true if saved.</summary>

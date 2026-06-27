@@ -80,14 +80,25 @@ namespace OodHelper.Tests
         }
 
         [Fact]
-        public void ShowSeriesResults_OpensTab_WhenChooserReturnsSeries()
+        public async Task ShowSeriesResults_OpensTab_WhenChooserReturnsSeries()
         {
             _dialogs.ShowSeriesChooser().Returns(5);
             var vm = CreateViewModel();
 
-            vm.ShowSeriesResultsCommand.Execute(null);
+            await vm.ShowSeriesResultsCommand.ExecuteAsync(null);
 
-            _navigation.Received(1).OpenSeriesResults(5);
+            await _navigation.Received(1).OpenSeriesResultsAsync(5);
+        }
+
+        [Fact]
+        public async Task ShowSeriesResults_DoesNothing_WhenChooserCancelled()
+        {
+            _dialogs.ShowSeriesChooser().Returns((int?)null);
+            var vm = CreateViewModel();
+
+            await vm.ShowSeriesResultsCommand.ExecuteAsync(null);
+
+            await _navigation.DidNotReceive().OpenSeriesResultsAsync(Arg.Any<int>());
         }
 
         [Fact]

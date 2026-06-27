@@ -270,6 +270,67 @@ WHERE r.rid = @rid AND r.bid = @bid";
         }
 
         // -------------------------------------------------------------------------------------
+        // Entry editing (SelectBoats)
+        // -------------------------------------------------------------------------------------
+
+        public void AddRaceEntry(int rid, int bid, DateTime startDate, string handicapStatus,
+            int? openHandicap, int? rollingHandicap)
+        {
+            var row = new Race
+            {
+                Rid = rid,
+                Bid = bid,
+                StartDate = startDate,
+                HandicapStatus = handicapStatus,
+                OpenHandicap = openHandicap,
+                RollingHandicap = rollingHandicap,
+                LastEdit = DateTime.Now
+            };
+            using (var ctx = _contextFactory.CreateDbContext())
+            {
+                ctx.Races.Add(row);
+                ctx.SaveChanges();
+            }
+        }
+
+        public void DeleteRaceEntry(int rid, int bid)
+        {
+            using (var ctx = _contextFactory.CreateDbContext())
+                ctx.Races.Where(r => r.Rid == rid && r.Bid == bid).ExecuteDelete();
+        }
+
+        // -------------------------------------------------------------------------------------
+        // Print pages
+        // -------------------------------------------------------------------------------------
+
+        public IReadOnlyList<RacePrintRow> GetPrintRows(int rid, bool rolling)
+        {
+            using (var ctx = _contextFactory.CreateDbContext())
+            {
+                var rows = ctx.Races.AsNoTracking()
+                    .Where(r => r.Rid == rid && (r.FinishDate != null || r.FinishCode != null))
+                    .Join(ctx.Boats, r => r.Bid, b => b.Bid, (r, b) => new { r, b })
+                    .OrderBy(x => x.r.Place)
+                    .ToList();
+
+                return rows.Select(x =>
+                {
+                    var r = x.r;
+                    var b = x.b;
+                    int? hcap = rolling ? r.RollingHandicap : r.OpenHandicap;
+                    double? points = r.OverridePoints ?? r.Points;
+                    double? percent = (r.AchievedHandicap.HasValue && r.OpenHandicap.HasValue && r.OpenHandicap.Value != 0)
+                        ? Math.Round((r.AchievedHandicap.Value - r.OpenHandicap.Value) * 100.0 / r.OpenHandicap.Value, 1)
+                        : (double?)null;
+                    string boat = b.Boatname + (r.RestrictedSail == true ? " (RS)" : string.Empty);
+                    return new RacePrintRow(boat, b.Boatclass, b.Sailno, hcap, r.FinishCode, r.FinishDate,
+                        r.Elapsed, r.Laps, r.Corrected, r.Place, points, r.AchievedHandicap,
+                        r.NewRollingHandicap, percent, r.C, r.A, r.HandicapStatus);
+                }).ToList();
+            }
+        }
+
+        // -------------------------------------------------------------------------------------
         // Helpers
         // -------------------------------------------------------------------------------------
 

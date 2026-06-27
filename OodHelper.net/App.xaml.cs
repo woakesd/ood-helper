@@ -72,6 +72,7 @@ namespace OodHelper
             services.AddSingleton<Data.ISelectRuleRepository, Data.SelectRuleRepository>();
             services.AddSingleton<Data.IPortsmouthNumberRepository, Data.PortsmouthNumberRepository>();
             services.AddSingleton<Data.ISeriesRepository, Data.SeriesRepository>();
+            services.AddSingleton<Data.ISeriesResultRepository, Data.SeriesResultRepository>();
             services.AddSingleton<Data.ICalendarRepository, Data.CalendarRepository>();
             services.AddSingleton<Data.IResultsDownloadService, Data.ResultsDownloadService>();
             services.AddSingleton<Data.IResultsUploadService, Data.ResultsUploadService>();
@@ -98,6 +99,14 @@ namespace OodHelper
                     sp.GetRequiredService<Func<int, Results.ResultsEditorViewModel>>()));
             services.AddTransient<Func<int[], Results.RaceResults>>(sp => rids =>
                 new Results.RaceResults(sp.GetRequiredService<Func<int[], Results.RaceResultsViewModel>>()(rids)));
+
+            //
+            // The series-results host view-model is created per open (one scoring pass) via a factory,
+            // so NavigationService can build a fresh one each time the screen is opened.
+            //
+            services.AddTransient<Func<Results.SeriesResultsViewModel>>(sp => () =>
+                new Results.SeriesResultsViewModel(sp.GetRequiredService<Data.ISeriesResultRepository>(),
+                    sp.GetRequiredService<Data.IRaceScoreRepository>()));
 
             //
             // The rule editor needs a runtime rule id (null for a new rule), so it is created
@@ -128,6 +137,12 @@ namespace OodHelper
                 new RaceEditViewModel(sp.GetRequiredService<Data.ICalendarRepository>(),
                     sp.GetRequiredService<Data.IPortsmouthNumberRepository>(),
                     sp.GetRequiredService<IDialogService>(), rid));
+
+            //
+            // The race-notes (memo) editor needs a runtime rid.
+            //
+            services.AddTransient<Func<int, RaceNotesViewModel>>(sp => rid =>
+                new RaceNotesViewModel(sp.GetRequiredService<Data.ICalendarRepository>(), rid));
 
             services.AddTransient<OodHelperWindowViewModel>();
             services.AddSingleton<OodHelperWindow>();

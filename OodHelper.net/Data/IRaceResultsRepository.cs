@@ -48,5 +48,46 @@ namespace OodHelper.Data
 
         /// <summary>Copies the boat's current handicaps onto this race entry (Edit Boat).</summary>
         void ApplyEditedBoatHandicaps(int rid, int bid);
+
+        // --- Entry editing (SelectBoats) ---------------------------------------------------
+
+        /// <summary>Adds a boat to a race's entry list, stamping last_edit (SelectBoats).</summary>
+        void AddRaceEntry(int rid, int bid, DateTime startDate, string handicapStatus,
+            int? openHandicap, int? rollingHandicap);
+
+        /// <summary>Removes a boat from a race's entry list (SelectBoats).</summary>
+        void DeleteRaceEntry(int rid, int bid);
+
+        // --- Print pages -------------------------------------------------------------------
+
+        /// <summary>
+        /// Projected, ordered rows for the printable results page. <paramref name="rolling"/>
+        /// selects the rolling vs open handicap for the Hcap column.
+        /// </summary>
+        IReadOnlyList<RacePrintRow> GetPrintRows(int rid, bool rolling);
     }
+
+    /// <summary>
+    /// One row of the printable results page. Mirrors the columns the old inline SQL produced
+    /// (boat name already carries the " (RS)" restricted-sail suffix; Points coalesces
+    /// override/points; Percent is the rounded achieved-vs-open handicap delta).
+    /// </summary>
+    public sealed record RacePrintRow(
+        string Boat,
+        string Class,
+        string SailNo,
+        int? Hcap,
+        string FinishCode,
+        DateTime? FinishDate,
+        int? Elapsed,
+        int? Laps,
+        double? Corrected,
+        int? Place,
+        double? Points,
+        int? AchievedHandicap,
+        int? NewRollingHandicap,
+        double? Percent,
+        string C,
+        string A,
+        string Py);
 }

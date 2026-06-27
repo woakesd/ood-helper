@@ -1,298 +1,155 @@
-﻿using System;
-using System.Collections;
-using System.Collections.ObjectModel;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+using System;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
+using OodHelper.Data;
+using OodHelper.Data.Entities;
 
 namespace OodHelper.Maintain
 {
     public class BoatModel : NotifyPropertyChanged
     {
+        private readonly IBoatRepository _repository;
+        private readonly Boat _boat;
+
         public BoatModel(int b)
         {
-            Db get = new Db("SELECT bid, boatname, boatclass, sailno, dinghy, " +
-                "hulltype, open_handicap, handicap_status, " +
-                "rolling_handicap, small_cat_handicap_rating, engine_propeller, keel, deviations, boatmemo " +
-                "FROM boats " +
-                "WHERE bid = @bid");
-            var p = new Hashtable {["bid"] = b};
-            var d = get.GetData(p);
-            Values = new Hashtable();
-            if (d.Rows.Count > 0)
-                foreach (DataColumn c in d.Columns)
-                    Values[c.ColumnName] = d.Rows[0][c];
-            else
-            {
-                foreach (DataColumn c in d.Columns)
-                    Values[c.ColumnName] = null;
-                Dinghy = false;
-            }
+            _repository = App.Services.GetRequiredService<IBoatRepository>();
+            //
+            // Existing boat: load it. New boat (no row): start from a blank entity, defaulting
+            // dinghy to false as the old code did. Bid stays 0 to mark it as not-yet-inserted.
+            //
+            _boat = _repository.Get(b) ?? new Boat { Dinghy = false };
         }
 
         public string Keel
         {
-            get
-            {
-                return Values["keel"] as string;
-            }
-
-            set
-            {
-                Values["keel"] = value; OnPropertyChanged("Keel");
-            }
+            get { return _boat.Keel; }
+            set { _boat.Keel = value; OnPropertyChanged("Keel"); }
         }
 
         public bool? Dinghy
         {
-            get
-            {
-                return Values["dinghy"] as bool?;
-            }
-
-            set
-            {
-                Values["dinghy"] = value; OnPropertyChanged("Dinghy");
-            }
+            get { return _boat.Dinghy; }
+            set { _boat.Dinghy = value; OnPropertyChanged("Dinghy"); }
         }
 
         public string HullType
         {
-            get
-            {
-                return Values["hulltype"] as string;
-            }
-
-            set
-            {
-                Values["hulltype"] = value; OnPropertyChanged("HullType");
-            }
+            get { return _boat.Hulltype; }
+            set { _boat.Hulltype = value; OnPropertyChanged("HullType"); }
         }
 
         public string HandicapStatus
         {
-            get
-            {
-                return Values["handicap_status"] as string;
-            }
-
-            set
-            {
-                Values["handicap_status"] = value; OnPropertyChanged("HandicapStatus");
-            }
+            get { return _boat.HandicapStatus; }
+            set { _boat.HandicapStatus = value; OnPropertyChanged("HandicapStatus"); }
         }
 
         public string OpenHandicap
         {
-            get
-            {
-                if (Values["open_handicap"] != null)
-                    return Values["open_handicap"].ToString();
-                else
-                    return string.Empty;
-            }
+            get { return _boat.OpenHandicap?.ToString() ?? string.Empty; }
 
             set
             {
                 if (value == string.Empty)
-                    Values["open_handicap"] = null;
-                else
-                {
-                    int ohp;
-                    if (Int32.TryParse(value, out ohp))
-                        Values["open_handicap"] = ohp;
-                }
+                    _boat.OpenHandicap = null;
+                else if (int.TryParse(value, out int ohp))
+                    _boat.OpenHandicap = ohp;
                 OnPropertyChanged("OpenHandicap");
             }
         }
 
         public string RollingHandicap
         {
-            get
-            {
-                if (Values["rolling_handicap"] != null)
-                    return Values["rolling_handicap"].ToString();
-                else
-                    return string.Empty;
-            }
+            get { return _boat.RollingHandicap?.ToString() ?? string.Empty; }
 
             set
             {
                 if (value == string.Empty)
-                    Values["rolling_handicap"] = null;
-                else
-                {
-                    int ohp;
-                    if (Int32.TryParse(value, out ohp))
-                        Values["rolling_handicap"] = ohp;
-                }
+                    _boat.RollingHandicap = null;
+                else if (int.TryParse(value, out int ohp))
+                    _boat.RollingHandicap = ohp;
                 OnPropertyChanged("RollingHandicap");
             }
         }
 
         public string SmallCatHandicapRating
         {
-            get
-            {
-                if (Values["small_cat_handicap_rating"] != null)
-                    return Values["small_cat_handicap_rating"].ToString();
-                else
-                    return string.Empty;
-            }
+            get { return _boat.SmallCatHandicapRating?.ToString() ?? string.Empty; }
 
             set
             {
                 if (value == string.Empty)
-                    Values["small_cat_handicap_rating"] = null;
-                else
-                {
-                    decimal schr;
-                    if (Decimal.TryParse(value, out schr) && schr < 10 && schr >= 0)
-                    {
-                        Values["small_cat_handicap_rating"] = schr;
-                    }
-                }
+                    _boat.SmallCatHandicapRating = null;
+                else if (decimal.TryParse(value, out decimal schr) && schr < 10 && schr >= 0)
+                    _boat.SmallCatHandicapRating = schr;
                 OnPropertyChanged("SmallCatHandicapRating");
             }
         }
 
         public string EnginePropeller
         {
-            get
-            {
-                return Values["engine_propeller"] as string;
-            }
-
-            set
-            {
-                Values["engine_propeller"] = value;
-                OnPropertyChanged("EnginePropeller");
-            }
+            get { return _boat.EnginePropeller; }
+            set { _boat.EnginePropeller = value; OnPropertyChanged("EnginePropeller"); }
         }
 
         public int? Bid
         {
-            get { return Values["bid"] as int?; }
-            set { Values["bid"] = value; }
+            get { return _boat.Bid == 0 ? (int?)null : _boat.Bid; }
         }
 
         public string BoatName
         {
-            set
-            {
-                Values["boatname"] = value;
-                OnPropertyChanged("BoatName");
-            }
-            get
-            {
-                return Values["boatname"] as string;
-            }
+            get { return _boat.Boatname; }
+            set { _boat.Boatname = value; OnPropertyChanged("BoatName"); }
         }
 
         public string BoatClass
         {
-            set
-            {
-                Values["boatclass"] = value;
-                OnPropertyChanged("BoatClass");
-            }
-            get
-            {
-                return Values["boatclass"] as string;
-            }
+            get { return _boat.Boatclass; }
+            set { _boat.Boatclass = value; OnPropertyChanged("BoatClass"); }
         }
 
         public string SailNumber
         {
-            set
-            {
-                Values["sailno"] = value;
-                OnPropertyChanged("SailNumber");
-            }
-            get
-            {
-                return Values["sailno"] as string;
-            }
+            get { return _boat.Sailno; }
+            set { _boat.Sailno = value; OnPropertyChanged("SailNumber"); }
         }
 
         public string Deviations
         {
-            set
-            {
-                Values["deviations"] = value;
-                OnPropertyChanged("Deviations");
-            }
-            get
-            {
-                return Values["deviations"] as string;
-            }
+            get { return _boat.Deviations; }
+            set { _boat.Deviations = value; OnPropertyChanged("Deviations"); }
         }
 
         public string BoatMemo
         {
-            set
-            {
-                Values["boatmemo"] = value;
-                OnPropertyChanged("BoatMemo");
-            }
-            get
-            {
-                return Values["boatmemo"] as string;
-            }
+            get { return _boat.Boatmemo; }
+            set { _boat.Boatmemo = value; OnPropertyChanged("BoatMemo"); }
         }
 
         public string CommitChanges()
         {
             var errors = new StringBuilder(string.Empty);
-            if (BoatName.Trim() == string.Empty)
+            if (string.IsNullOrEmpty(BoatName) || BoatName.Trim() == string.Empty)
                 errors.Append("Boat name required\n");
             ValidateRequiredInteger(OpenHandicap, "Open handicap", errors);
             ValidateRequiredInteger(RollingHandicap, "Rolling handicap", errors);
 
             if (errors.ToString() == string.Empty)
             {
-                Db save;
-                if (Bid == null)
-                {
-                    save = new Db("INSERT INTO boats " +
-                            "(boatname, boatclass, sailno, dinghy, hulltype, open_handicap, " +
-                            "handicap_status, rolling_handicap, small_cat_handicap_rating, " +
-                            "engine_propeller, keel, deviations, boatmemo) " +
-                            "VALUES (@boatname, @boatclass, @sailno, @dinghy, @hulltype, @open_handicap, " +
-                            "@handicap_status, @rolling_handicap, @small_cat_handicap_rating, " +
-                            "@engine_propeller, @keel, @deviations, @boatmemo)");
-                    Bid = save.GetNextIdentity("boats");
-                }
-                else
-                    save = new Db("UPDATE boats " +
-                            "SET boatname = @boatname, " +
-                            "boatclass = @boatclass, " +
-                            "sailno = @sailno, " +
-                            "dinghy = @dinghy, " +
-                            "hulltype = @hulltype, " +
-                            "open_handicap = @open_handicap, " +
-                            "handicap_status = @handicap_status, " +
-                            "rolling_handicap = @rolling_handicap, " +
-                            "small_cat_handicap_rating = @small_cat_handicap_rating, " +
-                            "engine_propeller = @engine_propeller, " +
-                            "keel = @keel, " +
-                            "deviations = @deviations, " +
-                            "boatmemo = @boatmemo " +
-                            "WHERE bid = @bid");
-                save.ExecuteNonQuery(Values);
+                _repository.Save(_boat);
                 return string.Empty;
             }
-            else
-                return errors.ToString();
+
+            return errors.ToString();
         }
 
         private static void ValidateRequiredInteger(string value, string valueName, StringBuilder errors)
         {
-            int tmp;
             if (string.IsNullOrWhiteSpace(value))
                 errors.Append($"{valueName} must be entered");
-            else if (!int.TryParse(value, out tmp))
+            else if (!int.TryParse(value, out _))
                 errors.Append($"{valueName} must be integer value");
         }
     }

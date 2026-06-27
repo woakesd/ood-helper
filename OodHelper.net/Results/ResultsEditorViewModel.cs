@@ -484,8 +484,7 @@ namespace OodHelper.Results
         [RelayCommand]
         private void Notes()
         {
-            var rn = new RaceNotes(_rid);
-            rn.ShowDialog();
+            _dialogs.ShowRaceNotes(_rid);
         }
     }
 }

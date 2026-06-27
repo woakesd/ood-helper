@@ -15,5 +15,7 @@ namespace OodHelper.Data
         /// <summary>Insert or update a calendar row. Returns the (possibly new) rid.</summary>
         int Save(Calendar calendar);
         void Delete(int rid);
+        /// <summary>Updates only the memo (race notes) for one race, leaving every other column untouched.</summary>
+        void UpdateMemo(int rid, string memo);
     }
 }

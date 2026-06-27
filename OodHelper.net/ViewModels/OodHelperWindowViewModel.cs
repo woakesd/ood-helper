@@ -83,11 +83,11 @@ namespace OodHelper.ViewModels
         }
 
         [RelayCommand]
-        private void ShowSeriesResults()
+        private async Task ShowSeriesResults()
         {
             var sid = _dialogs.ShowSeriesChooser();
             if (sid.HasValue)
-                _navigation.OpenSeriesResults(sid.Value);
+                await _navigation.OpenSeriesResultsAsync(sid.Value);
         }
 
         [RelayCommand]

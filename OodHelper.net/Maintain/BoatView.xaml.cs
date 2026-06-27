@@ -77,11 +77,8 @@ namespace OodHelper.Maintain
         {
             if (Bid == 0)
             {
-                int topseed, nextval;
-                topseed = Settings.TopSeed;
-
-                Db seed = new Db(string.Empty);
-                nextval = seed.GetNextIdentity("boats");
+                int topseed = Settings.TopSeed;
+                int nextval = App.Services.GetRequiredService<IBoatRepository>().GetNextIdentity();
 
                 if (nextval > topseed)
                 {

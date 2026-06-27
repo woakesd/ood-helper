@@ -93,5 +93,16 @@ namespace OodHelper.Data
                 ctx.Calendars.Where(c => c.Rid == rid).ExecuteDelete();
             }
         }
+
+        public void UpdateMemo(int rid, string memo)
+        {
+            //
+            // Targeted single-column update, mirroring the legacy RaceNotes `UPDATE calendar SET memo`;
+            // ExecuteUpdate leaves every other column (and the rest of the row) untouched.
+            //
+            using (var ctx = _contextFactory.CreateDbContext())
+                ctx.Calendars.Where(c => c.Rid == rid)
+                    .ExecuteUpdate(s => s.SetProperty(c => c.Memo, memo));
+        }
     }
 }
