@@ -29,10 +29,9 @@ namespace OodHelper
         {
             DispatcherUnhandledException += App_DispatcherUnhandledException;
             //
-            // This ensures that the SQL Server DB is created.
+            // This ensures that the SQL Server DB is created on first run.
             //
-            var db = new Db("SELECT 1");
-            db.Dispose();
+            Data.DatabaseAdmin.EnsureDatabaseExists();
             //
             // This allows DataColumns to have DataContext properties as per their DataGrid.
             //
@@ -55,11 +54,10 @@ namespace OodHelper
             //
             // EF Core context factory. A factory (rather than a scoped context) suits WPF:
             // there is no per-request scope, so each unit of work creates a short-lived
-            // context, mirroring the existing `using (Db ...)` pattern. The connection string
-            // is shared with the legacy Db helper during coexistence.
+            // context. The connection string is owned by LocalDbConfig (also used by DatabaseAdmin).
             //
             services.AddDbContextFactory<Data.OodHelperContext>(opt =>
-                opt.UseSqlServer(Db.DatabaseConstr));
+                opt.UseSqlServer(Data.LocalDbConfig.ConnectionString));
 
             services.AddSingleton<ISettingsService, SettingsService>();
             services.AddSingleton<IDialogService, DialogService>();

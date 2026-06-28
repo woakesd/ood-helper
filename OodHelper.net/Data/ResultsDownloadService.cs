@@ -29,8 +29,8 @@ namespace OodHelper.Data
         // It runs inside one MySQL read transaction (snapshot) and one SQL Server write transaction, so
         // any failure or cancellation rolls back and leaves the local database untouched. Identity
         // values (rid/bid/sid) from the website are preserved via SqlBulkCopyOptions.KeepIdentity,
-        // replacing the legacy SET IDENTITY_INSERT toggling; Db.ReseedDatabase() then realigns the
-        // identity seeds afterwards, exactly as before.
+        // replacing the legacy SET IDENTITY_INSERT toggling; DatabaseAdmin.ReseedDatabase() then
+        // realigns the identity seeds afterwards, exactly as before.
         //
         public async Task DownloadAsync(IProgress<DownloadProgress> progress, CancellationToken ct)
         {
@@ -104,7 +104,7 @@ namespace OodHelper.Data
             await mtrn.CommitAsync(ct);
             await mcon.CloseAsync();
 
-            Db.ReseedDatabase();
+            DatabaseAdmin.ReseedDatabase();
             progress?.Report(new DownloadProgress(100, "All done"));
         }
 

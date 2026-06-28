@@ -200,7 +200,7 @@ SELECT COUNT(*) FROM (
         }
 
         // -------------------------------------------------------------------------------------
-        // Bulk operations (complex self-joins kept as raw SQL, off Db.cs)
+        // Bulk operations (complex self-joins kept as raw SQL via the EF connection)
         // -------------------------------------------------------------------------------------
 
         public void DoAutoPopulate(int rid)
