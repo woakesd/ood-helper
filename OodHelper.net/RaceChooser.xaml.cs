@@ -1,17 +1,13 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using Microsoft.Extensions.DependencyInjection;
+using OodHelper.Data;
+using CalendarEntity = OodHelper.Data.Entities.Calendar;
 
 namespace OodHelper
 {
@@ -20,11 +16,15 @@ namespace OodHelper
     /// </summary>
     public partial class RaceChooser : Window
     {
+        private readonly ICalendarRepository _calendarRepo;
         private DataTable cal;
 
         public RaceChooser()
         {
             InitializeComponent();
+            // This dialog is not constructed through DI, so its repository is resolved from the
+            // container here, mirroring SelectBoats and the other non-DI'd windows.
+            _calendarRepo = App.Services.GetRequiredService<ICalendarRepository>();
             FilterRaces();
         }
 
@@ -36,15 +36,8 @@ namespace OodHelper
 
         void RaceChooser_Loaded(object sender, RoutedEventArgs e)
         {
-            Db v = new Db("SELECT MAX(start_date) " +
-                "FROM calendar " +
-                "WHERE is_race = 1 " +
-                "AND start_date <= @today");
-            Hashtable p = new Hashtable();
-            p["today"] = DateTime.Today.AddDays(1.0);
-            Object o;
-            DateTime lr = (o = v.GetScalar(p)) == DBNull.Value ? DateTime.Today : ((DateTime)o).Date;
-            DateSel.SelectedDate = lr;
+            DateTime? lr = _calendarRepo.GetLatestRaceDate(DateTime.Today.AddDays(1.0));
+            DateSel.SelectedDate = lr?.Date ?? DateTime.Today;
         }
 
         private void SetGridSource()
@@ -85,40 +78,17 @@ namespace OodHelper
         {
             try
             {
-                Hashtable p = new Hashtable();
-                StringBuilder sql = new StringBuilder(@"SELECT DISTINCT DATEPART(year, start_date), 
-DATEPART(month, start_date), DATEPART(day, start_date)
-FROM calendar
-WHERE is_race = 1 ");
-                if (Eventname.Text != "")
-                {
-                    p["event"] = String.Format("%{0}%", Eventname.Text);
-                    sql.Append("AND event LIKE @event ");
-                }
-                sql.Append("ORDER BY DATEPART(year, start_date), DATEPART(month, start_date), DATEPART(day, start_date)");
-                Db c = new Db(sql.ToString());
-                DataTable d = c.GetData(p);
-                CalendarDateRange dr = new CalendarDateRange();
+                IReadOnlyList<DateTime> days = _calendarRepo.GetRaceDays(Eventname.Text);
                 DateSel.BlackoutDates.Clear();
-                if (d.Rows.Count > 0)
+                if (days.Count > 0)
                 {
-                    int year, month, day;
-                    year = (int)d.Rows[0][0];
-                    month = (int)d.Rows[0][1];
-                    day = (int)d.Rows[0][2];
-                    DateSel.DisplayDateStart = new DateTime(year, month, day);
-
-                    year = (int)d.Rows[d.Rows.Count - 1][0];
-                    month = (int)d.Rows[d.Rows.Count - 1][1];
-                    day = (int)d.Rows[d.Rows.Count - 1][2];
-                    DateSel.DisplayDateEnd = new DateTime(year, month, day);
+                    DateSel.DisplayDateStart = days[0];
+                    DateSel.DisplayDateEnd = days[days.Count - 1];
 
                     DateTime? lr = null;
-                    for (int i = 0; i < d.Rows.Count - 1; i++)
+                    for (int i = 0; i < days.Count - 1; i++)
                     {
-                        CalendarDateRange r = new CalendarDateRange(
-                            new DateTime((int)d.Rows[i][0], (int)d.Rows[i][1], (int)d.Rows[i][2]),
-                            new DateTime((int)d.Rows[i + 1][0], (int)d.Rows[i + 1][1], (int)d.Rows[i + 1][2]));
+                        CalendarDateRange r = new CalendarDateRange(days[i], days[i + 1]);
                         if (lr == null && r.Start >= DateTime.Today) lr = r.Start;
                         if (r.End - r.Start > new TimeSpan(1, 0, 0, 0))
                         {
@@ -127,21 +97,46 @@ WHERE is_race = 1 ");
                             DateSel.BlackoutDates.Add(r);
                         }
                     }
-                    if (lr == null) lr = new DateTime((int)d.Rows[d.Rows.Count - 1][0],
-                        (int)d.Rows[d.Rows.Count - 1][1],
-                        (int)d.Rows[d.Rows.Count - 1][2]);
+                    if (lr == null) lr = days[days.Count - 1];
                     DateSel.SelectedDate = lr.Value;
                     if (DateSel.SelectedDate.HasValue)
                         DateSel.DisplayDate = DateSel.SelectedDate.Value;
                 }
-                
-                ((DataView)CalGrid.ItemsSource).RowFilter =
-                    "event LIKE '%" + Eventname.Text + "%'";
+
+                if (CalGrid.ItemsSource is DataView dv)
+                    dv.RowFilter = "event LIKE '%" + Eventname.Text + "%'";
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private static DataTable BuildCalendarTable(IReadOnlyList<CalendarEntity> races)
+        {
+            //
+            // Reproduces the column set the old `SELECT rid, start_date, event, class, raced`
+            // produced, so the auto-generated grid columns, the start_date formatter and
+            // setChosenRaces (which reads rid/start_date by name) keep working unchanged.
+            //
+            DataTable dt = new DataTable { TableName = "calendar" };
+            dt.Columns.Add(new DataColumn("rid", typeof(int)));
+            dt.Columns.Add(new DataColumn("start_date", typeof(DateTime)));
+            dt.Columns.Add(new DataColumn("event", typeof(string)));
+            dt.Columns.Add(new DataColumn("class", typeof(string)));
+            dt.Columns.Add(new DataColumn("raced", typeof(bool)));
+            foreach (var c in races)
+            {
+                DataRow r = dt.NewRow();
+                r["rid"] = c.Rid;
+                r["start_date"] = (object)c.StartDate ?? DBNull.Value;
+                r["event"] = (object)c.Event ?? DBNull.Value;
+                r["class"] = (object)c.Class ?? DBNull.Value;
+                r["raced"] = (object)c.Raced ?? DBNull.Value;
+                dt.Rows.Add(r);
+            }
+            dt.AcceptChanges();
+            return dt;
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
@@ -209,15 +204,7 @@ WHERE is_race = 1 ");
         {
             if (DateSel.SelectedDate.HasValue)
             {
-                Hashtable p = new Hashtable();
-                Db d = new Db("SELECT rid, start_date, event, class, raced " +
-                    "FROM calendar " +
-                    "WHERE is_race = 1 " +
-                    "AND start_date >= @startdate AND start_date < @enddate " +
-                    "ORDER BY start_date");
-                p["startdate"] = DateSel.SelectedDate.Value;
-                p["enddate"] = DateSel.SelectedDate.Value.AddDays(1);
-                cal = d.GetData(p);
+                cal = BuildCalendarTable(_calendarRepo.GetRacesOnDay(DateSel.SelectedDate.Value));
                 SetGridSource();
             }
         }
@@ -239,7 +226,7 @@ WHERE is_race = 1 ");
                         DateSel.SelectedDate = sel;
                         isSet = true;
                     }
-                    catch 
+                    catch
                     {
                         sel = sel.AddDays(-1);
                     }
