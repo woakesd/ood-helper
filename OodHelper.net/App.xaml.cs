@@ -29,10 +29,6 @@ namespace OodHelper
         {
             DispatcherUnhandledException += App_DispatcherUnhandledException;
             //
-            // This ensures that the SQL Server DB is created on first run.
-            //
-            Data.DatabaseAdmin.EnsureDatabaseExists();
-            //
             // This allows DataColumns to have DataContext properties as per their DataGrid.
             //
             FrameworkElement.DataContextProperty.AddOwner(typeof(DataGridColumn));
@@ -45,6 +41,13 @@ namespace OodHelper
             ConfigureServices(services);
             Services = services.BuildServiceProvider();
 
+            //
+            // Create the SQLite database on first run and apply any pending EF migrations. EF Core owns
+            // the schema (code-first), replacing the old hand-rolled DatabaseAdmin DDL.
+            //
+            using (var ctx = Services.GetRequiredService<IDbContextFactory<Data.OodHelperContext>>().CreateDbContext())
+                ctx.Database.Migrate();
+
             var main = Services.GetRequiredService<OodHelperWindow>();
             main.Show();
         }
@@ -54,10 +57,10 @@ namespace OodHelper
             //
             // EF Core context factory. A factory (rather than a scoped context) suits WPF:
             // there is no per-request scope, so each unit of work creates a short-lived
-            // context. The connection string is owned by LocalDbConfig (also used by DatabaseAdmin).
+            // context. The connection string is owned by SqliteConfig.
             //
             services.AddDbContextFactory<Data.OodHelperContext>(opt =>
-                opt.UseSqlServer(Data.LocalDbConfig.ConnectionString));
+                opt.UseSqlite(Data.SqliteConfig.ConnectionString));
 
             services.AddSingleton<ISettingsService, SettingsService>();
             services.AddSingleton<IDialogService, DialogService>();
