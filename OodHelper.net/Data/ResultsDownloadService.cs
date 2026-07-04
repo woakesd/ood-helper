@@ -30,10 +30,10 @@ namespace OodHelper.Data
         //
         // The download is a full replace: clear every local table, then re-load it from the website.
         // It runs inside one MySQL read transaction (snapshot) and one SQLite write transaction, so
-        // any failure or cancellation rolls back and leaves the local database untouched. Identity
-        // values (rid/bid/sid) from the website are preserved because BulkInsert writes the entity's
-        // explicit primary-key value on SQLite; the maintenance Reseed() then realigns the boats seed
-        // band afterwards.
+        // any failure or cancellation rolls back and leaves the local database untouched. The website
+        // identity values (rid/bid/sid) must be preserved so the child tables keep referencing the right
+        // rows; on SQLite that means EF SaveChanges for the AUTOINCREMENT tables and BulkInsert for the
+        // rest (see the per-table note below). The maintenance Reseed() then realigns the boats seed band.
         //
         public async Task DownloadAsync(IProgress<DownloadProgress> progress, CancellationToken ct)
         {
@@ -82,18 +82,31 @@ namespace OodHelper.Data
                 //
                 // Re-load each table from the website, parents before children.
                 //
+                // boats/calendar/series have AUTOINCREMENT identity keys. BulkInsert cannot preserve an
+                // explicit identity value on SQLite (it always lets AUTOINCREMENT assign a new one), which
+                // would break every child reference (races.rid/bid, the join, series_results ...). EF
+                // SaveChanges DOES honour the explicit key on SQLite and advances sqlite_sequence to the
+                // max, so these three tables go through the tracker; the child tables below keep their
+                // (non-generated) keys via BulkInsert.
+                //
                 Report("Loading Boats");
-                await ctx.BulkInsertAsync(await ReadBoatsAsync(mcon, mtrn, ct), cancellationToken: ct);
+                ctx.Boats.AddRange(await ReadBoatsAsync(mcon, mtrn, ct));
+                await ctx.SaveChangesAsync(ct);
+                ctx.ChangeTracker.Clear();
 
                 Report("Loading Calendar");
-                await ctx.BulkInsertAsync(await ReadCalendarAsync(mcon, mtrn, ct), cancellationToken: ct);
+                ctx.Calendars.AddRange(await ReadCalendarAsync(mcon, mtrn, ct));
+                await ctx.SaveChangesAsync(ct);
+                ctx.ChangeTracker.Clear();
 
                 ct.ThrowIfCancellationRequested();
                 Report("Loading Races");
                 await ctx.BulkInsertAsync(await ReadRacesAsync(mcon, mtrn, ct), cancellationToken: ct);
 
                 Report("Loading Series");
-                await ctx.BulkInsertAsync(await ReadSeriesAsync(mcon, mtrn, ct), cancellationToken: ct);
+                ctx.Series.AddRange(await ReadSeriesAsync(mcon, mtrn, ct));
+                await ctx.SaveChangesAsync(ct);
+                ctx.ChangeTracker.Clear();
 
                 ct.ThrowIfCancellationRequested();
                 Report("Loading Series links");

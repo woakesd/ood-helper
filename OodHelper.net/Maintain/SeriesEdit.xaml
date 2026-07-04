@@ -33,7 +33,7 @@
             </StackPanel>
         </Button>
         <ScrollViewer Grid.Row="2" Grid.Column="1" MaxHeight="480" Margin="3">
-            <DataGrid Name="Calendar" MinHeight="120" IsReadOnly="True" AutoGenerateColumns="False" HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="1">
+            <DataGrid Name="Calendar" ItemsSource="{Binding Calendar}" MinHeight="120" IsReadOnly="True" AutoGenerateColumns="False" HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="1">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Event" Binding="{Binding Event}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Class" Binding="{Binding EventClass}"></DataGridTextColumn>

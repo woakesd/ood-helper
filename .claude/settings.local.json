@@ -7,7 +7,23 @@
       "Bash(Remove-Item \"c:\\\\Users\\\\david\\\\source\\\\repos\\\\ood-helper\\\\OodHelper.net\\\\packages.config\" -Force)",
       "PowerShell(dotnet test *)",
       "Bash(git *)",
-      "PowerShell(dotnet build *)"
+      "PowerShell(dotnet build *)",
+      "Bash(cat)",
+      "PowerShell($SP = \"$env:TEMP\\\\claude\\\\c--Users-david-source-repos-ood-helper\\\\6b4ab461-492a-4000-ae03-4728ea4af0d6\\\\scratchpad\\\\dbprobe\"; dotnet run --project $SP -c Release 2>&1 | Select-String -Pattern \"Identity|Preserve|Keep|Property|Insert|Order|Sql\" | Select-Object -First 40)",
+      "PowerShell($SP = \"$env:TEMP\\\\claude\\\\c--Users-david-source-repos-ood-helper\\\\6b4ab461-492a-4000-ae03-4728ea4af0d6\\\\scratchpad\\\\dbprobe\"; dotnet run --project $SP -c Release 2>&1 | Select-String -Pattern \"stored ids|Exception|error CS\" | Select-Object -First 20)",
+      "PowerShell($SP = \"$env:TEMP\\\\claude\\\\c--Users-david-source-repos-ood-helper\\\\6b4ab461-492a-4000-ae03-4728ea4af0d6\\\\scratchpad\\\\dbprobe\"; dotnet run --project $SP -c Release 2>&1 | Select-String -Pattern \"stored ids|sqlite_sequence|max id|Exception|error CS\" | Select-Object -First 20)",
+      "PowerShell($log = [Environment]::GetFolderPath\\(\"DesktopDirectory\"\\) + \"\\\\OodHelper-Errors.log\"; $lastDownloadEra = Get-Content $log | Select-String -Pattern \"2026-07-01T1[0-2]\" | Select-Object -Last 3; if \\($lastDownloadEra\\) { \"Recent error entries \\(10:00-12:59 today\\):\"; $lastDownloadEra } else { \"No error-log entries from the recent \\(post-fix\\) window.\" }; \"App running: $\\([bool]\\(Get-Process OodHelper -ErrorAction SilentlyContinue\\)\\)\")",
+      "PowerShell($SP = \"$env:TEMP\\\\claude\\\\c--Users-david-source-repos-ood-helper\\\\6b4ab461-492a-4000-ae03-4728ea4af0d6\\\\scratchpad\\\\dbprobe\"; dotnet run --project $SP -c Release 2>&1 | Select-String -Pattern \"id=|name=|classes:|typeof|=== \" | Select-Object -First 40)",
+      "PowerShell($log = [Environment]::GetFolderPath\\(\"DesktopDirectory\"\\) + \"\\\\OodHelper-Errors.log\"; Get-Content $log -Tail 45)",
+      "Bash(SP=\"/c/Users/david/AppData/Local/Temp/claude/c--Users-david-source-repos-ood-helper/6b4ab461-492a-4000-ae03-4728ea4af0d6/scratchpad/dbprobe\"; cat > \"$SP/Program.cs\" <<'EOF' *)",
+      "PowerShell($SP = \"$env:TEMP\\\\claude\\\\c--Users-david-source-repos-ood-helper\\\\6b4ab461-492a-4000-ae03-4728ea4af0d6\\\\scratchpad\\\\dbprobe\"; dotnet run --project $SP -c Release 2>&1 | Select-String -Pattern \"name|field|string_value|application|total\")",
+      "PowerShell($SP = \"$env:TEMP\\\\claude\\\\c--Users-david-source-repos-ood-helper\\\\6b4ab461-492a-4000-ae03-4728ea4af0d6\\\\scratchpad\\\\dbprobe\"; dotnet run --project $SP -c Release 2>&1 | Select-String -Pattern \"connected|sql_mode|Field|name|parent|application|field|condition|string_value|number_bound|id |nulls|type=|error|Exception\" | Select-Object -First 30)",
+      "PowerShell(Start-Process \"OodHelper.net\\\\bin\\\\Debug\\\\net10.0-windows\\\\OodHelper.exe\"; Start-Sleep -Seconds 5; $p = Get-Process OodHelper -ErrorAction SilentlyContinue; if \\($p\\) { \"APP RUNNING pid=$\\($p.Id\\) — try Upload to Website now\" } else { \"APP NOT RUNNING\" })",
+      "PowerShell(Start-Process \"OodHelper.net\\\\bin\\\\Debug\\\\net10.0-windows\\\\OodHelper.exe\"; Start-Sleep -Seconds 5; $p = Get-Process OodHelper -ErrorAction SilentlyContinue; if \\($p\\) { \"APP RUNNING pid=$\\($p.Id\\)\" } else { \"APP NOT RUNNING\" })",
+      "PowerShell($log = [Environment]::GetFolderPath\\(\"DesktopDirectory\"\\) + \"\\\\OodHelper-Errors.log\"; Get-Content $log -Tail 40)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\david\\AppData\\Local\\Temp\\claude\\c--Users-david-source-repos-ood-helper\\6b4ab461-492a-4000-ae03-4728ea4af0d6\\scratchpad\\dbprobe"
     ]
   }
 }

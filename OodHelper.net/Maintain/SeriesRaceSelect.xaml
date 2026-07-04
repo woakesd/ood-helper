@@ -1,7 +1,8 @@
 ﻿<Window x:Class="OodHelper.Maintain.SeriesRaceSelect"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="SeriesRaceSelect" Loaded="Window_Loaded" KeyUp="Window_KeyUp">
+        Title="SeriesRaceSelect" Loaded="Window_Loaded" KeyUp="Window_KeyUp"
+        Width="620" Height="500" WindowStartupLocation="CenterOwner">
     <Grid FocusManager.FocusedElement="{Binding ElementName=Eventname}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -44,7 +45,7 @@
                       ItemsSource="{Binding RacesView}">
                 <DataGrid.Columns>
                     <DataGridCheckBoxColumn Header="Selected" Binding="{Binding Selected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                    <DataGridTextColumn Header="Event" Binding="{Binding Event}" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Event" Binding="{Binding Event}" IsReadOnly="True" Width="*"/>
                     <DataGridTextColumn Header="Class" Binding="{Binding EventClass}" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Date" Binding="{Binding StartDate,StringFormat={}{0:dd MMM yyyy HH:mm:ss}}" IsReadOnly="True"/>
                 </DataGrid.Columns>
