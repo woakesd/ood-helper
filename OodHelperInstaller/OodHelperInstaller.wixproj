@@ -53,4 +53,19 @@
   <PropertyGroup>
     <DefineConstants>AppOutputDir=$(AppOutputDir)</DefineConstants>
   </PropertyGroup>
+
+  <!--
+    Pick up the product version from the built application rather than hardwiring it in Product.wxs.
+    The managed assembly version of OodHelper.dll (OodHelper.exe is only the apphost launcher) is read
+    after the ProjectReference has built it, then handed to the WiX preprocessor as var.AppVersion,
+    which Product.wxs uses for the Package/@Version. Runs before CoreCompile consumes $(DefineConstants).
+  -->
+  <Target Name="SetPackageVersionFromApp" BeforeTargets="CoreCompile" DependsOnTargets="ResolveProjectReferences">
+    <GetAssemblyIdentity AssemblyFiles="$(AppOutputDir)OodHelper.dll">
+      <Output TaskParameter="Assemblies" ItemName="_OodHelperAssembly" />
+    </GetAssemblyIdentity>
+    <PropertyGroup>
+      <DefineConstants>$(DefineConstants);AppVersion=%(_OodHelperAssembly.Version)</DefineConstants>
+    </PropertyGroup>
+  </Target>
 </Project>

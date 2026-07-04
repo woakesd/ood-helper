@@ -20,7 +20,11 @@
       "PowerShell($SP = \"$env:TEMP\\\\claude\\\\c--Users-david-source-repos-ood-helper\\\\6b4ab461-492a-4000-ae03-4728ea4af0d6\\\\scratchpad\\\\dbprobe\"; dotnet run --project $SP -c Release 2>&1 | Select-String -Pattern \"connected|sql_mode|Field|name|parent|application|field|condition|string_value|number_bound|id |nulls|type=|error|Exception\" | Select-Object -First 30)",
       "PowerShell(Start-Process \"OodHelper.net\\\\bin\\\\Debug\\\\net10.0-windows\\\\OodHelper.exe\"; Start-Sleep -Seconds 5; $p = Get-Process OodHelper -ErrorAction SilentlyContinue; if \\($p\\) { \"APP RUNNING pid=$\\($p.Id\\) — try Upload to Website now\" } else { \"APP NOT RUNNING\" })",
       "PowerShell(Start-Process \"OodHelper.net\\\\bin\\\\Debug\\\\net10.0-windows\\\\OodHelper.exe\"; Start-Sleep -Seconds 5; $p = Get-Process OodHelper -ErrorAction SilentlyContinue; if \\($p\\) { \"APP RUNNING pid=$\\($p.Id\\)\" } else { \"APP NOT RUNNING\" })",
-      "PowerShell($log = [Environment]::GetFolderPath\\(\"DesktopDirectory\"\\) + \"\\\\OodHelper-Errors.log\"; Get-Content $log -Tail 40)"
+      "PowerShell($log = [Environment]::GetFolderPath\\(\"DesktopDirectory\"\\) + \"\\\\OodHelper-Errors.log\"; Get-Content $log -Tail 40)",
+      "Bash(find ~/.nuget/packages/wixtoolset.sdk -name \"*.targets\" 2>/dev/null | head; echo \"---PROPS---\"; grep -rl \"DefineConstants\" ~/.nuget/packages/wixtoolset.sdk/*/build 2>/dev/null | head)",
+      "Read(//c/Users/david/.nuget/packages/wixtoolset.sdk/**)",
+      "Bash(grep -n \"DefineConstants\\\\|CompileWix\\\\|<Target Name=\\\\\"Compile\\\\|Name=\\\\\"Compile\\\\|CoreCompile\\\\|WixBuild\\\\|BeforeTargets\" /c/Users/david/.nuget/packages/wixtoolset.sdk/4.0.5/tools/wix.targets | head -50)",
+      "Read(//c/Users/david/.nuget/packages/wixtoolset.sdk/4.0.5/tools/**)"
     ],
     "additionalDirectories": [
       "C:\\Users\\david\\AppData\\Local\\Temp\\claude\\c--Users-david-source-repos-ood-helper\\6b4ab461-492a-4000-ae03-4728ea4af0d6\\scratchpad\\dbprobe"
