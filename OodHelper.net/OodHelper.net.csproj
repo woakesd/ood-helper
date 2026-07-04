@@ -36,4 +36,19 @@
     <Compile Remove="Website\About.xaml.cs" />
     <Page Remove="Website\About.xaml" />
   </ItemGroup>
+
+  <!--
+    This is a Windows-only WPF app, but the SQLitePCLRaw native package ships e_sqlite3 for every
+    runtime identifier (linux/osx/freebsd/wasm/...). A framework-dependent build copies them all into
+    runtimes\, which then bloats the harvested installer with ~27 native libraries this app can never
+    load. Prune every non-win* RID folder after build so both the run output and the MSI carry only
+    the Windows natives.
+  -->
+  <Target Name="PruneNonWindowsRuntimes" AfterTargets="Build" Condition="Exists('$(OutDir)runtimes')">
+    <ItemGroup>
+      <_RidDir Include="$([System.IO.Directory]::GetDirectories('$(OutDir)runtimes'))" />
+      <_NonWinRidDir Include="@(_RidDir)" Condition="!$([System.String]::Copy('%(Filename)').StartsWith('win'))" />
+    </ItemGroup>
+    <RemoveDir Directories="@(_NonWinRidDir)" />
+  </Target>
 </Project>
