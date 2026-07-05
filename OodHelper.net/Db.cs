@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 
@@ -166,26 +166,14 @@ RESTORE VERIFYONLY FROM  DISK = N'{1}\{0}.bak' WITH  FILE = @backupSetId,  NOUNL
                 con.Open();
                 SqlCommand cmd = con.CreateCommand();
                 cmd.CommandText = @"
-CREATE TABLE [dbo].[boat_crew](
-	[id] [int] NOT NULL,
-	[bid] [int] NOT NULL,
- CONSTRAINT [PK_boat_crew] PRIMARY KEY CLUSTERED 
-(
-	[id] ASC,
-	[bid] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY];
-
 CREATE TABLE [dbo].[boats](
 	[bid] [int] IDENTITY(1,1) NOT NULL,
-	[id] [int] NULL,
 	[boatname] [nvarchar](20) NULL,
 	[boatclass] [nvarchar](20) NULL,
 	[sailno] [nvarchar](8) NULL,
 	[dinghy] [bit] NULL,
 	[hulltype] [nvarchar](1) NULL,
 	[distance] [int] NULL,
-	[crewname] [nvarchar](30) NULL,
 	[open_handicap] [int] NULL,
 	[handicap_status] [nvarchar](2) NULL,
 	[rolling_handicap] [int] NULL,
@@ -250,35 +238,6 @@ CREATE TABLE [dbo].[calendar_series_join](
 	[rid] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY];
-
-CREATE TABLE [dbo].[people](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[main_id] [int] NULL,
-	[firstname] [nvarchar](20) NULL,
-	[surname] [nvarchar](28) NULL,
-	[address1] [nvarchar](30) NULL,
-	[address2] [nvarchar](30) NULL,
-	[address3] [nvarchar](30) NULL,
-	[address4] [nvarchar](30) NULL,
-	[postcode] [nvarchar](9) NULL,
-	[hometel] [nvarchar](20) NULL,
-	[worktel] [nvarchar](20) NULL,
-	[mobile] [nvarchar](20) NULL,
-	[email] [nvarchar](45) NULL,
-	[club] [nvarchar](10) NULL,
-	[member] [nvarchar](6) NULL,
-	[manmemo] [ntext] NULL,
-	[cp] [bit] NULL,
-	[s] [bit] NULL,
-	[novice] [bit] NULL,
-	[uid] [uniqueidentifier] NULL,
-	[papernewsletter] [bit] NULL,
-	[handbookexclude] [bit] NULL,
- CONSTRAINT [PK_people] PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
 
 CREATE TABLE [dbo].[portsmouth_numbers](
 	[id] [uniqueidentifier] NOT NULL,
@@ -374,13 +333,6 @@ CREATE TABLE [dbo].[updates](
 	[dummy] [int] NULL,
 	[upload] [datetime] NULL
 ) ON [PRIMARY];
-
-ALTER TABLE [dbo].[boats]  WITH CHECK ADD  CONSTRAINT [FK_boats_people] FOREIGN KEY([id])
-REFERENCES [dbo].[people] ([id])
-ON UPDATE CASCADE
-ON DELETE SET NULL;
-
-ALTER TABLE [dbo].[boats] CHECK CONSTRAINT [FK_boats_people];
 
 ALTER TABLE [dbo].[calendar_series_join]  WITH CHECK ADD  CONSTRAINT [FK_calendar_series_join_calendar] FOREIGN KEY([rid])
 REFERENCES [dbo].[calendar] ([rid])
@@ -546,7 +498,6 @@ ALTER TABLE [dbo].[races] CHECK CONSTRAINT [FK_races_calendar];
             var t = Settings.TopSeed;
 
             ReseedTable("boats", "bid", b, t);
-            ReseedTable("people", "id", b, t);
             ReseedTable("calendar", "rid");
             ReseedTable("series", "sid");
         }

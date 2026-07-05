@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
+using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Markup;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Printing;
 using System.Windows.Xps;
 using OodHelper.Maintain;
@@ -20,23 +10,30 @@ using OodHelper.Maintain;
 namespace OodHelper.Results
 {
     /// <summary>
-    /// Interaction logic for RaceResults.xaml
+    /// Interaction logic for RaceResults.xaml.
     /// </summary>
+    /// <remarks>
+    /// The host keeps the WPF-specific plumbing (tabs, per-tab context menus, the XPS print
+    /// pipeline) but is now driven by a <see cref="RaceResultsViewModel"/>; all database work
+    /// goes through <see cref="OodHelper.Data.IRaceResultsRepository"/> via that view-model.
+    /// </remarks>
     public partial class RaceResults : UserControl
     {
+        private readonly RaceResultsViewModel _vm;
         private ResultsEditor[] reds;
 
-        public RaceResults(int[] rids)
+        public RaceResults(RaceResultsViewModel viewModel)
         {
             InitializeComponent();
 
-            reds = new ResultsEditor[rids.Length];
+            _vm = viewModel;
+            reds = _vm.Editors.Select(ev => new ResultsEditor(ev)).ToArray();
 
             bool askAutoPopulate = true, doAutoPopulate = false;
-            for (int i = 0; i < rids.Length; i++)
+            for (int i = 0; i < reds.Length; i++)
             {
-                ResultsEditor r = new ResultsEditor(rids[i]);
-                if (!r.Races.HasItems && r.CountAutoPopulateData() > 0)
+                ResultsEditor r = reds[i];
+                if ((r.Rows == null || r.Rows.Count == 0) && r.CountAutoPopulateData() > 0)
                 {
                     if (askAutoPopulate)
                     {
@@ -53,7 +50,6 @@ namespace OodHelper.Results
                         r.DoAutoPopulate();
                     }
                 }
-                reds[i] = r;
                 TabItem t = new TabItem();
                 t.Header = r.RaceName;
                 t.Content = r;
@@ -61,20 +57,20 @@ namespace OodHelper.Results
                 r.ContextMenu = new ContextMenu();
             }
 
-            for (int i = 0; i < rids.Length; i++)
+            for (int i = 0; i < reds.Length; i++)
             {
-                ResultsEditor from = (ResultsEditor)((TabItem)raceTabControl.Items[i]).Content;
+                ResultsEditor from = reds[i];
                 ContextMenu m = from.ContextMenu;
                 MenuItem editBoat = new MenuItem();
                 editBoat.Header = "Edit Boat";
-                editBoat.Command = new EditBoatCmd();
+                editBoat.Command = new EditBoatCmd(this);
                 editBoat.CommandParameter = from;
                 m.Items.Add(editBoat);
-                if (rids.Length > 1)
+                if (reds.Length > 1)
                 {
-                    for (int j = 0; j < rids.Length; j++)
+                    for (int j = 0; j < reds.Length; j++)
                     {
-                        ResultsEditor to = (ResultsEditor)((TabItem)raceTabControl.Items[j]).Content;
+                        ResultsEditor to = reds[j];
                         if (i != j)
                         {
                             MenuItem mi = new MenuItem();
@@ -90,8 +86,11 @@ namespace OodHelper.Results
 
         class EditBoatCmd : ICommand
         {
-            public EditBoatCmd()
+            private readonly RaceResults _owner;
+
+            public EditBoatCmd(RaceResults owner)
             {
+                _owner = owner;
             }
 
             #region ICommand Members
@@ -109,32 +108,17 @@ namespace OodHelper.Results
             public void Execute(object parameter)
             {
                 bool reload = false;
-                ResultsEditor rr = (ResultsEditor)parameter;
-                IList<DataGridCellInfo> cc = rr.Races.SelectedCells;
+                ResultsEditor rr = (ResultsEditor) parameter;
 
                 foreach (DataGridCellInfo inf in rr.Races.SelectedCells)
                 {
-                    ResultModel rv = inf.Item as ResultModel;
+                    ResultRowViewModel rv = inf.Item as ResultRowViewModel;
+                    if (rv == null) continue;
                     int bid = rv.Bid;
                     BoatView edit = new BoatView(bid);
                     if (edit.ShowDialog().Value)
                     {
-                        Db c = new Db(@"SELECT bid, rolling_handicap, handicap_status, open_handicap
-                                FROM boats WHERE bid = @bid");
-                        Hashtable p = new Hashtable();
-                        p["bid"] = bid;
-                        Hashtable d = c.GetHashtable(p);
-                        foreach (object o in d.Keys)
-                            p[o] = d[o];
-                        p["rid"] = rr.Rid;
-                        c = new Db(@"UPDATE races
-                                SET rolling_handicap = @rolling_handicap,
-                                handicap_status = @handicap_status,
-                                open_handicap = @open_handicap,
-                                last_edit = GETDATE()
-                                WHERE rid = @rid
-                                AND bid = @bid");
-                        c.ExecuteNonQuery(p);
+                        _owner._vm.ApplyEditedBoatHandicaps(rr.Rid, bid);
                         reload = true;
                     }
                 }
@@ -146,14 +130,15 @@ namespace OodHelper.Results
 
         class FleetChanger : ICommand
         {
-            private int toRid;
-            private int fromRid;
-            private RaceResults raceResults;
-            public FleetChanger(RaceResults r, int from, int to)
+            private readonly RaceResults _owner;
+            private readonly int _toRid;
+            private readonly int _fromRid;
+
+            public FleetChanger(RaceResults owner, int from, int to)
             {
-                fromRid = from;
-                toRid = to;
-                raceResults = r;
+                _owner = owner;
+                _fromRid = from;
+                _toRid = to;
             }
 
             #region ICommand Members
@@ -170,31 +155,18 @@ namespace OodHelper.Results
 
             public void Execute(object parameter)
             {
-                DataGrid races = (DataGrid)parameter;
+                DataGrid races = (DataGrid) parameter;
                 if (races.SelectedCells.Count > 0)
                 {
-                    Db s = new Db(@"SELECT start_date
-                            FROM calendar
-                            WHERE rid = @torid");
-                    Hashtable p = new Hashtable();
-                    p["torid"] = toRid;
-                    DateTime rstart = (DateTime)s.GetScalar(p);
-                    Db c = new Db(@"UPDATE races
-                            SET rid = @torid
-                            , start_date = @start_date
-                            WHERE rid = @fromrid
-                            AND bid = @bid");
-                    p["fromrid"] = fromRid;
-                    p["start_date"] = rstart;
                     foreach (DataGridCellInfo inf in races.SelectedCells)
                     {
-                        ResultModel drv = inf.Item as ResultModel;
-                        p["bid"] = drv.Bid;
-                        c.ExecuteNonQuery(p);
+                        ResultRowViewModel rv = inf.Item as ResultRowViewModel;
+                        if (rv == null) continue;
+                        _owner._vm.MoveToFleet(_fromRid, _toRid, rv.Bid);
                     }
 
-                    for (int i = 0; i < raceResults.reds.Length; i++)
-                        raceResults.reds[i].LoadGrid();
+                    for (int i = 0; i < _owner.reds.Length; i++)
+                        _owner.reds[i].LoadGrid();
                 }
             }
 

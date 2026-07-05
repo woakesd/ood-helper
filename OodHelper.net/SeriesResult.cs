@@ -1,10 +1,16 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace OodHelper
 {
+    /// <summary>
+    /// Pure series scoring algorithm: given the per-event entries for one class/division it computes
+    /// each boat's discards, totals and finishing places. Persistence and data loading now live in
+    /// <see cref="OodHelper.Data.ISeriesResultRepository"/> and the
+    /// <see cref="OodHelper.Results.SeriesResultsViewModel"/> orchestrator — this class touches no
+    /// database or UI.
+    /// </summary>
     public class SeriesResult
     {
         private readonly int[] _discardProfile;
@@ -211,47 +217,6 @@ namespace OodHelper
             foreach (var boat in Results)
             {
                 boat.Place = place++;
-            }
-
-            //
-            // Save to database replacing existing values
-            //
-            SaveResults();
-        }
-
-        private void SaveResults()
-        {
-            try
-            {
-                var p = new Hashtable
-                {
-                    ["sid"] = Sid,
-                    ["division"] = Division
-                };
-                using (var c = new Db(@"DELETE FROM series_results
-                WHERE [sid] = @sid
-                AND [division] = @division"))
-                {
-                    c.ExecuteNonQuery(p);
-                }
-                using (var c = new Db(@"INSERT INTO series_results
-                ([sid], [bid], [division], [entered], [gross], [nett], [place])
-                VALUES (@sid, @bid, @division, @entered, @gross, @nett, @place)"))
-                {
-                    foreach (var bsr in Results)
-                    {
-                        p["bid"] = bsr.Bid;
-                        p["entered"] = bsr.Count;
-                        p["gross"] = bsr.Total;
-                        p["nett"] = bsr.Net;
-                        p["place"] = bsr.Place;
-                        c.ExecuteNonQuery(p);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                ErrorLogger.LogException(e);
             }
         }
 

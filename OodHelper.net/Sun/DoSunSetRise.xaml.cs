@@ -2,7 +2,9 @@
 using System.Data;
 using System.Windows;
 using System.Windows.Controls;
-using OodHelper.Website;
+using Microsoft.Extensions.DependencyInjection;
+using OodHelper.Data;
+using OodHelper.Services;
 
 namespace OodHelper.Sun
 {
@@ -43,9 +45,22 @@ namespace OodHelper.Sun
             }
         }
 
-        private void UploadSun_Click(object sender, RoutedEventArgs e)
+        private async void UploadSun_Click(object sender, RoutedEventArgs e)
         {
-            new UploadSun(_dataContext.SunRiseTable);
+            var dialogs = App.Services.GetRequiredService<IDialogService>();
+            var uploader = App.Services.GetRequiredService<ISunTideUploadService>();
+            try
+            {
+                var completed = await dialogs.ShowProgressAsync("Uploading Sun Data",
+                    (progress, ct) => uploader.UploadSunAsync(_dataContext.SunRiseTable, progress, ct));
+                dialogs.ShowInformation(completed ? "Sun Data Upload Complete" : "Sun Data Upload Cancelled",
+                    completed ? "Finished" : "Cancel");
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogException(ex);
+                dialogs.ShowError("Sun Data Upload Failed", "Failed");
+            }
         }
 
         private void Year_SelectionChanged(object sender, SelectionChangedEventArgs e)

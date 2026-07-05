@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Data;
 using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using MySqlConnector;
+using OodHelper.Data;
+using OodHelper.Services;
 
 namespace OodHelper.LoadTide
 {
@@ -30,9 +33,22 @@ namespace OodHelper.LoadTide
             }
         }
 
-        private void Upload_Click(object sender, RoutedEventArgs e)
+        private async void Upload_Click(object sender, RoutedEventArgs e)
         {
-            Website.UploadTide upload = new Website.UploadTide(TideInfo.Data);
+            var dialogs = App.Services.GetRequiredService<IDialogService>();
+            var uploader = App.Services.GetRequiredService<ISunTideUploadService>();
+            try
+            {
+                var completed = await dialogs.ShowProgressAsync("Uploading Tide Data",
+                    (progress, ct) => uploader.UploadTideAsync(TideInfo.Data, progress, ct));
+                dialogs.ShowInformation(completed ? "Tide Data Upload Complete" : "Tide Data Upload Cancelled",
+                    completed ? "Finished" : "Cancel");
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogException(ex);
+                dialogs.ShowError("Tide Data Upload Failed", "Failed");
+            }
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)

@@ -8,6 +8,8 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Microsoft.Extensions.DependencyInjection;
+using OodHelper.Data;
 using OodHelper.Maintain;
 using OodHelper.Rules;
 
@@ -24,8 +26,9 @@ namespace OodHelper.Results
         private readonly ResultsEditor[] _reds;
         private readonly BoatSelectRule[] _rules;
         private readonly SelectedBoats[] _sbt;
+        private readonly IBoatRepository _boatRepo;
+        private readonly IRaceResultsRepository _raceRepo;
 
-        private StringBuilder _boatsSql;
         private Timer _timer;
 
         public SelectBoats(ResultsEditor[] raceEdits)
@@ -42,6 +45,12 @@ namespace OodHelper.Results
             _sbt = new SelectedBoats[_reds.Length];
             _rules = new BoatSelectRule[_reds.Length];
 
+            // This window is not constructed through DI, so its repositories are resolved from the
+            // container here. Boat search, the rule trees and race-entry writes all go via EF.
+            var ruleRepo = App.Services.GetRequiredService<ISelectRuleRepository>();
+            _boatRepo = App.Services.GetRequiredService<IBoatRepository>();
+            _raceRepo = App.Services.GetRequiredService<IRaceResultsRepository>();
+
             for (int i = 0; i < _reds.Length; i++)
             {
                 var ti = new TabItem {Header = _reds[i].RaceClass};
@@ -54,7 +63,7 @@ namespace OodHelper.Results
                 ti.Content = _sbt[i];
                 Fleets.Items.Add(ti);
 
-                var d = _reds[i].Races.ItemsSource as IList<ResultModel>;
+                IReadOnlyList<ResultRowViewModel> d = _reds[i].Rows;
                 var bts = new DataTable {TableName = "boats"};
                 bts.Columns.Add(new DataColumn("bid", typeof (int)));
                 var pk = new DataColumn[1];
@@ -86,7 +95,7 @@ namespace OodHelper.Results
                 _sbt[i].Boats.IsReadOnly = true;
                 _sbt[i].Boats.ContextMenu = new ContextMenu();
 
-                _rules[i] = new BoatSelectRule(_reds[i].RaceClass);
+                _rules[i] = ruleRepo.GetTree(_reds[i].RaceClass);
             }
 
             for (int i = 0; i < _sbt.Length; i++)
@@ -128,11 +137,6 @@ namespace OodHelper.Results
         {
             if (Boatname.Text.Trim() != string.Empty)
             {
-                _boatsSql =
-                    new StringBuilder(
-                        @"SELECT bid, boatname, boatclass, sailno, dinghy, handicap_status, open_handicap, rolling_handicap, firstname + ' ' + surname name
-FROM boats
-LEFT JOIN people ON boats.id = people.id ");
                 bool yachts = false;
                 bool dinghies = false;
 
@@ -154,29 +158,49 @@ LEFT JOIN people ON boats.id = people.id ");
                     }
                 }
 
-                _boatsSql.Append(@"WHERE (boatname LIKE @filter
-OR sailno LIKE @filter
-OR boatclass LIKE @filter
-OR firstname LIKE @filter
-OR surname LIKE @filter) ");
+                //
+                // Restrict to yachts (dinghy = false) or dinghies (dinghy = true) when exactly one
+                // applies; otherwise no dinghy filter, matching the old SQL.
+                //
+                bool? dinghyFilter = null;
+                if (!dinghies && yachts) dinghyFilter = false;
+                else if (dinghies && !yachts) dinghyFilter = true;
 
-                if (!dinghies && yachts)
-                    _boatsSql.Append(@"AND dinghy = 0 ");
-                else if (dinghies && !yachts)
-                    _boatsSql.Append(@"AND dinghy = 1 ");
-
-                _boatsSql.Append(@"ORDER BY boatname");
-
-                var c = new Db(_boatsSql.ToString());
-                var para = new Hashtable();
-                para["filter"] = string.Format("%{0}%", Boatname.Text.Trim());
-                var dt = c.GetData(para);
+                var dt = BuildBoatTable(_boatRepo.Search(Boatname.Text.Trim(), dinghyFilter));
 
                 Boats.ItemsSource = dt.DefaultView;
                 Boats.IsReadOnly = true;
             }
             else
                 Boats.ItemsSource = null;
+        }
+
+        private static DataTable BuildBoatTable(IReadOnlyList<Data.Entities.Boat> boats)
+        {
+            var dt = new DataTable {TableName = "boats"};
+            dt.Columns.Add(new DataColumn("bid", typeof (int)));
+            dt.Columns.Add(new DataColumn("boatname"));
+            dt.Columns.Add(new DataColumn("boatclass"));
+            dt.Columns.Add(new DataColumn("sailno"));
+            dt.Columns.Add(new DataColumn("dinghy", typeof (bool)));
+            dt.Columns.Add(new DataColumn("handicap_status"));
+            dt.Columns.Add(new DataColumn("open_handicap", typeof (int)));
+            dt.Columns.Add(new DataColumn("rolling_handicap", typeof (int)));
+            foreach (var b in boats)
+            {
+                var r = dt.NewRow();
+                r["bid"] = b.Bid;
+                r["boatname"] = (object) b.Boatname ?? DBNull.Value;
+                r["boatclass"] = (object) b.Boatclass ?? DBNull.Value;
+                r["sailno"] = (object) b.Sailno ?? DBNull.Value;
+                r["dinghy"] = (object) b.Dinghy ?? DBNull.Value;
+                r["handicap_status"] = (object) b.HandicapStatus ?? DBNull.Value;
+                r["open_handicap"] = (object) b.OpenHandicap ?? DBNull.Value;
+                r["rolling_handicap"] = (object) b.RollingHandicap ?? DBNull.Value;
+                dt.Rows.Add(r);
+            }
+            dt.AcceptChanges();
+            return dt;
         }
 
         private void Boats_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -260,17 +284,11 @@ OR surname LIKE @filter) ");
 
         private void Ok_Click(object sender, RoutedEventArgs e)
         {
-            var delete = new Db("DELETE FROM races WHERE rid = @rid AND bid = @bid");
-            var add = new Db(@"INSERT INTO races
-                    (rid, bid, start_date, handicap_status, open_handicap, rolling_handicap, last_edit)
-                    VALUES (@rid, @bid, @start_date, @handicap_status, @open_handicap, @rolling_handicap, GETDATE())");
-            var a = new Hashtable();
-
             DialogResult = true;
             for (var i = 0; i < _sbt.Length; i++)
             {
-                var resultModels = _reds[i].Races.ItemsSource as IList<ResultModel>;
-                a["rid"] = _sbt[i].RaceId;
+                IReadOnlyList<ResultRowViewModel> resultModels = _reds[i].Rows;
+                int rid = _sbt[i].RaceId;
                 DataTable sb = ((DataView) _sbt[i].Boats.ItemsSource).Table;
                 var selectedBids = new Hashtable();
                 //
@@ -279,31 +297,29 @@ OR surname LIKE @filter) ");
                 //
                 foreach (DataRow r in sb.Rows)
                 {
+                    int bid = (int) r["bid"];
                     if (resultModels != null &&
-                        !resultModels.Any(rm => rm.Bid == (int) r["bid"] && rm.Rid == (int) a["rid"]))
+                        !resultModels.Any(rm => rm.Bid == bid && rm.Rid == rid))
                     {
-                        a["bid"] = r["bid"];
-                        a["start_date"] = _reds[i].StartDate;
-                        a["handicap_status"] = r["handicap_status"];
-                        a["open_handicap"] = r["open_handicap"];
-                        a["rolling_handicap"] = r["rolling_handicap"];
-                        add.ExecuteNonQuery(a);
+                        _raceRepo.AddRaceEntry(rid, bid, _reds[i].StartDate,
+                            r["handicap_status"] as string,
+                            r["open_handicap"] == DBNull.Value ? (int?) null : (int) r["open_handicap"],
+                            r["rolling_handicap"] == DBNull.Value ? (int?) null : (int) r["rolling_handicap"]);
                     }
-                    selectedBids[r["bid"]] = true;
+                    selectedBids[bid] = true;
                 }
-                
+
                 //
                 // For each boat in the race edit control check to see if it is in selected boats,
                 // if not then delete it.
                 //
                 if (resultModels == null) continue;
-                
+
                 foreach (var r in resultModels)
                 {
-                    a["bid"] = r.Bid;
                     if (!selectedBids.ContainsKey(r.Bid))
                     {
-                        delete.ExecuteNonQuery(a);
+                        _raceRepo.DeleteRaceEntry(rid, r.Bid);
                     }
                 }
             }

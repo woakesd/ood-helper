@@ -25,15 +25,15 @@ namespace OodHelper
     {
         List<SeriesDisplay> sds = new List<SeriesDisplay>();
 
-        public SeriesDisplayByClass(RaceSeriesResult rs)
+        public SeriesDisplayByClass(SeriesResultsViewModel rs)
         {
             InitializeComponent();
-            foreach (string className in rs.SeriesResults.Keys)
+            foreach (SeriesDisplayViewModel display in rs.Displays)
             {
-                SeriesDisplay sd = new SeriesDisplay(rs.SeriesResults[className]);
+                SeriesDisplay sd = new SeriesDisplay(display);
                 sds.Add(sd);
                 TabItem t = new TabItem();
-                t.Header = className;
+                t.Header = display.ClassName;
                 t.Content = sd;
                 SeriesTabControl.Items.Add(t);
             }
@@ -56,16 +56,12 @@ namespace OodHelper
                         for (int i = 0; i < sds.Count; i++)
                         {
                             SeriesDisplay sd = sds[i];
-                            string msg = null;
-                            Dispatcher.Invoke(new Action(delegate()
-                            {
-                                msg = string.Format("Printing {0}", sd.seriesName.Content);
-                            }));
+                            string msg = string.Format("Printing {0}", sd.ViewModel.SeriesName);
                             w.SetProgress(msg, i + 1);
                             System.Threading.Thread.Sleep(50);
                             Dispatcher.Invoke(new Action(delegate()
                             {
-                                SeriesDisplayPage p = new SeriesDisplayPage(sd);
+                                SeriesDisplayPage p = new SeriesDisplayPage(sd.ViewModel);
 
                                 p.Measure(ps);
                                 p.Arrange(new Rect(new Point(0, 0), ps));

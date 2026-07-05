@@ -1,24 +1,9 @@
-﻿<UserControl x:Class="OodHelper.SeriesDisplay"
+<UserControl x:Class="OodHelper.SeriesDisplay"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:oodhelper="clr-namespace:OodHelper"
-    mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:b="clr-namespace:OodHelper.Behaviors"
+    mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              d:DesignHeight="122" d:DesignWidth="557">
-    <UserControl.Resources>
-        <DataTemplate DataType="{x:Type oodhelper:SeriesEntry}">
-            <StackPanel Orientation="Horizontal" Name="panel" >
-                <TextBlock Text="{Binding Path=Points, StringFormat=#.#}" />
-                <TextBlock Text="{Binding Path=CodeDisplay}" FontSize="9"/>
-            </StackPanel>
-            <DataTemplate.Triggers>
-                <DataTrigger Binding="{Binding Path=discard}" Value="True">
-                    <DataTrigger.Setters>
-                        <Setter Property="Background" Value="DodgerBlue" TargetName="panel"/>
-                    </DataTrigger.Setters>
-                </DataTrigger>
-            </DataTemplate.Triggers>
-        </DataTemplate>
-    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -44,9 +29,9 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <Label Name="seriesName" Grid.ColumnSpan="6">Label</Label>
+            <Label Name="seriesName" Grid.ColumnSpan="6" Content="{Binding SeriesName}"/>
             <Label Name="startLabel" Grid.Row="1">Entries</Label>
-            <TextBox Margin="2" Name="entries" Grid.Row="1" Grid.Column="1" Width="40" MaxLength="5" IsReadOnly="True"/>
+            <TextBox Margin="2" Name="entries" Grid.Row="1" Grid.Column="1" Width="40" MaxLength="5" IsReadOnly="True" Text="{Binding Entries, Mode=OneWay}"/>
             <Grid VerticalAlignment="Center" Margin="20,0,5,0" Grid.RowSpan="2" Grid.Row="0" Grid.Column="8">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
@@ -54,31 +39,15 @@
             </Grid>
         </Grid>
         <DockPanel Grid.Row="1" Grid.ColumnSpan="2" Name="racesDockPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <DataGrid Name="Races" CanUserResizeRows="False" IsReadOnly="True" AutoGenerateColumns="False">
+            <DataGrid Name="Races" CanUserResizeRows="False" IsReadOnly="True" AutoGenerateColumns="False"
+                      ItemsSource="{Binding Rows}" b:SeriesRaceColumns.Count="{Binding RaceColumnCount}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Boat name" Binding="{Binding boatname}"/>
-                    <DataGridTextColumn Header="Boat class" Binding="{Binding boatclass}"/>
-                    <DataGridTextColumn Header="Entered" Binding="{Binding entered}"/>
-                    <DataGridTextColumn Header="Sail no" Binding="{Binding sailno}"/>
-                    <DataGridTextColumn Header="Position" Binding="{Binding place}"/>
-                    <DataGridTextColumn Header="Score" Binding="{Binding score, StringFormat=#.#}"/>
-                    <!--<DataGridTemplateColumn Header="R1">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Name="panel" >
-                                    <TextBlock Text="{Binding r1.Points, StringFormat=#.#}" />
-                                    <TextBlock Text="{Binding r1.CodeDisplay}" FontSize="9"/>
-                                </StackPanel>
-                                <DataTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding r1.Discard}" Value="True">
-                                        <DataTrigger.Setters>
-                                            <Setter Property="Background" Value="DodgerBlue" TargetName="panel"/>
-                                        </DataTrigger.Setters>
-                                    </DataTrigger>
-                                </DataTemplate.Triggers>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>-->
+                    <DataGridTextColumn Header="Boat name" Binding="{Binding Boatname}"/>
+                    <DataGridTextColumn Header="Boat class" Binding="{Binding Boatclass}"/>
+                    <DataGridTextColumn Header="Entered" Binding="{Binding Entered}"/>
+                    <DataGridTextColumn Header="Sail no" Binding="{Binding Sailno}"/>
+                    <DataGridTextColumn Header="Position" Binding="{Binding Place}"/>
+                    <DataGridTextColumn Header="Score" Binding="{Binding Score, StringFormat=#.#}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>

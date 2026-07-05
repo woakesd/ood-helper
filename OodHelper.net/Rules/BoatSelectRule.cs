@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -65,42 +64,6 @@ namespace OodHelper.Rules
         {
         }
 
-        public BoatSelectRule(Guid? id)
-            : this()
-        {
-            var c = new Db(@"SELECT [name], [application]
-                FROM [select_rules]
-                WHERE [id] = @id");
-            var p = new Hashtable();
-            p["id"] = id;
-            Hashtable d = c.GetHashtable(p);
-            Name = d["name"] as string;
-            Rule = RuleType.Compound;
-            Application = (d["application"] != null)
-                ? (Apply?) Enum.GetValues(typeof (Apply)).GetValue((int) d["application"])
-                : null;
-            Id = id;
-            AddChildren(this);
-        }
-
-        public BoatSelectRule(string name)
-            : this()
-        {
-            var c = new Db(@"SELECT [id], [application]
-                FROM [select_rules]
-                WHERE [name] = @name");
-            var p = new Hashtable();
-            p["name"] = name;
-            Hashtable d = c.GetHashtable(p);
-            Id = d["id"] as Guid?;
-            Rule = RuleType.Compound;
-            Application = (d["application"] != null)
-                ? (Apply?) Enum.GetValues(typeof (Apply)).GetValue((int) d["application"])
-                : null;
-            Name = name;
-            AddChildren(this);
-        }
-
         public BoatSelectRule Parent { get; set; }
 
         public Guid? Id { get; set; }
@@ -128,60 +91,6 @@ namespace OodHelper.Rules
         public ReadOnlyCollection<BoatSelectRule> DeletedChildren
         {
             get { return new ReadOnlyCollection<BoatSelectRule>(_deletedChildren); }
-        }
-
-        public void Delete()
-        {
-            var del = new Db("DELETE FROM select_rules " +
-                             "WHERE id = @id");
-            var d = new Hashtable();
-            d["id"] = Id;
-            del.ExecuteNonQuery(d);
-            foreach (BoatSelectRule b in Children)
-                b.Delete();
-            foreach (BoatSelectRule b in DeletedChildren)
-                b.Delete();
-        }
-
-        private void AddChildren(BoatSelectRule parent)
-        {
-            var c = new Db(@"SELECT [id], [application], [field], [condition],
-                    [string_value], [number_bound1], [number_bound2]
-                    FROM [select_rules]
-                    WHERE [parent] = @parent");
-            var p = new Hashtable();
-            p["parent"] = parent.Id;
-            DataTable d = c.GetData(p);
-            foreach (DataRow r in d.Rows)
-            {
-                var child = new BoatSelectRule {Id = r["id"] as Guid?};
-                if (r["field"] != DBNull.Value)
-                {
-                    child.Field = (from n in Fields
-                        where n.Name.Equals(r["field"] as string)
-                        select n).First<Field>();
-                    child.Condition =
-                        (ConditionType) Enum.GetValues(typeof (ConditionType)).GetValue((int) r["condition"]);
-                    child.Rule = RuleType.Simple;
-                    child.StringValue = r["string_value"] as string;
-                    child.Bound1 = r["number_bound1"] as decimal?;
-                    child.Bound2 = r["number_bound2"] as decimal?;
-                }
-                else
-                {
-                    child.Rule = RuleType.Compound;
-                    try
-                    {
-                        child.Application = (Apply) Enum.GetValues(typeof (Apply)).GetValue((int) r["application"]);
-                    }
-                    catch
-                    {
-                        child.Application = Apply.Any;
-                    }
-                    AddChildren(child);
-                }
-                parent.Add(child);
-            }
         }
 
         public bool AppliesToBoat(DataRowView boat)
@@ -268,52 +177,6 @@ namespace OodHelper.Rules
         {
             Parent._children.Remove(this);
             Parent._deletedChildren.Add(this);
-        }
-
-        //
-        // Add rule to database.
-        //
-        public void Save()
-        {
-            Db c;
-            var p = new Hashtable();
-            if (Id.HasValue)
-            {
-                c = new Db(@"UPDATE select_rules
-                    SET name = @name
-                    , parent = @parent
-                    , application = @application
-                    , field = @field
-                    , condition = @condition
-                    , string_value = @string_value
-                    , number_bound1 = @number_bound1
-                    , number_bound2 = @number_bound2
-                    WHERE id = @id");
-                p["id"] = Id;
-            }
-            else
-            {
-                c = new Db(@"INSERT INTO select_rules
-                    (id, name, parent, application, field, condition, string_value, number_bound1, number_bound2)
-                    VALUES (@id, @name, @parent, @application, @field, @condition, @string_value, @number_bound1, @number_bound2)");
-                Id = Guid.NewGuid();
-                p["id"] = Id;
-            }
-            p["name"] = Name;
-            p["parent"] = (Parent == null) ? null : Parent.Id;
-            p["application"] = Application;
-            p["field"] = (Field == null) ? null : Field.Name;
-            p["condition"] = Condition;
-            p["string_value"] = StringValue;
-            p["number_bound1"] = Bound1;
-            p["number_bound2"] = Bound2;
-            c.ExecuteNonQuery(p);
-
-            foreach (BoatSelectRule child in Children)
-                child.Save();
-
-            foreach (var child in _deletedChildren)
-                child.Delete();
         }
     }
 }

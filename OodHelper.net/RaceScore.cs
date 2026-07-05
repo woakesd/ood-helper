@@ -1,8 +1,4 @@
-﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
 
 namespace OodHelper
 {
@@ -10,12 +6,11 @@ namespace OodHelper
     {
         double StandardCorrectedTime { get; }
 
-        void Calculate(int rid);
-
-        void Calculate(object sender, DoWorkEventArgs e);
-
         int Finishers { get; }
 
-        bool Calculated { get; }
+        /// <summary>User-facing notices produced by the last <see cref="Calculate"/> (shown by the caller).</summary>
+        IReadOnlyList<string> Warnings { get; }
+
+        void Calculate(int rid);
     }
 }

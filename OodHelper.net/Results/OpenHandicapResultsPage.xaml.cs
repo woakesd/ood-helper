@@ -14,7 +14,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Xps;
+using Microsoft.Extensions.DependencyInjection;
 using OodHelper.Converters;
+using OodHelper.Data;
 
 namespace OodHelper.Results
 {
@@ -37,21 +39,8 @@ namespace OodHelper.Results
             Sct.Text = "SCT: " + Common.HMS(red.Scorer.StandardCorrectedTime);
             PrintedDate.Text = string.Format("Printed on {0:dd MMM yyyy} at {0:HH:mm:ss}", DateTime.Now);
 
-            Db c = new Db(@"SELECT 0 [order], b.boatname + case when r.restricted_sail = 1 then ' (RS)' else '' end  Boat,
-                b.boatclass [Class], b.sailno [Sail No], r.open_handicap as Hcap,
-                r.finish_code, r.finish_date, '' AS Finish, r.elapsed Elapsed, r.laps Laps, r.corrected Corrected, r.place Pos,
-                ISNULL(override_points, points) Pts,
-                r.achieved_handicap Achp, r.new_rolling_handicap [nhcp],
-                ROUND((r.achieved_handicap - r.open_handicap) * 100.0 / r.open_handicap, 1) [%], r.c C, r.a A,
-                r.handicap_status PY
-                FROM boats b INNER JOIN races r ON r.bid = b.bid
-                WHERE r.rid = @rid
-                AND (finish_date IS NOT NULL OR finish_code IS NOT NULL)
-                ORDER BY place");
-            Hashtable p = new Hashtable();
-            p["rid"] = red.Rid;
-
-            rd = c.GetData(p);
+            var repo = App.Services.GetRequiredService<IRaceResultsRepository>();
+            rd = ResultsPrintData.BuildTable(repo.GetPrintRows(red.Rid, rolling: false));
             int i = 1;
             foreach (DataRow r in rd.Rows)
             {

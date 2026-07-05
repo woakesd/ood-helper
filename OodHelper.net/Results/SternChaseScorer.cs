@@ -1,52 +1,37 @@
-﻿using System.Collections;
-using System.ComponentModel;
+using System;
+using System.Collections.Generic;
+using OodHelper.Data;
 
 namespace OodHelper.Results
 {
-    class SternChaseScorer : IRaceScore
+    /// <summary>
+    /// Stern-chase races aren't handicap-scored: the boats finish in order, so calculation just
+    /// stamps the calendar as raced/calculated. Ported off the legacy <c>Db</c> helper onto
+    /// <see cref="IRaceScoreRepository"/>.
+    /// </summary>
+    internal sealed class SternChaseScorer : IRaceScore
     {
-        private Db _racedb;
-        private System.Data.DataTable _racedata;
+        private readonly IRaceScoreRepository _repo;
 
-        public double StandardCorrectedTime
+        public SternChaseScorer(IRaceScoreRepository repo)
         {
-            get { return 0.0; }
+            _repo = repo;
         }
+
+        public double StandardCorrectedTime => 0.0;
+
+        public int Finishers { get; private set; }
+
+        public IReadOnlyList<string> Warnings { get; } = Array.Empty<string>();
 
         public void Calculate(int rid)
         {
             try
             {
-                var p = new Hashtable();
-                p["rid"] = rid;
-                _racedb = new Db(@"SELECT * FROM races WHERE rid = @rid");
-                _racedata = _racedb.GetData(p);
-
-                var c = new Db(@"UPDATE calendar
-                        SET result_calculated = GETDATE(),
-                        raced = 1
-                        WHERE rid = @rid");
-                c.ExecuteNonQuery(p);
+                Finishers = _repo.GetScoringRows(rid).Count;
+                _repo.MarkResultCalculated(rid);
             }
             catch { }
         }
-
-        //BackgroundWorker _back = null;
-
-        public void Calculate(object sender, DoWorkEventArgs e)
-        {
-            //_back = sender as BackgroundWorker;
-            Calculate((int)e.Argument);
-        }
-
-        public int Finishers
-        {
-            get
-            {
-                return _racedata != null ? _racedata.Rows.Count : 0;
-            }
-        }
-
-        public bool Calculated { get; private set; }
     }
 }

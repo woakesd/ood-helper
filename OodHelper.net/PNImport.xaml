@@ -1,4 +1,4 @@
-﻿<Window x:Class="OodHelper.PnImport"
+<Window x:Class="OodHelper.PnImport"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="PNImport" Height="292" Width="546">
@@ -8,10 +8,23 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <TextBox Name="fileName" Width="120" Margin="3" />
-            <Button Content="Browse..." Click="browse_Click" Name="browse" Margin="3" />
-            <Button Content="Import..." Click="import_Click" Name="import" Margin="3"/>
+            <TextBox Name="fileName" Width="120" Margin="3" Text="{Binding FileName, Mode=OneWay}" IsReadOnly="True" />
+            <Button Content="Browse..." Command="{Binding BrowseCommand}" Name="browse" Margin="3" />
+            <Button Content="Import..." Command="{Binding ImportCommand}" Name="import" Margin="3"/>
         </StackPanel>
-        <DataGrid Grid.Row="1" HorizontalAlignment="Stretch" Name="pn" VerticalAlignment="Stretch" />
+        <DataGrid Grid.Row="1" HorizontalAlignment="Stretch" Name="pn" VerticalAlignment="Stretch"
+                  IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding Rows}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Class name" Binding="{Binding ClassName}" Width="*" />
+                <DataGridTextColumn Header="Crew" Binding="{Binding NoOfCrew}" />
+                <DataGridTextColumn Header="Rig" Binding="{Binding Rig}" />
+                <DataGridTextColumn Header="Spinnaker" Binding="{Binding Spinnaker}" />
+                <DataGridTextColumn Header="Engine" Binding="{Binding Engine}" />
+                <DataGridTextColumn Header="Keel" Binding="{Binding Keel}" />
+                <DataGridTextColumn Header="Number" Binding="{Binding Number}" />
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
+                <DataGridTextColumn Header="Notes" Binding="{Binding Notes}" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>

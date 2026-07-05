@@ -27,7 +27,7 @@
         <TextBlock Grid.Row="1" Text="Discard Profile"/>
         <TextBox Grid.Column="1" Text="{Binding Path=Sname,UpdateSourceTrigger=PropertyChanged}" Width="300"/>
         <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Path=Discards,UpdateSourceTrigger=PropertyChanged}" Width="300"/>
-        <Button VerticalAlignment="Center" Grid.Row="2" Name="EditRaces" Click="EditRaces_Click" Margin="3">
+        <Button VerticalAlignment="Center" Grid.Row="2" Name="EditRaces" Command="{Binding EditRacesCommand}" Margin="3">
             <StackPanel>
                 <TextBlock Text="Edit"/>
             </StackPanel>
@@ -35,9 +35,9 @@
         <ScrollViewer Grid.Row="2" Grid.Column="1" MaxHeight="480" Margin="3">
             <DataGrid Name="Calendar" MinHeight="120" IsReadOnly="True" AutoGenerateColumns="False" HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="1">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Event" Binding="{Binding event}"></DataGridTextColumn>
-                    <DataGridTextColumn Header="Class" Binding="{Binding event_class}"></DataGridTextColumn>
-                    <DataGridTextColumn Header="Date" Binding="{Binding Path=start_date,StringFormat={}{0:dd MMM yyyy HH:mm:ss}}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Event" Binding="{Binding Event}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Class" Binding="{Binding EventClass}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Date" Binding="{Binding Path=StartDate,StringFormat={}{0:dd MMM yyyy HH:mm:ss}}"></DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </ScrollViewer>
@@ -46,13 +46,13 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Name="CancelButton" IsCancel="True" Click="CancelButton_Click" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Width="80">
+            <Button Name="CancelButton" IsCancel="True" Command="{Binding CancelCommand}" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Width="80">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/OodHelper;component/Images/Cancel.png" />
                     <TextBlock Text="Cancel" Margin="5,0"/>
                 </StackPanel>
             </Button>
-            <Button Name="OKButton" IsDefault="True" Click="OKButton_Click" Grid.Column="1" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Width="80">
+            <Button Name="OKButton" IsDefault="True" Command="{Binding SaveCommand}" Grid.Column="1" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Width="80">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/OodHelper;component/Images/Ok.png" />
                     <TextBlock Text="OK" Margin="5,0"/>
