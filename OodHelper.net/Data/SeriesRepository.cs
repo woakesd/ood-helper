@@ -34,7 +34,7 @@ namespace OodHelper.Data
             }
         }
 
-        public Series Get(int sid)
+        public Series? Get(int sid)
         {
             using (var ctx = _contextFactory.CreateDbContext())
             {
@@ -48,14 +48,14 @@ namespace OodHelper.Data
             {
                 var discards = string.IsNullOrWhiteSpace(series.Discards) ? null : series.Discards.Trim();
 
-                Series entity = series.Sid == 0 ? null : ctx.Series.Find(series.Sid);
+                Series? entity = series.Sid == 0 ? null : ctx.Series.Find(series.Sid);
                 if (entity == null)
                 {
                     entity = new Series();
                     ctx.Series.Add(entity);
                 }
 
-                entity.Sname = series.Sname?.Trim();
+                entity.Sname = series.Sname?.Trim() ?? string.Empty;
                 entity.Discards = discards;
                 ctx.SaveChanges();
                 return entity.Sid;

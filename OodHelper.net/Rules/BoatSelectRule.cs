@@ -64,17 +64,17 @@ namespace OodHelper.Rules
         {
         }
 
-        public BoatSelectRule Parent { get; set; }
+        public BoatSelectRule? Parent { get; set; }
 
         public Guid? Id { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public RuleType Rule { get; set; }
         //
         // For simple rules the following will be used.
         //
-        public Field Field { get; set; }
+        public Field? Field { get; set; }
         public ConditionType Condition { get; set; }
-        public string StringValue { get; set; }
+        public string? StringValue { get; set; }
         public decimal? Bound1 { get; set; }
         public decimal? Bound2 { get; set; }
 
@@ -107,7 +107,7 @@ namespace OodHelper.Rules
                     }
                     break;
                 case RuleType.Simple:
-                    object val = boat[Field.Column];
+                    object val = boat[Field!.Column];
                     if (val != DBNull.Value)
                     {
                         switch (Condition)
@@ -133,23 +133,23 @@ namespace OodHelper.Rules
                                     return true;
                                 break;
                             case ConditionType.Contains:
-                                if (((string) val).ToLower().Contains(StringValue.ToLower()))
+                                if (((string) val).ToLower().Contains(StringValue!.ToLower()))
                                     return true;
                                 break;
                             case ConditionType.EndsWith:
-                                if (((string) val).ToLower().EndsWith(StringValue.ToLower()))
+                                if (((string) val).ToLower().EndsWith(StringValue!.ToLower()))
                                     return true;
                                 break;
                             case ConditionType.StartWith:
-                                if (((string) val).ToLower().StartsWith(StringValue.ToLower()))
+                                if (((string) val).ToLower().StartsWith(StringValue!.ToLower()))
                                     return true;
                                 break;
                             case ConditionType.Equals:
-                                if (((string) val).ToLower().Equals(StringValue.ToLower()))
+                                if (((string) val).ToLower().Equals(StringValue!.ToLower()))
                                     return true;
                                 break;
                             case ConditionType.NotEqual:
-                                if (!((string) val).ToLower().Equals(StringValue.ToLower()))
+                                if (!((string) val).ToLower().Equals(StringValue!.ToLower()))
                                     return true;
                                 break;
                             case ConditionType.False:
@@ -175,7 +175,7 @@ namespace OodHelper.Rules
 
         public void RemoveFromParent()
         {
-            Parent._children.Remove(this);
+            Parent!._children.Remove(this);
             Parent._deletedChildren.Add(this);
         }
     }

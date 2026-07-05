@@ -32,10 +32,10 @@ namespace OodHelper.ViewModels
         }
 
         [ObservableProperty]
-        private string _fileName;
+        private string? _fileName;
 
         [ObservableProperty]
-        private ObservableCollection<PortsmouthNumber> _rows;
+        private ObservableCollection<PortsmouthNumber>? _rows;
 
         [RelayCommand]
         private void Browse()

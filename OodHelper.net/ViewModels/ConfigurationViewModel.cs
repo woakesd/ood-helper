@@ -18,7 +18,7 @@ namespace OodHelper.ViewModels
         private readonly ISettingsService _settings;
         private readonly IDatabaseMaintenanceService _dbMaintenance;
 
-        public event Action<bool> CloseRequested;
+        public event Action<bool>? CloseRequested;
 
         [ObservableProperty]
         private string _bottomSeed;

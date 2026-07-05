@@ -9,7 +9,7 @@ public partial class SeriesResult
 
     public int Bid { get; set; }
 
-    public string Division { get; set; }
+    public string Division { get; set; } = null!;
 
     public int? Entered { get; set; }
 

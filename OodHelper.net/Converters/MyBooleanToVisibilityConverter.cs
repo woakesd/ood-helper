@@ -7,8 +7,9 @@ namespace OodHelper.Converters
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (value != null && typeof(bool) == value.GetType() && (bool)value ||
-                typeof(int) == value.GetType() && (int)value != 0)
+            if (value != null &&
+                (typeof(bool) == value.GetType() && (bool)value ||
+                 typeof(int) == value.GetType() && (int)value != 0))
                 return System.Windows.Visibility.Visible;
             else
                 return System.Windows.Visibility.Hidden;

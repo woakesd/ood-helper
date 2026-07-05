@@ -26,7 +26,7 @@ namespace OodHelper.ViewModel
         /// Child classes can set this property to a new value,
         /// or override it to determine the value on-demand.
         /// </summary>
-        public virtual string DisplayName { get; protected set; }
+        public virtual string? DisplayName { get; protected set; }
 
         #endregion // DisplayName
 
@@ -69,7 +69,7 @@ namespace OodHelper.ViewModel
         /// <summary>
         /// Raised when a property on this object has a new value.
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// Raises this object's PropertyChanged event.
@@ -79,7 +79,7 @@ namespace OodHelper.ViewModel
         {
             this.VerifyPropertyName(propertyName);
 
-            PropertyChangedEventHandler handler = this.PropertyChanged;
+            PropertyChangedEventHandler? handler = this.PropertyChanged;
             if (handler != null)
             {
                 var e = new PropertyChangedEventArgs(propertyName);

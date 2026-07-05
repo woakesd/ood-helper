@@ -28,7 +28,7 @@ namespace OodHelper
         private const string settPusherAppSecret = "PusherAppSecret";
 
         private static string CustomSettings;
-        private static Configuration Config;
+        private static Configuration Config = null!;
 
         static Settings()
         {

@@ -24,7 +24,7 @@ namespace OodHelper.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            string strValue = value as string;
+            string? strValue = value as string;
             TimeSpan resultDateTime;
             if (TimeSpan.TryParse(strValue, out resultDateTime))
             {

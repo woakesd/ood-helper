@@ -38,11 +38,11 @@ namespace OodHelper.Results
 
         public int Bid => _race.Bid;
 
-        public string BoatName => _race.BidNavigation?.Boatname;
+        public string? BoatName => _race.BidNavigation?.Boatname;
 
-        public string BoatClass => _race.BidNavigation?.Boatclass;
+        public string? BoatClass => _race.BidNavigation?.Boatclass;
 
-        public string SailNo => _race.BidNavigation?.Sailno;
+        public string? SailNo => _race.BidNavigation?.Sailno;
 
         public DateTime? StartDate
         {
@@ -78,7 +78,7 @@ namespace OodHelper.Results
             }
         }
 
-        public string FinishCode
+        public string? FinishCode
         {
             get { return _race.FinishCode; }
             set
@@ -251,11 +251,11 @@ namespace OodHelper.Results
 
         public string NewRollingHandicap => _race.NewRollingHandicap.HasValue ? _race.NewRollingHandicap.Value.ToString() : string.Empty;
 
-        public string HandicapStatus => _race.HandicapStatus;
+        public string? HandicapStatus => _race.HandicapStatus;
 
-        public string C => _race.C;
+        public string? C => _race.C;
 
-        public string A => _race.A;
+        public string? A => _race.A;
 
         public string PerformanceIndex => _race.PerformanceIndex.HasValue ? _race.PerformanceIndex.Value.ToString() : string.Empty;
 

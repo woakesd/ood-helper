@@ -13,7 +13,7 @@ namespace OodHelper
         {
             ValidationResult ret;
             Regex rxt = new Regex("^[0-9]{2}([: ][0-9]{2}){2}$");
-            string input = (value ?? string.Empty).ToString();
+            string input = (value ?? string.Empty).ToString() ?? string.Empty;
             if (rxt.IsMatch(input))
                 ret = new ValidationResult(true, null);
             else

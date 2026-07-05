@@ -16,7 +16,7 @@ namespace OodHelper.ViewModels
         private readonly ISeriesRepository _repository;
 
         /// <summary>Raised when the dialog should close; argument is the DialogResult.</summary>
-        public event Action<bool> CloseRequested;
+        public event Action<bool>? CloseRequested;
 
         public int? SelectedSid => SelectedRow?.Sid;
 
@@ -26,10 +26,10 @@ namespace OodHelper.ViewModels
         }
 
         [ObservableProperty]
-        private ObservableCollection<Series> _rows;
+        private ObservableCollection<Series>? _rows;
 
         [ObservableProperty]
-        private Series _selectedRow;
+        private Series? _selectedRow;
 
         public void Load()
         {

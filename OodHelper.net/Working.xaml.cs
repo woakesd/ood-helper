@@ -28,7 +28,7 @@ namespace OodHelper
             Progress.IsIndeterminate = true;
         }
 
-        private CancellationTokenSource _cts;
+        private CancellationTokenSource? _cts;
 
         //
         // Async/await variant: the caller drives progress via SetProgress and cancellation flows

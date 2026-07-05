@@ -39,14 +39,14 @@ namespace OodHelper.Results
     public sealed class SeriesRowViewModel
     {
         public int Bid { get; set; }
-        public string Boatname { get; set; }
-        public string Boatclass { get; set; }
-        public string Sailno { get; set; }
+        public string? Boatname { get; set; }
+        public string? Boatclass { get; set; }
+        public string? Sailno { get; set; }
         public int Entered { get; set; }
         public int Place { get; set; }
         public double Score { get; set; }
 
         /// <summary>Per-race entries, date-ascending; index i aligns with the R(i+1) column.</summary>
-        public IReadOnlyList<SeriesEntry> Cells { get; set; }
+        public IReadOnlyList<SeriesEntry> Cells { get; set; } = new List<SeriesEntry>();
     }
 }

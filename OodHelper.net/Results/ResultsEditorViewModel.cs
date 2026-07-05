@@ -31,12 +31,12 @@ namespace OodHelper.Results
 
         private DateTime _limitDate = DateTime.Now;
         private CalendarModel.RaceTypes _raceType;
-        private string _eventname;
+        private string _eventname = "";
         private int _extension;
-        private string _course;
-        private string _handicap;
-        private string _windDirection;
-        private string _windSpeed;
+        private string _course = "";
+        private string _handicap = "";
+        private string _windDirection = "";
+        private string _windSpeed = "";
         private int? _laps;
         private int? _timeLimitDelta;
         private DateTime? _timeLimitFixed;
@@ -53,7 +53,7 @@ namespace OodHelper.Results
 
         public int Rid => _rid;
 
-        public IRaceScore Scorer { get; private set; }
+        public IRaceScore? Scorer { get; private set; }
 
         // -- Simple notifying state (no DB side-effects) ------------------------------------
 
@@ -64,23 +64,23 @@ namespace OodHelper.Results
             private set { SetProperty(ref _startDate, value); }
         }
 
-        private string _raceTitle;
+        private string _raceTitle = "";
         public string RaceTitle
         {
             get { return _raceTitle; }
             private set { SetProperty(ref _raceTitle, value); }
         }
 
-        private string _sct;
+        private string _sct = "";
         public string Sct
         {
             get { return _sct; }
             private set { SetProperty(ref _sct, value); }
         }
 
-        public string RaceName { get; private set; }
-        public string RaceClass { get; private set; }
-        public string Ood { get; private set; }
+        public string RaceName { get; private set; } = "";
+        public string RaceClass { get; private set; } = "";
+        public string Ood { get; private set; } = "";
 
         private bool _calculateEnabled;
         public bool CalculateEnabled
@@ -96,7 +96,7 @@ namespace OodHelper.Results
             set { SetProperty(ref _refreshHandicapsEnabled, value); }
         }
 
-        private ObservableCollection<ResultRowViewModel> _rows;
+        private ObservableCollection<ResultRowViewModel> _rows = new();
         public ObservableCollection<ResultRowViewModel> Rows
         {
             get { return _rows; }
@@ -144,7 +144,7 @@ namespace OodHelper.Results
 
         public string Laps
         {
-            get { return _laps.ToString(); }
+            get { return _laps?.ToString() ?? string.Empty; }
             set
             {
                 _laps = ValueParsers.ReadInt(value);
@@ -222,7 +222,7 @@ namespace OodHelper.Results
                     else
                     {
                         _timeLimitFixed = _timeLimitFixed.Value.Date + value;
-                        _repo.UpdateTimeLimitFixed(_rid, _timeLimitFixed.Value);
+                        _repo.UpdateTimeLimitFixed(_rid, _timeLimitFixed!.Value);
                     }
                 }
                 else if (_timeLimitDelta.HasValue)
@@ -232,7 +232,7 @@ namespace OodHelper.Results
                             MessageBoxButton.OK, MessageBoxImage.Error);
                     else
                     {
-                        _timeLimitDelta = (int) value.Value.TotalSeconds;
+                        _timeLimitDelta = (int) value!.Value.TotalSeconds;
                         _repo.UpdateTimeLimitDelta(_rid, _timeLimitDelta.Value);
                     }
                 }
@@ -381,7 +381,7 @@ namespace OodHelper.Results
             _eventname = (cal.Event ?? string.Empty).Trim();
             RaceName = _eventname + " - " + (cal.Class ?? string.Empty).Trim();
             RaceClass = (cal.Class ?? string.Empty).Trim();
-            Ood = cal.Ood;
+            Ood = cal.Ood ?? "";
             if (cal.Handicapping != null)
                 _handicap = cal.Handicapping;
             Sct = cal.StandardCorrectedTime.HasValue ? Common.HMS(cal.StandardCorrectedTime.Value) : string.Empty;
@@ -395,9 +395,9 @@ namespace OodHelper.Results
             CalculateEnabled = _repo.GetCalculateEnabled(_rid);
             RefreshHandicapsEnabled = _repo.GetRefreshHandicapsEnabled(_rid);
 
-            _course = cal.CourseChoice;
-            _windSpeed = cal.WindSpeed;
-            _windDirection = cal.WindDirection;
+            _course = cal.CourseChoice ?? "";
+            _windSpeed = cal.WindSpeed ?? "";
+            _windDirection = cal.WindDirection ?? "";
             _laps = cal.LapsCompleted;
 
             CreateScorer();

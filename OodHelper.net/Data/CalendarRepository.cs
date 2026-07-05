@@ -34,7 +34,7 @@ namespace OodHelper.Data
             }
         }
 
-        public Calendar Get(int rid)
+        public Calendar? Get(int rid)
         {
             using (var ctx = _contextFactory.CreateDbContext())
             {
@@ -46,7 +46,7 @@ namespace OodHelper.Data
         {
             using (var ctx = _contextFactory.CreateDbContext())
             {
-                Calendar entity = calendar.Rid == 0 ? null : ctx.Calendars.Find(calendar.Rid);
+                Calendar? entity = calendar.Rid == 0 ? null : ctx.Calendars.Find(calendar.Rid);
                 if (entity == null)
                 {
                     entity = new Calendar();
@@ -123,7 +123,7 @@ namespace OodHelper.Data
                 // Distinct race days (date only), ordered. Replaces the old DATEPART
                 // year/month/day grouping; EF translates .Date to CAST(... AS date).
                 //
-                return q.Select(c => c.StartDate.Value.Date)
+                return q.Select(c => c.StartDate!.Value.Date)
                     .Distinct()
                     .OrderBy(d => d)
                     .ToList();
@@ -156,7 +156,7 @@ namespace OodHelper.Data
                     .ToList();
         }
 
-        public void UpdateMemo(int rid, string memo)
+        public void UpdateMemo(int rid, string? memo)
         {
             //
             // Targeted single-column update, mirroring the legacy RaceNotes `UPDATE calendar SET memo`;

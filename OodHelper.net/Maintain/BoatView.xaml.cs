@@ -30,7 +30,7 @@ namespace OodHelper.Maintain
         {
             get 
             {
-                BoatModel bm = DataContext as BoatModel;
+                BoatModel? bm = DataContext as BoatModel;
                 if (bm != null)
                     return bm.Bid.HasValue ? bm.Bid.Value : 0;
                 return 0;
@@ -95,16 +95,16 @@ namespace OodHelper.Maintain
             var id = App.Services.GetRequiredService<IDialogService>().ShowClassPicker();
             if (id == null) return;
 
-            BoatModel dc = DataContext as BoatModel;
+            BoatModel? dc = DataContext as BoatModel;
             if (dc == null) return;
 
             var pn = App.Services.GetRequiredService<IPortsmouthNumberRepository>().Get(id.Value);
             if (pn == null) return;
 
-            dc.BoatClass = pn.ClassName;
-            dc.OpenHandicap = pn.Number.ToString();
+            dc.BoatClass = pn.ClassName ?? string.Empty;
+            dc.OpenHandicap = pn.Number.ToString() ?? string.Empty;
             if (dc.RollingHandicap == string.Empty)
-                dc.RollingHandicap = pn.Number.ToString();
+                dc.RollingHandicap = pn.Number.ToString() ?? string.Empty;
             switch (pn.Status)
             {
                 case "P":

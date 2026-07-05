@@ -38,7 +38,7 @@ namespace OodHelper.Results
         public TimeSpan StartTime => _vm.StartTime;
         public string Ood => _vm.Ood;
         public string Handicap => _vm.Handicap;
-        public IRaceScore Scorer => _vm.Scorer;
+        public IRaceScore? Scorer => _vm.Scorer;
         public IReadOnlyList<ResultRowViewModel> Rows => _vm.Rows;
 
         public void LoadGrid() => _vm.Load();
@@ -60,7 +60,7 @@ namespace OodHelper.Results
 
         public int PrintIncludeGroup { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public void OnPropertyChanged(string name)
         {

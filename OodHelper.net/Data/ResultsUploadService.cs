@@ -180,7 +180,7 @@ namespace OodHelper.Data
         // is shared with the other upload paths via MySqlBulkWriter.
         //
         private static async Task ReplaceTableAsync<T>(MySqlConnection con, MySqlTransaction trn,
-            string table, string[] columns, IReadOnlyList<T> rows, Func<T, object[]> values, CancellationToken ct)
+            string table, string[] columns, IReadOnlyList<T> rows, Func<T, object?[]> values, CancellationToken ct)
         {
             await using (var del = new MySqlCommand($"DELETE FROM `{table}`", con, trn))
                 await del.ExecuteNonQueryAsync(ct);

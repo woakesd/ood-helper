@@ -99,10 +99,10 @@ namespace OodHelper.Results.Scoring
                             ? v
                             : (int?)null;
                         if (!nrh.HasValue)
-                            nrh = r.OpenHandicap.Value;
+                            nrh = r.OpenHandicap!.Value;
                         r.RollingHandicap = nrh.Value;
                     }
-                    var newhc = r.RollingHandicap.Value;
+                    var newhc = r.RollingHandicap!.Value;
                     if (r.RestrictedSail == true)
                         newhc = (int)Math.Round(newhc / _in.RsCoefficient);
 
@@ -150,20 +150,20 @@ namespace OodHelper.Results.Scoring
                     var interim = dr.InterimDate;
 
                     var elapsed = finish - start;
-                    dr.Elapsed = Convert.ToInt32(elapsed.Value.TotalSeconds);
+                    dr.Elapsed = Convert.ToInt32(elapsed!.Value.TotalSeconds);
 
                     var laps = dr.Laps;
                     //
                     // The open-handicap engine clamps a zero lap count to 1; the rolling engine
                     // historically did not — preserved.
                     //
-                    if (_in.Mode == HandicapMode.Open && laps.HasValue && laps.Value == 0)
+                    if (_in.Mode == HandicapMode.Open && laps.HasValue && laps!.Value == 0)
                         laps = 1;
 
                     var hcap = _in.Mode == HandicapMode.Open
-                        ? dr.OpenHandicap.Value
-                        : dr.RollingHandicap.Value;
-                    var ohp = dr.OpenHandicap.Value;
+                        ? dr.OpenHandicap!.Value
+                        : dr.RollingHandicap!.Value;
+                    var ohp = dr.OpenHandicap!.Value;
 
                     TimeSpan? fixedPart;
                     TimeSpan? averageLapPart;
@@ -171,23 +171,23 @@ namespace OodHelper.Results.Scoring
                     switch (_in.RaceType)
                     {
                         case CalendarModel.RaceTypes.AverageLap:
-                            dr.Corrected = Math.Round(elapsed.Value.TotalSeconds * 1000 / hcap) / laps.Value;
+                            dr.Corrected = Math.Round(elapsed!.Value.TotalSeconds * 1000 / hcap) / laps!.Value;
                             break;
                         case CalendarModel.RaceTypes.HybridOld:
                             fixedPart = interim - start;
                             averageLapPart = finish - interim;
-                            dr.Corrected = Math.Round(fixedPart.Value.TotalSeconds * 1000 / hcap) +
-                                           Math.Round(averageLapPart.Value.TotalSeconds * 1000 / hcap) / laps.Value;
+                            dr.Corrected = Math.Round(fixedPart!.Value.TotalSeconds * 1000 / hcap) +
+                                           Math.Round(averageLapPart!.Value.TotalSeconds * 1000 / hcap) / laps!.Value;
                             break;
                         case CalendarModel.RaceTypes.Hybrid:
                             fixedPart = interim - start;
                             averageLapPart = finish - interim;
-                            dr.Corrected = Math.Round(fixedPart.Value.TotalSeconds * 1000 / hcap) +
-                                           Math.Round(averageLapPart.Value.TotalSeconds * 1000 / hcap * avgLaps) / laps.Value;
+                            dr.Corrected = Math.Round(fixedPart!.Value.TotalSeconds * 1000 / hcap) +
+                                           Math.Round(averageLapPart!.Value.TotalSeconds * 1000 / hcap * avgLaps) / laps!.Value;
                             break;
                         case CalendarModel.RaceTypes.FixedLength:
                         case CalendarModel.RaceTypes.TimeGate:
-                            dr.Corrected = Math.Round(elapsed.Value.TotalSeconds * 1000 / hcap);
+                            dr.Corrected = Math.Round(elapsed!.Value.TotalSeconds * 1000 / hcap);
                             break;
                     }
 
@@ -207,23 +207,23 @@ namespace OodHelper.Results.Scoring
                         switch (_in.RaceType)
                         {
                             case CalendarModel.RaceTypes.AverageLap:
-                                dr.StandardCorrected = Math.Round(elapsed.Value.TotalSeconds * 1000 / ohp) / laps.Value;
+                                dr.StandardCorrected = Math.Round(elapsed!.Value.TotalSeconds * 1000 / ohp) / laps!.Value;
                                 break;
                             case CalendarModel.RaceTypes.HybridOld:
                                 fixedPart = interim - start;
                                 averageLapPart = finish - interim;
-                                dr.StandardCorrected = Math.Round(fixedPart.Value.TotalSeconds * 1000 / ohp) +
-                                                       Math.Round(averageLapPart.Value.TotalSeconds * 1000 / ohp) / laps.Value;
+                                dr.StandardCorrected = Math.Round(fixedPart!.Value.TotalSeconds * 1000 / ohp) +
+                                                       Math.Round(averageLapPart!.Value.TotalSeconds * 1000 / ohp) / laps!.Value;
                                 break;
                             case CalendarModel.RaceTypes.Hybrid:
                                 fixedPart = interim - start;
                                 averageLapPart = finish - interim;
-                                dr.StandardCorrected = Math.Round(fixedPart.Value.TotalSeconds * 1000 / ohp) +
-                                                       Math.Round(averageLapPart.Value.TotalSeconds * 1000 / ohp * avgLaps) / laps.Value;
+                                dr.StandardCorrected = Math.Round(fixedPart!.Value.TotalSeconds * 1000 / ohp) +
+                                                       Math.Round(averageLapPart!.Value.TotalSeconds * 1000 / ohp * avgLaps) / laps!.Value;
                                 break;
                             case CalendarModel.RaceTypes.FixedLength:
                             case CalendarModel.RaceTypes.TimeGate:
-                                dr.StandardCorrected = Math.Round(elapsed.Value.TotalSeconds * 1000 / ohp);
+                                dr.StandardCorrected = Math.Round(elapsed!.Value.TotalSeconds * 1000 / ohp);
                                 break;
                         }
                     }
@@ -256,7 +256,7 @@ namespace OodHelper.Results.Scoring
                     double total = 0;
                     var n = (int)Math.Round(qual * 0.67);
                     for (var i = 0; i < n; i++)
-                        total += query[i].StandardCorrected.Value;
+                        total += query[i].StandardCorrected!.Value;
 
                     var averageCorrectedTime = total / n;
 
@@ -269,11 +269,11 @@ namespace OodHelper.Results.Scoring
                     _sct = 0;
                     foreach (var row in query)
                     {
-                        if (row.StandardCorrected.Value < avgSlowLimit)
+                        if (row.StandardCorrected!.Value < avgSlowLimit)
                         {
                             row.A = null;
                             goodBoats++;
-                            _sct += row.StandardCorrected.Value;
+                            _sct += row.StandardCorrected!.Value;
                         }
                     }
 
@@ -348,7 +348,7 @@ namespace OodHelper.Results.Scoring
                         // 4% increase removed).
                         //
                         dr.AchievedHandicap = dr.OpenHandicap;
-                        var oldhc = dr.RollingHandicap.Value;
+                        var oldhc = dr.RollingHandicap!.Value;
                         if (dr.RestrictedSail == true)
                             dr.NewRollingHandicap = (int)Math.Round(oldhc / _in.RsCoefficient);
                         else
@@ -358,14 +358,14 @@ namespace OodHelper.Results.Scoring
                         // Achieved handicap = ratio of the boat's corrected time to the race SCT,
                         // scaled by the open handicap.
                         //
-                        var achhc = (int)Math.Round(dr.StandardCorrected.Value / _sct * dr.OpenHandicap.Value);
+                        var achhc = (int)Math.Round(dr.StandardCorrected!.Value / _sct * dr.OpenHandicap!.Value);
                         dr.AchievedHandicap = achhc;
 
                         var sperf = false;
                         var sperfover = false;
-                        if (dr.StandardCorrected.Value >= _slowLimit || dr.StandardCorrected.Value <= _fastLimit)
+                        if (dr.StandardCorrected!.Value >= _slowLimit || dr.StandardCorrected!.Value <= _fastLimit)
                         {
-                            if (dr.StandardCorrected.Value >= _slowLimit)
+                            if (dr.StandardCorrected!.Value >= _slowLimit)
                             {
                                 dr.C = "s";
                                 sperf = true;
@@ -377,7 +377,7 @@ namespace OodHelper.Results.Scoring
                             // Exceptional result: only allow the handicap to move if the previous
                             // result was similarly slow.
                             //
-                            var p1 = _in.PriorPerformanceLookup(dr.Bid, dr.StartDate.Value);
+                            var p1 = _in.PriorPerformanceLookup(dr.Bid, dr.StartDate!.Value);
                             if (p1.HasValue && p1.Value > 5)
                             {
                                 sperfover = true;
@@ -385,7 +385,7 @@ namespace OodHelper.Results.Scoring
                             }
                         }
 
-                        dr.PerformanceIndex = dr.AchievedHandicap.Value - dr.OpenHandicap.Value;
+                        dr.PerformanceIndex = dr.AchievedHandicap!.Value - dr.OpenHandicap!.Value;
 
                         //
                         // Unless this is a (non-overridden) slow result, move the rolling handicap
@@ -394,18 +394,18 @@ namespace OodHelper.Results.Scoring
                         if (!sperf || sperfover)
                         {
                             var working = achhc;
-                            if (achhc > dr.OpenHandicap.Value * 1.05)
-                                working = (int)Math.Round(1.05 * dr.OpenHandicap.Value, 0);
-                            if (achhc < dr.OpenHandicap.Value * 0.95)
-                                working = (int)Math.Round(0.95 * dr.OpenHandicap.Value, 0);
+                            if (achhc > dr.OpenHandicap!.Value * 1.05)
+                                working = (int)Math.Round(1.05 * dr.OpenHandicap!.Value, 0);
+                            if (achhc < dr.OpenHandicap!.Value * 0.95)
+                                working = (int)Math.Round(0.95 * dr.OpenHandicap!.Value, 0);
 
                             var newhc = (int)Math.Round(
-                                dr.RollingHandicap.Value + (working - dr.RollingHandicap.Value) * _in.RhCoefficient);
+                                dr.RollingHandicap!.Value + (working - dr.RollingHandicap!.Value) * _in.RhCoefficient);
 
                             if (dr.RestrictedSail == true)
                                 newhc = (int)Math.Round(newhc / _in.RsCoefficient);
 
-                            if (newhc >= dr.OpenHandicap.Value * 0.95 && newhc <= dr.OpenHandicap.Value * 1.05)
+                            if (newhc >= dr.OpenHandicap!.Value * 0.95 && newhc <= dr.OpenHandicap!.Value * 1.05)
                                 dr.NewRollingHandicap = newhc;
                         }
                     }

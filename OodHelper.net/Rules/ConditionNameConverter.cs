@@ -15,7 +15,7 @@ namespace OodHelper.Rules
             return CamelCaseToWordsRegex.Replace((Enum.GetName(typeof(ConditionType), ct) ?? ""), "$1 $2");
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var strValue = value as string;
             if (strValue == null) return null;

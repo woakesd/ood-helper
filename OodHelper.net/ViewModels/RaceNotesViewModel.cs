@@ -16,13 +16,13 @@ namespace OodHelper.ViewModels
         private readonly int _rid;
 
         /// <summary>Raised when the dialog should close; argument is the DialogResult.</summary>
-        public event Action<bool> CloseRequested;
+        public event Action<bool>? CloseRequested;
 
-        public string EventName { get; }
-        public string ClassName { get; }
+        public string? EventName { get; }
+        public string? ClassName { get; }
 
         [ObservableProperty]
-        private string _memo;
+        private string? _memo;
 
         public RaceNotesViewModel(ICalendarRepository repository, int rid)
         {

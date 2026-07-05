@@ -19,7 +19,7 @@ namespace OodHelper.Data
         // Reads
         // -------------------------------------------------------------------------------------
 
-        public RaceScoreHeader GetHeader(int rid)
+        public RaceScoreHeader? GetHeader(int rid)
         {
             //
             // Header read ported from OpenHandicap: the time limit is resolved from the F/D type,

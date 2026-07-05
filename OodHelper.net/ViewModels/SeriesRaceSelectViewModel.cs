@@ -13,8 +13,8 @@ namespace OodHelper.ViewModels
     public partial class SeriesRaceCandidateViewModel : ObservableObject
     {
         public int Rid { get; }
-        public string Event { get; }
-        public string EventClass { get; }
+        public string? Event { get; }
+        public string? EventClass { get; }
         public DateTime? StartDate { get; }
 
         [ObservableProperty]
@@ -40,7 +40,7 @@ namespace OodHelper.ViewModels
         private readonly int _sid;
 
         /// <summary>Raised when the dialog should close; argument is the DialogResult.</summary>
-        public event Action<bool> CloseRequested;
+        public event Action<bool>? CloseRequested;
 
         public ObservableCollection<SeriesRaceCandidateViewModel> Races { get; } =
             new ObservableCollection<SeriesRaceCandidateViewModel>();
@@ -48,7 +48,7 @@ namespace OodHelper.ViewModels
         public ICollectionView RacesView { get; }
 
         [ObservableProperty]
-        private string _filterText;
+        private string? _filterText;
 
         public SeriesRaceSelectViewModel(ISeriesRepository repository, int sid)
         {
@@ -76,7 +76,7 @@ namespace OodHelper.ViewModels
                    || (race.EventClass != null && race.EventClass.IndexOf(f, StringComparison.OrdinalIgnoreCase) >= 0);
         }
 
-        partial void OnFilterTextChanged(string value)
+        partial void OnFilterTextChanged(string? value)
         {
             RacesView.Refresh();
         }

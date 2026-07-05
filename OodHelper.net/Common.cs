@@ -7,7 +7,7 @@ namespace OodHelper
 {
     internal class Common
     {
-        public static List<T> FindVisualChild<T>(UIElement element) where T : UIElement
+        public static List<T> FindVisualChild<T>(UIElement? element) where T : UIElement
         {
             var r = new List<T>();
             var child = element;

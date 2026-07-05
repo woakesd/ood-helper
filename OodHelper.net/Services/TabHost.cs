@@ -5,7 +5,7 @@ namespace OodHelper.Services
 {
     internal sealed class TabHost : ITabHost
     {
-        private TabControl _tabControl;
+        private TabControl _tabControl = null!;
 
         public void Attach(TabControl tabControl)
         {

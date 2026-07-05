@@ -14,11 +14,11 @@ namespace OodHelper.ViewModels
     {
         private readonly ISelectRuleRepository _rules;
         private readonly IDialogService _dialogs;
-        private CancellationTokenSource _debounce;
+        private CancellationTokenSource? _debounce;
 
         internal int DebounceMilliseconds { get; set; } = 500;
 
-        internal Task FilterTask { get; private set; }
+        internal Task? FilterTask { get; private set; }
 
         public SelectRulesViewModel(ISelectRuleRepository rules, IDialogService dialogs)
         {
@@ -27,15 +27,15 @@ namespace OodHelper.ViewModels
         }
 
         [ObservableProperty]
-        private string _filterText;
+        private string? _filterText;
 
         [ObservableProperty]
-        private ObservableCollection<SelectRuleListItem> _rows;
+        private ObservableCollection<SelectRuleListItem>? _rows;
 
         [ObservableProperty]
-        private SelectRuleListItem _selectedRow;
+        private SelectRuleListItem? _selectedRow;
 
-        partial void OnFilterTextChanged(string value)
+        partial void OnFilterTextChanged(string? value)
         {
             FilterTask = DebouncedLoadAsync();
         }

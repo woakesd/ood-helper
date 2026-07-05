@@ -21,32 +21,32 @@ namespace OodHelper.ViewModels
         private bool _loading;
 
         /// <summary>Raised when the dialog should close; argument is the DialogResult.</summary>
-        public event Action<bool> CloseRequested;
+        public event Action<bool>? CloseRequested;
 
         public int Rid { get; private set; }
 
-        [ObservableProperty] private string _event;
-        [ObservableProperty] private string _className;
-        [ObservableProperty] private string _flag;
-        [ObservableProperty] private string _course;
-        [ObservableProperty] private string _ood;
-        [ObservableProperty] private string _venue;
-        [ObservableProperty] private string _memo;
-        [ObservableProperty] private string _priceCode;
-        [ObservableProperty] private string _handicapping;
-        [ObservableProperty] private string _racetype;
+        [ObservableProperty] private string? _event;
+        [ObservableProperty] private string? _className;
+        [ObservableProperty] private string? _flag;
+        [ObservableProperty] private string? _course;
+        [ObservableProperty] private string? _ood;
+        [ObservableProperty] private string? _venue;
+        [ObservableProperty] private string? _memo;
+        [ObservableProperty] private string? _priceCode;
+        [ObservableProperty] private string? _handicapping;
+        [ObservableProperty] private string? _racetype;
         [ObservableProperty] private int? _visitors;
         [ObservableProperty] private bool? _raced;
         [ObservableProperty] private bool? _approved;
         [ObservableProperty] private bool? _isRace;
 
         [ObservableProperty] private DateTime? _startDateDate;
-        [ObservableProperty] private string _startDateTime;
+        [ObservableProperty] private string? _startDateTime;
         [ObservableProperty] private DateTime? _timeLimitFixedDate;
-        [ObservableProperty] private string _timeLimitFixedTime;
-        [ObservableProperty] private string _timeLimitDeltaText;
-        [ObservableProperty] private string _extensionText;
-        [ObservableProperty] private string _sct;
+        [ObservableProperty] private string? _timeLimitFixedTime;
+        [ObservableProperty] private string? _timeLimitDeltaText;
+        [ObservableProperty] private string? _extensionText;
+        [ObservableProperty] private string? _sct;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ShowFixedTimeLimit))]
@@ -55,7 +55,7 @@ namespace OodHelper.ViewModels
         [NotifyPropertyChangedFor(nameof(IsTimeFixed))]
         [NotifyPropertyChangedFor(nameof(IsTimeDelta))]
         [NotifyPropertyChangedFor(nameof(IsTimeNone))]
-        private string _timeLimitType;
+        private string? _timeLimitType;
 
         public bool ShowFixedTimeLimit => TimeLimitType == "F";
         public bool ShowDeltaTimeLimit => TimeLimitType == "D";
@@ -315,7 +315,7 @@ namespace OodHelper.ViewModels
         }
 
         /// <summary>Parses a duration ("1 02:50" or "2:30") into total seconds; throws on bad input.</summary>
-        private static int? ParseDuration(string text)
+        private static int? ParseDuration(string? text)
         {
             if (string.IsNullOrEmpty(text)) return null;
             try { return (int)TimeSpan.ParseExact(text, "d\\ hh\\:mm", null).TotalSeconds; }
@@ -324,21 +324,21 @@ namespace OodHelper.ViewModels
             catch (FormatException) { throw new ArgumentException("Time must be in format '1 02:50' or '2:30'"); }
         }
 
-        private static int? TryParseDuration(string text)
+        private static int? TryParseDuration(string? text)
         {
             try { return ParseDuration(text); }
             catch (ArgumentException) { return null; }
         }
 
         /// <summary>Combines a date and an "h:mm" time string; throws on a bad time.</summary>
-        private static DateTime? Combine(DateTime? date, string time)
+        private static DateTime? Combine(DateTime? date, string? time)
         {
             if (!date.HasValue) return null;
             if (string.IsNullOrEmpty(time)) return date.Value.Date;
             return date.Value.Date + TimeSpan.ParseExact(time, "h\\:mm", null);
         }
 
-        private static DateTime? TryCombine(DateTime? date, string time)
+        private static DateTime? TryCombine(DateTime? date, string? time)
         {
             try { return Combine(date, time); }
             catch (FormatException) { return null; }

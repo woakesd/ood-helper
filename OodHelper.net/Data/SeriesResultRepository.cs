@@ -19,7 +19,7 @@ namespace OodHelper.Data
             _contextFactory = contextFactory;
         }
 
-        public SeriesResultHeader GetSeriesHeader(int sid)
+        public SeriesResultHeader? GetSeriesHeader(int sid)
         {
             using (var ctx = _contextFactory.CreateDbContext())
             {
@@ -65,7 +65,7 @@ namespace OodHelper.Data
                     .OrderBy(x => x.c.Class)
                     .Select(x => new { x.c.Class, x.r.Rid, x.c.StartDate, x.r.Bid, x.r.Points, x.r.OverridePoints, x.r.FinishCode })
                     .AsEnumerable()
-                    .Select(x => new SeriesEntryRow(x.Class, x.Rid, x.StartDate.Value, x.Bid, x.Points, x.OverridePoints, x.FinishCode))
+                    .Select(x => new SeriesEntryRow(x.Class, x.Rid, x.StartDate!.Value, x.Bid, x.Points, x.OverridePoints, x.FinishCode))
                     .ToList();
             }
         }

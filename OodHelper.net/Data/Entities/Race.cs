@@ -11,7 +11,7 @@ public partial class Race
 
     public DateTime? StartDate { get; set; }
 
-    public string FinishCode { get; set; }
+    public string?FinishCode { get; set; }
 
     public DateTime? FinishDate { get; set; }
 
@@ -35,7 +35,7 @@ public partial class Race
 
     public double? StandardCorrected { get; set; }
 
-    public string HandicapStatus { get; set; }
+    public string?HandicapStatus { get; set; }
 
     public int? OpenHandicap { get; set; }
 
@@ -47,11 +47,11 @@ public partial class Race
 
     public int? PerformanceIndex { get; set; }
 
-    public string A { get; set; }
+    public string?A { get; set; }
 
-    public string C { get; set; }
+    public string?C { get; set; }
 
-    public virtual Boat BidNavigation { get; set; }
+    public virtual Boat BidNavigation { get; set; } = null!;
 
-    public virtual Calendar RidNavigation { get; set; }
+    public virtual Calendar RidNavigation { get; set; } = null!;
 }

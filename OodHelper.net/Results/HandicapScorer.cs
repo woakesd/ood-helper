@@ -82,7 +82,7 @@ namespace OodHelper.Results
                 _repo.UpdateCalendarSct(rid, outcome.StandardCorrectedTime);
                 _repo.UpdateBoatRollingHandicaps(rid,
                     rows.Where(r => r.Place != 999)
-                        .Select(r => (r.Bid, r.NewRollingHandicap.Value)));
+                        .Select(r => (r.Bid, r.NewRollingHandicap!.Value)));
                 _repo.MarkResultCalculated(rid);
             }
             catch (Exception ex)

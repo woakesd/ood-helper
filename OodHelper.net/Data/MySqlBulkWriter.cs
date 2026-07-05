@@ -22,7 +22,7 @@ namespace OodHelper.Data
         // are back-ticked to dodge reserved words such as `event` / `condition`.
         //
         public static async Task InsertRowsAsync<T>(MySqlConnection con, MySqlTransaction trn,
-            string table, string[] columns, IReadOnlyList<T> rows, Func<T, object[]> values, CancellationToken ct)
+            string table, string[] columns, IReadOnlyList<T> rows, Func<T, object?[]> values, CancellationToken ct)
         {
             if (rows.Count == 0)
                 return;
@@ -58,7 +58,7 @@ namespace OodHelper.Data
         // in {brace} form (matching the legacy upload and the format the download's GUID reader parses
         // back). Everything else passes straight through.
         //
-        public static object Normalize(object v)
+        public static object Normalize(object? v)
         {
             switch (v)
             {

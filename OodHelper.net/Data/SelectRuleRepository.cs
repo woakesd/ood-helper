@@ -38,7 +38,7 @@ namespace OodHelper.Data
             }
         }
 
-        public BoatSelectRule GetTree(Guid id)
+        public BoatSelectRule? GetTree(Guid id)
         {
             using (var ctx = _contextFactory.CreateDbContext())
             {

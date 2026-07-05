@@ -15,11 +15,11 @@ namespace OodHelper.ViewModels
     {
         private readonly ISeriesRepository _repository;
         private readonly IDialogService _dialogs;
-        private CancellationTokenSource _debounce;
+        private CancellationTokenSource? _debounce;
 
         internal int DebounceMilliseconds { get; set; } = 500;
 
-        internal Task FilterTask { get; private set; }
+        internal Task? FilterTask { get; private set; }
 
         public SeriesViewModel(ISeriesRepository repository, IDialogService dialogs)
         {
@@ -28,15 +28,15 @@ namespace OodHelper.ViewModels
         }
 
         [ObservableProperty]
-        private string _filterText;
+        private string? _filterText;
 
         [ObservableProperty]
-        private ObservableCollection<Series> _rows;
+        private ObservableCollection<Series>? _rows;
 
         [ObservableProperty]
-        private Series _selectedRow;
+        private Series? _selectedRow;
 
-        partial void OnFilterTextChanged(string value)
+        partial void OnFilterTextChanged(string? value)
         {
             FilterTask = DebouncedLoadAsync();
         }
