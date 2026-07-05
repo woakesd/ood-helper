@@ -28,7 +28,6 @@ namespace OodHelper.Behaviors
 
         public static void OnIsExcelLike(DependencyObject depObj, DependencyPropertyChangedEventArgs e)
         {
-            if (e == null) return;
             if ((bool)e.NewValue)
             {
                 DataGridCell _dgc = depObj as DataGridCell;
