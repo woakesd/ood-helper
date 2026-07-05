@@ -4,10 +4,10 @@ using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 using EFCore.BulkExtensions;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
 using OodHelper.Data.Entities;
+using OodHelper.Services;
 
 namespace OodHelper.Data
 {
@@ -18,19 +18,22 @@ namespace OodHelper.Data
     internal sealed class ResultsDownloadService : IResultsDownloadService
     {
         private readonly IDbContextFactory<OodHelperContext> _factory;
+        private readonly IDatabaseMaintenanceService _maintenance;
 
-        public ResultsDownloadService(IDbContextFactory<OodHelperContext> factory)
+        public ResultsDownloadService(IDbContextFactory<OodHelperContext> factory,
+            IDatabaseMaintenanceService maintenance)
         {
             _factory = factory;
+            _maintenance = maintenance;
         }
 
         //
         // The download is a full replace: clear every local table, then re-load it from the website.
-        // It runs inside one MySQL read transaction (snapshot) and one SQL Server write transaction, so
-        // any failure or cancellation rolls back and leaves the local database untouched. Identity
-        // values (rid/bid/sid) from the website are preserved via SqlBulkCopyOptions.KeepIdentity,
-        // replacing the legacy SET IDENTITY_INSERT toggling; Db.ReseedDatabase() then realigns the
-        // identity seeds afterwards, exactly as before.
+        // It runs inside one MySQL read transaction (snapshot) and one SQLite write transaction, so
+        // any failure or cancellation rolls back and leaves the local database untouched. The website
+        // identity values (rid/bid/sid) must be preserved so the child tables keep referencing the right
+        // rows; on SQLite that means EF SaveChanges for the AUTOINCREMENT tables and BulkInsert for the
+        // rest (see the per-table note below). The maintenance Reseed() then realigns the boats seed band.
         //
         public async Task DownloadAsync(IProgress<DownloadProgress> progress, CancellationToken ct)
         {
@@ -40,72 +43,119 @@ namespace OodHelper.Data
             await using var mtrn = await mcon.BeginTransactionAsync(ct);
 
             await using var ctx = await _factory.CreateDbContextAsync(ct);
-            await using var tx = await ctx.Database.BeginTransactionAsync(ct);
-
-            var keepIdentity = new BulkConfig { SqlBulkCopyOptions = SqlBulkCopyOptions.KeepIdentity };
-
-            var step = 0;
-            const int totalSteps = 8;
-            void Report(string message) => progress?.Report(new DownloadProgress(step++ * 100 / totalSteps, message));
 
             //
-            // Clear the local tables first, children before parents, so a foreign key never blocks a
-            // delete regardless of cascade configuration. (updates is append-only, matching the legacy
-            // download, so it is not cleared.)
+            // Keep one connection open for the whole load so the foreign_keys pragma set below persists
+            // (it is scoped to the connection and is a no-op inside a transaction, so it must be set here,
+            // before the transaction begins).
             //
-            await ctx.Races.ExecuteDeleteAsync(ct);
-            await ctx.SeriesResults.ExecuteDeleteAsync(ct);
-            await ctx.CalendarSeriesJoins.ExecuteDeleteAsync(ct);
-            await ctx.Calendars.ExecuteDeleteAsync(ct);
-            await ctx.Boats.ExecuteDeleteAsync(ct);
-            await ctx.Series.ExecuteDeleteAsync(ct);
-            await ctx.SelectRules.ExecuteDeleteAsync(ct);
-            await ctx.PortsmouthNumbers.ExecuteDeleteAsync(ct);
+            await ctx.Database.OpenConnectionAsync(ct);
+            try
+            {
+                //
+                // Disable foreign-key enforcement for the full replace. The legacy SQL Server download
+                // used SqlBulkCopy, which does not check constraints, so website data containing a row
+                // whose parent was since removed still loaded; SQLite enforces FKs by default, so mirror
+                // the old behaviour here rather than fail the whole download on an orphan row.
+                //
+                await SetForeignKeysAsync(ctx, false, ct);
 
-            //
-            // Re-load each table from the website, parents before children so the foreign keys hold.
-            //
-            Report("Loading Boats");
-            await ctx.BulkInsertAsync(await ReadBoatsAsync(mcon, mtrn, ct), keepIdentity, cancellationToken: ct);
+                await using var tx = await ctx.Database.BeginTransactionAsync(ct);
 
-            Report("Loading Calendar");
-            await ctx.BulkInsertAsync(await ReadCalendarAsync(mcon, mtrn, ct), keepIdentity, cancellationToken: ct);
+                var step = 0;
+                const int totalSteps = 8;
+                void Report(string message) => progress?.Report(new DownloadProgress(step++ * 100 / totalSteps, message));
 
-            ct.ThrowIfCancellationRequested();
-            Report("Loading Races");
-            await ctx.BulkInsertAsync(await ReadRacesAsync(mcon, mtrn, ct), cancellationToken: ct);
+                //
+                // Clear the local tables first, children before parents. (updates is append-only,
+                // matching the legacy download, so it is not cleared.)
+                //
+                await ctx.Races.ExecuteDeleteAsync(ct);
+                await ctx.SeriesResults.ExecuteDeleteAsync(ct);
+                await ctx.CalendarSeriesJoins.ExecuteDeleteAsync(ct);
+                await ctx.Calendars.ExecuteDeleteAsync(ct);
+                await ctx.Boats.ExecuteDeleteAsync(ct);
+                await ctx.Series.ExecuteDeleteAsync(ct);
+                await ctx.SelectRules.ExecuteDeleteAsync(ct);
+                await ctx.PortsmouthNumbers.ExecuteDeleteAsync(ct);
 
-            Report("Loading Series");
-            await ctx.BulkInsertAsync(await ReadSeriesAsync(mcon, mtrn, ct), keepIdentity, cancellationToken: ct);
+                //
+                // Re-load each table from the website, parents before children.
+                //
+                // boats/calendar/series have AUTOINCREMENT identity keys. BulkInsert cannot preserve an
+                // explicit identity value on SQLite (it always lets AUTOINCREMENT assign a new one), which
+                // would break every child reference (races.rid/bid, the join, series_results ...). EF
+                // SaveChanges DOES honour the explicit key on SQLite and advances sqlite_sequence to the
+                // max, so these three tables go through the tracker; the child tables below keep their
+                // (non-generated) keys via BulkInsert.
+                //
+                Report("Loading Boats");
+                ctx.Boats.AddRange(await ReadBoatsAsync(mcon, mtrn, ct));
+                await ctx.SaveChangesAsync(ct);
+                ctx.ChangeTracker.Clear();
 
-            ct.ThrowIfCancellationRequested();
-            Report("Loading Series links");
-            await ctx.BulkInsertAsync(await ReadJoinAsync(mcon, mtrn, ct), cancellationToken: ct);
+                Report("Loading Calendar");
+                ctx.Calendars.AddRange(await ReadCalendarAsync(mcon, mtrn, ct));
+                await ctx.SaveChangesAsync(ct);
+                ctx.ChangeTracker.Clear();
 
-            Report("Loading Series Results");
-            await ctx.BulkInsertAsync(await ReadSeriesResultsAsync(mcon, mtrn, ct), cancellationToken: ct);
+                ct.ThrowIfCancellationRequested();
+                Report("Loading Races");
+                await ctx.BulkInsertAsync(await ReadRacesAsync(mcon, mtrn, ct), cancellationToken: ct);
 
-            ct.ThrowIfCancellationRequested();
-            Report("Loading Select Rules");
-            await ctx.BulkInsertAsync(await ReadSelectRulesAsync(mcon, mtrn, ct), cancellationToken: ct);
+                Report("Loading Series");
+                ctx.Series.AddRange(await ReadSeriesAsync(mcon, mtrn, ct));
+                await ctx.SaveChangesAsync(ct);
+                ctx.ChangeTracker.Clear();
 
-            Report("Loading Portsmouth numbers");
-            await ctx.BulkInsertAsync(await ReadPortsmouthNumbersAsync(mcon, mtrn, ct), cancellationToken: ct);
+                ct.ThrowIfCancellationRequested();
+                Report("Loading Series links");
+                await ctx.BulkInsertAsync(await ReadJoinAsync(mcon, mtrn, ct), cancellationToken: ct);
 
-            //
-            // Record the website's latest upload time locally (append-only, as the legacy code did).
-            //
-            var maxUpload = await ReadMaxUploadAsync(mcon, mtrn, ct);
-            if (maxUpload.HasValue)
-                await ctx.BulkInsertAsync(new List<Update> { new() { Upload = maxUpload, Dummy = 2 } },
-                    cancellationToken: ct);
+                Report("Loading Series Results");
+                await ctx.BulkInsertAsync(await ReadSeriesResultsAsync(mcon, mtrn, ct), cancellationToken: ct);
 
-            await tx.CommitAsync(ct);
-            await mtrn.CommitAsync(ct);
-            await mcon.CloseAsync();
+                ct.ThrowIfCancellationRequested();
+                Report("Loading Select Rules");
+                await ctx.BulkInsertAsync(await ReadSelectRulesAsync(mcon, mtrn, ct), cancellationToken: ct);
 
-            Db.ReseedDatabase();
+                Report("Loading Portsmouth numbers");
+                await ctx.BulkInsertAsync(await ReadPortsmouthNumbersAsync(mcon, mtrn, ct), cancellationToken: ct);
+
+                //
+                // Record the website's latest upload time locally (append-only, as the legacy code did).
+                //
+                var maxUpload = await ReadMaxUploadAsync(mcon, mtrn, ct);
+                if (maxUpload.HasValue)
+                    await ctx.BulkInsertAsync(new List<Update> { new() { Upload = maxUpload, Dummy = 2 } },
+                        cancellationToken: ct);
+
+                await tx.CommitAsync(ct);
+                await mtrn.CommitAsync(ct);
+                await mcon.CloseAsync();
+            }
+            finally
+            {
+                // Restore enforcement before the connection returns to the pool. Use None so cleanup
+                // still runs when the download was cancelled.
+                await SetForeignKeysAsync(ctx, true, CancellationToken.None);
+                await ctx.Database.CloseConnectionAsync();
+            }
+
+            _maintenance.Reseed();
             progress?.Report(new DownloadProgress(100, "All done"));
+        }
+
+        //
+        // Toggle SQLite foreign-key enforcement on the context's (already open) connection. Executed as a
+        // raw command rather than ExecuteSqlRaw so it is never wrapped in a transaction, where PRAGMA
+        // foreign_keys is silently ignored. Only called when no transaction is active on the connection.
+        //
+        private static async Task SetForeignKeysAsync(OodHelperContext ctx, bool on, CancellationToken ct)
+        {
+            await using var cmd = ctx.Database.GetDbConnection().CreateCommand();
+            cmd.CommandText = on ? "PRAGMA foreign_keys = ON" : "PRAGMA foreign_keys = OFF";
+            await cmd.ExecuteNonQueryAsync(ct);
         }
 
         //

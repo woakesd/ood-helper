@@ -7,9 +7,8 @@ namespace OodHelper.Data
     /// <summary>
     /// EF Core data access for the race-results editor (calendar header + races rows).
     /// Replaces the inline <c>Db</c> SQL that used to live in <c>ResultsEditor</c> /
-    /// <c>RaceResults</c>. The handicap scoring engines (<see cref="IRaceScore"/>) remain on the
-    /// legacy <c>Db</c> helper for now, so this repository deliberately mirrors the existing
-    /// behaviour rather than re-deriving it.
+    /// <c>RaceResults</c>. Complex self-joins are kept as raw SQL over the EF connection, so this
+    /// repository deliberately mirrors the existing behaviour rather than re-deriving it.
     /// </summary>
     public interface IRaceResultsRepository
     {

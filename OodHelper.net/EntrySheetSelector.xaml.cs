@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Data;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Printing;
-using System.Xml;
-using System.Windows.Markup;
 using System.Windows.Xps;
+using Microsoft.Extensions.DependencyInjection;
+using OodHelper.Data;
+using CalendarEntity = OodHelper.Data.Entities.Calendar;
 
 namespace OodHelper
 {
@@ -25,16 +19,11 @@ namespace OodHelper
         public EntrySheetSelector()
         {
             InitializeComponent();
-            Db c = new Db(@"SELECT 0 print_all_visible, 0 print_all, 0 [print], 1 [copies], rid, start_date, event, class
-                FROM calendar
-                WHERE is_race = 1
-                AND raced = 0
-                AND start_date BETWEEN @today
-                AND DATEADD(DAY, 10, @today)
-                ORDER BY start_date");
-            Hashtable para = new Hashtable();
-            para["today"] = DateTime.Today;
-            DataTable d = c.GetData(para);
+            // This dialog is not constructed through DI, so its repository is resolved from the
+            // container here, mirroring the other non-DI'd print screens.
+            var races = App.Services.GetRequiredService<ICalendarRepository>()
+                .GetUpcomingUnraced(DateTime.Today, 10);
+            DataTable d = BuildSelectorTable(races);
             DateTime? NextDate = null;
 
             if (d.Rows.Count > 0)
@@ -64,6 +53,35 @@ namespace OodHelper
                 }
             }
             Races.ItemsSource = d.DefaultView;
+        }
+
+        private static DataTable BuildSelectorTable(IReadOnlyList<CalendarEntity> races)
+        {
+            //
+            // Reproduces the old `SELECT 0 print_all_visible, 0 print_all, 0 [print], 1 [copies],
+            // rid, start_date, event, class` shape — the print-state columns are int (0/1) and the
+            // checkbox bindings / handlers (which cast to int and assign bools) depend on that.
+            //
+            DataTable d = new DataTable { TableName = "calendar" };
+            d.Columns.Add(new DataColumn("print_all_visible", typeof(int)) { DefaultValue = 0 });
+            d.Columns.Add(new DataColumn("print_all", typeof(int)) { DefaultValue = 0 });
+            d.Columns.Add(new DataColumn("print", typeof(int)) { DefaultValue = 0 });
+            d.Columns.Add(new DataColumn("copies", typeof(int)) { DefaultValue = 1 });
+            d.Columns.Add(new DataColumn("rid", typeof(int)));
+            d.Columns.Add(new DataColumn("start_date", typeof(DateTime)));
+            d.Columns.Add(new DataColumn("event", typeof(string)));
+            d.Columns.Add(new DataColumn("class", typeof(string)));
+            foreach (var c in races)
+            {
+                DataRow r = d.NewRow();
+                r["rid"] = c.Rid;
+                r["start_date"] = (object)c.StartDate ?? DBNull.Value;
+                r["event"] = (object)c.Event ?? DBNull.Value;
+                r["class"] = (object)c.Class ?? DBNull.Value;
+                d.Rows.Add(r);
+            }
+            d.AcceptChanges();
+            return d;
         }
 
         private void Print_Click(object sender, RoutedEventArgs e)

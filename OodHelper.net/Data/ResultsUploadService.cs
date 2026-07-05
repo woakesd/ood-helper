@@ -133,8 +133,10 @@ namespace OodHelper.Data
                 [ "id", "name", "parent", "application", "field", "condition", "string_value",
                     "number_bound1", "number_bound2" ],
                 selectRules,
-                r => [ r.Id, r.Name, r.Parent, r.Application, r.Field, r.Condition, r.StringValue,
-                    r.NumberBound1, r.NumberBound2 ],
+                // The website's select_rules.name is NOT NULL (default ''), and MySQL runs in strict mode,
+                // so a nameless child rule (Name == null) must be written as an empty string, not NULL.
+                r => [ r.Id, r.Name ?? string.Empty, r.Parent, r.Application, r.Field, r.Condition,
+                    r.StringValue, r.NumberBound1, r.NumberBound2 ],
                 ct);
 
             Report("Uploading portsmouth numbers");

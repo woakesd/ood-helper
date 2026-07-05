@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using OodHelper.Data.Entities;
@@ -63,24 +62,22 @@ namespace OodHelper.Data
 
         public int GetNextIdentity()
         {
+            //
+            // The id the next inserted boat will receive. boats is an AUTOINCREMENT table, so the last
+            // assigned id is held in sqlite_sequence (the equivalent of the old IDENT_CURRENT); the
+            // reserved seed band is enforced by reseeding that row after a website download. Falls back
+            // to MAX(bid) before any insert has happened (no sqlite_sequence row yet).
+            //
             using (var ctx = _contextFactory.CreateDbContext())
             {
-                var conn = ctx.Database.GetDbConnection();
-                using (var cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = "SELECT IDENT_CURRENT('boats')";
-                    var mustOpen = conn.State != ConnectionState.Open;
-                    if (mustOpen) conn.Open();
-                    try
-                    {
-                        var result = cmd.ExecuteScalar();
-                        return Convert.ToInt32(result) + 1;
-                    }
-                    finally
-                    {
-                        if (mustOpen) conn.Close();
-                    }
-                }
+                var seq = ctx.Database
+                    .SqlQuery<long?>($"SELECT seq AS Value FROM sqlite_sequence WHERE name = 'boats'")
+                    .AsEnumerable()
+                    .FirstOrDefault();
+                if (seq.HasValue)
+                    return (int)seq.Value + 1;
+
+                return (ctx.Boats.Max(b => (int?)b.Bid) ?? 0) + 1;
             }
         }
 

@@ -19,7 +19,7 @@ namespace OodHelper.Data
         void Save(Boat boat);
 
         /// <summary>
-        /// The identity value the next inserted boat will receive (<c>IDENT_CURRENT + 1</c>).
+        /// The identity value the next inserted boat will receive (the boats <c>sqlite_sequence</c> seq + 1).
         /// Used to validate a new boat against the configured seed range before it is added.
         /// </summary>
         int GetNextIdentity();

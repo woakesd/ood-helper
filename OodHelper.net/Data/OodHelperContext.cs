@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using OodHelper.Data.Entities;
@@ -8,7 +8,6 @@ namespace OodHelper.Data;
 // Disambiguate from the legacy OodHelper.SeriesResult domain class, which is visible here
 // via the parent namespace and would otherwise win over the imported entity type. This alias
 // must live inside the namespace scope to take precedence over the enclosing namespace.
-// Re-apply this alias if the context is re-scaffolded.
 using SeriesResult = OodHelper.Data.Entities.SeriesResult;
 
 public partial class OodHelperContext : DbContext
@@ -44,7 +43,10 @@ public partial class OodHelperContext : DbContext
 
             entity.ToTable("boats");
 
-            entity.Property(e => e.Bid).HasColumnName("bid");
+            // boats uses a reserved identity band (Settings.BottomSeed/TopSeed) for locally-created
+            // boats, enforced by reseeding sqlite_sequence after a website download
+            // (DatabaseMaintenanceService.Reseed). AUTOINCREMENT is required so that sequence exists.
+            entity.Property(e => e.Bid).HasColumnName("bid").HasAnnotation("Sqlite:Autoincrement", true);
             entity.Property(e => e.Beaten).HasColumnName("beaten");
             entity.Property(e => e.Berth)
                 .HasMaxLength(6)
@@ -52,9 +54,7 @@ public partial class OodHelperContext : DbContext
             entity.Property(e => e.Boatclass)
                 .HasMaxLength(20)
                 .HasColumnName("boatclass");
-            entity.Property(e => e.Boatmemo)
-                .HasColumnType("ntext")
-                .HasColumnName("boatmemo");
+            entity.Property(e => e.Boatmemo).HasColumnName("boatmemo");
             entity.Property(e => e.Boatname)
                 .HasMaxLength(20)
                 .HasColumnName("boatname");
@@ -86,9 +86,7 @@ public partial class OodHelperContext : DbContext
             entity.Property(e => e.Sailno)
                 .HasMaxLength(8)
                 .HasColumnName("sailno");
-            entity.Property(e => e.SmallCatHandicapRating)
-                .HasColumnType("numeric(4, 3)")
-                .HasColumnName("small_cat_handicap_rating");
+            entity.Property(e => e.SmallCatHandicapRating).HasColumnName("small_cat_handicap_rating");
             entity.Property(e => e.Subscription)
                 .HasMaxLength(26)
                 .HasColumnName("subscription");
@@ -124,9 +122,7 @@ public partial class OodHelperContext : DbContext
                 .HasColumnName("handicapping");
             entity.Property(e => e.IsRace).HasColumnName("is_race");
             entity.Property(e => e.LapsCompleted).HasColumnName("laps_completed");
-            entity.Property(e => e.Memo)
-                .HasColumnType("ntext")
-                .HasColumnName("memo");
+            entity.Property(e => e.Memo).HasColumnName("memo");
             entity.Property(e => e.Ood)
                 .HasMaxLength(30)
                 .HasColumnName("ood");
@@ -137,17 +133,11 @@ public partial class OodHelperContext : DbContext
             entity.Property(e => e.Racetype)
                 .HasMaxLength(20)
                 .HasColumnName("racetype");
-            entity.Property(e => e.ResultCalculated)
-                .HasColumnType("datetime")
-                .HasColumnName("result_calculated");
+            entity.Property(e => e.ResultCalculated).HasColumnName("result_calculated");
             entity.Property(e => e.StandardCorrectedTime).HasColumnName("standard_corrected_time");
-            entity.Property(e => e.StartDate)
-                .HasColumnType("datetime")
-                .HasColumnName("start_date");
+            entity.Property(e => e.StartDate).HasColumnName("start_date");
             entity.Property(e => e.TimeLimitDelta).HasColumnName("time_limit_delta");
-            entity.Property(e => e.TimeLimitFixed)
-                .HasColumnType("datetime")
-                .HasColumnName("time_limit_fixed");
+            entity.Property(e => e.TimeLimitFixed).HasColumnName("time_limit_fixed");
             entity.Property(e => e.TimeLimitType)
                 .HasMaxLength(1)
                 .HasColumnName("time_limit_type");
@@ -180,9 +170,7 @@ public partial class OodHelperContext : DbContext
                 .HasMaxLength(1)
                 .HasColumnName("keel");
             entity.Property(e => e.NoOfCrew).HasColumnName("no_of_crew");
-            entity.Property(e => e.Notes)
-                .HasColumnType("ntext")
-                .HasColumnName("notes");
+            entity.Property(e => e.Notes).HasColumnName("notes");
             entity.Property(e => e.Number).HasColumnName("number");
             entity.Property(e => e.Rig)
                 .HasMaxLength(1)
@@ -197,7 +185,7 @@ public partial class OodHelperContext : DbContext
 
         modelBuilder.Entity<Race>(entity =>
         {
-            entity.HasKey(e => new { e.Rid, e.Bid }).IsClustered(false);
+            entity.HasKey(e => new { e.Rid, e.Bid });
 
             entity.ToTable("races");
 
@@ -215,19 +203,13 @@ public partial class OodHelperContext : DbContext
             entity.Property(e => e.FinishCode)
                 .HasMaxLength(5)
                 .HasColumnName("finish_code");
-            entity.Property(e => e.FinishDate)
-                .HasColumnType("datetime")
-                .HasColumnName("finish_date");
+            entity.Property(e => e.FinishDate).HasColumnName("finish_date");
             entity.Property(e => e.HandicapStatus)
                 .HasMaxLength(2)
                 .HasColumnName("handicap_status");
-            entity.Property(e => e.InterimDate)
-                .HasColumnType("datetime")
-                .HasColumnName("interim_date");
+            entity.Property(e => e.InterimDate).HasColumnName("interim_date");
             entity.Property(e => e.Laps).HasColumnName("laps");
-            entity.Property(e => e.LastEdit)
-                .HasColumnType("datetime")
-                .HasColumnName("last_edit");
+            entity.Property(e => e.LastEdit).HasColumnName("last_edit");
             entity.Property(e => e.NewRollingHandicap).HasColumnName("new_rolling_handicap");
             entity.Property(e => e.OpenHandicap).HasColumnName("open_handicap");
             entity.Property(e => e.OverridePoints).HasColumnName("override_points");
@@ -237,9 +219,7 @@ public partial class OodHelperContext : DbContext
             entity.Property(e => e.RestrictedSail).HasColumnName("restricted_sail");
             entity.Property(e => e.RollingHandicap).HasColumnName("rolling_handicap");
             entity.Property(e => e.StandardCorrected).HasColumnName("standard_corrected");
-            entity.Property(e => e.StartDate)
-                .HasColumnType("datetime")
-                .HasColumnName("start_date");
+            entity.Property(e => e.StartDate).HasColumnName("start_date");
 
             entity.HasOne(d => d.BidNavigation).WithMany(p => p.Races)
                 .HasForeignKey(d => d.Bid)
@@ -267,12 +247,8 @@ public partial class OodHelperContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
-            entity.Property(e => e.NumberBound1)
-                .HasColumnType("numeric(18, 4)")
-                .HasColumnName("number_bound1");
-            entity.Property(e => e.NumberBound2)
-                .HasColumnType("numeric(18, 4)")
-                .HasColumnName("number_bound2");
+            entity.Property(e => e.NumberBound1).HasColumnName("number_bound1");
+            entity.Property(e => e.NumberBound2).HasColumnName("number_bound2");
             entity.Property(e => e.Parent).HasColumnName("parent");
             entity.Property(e => e.StringValue)
                 .HasMaxLength(255)
@@ -336,9 +312,7 @@ public partial class OodHelperContext : DbContext
                 .ToTable("updates");
 
             entity.Property(e => e.Dummy).HasColumnName("dummy");
-            entity.Property(e => e.Upload)
-                .HasColumnType("datetime")
-                .HasColumnName("upload");
+            entity.Property(e => e.Upload).HasColumnName("upload");
         });
 
         OnModelCreatingPartial(modelBuilder);

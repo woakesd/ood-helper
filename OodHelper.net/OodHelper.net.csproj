@@ -10,20 +10,24 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
-    <Platforms>AnyCPU;x86</Platforms>
-    <PlatformTarget>x86</PlatformTarget>
+    <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="CsvHelper" Version="33.1.0" />
-    <PackageReference Include="EFCore.BulkExtensions.MIT.SqlServer" Version="10.22.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.3" />
+    <PackageReference Include="EFCore.BulkExtensions.MIT.Sqlite" Version="10.22.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.9" />
+    <!-- Pin SQLitePCLRaw to the 3.x line so the bundled native SQLite is 3.50.3, above the
+         GHSA-2m69-gcr7-jv3q vulnerable range (<= 2.1.11) that EF Core's transitive 2.1.11 falls in. -->
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.3" />
+    <PackageReference Include="SQLitePCLRaw.core" Version="3.0.3" />
+    <PackageReference Include="SQLitePCLRaw.provider.e_sqlite3" Version="3.0.3" />
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.50.3" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.9" />
     <PackageReference Include="MySqlConnector" Version="2.5.0" />
     <PackageReference Include="System.Data.Odbc" Version="8.0.0" />
@@ -38,4 +42,19 @@
     <Compile Remove="Website\About.xaml.cs" />
     <Page Remove="Website\About.xaml" />
   </ItemGroup>
+
+  <!--
+    This is a Windows-only WPF app, but the SQLitePCLRaw native package ships e_sqlite3 for every
+    runtime identifier (linux/osx/freebsd/wasm/...). A framework-dependent build copies them all into
+    runtimes\, which then bloats the harvested installer with ~27 native libraries this app can never
+    load. Prune every non-win* RID folder after build so both the run output and the MSI carry only
+    the Windows natives.
+  -->
+  <Target Name="PruneNonWindowsRuntimes" AfterTargets="Build" Condition="Exists('$(OutDir)runtimes')">
+    <ItemGroup>
+      <_RidDir Include="$([System.IO.Directory]::GetDirectories('$(OutDir)runtimes'))" />
+      <_NonWinRidDir Include="@(_RidDir)" Condition="!$([System.String]::Copy('%(Filename)').StartsWith('win'))" />
+    </ItemGroup>
+    <RemoveDir Directories="@(_NonWinRidDir)" />
+  </Target>
 </Project>

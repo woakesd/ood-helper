@@ -4,7 +4,8 @@
         Title="SeriesChooser" mc:Ignorable="d"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        d:DesignHeight="300" d:DesignWidth="300" SizeToContent="WidthAndHeight"
+        d:DesignHeight="300" d:DesignWidth="300"
+        Width="460" Height="480" WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False" Loaded="SeriesChooser_Loaded" >
     <Grid>
         <Grid.RowDefinitions>

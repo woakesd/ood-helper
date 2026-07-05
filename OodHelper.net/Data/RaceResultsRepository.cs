@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using OodHelper.Data.Entities;
 
@@ -46,43 +44,54 @@ namespace OodHelper.Data
         {
             //
             // Calculation is allowed when results have never been calculated, or a race row has
-            // been edited since the last calculation. Ported verbatim from the original query;
-            // the boolean is evaluated in SQL.
+            // been edited since the last calculation. (Equivalent to the original grouped TOP-1
+            // query: result_calculated IS NULL, or the max last_edit is at/after result_calculated.)
             //
-            const string sql = @"
-SELECT TOP 1 CASE WHEN result_calculated IS NULL
-                  OR (mle IS NOT NULL AND result_calculated <= mle) THEN 1 ELSE 0 END
-FROM (
-    SELECT result_calculated, MAX(last_edit) AS mle
-    FROM calendar c LEFT JOIN races r ON c.rid = r.rid
-    WHERE c.rid = @rid
-    GROUP BY result_calculated, standard_corrected_time
-) x";
             using (var ctx = _contextFactory.CreateDbContext())
-                return ExecuteScalarInt(ctx, sql, new SqlParameter("@rid", rid)) == 1;
+            {
+                var cal = ctx.Calendars.AsNoTracking().FirstOrDefault(c => c.Rid == rid);
+                if (cal == null)
+                    return false;
+                if (cal.ResultCalculated == null)
+                    return true;
+                var maxLastEdit = ctx.Races.Where(r => r.Rid == rid).Max(r => (DateTime?)r.LastEdit);
+                return maxLastEdit != null && cal.ResultCalculated <= maxLastEdit;
+            }
         }
 
         public bool GetRefreshHandicapsEnabled(int rid)
         {
-            const string sql = @"
-SELECT COUNT(*) FROM (
-    SELECT COUNT(1) AS cnt
-    FROM races r1
-    INNER JOIN races r2 ON r2.bid = r1.bid AND r2.rid <> r1.rid AND r2.start_date < r1.start_date AND r2.last_edit > r1.last_edit
-    INNER JOIN races r3 ON r3.bid = r1.bid AND r3.rid <> r1.rid
-    WHERE r1.rid = @rid
-    GROUP BY r1.bid, r3.start_date, r3.new_rolling_handicap
-    HAVING r3.start_date = MAX(r2.start_date)
-) x";
+            //
+            // A refresh is offered when some boat in this race has an earlier race (for that boat)
+            // that has been edited more recently than this race row — i.e. its rolling handicap may
+            // now be stale. (Set-based original re-expressed in memory; the row counts per race are
+            // small.)
+            //
             using (var ctx = _contextFactory.CreateDbContext())
-                return ExecuteScalarInt(ctx, sql, new SqlParameter("@rid", rid)) > 0;
+            {
+                var ridRows = ctx.Races.AsNoTracking()
+                    .Where(r => r.Rid == rid)
+                    .Select(r => new { r.Bid, r.StartDate, r.LastEdit })
+                    .ToList();
+                if (ridRows.Count == 0)
+                    return false;
+
+                var bids = ridRows.Select(r => r.Bid).Distinct().ToList();
+                var boatRaces = ctx.Races.AsNoTracking()
+                    .Where(r => bids.Contains(r.Bid) && r.Rid != rid)
+                    .Select(r => new { r.Bid, r.StartDate, r.LastEdit })
+                    .ToList()
+                    .ToLookup(r => r.Bid);
+
+                return ridRows.Any(r1 => boatRaces[r1.Bid]
+                    .Any(r2 => r2.StartDate < r1.StartDate && r2.LastEdit > r1.LastEdit));
+            }
         }
 
         public int CountAutoPopulate(int rid)
         {
-            string sql = @"SELECT COUNT(*) FROM (" + AutoPopulateBids + @") x";
             using (var ctx = _contextFactory.CreateDbContext())
-                return ExecuteScalarInt(ctx, sql, new SqlParameter("@rid", rid));
+                return GetAutoPopulateBids(ctx, rid).Count;
         }
 
         // -------------------------------------------------------------------------------------
@@ -200,73 +209,107 @@ SELECT COUNT(*) FROM (
         }
 
         // -------------------------------------------------------------------------------------
-        // Bulk operations (complex self-joins kept as raw SQL, off Db.cs)
+        // Bulk operations
         // -------------------------------------------------------------------------------------
 
         public void DoAutoPopulate(int rid)
         {
-            string sql = @"
-INSERT INTO races
-    (rid, start_date, bid, rolling_handicap, handicap_status, open_handicap, last_edit)
-SELECT c.rid, c.start_date, b.bid, b.rolling_handicap, b.handicap_status, b.open_handicap, GETDATE()
-FROM boats b, calendar c
-WHERE c.rid = @rid
-AND b.bid IN (" + AutoPopulateBids + @")";
+            //
+            // Add a race entry for every boat that has raced in another race of the same series and
+            // class, seeded with that boat's current handicap fields (the old INSERT … SELECT).
+            //
             using (var ctx = _contextFactory.CreateDbContext())
-                ctx.Database.ExecuteSqlRaw(sql, new SqlParameter("@rid", rid));
+            {
+                var startDate = ctx.Calendars.Where(c => c.Rid == rid)
+                    .Select(c => c.StartDate).FirstOrDefault();
+                var bids = GetAutoPopulateBids(ctx, rid);
+                if (bids.Count == 0)
+                    return;
+
+                var boats = ctx.Boats.AsNoTracking()
+                    .Where(b => bids.Contains(b.Bid))
+                    .ToList();
+                var now = DateTime.Now;
+                ctx.Races.AddRange(boats.Select(b => new Race
+                {
+                    Rid = rid,
+                    Bid = b.Bid,
+                    StartDate = startDate,
+                    RollingHandicap = b.RollingHandicap,
+                    HandicapStatus = b.HandicapStatus,
+                    OpenHandicap = b.OpenHandicap,
+                    LastEdit = now
+                }));
+                ctx.SaveChanges();
+            }
         }
 
         public void RefreshRollingHandicaps(int rid)
         {
             //
-            // Set each boat's rolling handicap to the new_rolling_handicap from its latest
-            // previous race entry (set-based equivalent of the old read-then-loop-update).
+            // Set each boat's rolling handicap in this race to the new_rolling_handicap from its
+            // latest previous race entry (in-memory equivalent of the old UPDATE … FROM self-join).
             //
-            const string sql = @"
-UPDATE races
-SET last_edit = GETDATE(), rolling_handicap = src.nrh
-FROM races
-INNER JOIN (
-    SELECT r1.bid AS bid, r3.new_rolling_handicap AS nrh
-    FROM races r1
-    INNER JOIN races r2 ON r2.bid = r1.bid AND r2.rid <> r1.rid AND r2.start_date < r1.start_date
-    INNER JOIN races r3 ON r3.bid = r1.bid AND r3.rid <> r1.rid
-    WHERE r1.rid = @rid
-    GROUP BY r1.bid, r3.start_date, r3.new_rolling_handicap
-    HAVING r3.start_date = MAX(r2.start_date)
-) src ON src.bid = races.bid
-WHERE races.rid = @rid";
             using (var ctx = _contextFactory.CreateDbContext())
-                ctx.Database.ExecuteSqlRaw(sql, new SqlParameter("@rid", rid));
+            {
+                var ridRows = ctx.Races.Where(r => r.Rid == rid).ToList();
+                if (ridRows.Count == 0)
+                    return;
+
+                var bids = ridRows.Select(r => r.Bid).Distinct().ToList();
+                var boatRaces = ctx.Races.AsNoTracking()
+                    .Where(r => bids.Contains(r.Bid) && r.Rid != rid)
+                    .Select(r => new { r.Bid, r.StartDate, r.NewRollingHandicap })
+                    .ToList()
+                    .ToLookup(r => r.Bid);
+
+                var now = DateTime.Now;
+                foreach (var r1 in ridRows)
+                {
+                    var latestPrior = boatRaces[r1.Bid]
+                        .Where(r => r.StartDate < r1.StartDate)
+                        .OrderByDescending(r => r.StartDate)
+                        .FirstOrDefault();
+                    if (latestPrior == null)
+                        continue;
+                    r1.RollingHandicap = latestPrior.NewRollingHandicap;
+                    r1.LastEdit = now;
+                }
+                ctx.SaveChanges();
+            }
         }
 
         public void MoveToFleet(int fromRid, int toRid, int bid)
         {
-            const string sql = @"
-UPDATE races
-SET rid = @toRid, start_date = (SELECT start_date FROM calendar WHERE rid = @toRid)
-WHERE rid = @fromRid AND bid = @bid";
             using (var ctx = _contextFactory.CreateDbContext())
-                ctx.Database.ExecuteSqlRaw(sql,
-                    new SqlParameter("@fromRid", fromRid),
-                    new SqlParameter("@toRid", toRid),
-                    new SqlParameter("@bid", bid));
+            {
+                var toStart = ctx.Calendars.Where(c => c.Rid == toRid)
+                    .Select(c => c.StartDate).FirstOrDefault();
+                ctx.Races.Where(r => r.Rid == fromRid && r.Bid == bid)
+                    .ExecuteUpdate(s => s
+                        .SetProperty(r => r.Rid, toRid)
+                        .SetProperty(r => r.StartDate, toStart));
+            }
         }
 
         public void ApplyEditedBoatHandicaps(int rid, int bid)
         {
-            const string sql = @"
-UPDATE r
-SET r.rolling_handicap = b.rolling_handicap,
-    r.handicap_status = b.handicap_status,
-    r.open_handicap = b.open_handicap,
-    r.last_edit = GETDATE()
-FROM races r INNER JOIN boats b ON b.bid = r.bid
-WHERE r.rid = @rid AND r.bid = @bid";
             using (var ctx = _contextFactory.CreateDbContext())
-                ctx.Database.ExecuteSqlRaw(sql,
-                    new SqlParameter("@rid", rid),
-                    new SqlParameter("@bid", bid));
+            {
+                var boat = ctx.Boats.Where(b => b.Bid == bid)
+                    .Select(b => new { b.RollingHandicap, b.HandicapStatus, b.OpenHandicap })
+                    .FirstOrDefault();
+                if (boat == null)
+                    return;
+
+                var now = DateTime.Now;
+                ctx.Races.Where(r => r.Rid == rid && r.Bid == bid)
+                    .ExecuteUpdate(s => s
+                        .SetProperty(r => r.RollingHandicap, boat.RollingHandicap)
+                        .SetProperty(r => r.HandicapStatus, boat.HandicapStatus)
+                        .SetProperty(r => r.OpenHandicap, boat.OpenHandicap)
+                        .SetProperty(r => r.LastEdit, now));
+            }
         }
 
         // -------------------------------------------------------------------------------------
@@ -334,42 +377,35 @@ WHERE r.rid = @rid AND r.bid = @bid";
         // Helpers
         // -------------------------------------------------------------------------------------
 
-        private static int ExecuteScalarInt(OodHelperContext ctx, string sql, params SqlParameter[] parameters)
+        //
+        // Distinct boats that have raced in another race of the same series and class as the given
+        // race. Used by both CountAutoPopulate and DoAutoPopulate. Re-expresses the old self-join over
+        // calendar_series_join + series (event LIKE sname%) as LINQ.
+        //
+        private static List<int> GetAutoPopulateBids(OodHelperContext ctx, int rid)
         {
-            var conn = ctx.Database.GetDbConnection();
-            using (var cmd = conn.CreateCommand())
-            {
-                cmd.CommandText = sql;
-                foreach (var p in parameters)
-                    cmd.Parameters.Add(p);
+            var current = ctx.Calendars.AsNoTracking()
+                .Where(c => c.Rid == rid)
+                .Select(c => new { c.Event, c.Class })
+                .FirstOrDefault();
+            if (current == null)
+                return new List<int>();
 
-                var mustOpen = conn.State != ConnectionState.Open;
-                if (mustOpen) conn.Open();
-                try
-                {
-                    var result = cmd.ExecuteScalar();
-                    if (result == null || result == DBNull.Value) return 0;
-                    return Convert.ToInt32(result);
-                }
-                finally
-                {
-                    if (mustOpen) conn.Close();
-                }
-            }
+            string namePrefixSource = current.Event;
+            string raceClass = current.Class;
+
+            var query =
+                from cs1 in ctx.CalendarSeriesJoins
+                where cs1.Rid == rid
+                join s in ctx.Series on cs1.Sid equals s.Sid
+                where namePrefixSource != null && EF.Functions.Like(namePrefixSource, s.Sname + "%")
+                join cs2 in ctx.CalendarSeriesJoins on cs1.Sid equals cs2.Sid
+                join c2 in ctx.Calendars on cs2.Rid equals c2.Rid
+                where c2.Rid != rid && c2.Class == raceClass
+                join r in ctx.Races on c2.Rid equals r.Rid
+                select r.Bid;
+
+            return query.Distinct().ToList();
         }
-
-        //
-        // Distinct boats that have raced in another race of the same series and class. Used by
-        // both CountAutoPopulate and DoAutoPopulate; bound parameter @rid is the current rid.
-        //
-        private const string AutoPopulateBids = @"
-    SELECT DISTINCT r.bid
-    FROM calendar AS c1
-    INNER JOIN calendar_series_join AS cs1 ON c1.rid = cs1.rid
-    INNER JOIN calendar_series_join AS cs2 ON cs2.sid = cs1.sid
-    INNER JOIN calendar AS c2 ON c2.rid = cs2.rid AND c1.rid <> c2.rid AND c1.class = c2.class
-    INNER JOIN races AS r ON r.rid = c2.rid
-    INNER JOIN series AS s ON s.sid = cs1.sid AND c1.event LIKE s.sname + '%'
-    WHERE c1.rid = @rid";
     }
 }

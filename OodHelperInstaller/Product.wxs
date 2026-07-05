@@ -1,110 +1,48 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
-  <Package Name="OodHelper" Language="1033" Version="1.2.6.0" Manufacturer="David Woakes" UpgradeCode="{586CAE3C-1E00-4522-ABD5-DFEAE4C5DA54}" InstallerVersion="200">
+  <!-- Version is not hardwired: it is read from the built OodHelper.dll's assembly version and passed
+       in as the AppVersion preprocessor variable by OodHelperInstaller.wixproj. -->
+  <Package Name="OodHelper" Language="1033" Version="$(var.AppVersion)" Manufacturer="David Woakes" UpgradeCode="{586CAE3C-1E00-4522-ABD5-DFEAE4C5DA54}" InstallerVersion="200">
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 
     <MediaTemplate EmbedCab="yes" />
 
     <Feature Id="ProductFeature" Title="OodHelperInstaller" Level="1">
+      <!-- Files (the application plus its full dependency closure) are harvested from the app build
+           output at build time into ProductComponents; see OodHelperInstaller.wixproj. -->
       <ComponentGroupRef Id="ProductComponents" />
+      <ComponentRef Id="ApplicationShortcuts" />
+      <ComponentRef Id="CleanupInstallFolder" />
     </Feature>
   </Package>
 
   <Fragment>
-    <StandardDirectory Id="ProgramFilesFolder">
-      <Directory Id="INSTALLFOLDER" Name="OodHelper">
-      </Directory>
+    <StandardDirectory Id="ProgramFiles6432Folder">
+      <Directory Id="INSTALLFOLDER" Name="OodHelper" />
     </StandardDirectory>
     <StandardDirectory Id="ProgramMenuFolder" />
     <StandardDirectory Id="DesktopFolder" />
   </Fragment>
 
   <Fragment>
-    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-      <Component Id="ProgramFilesFolder" Guid="{AA426A21-58BC-4DE5-89F7-21FC16A1CE11}">
-        <RemoveFolder Id="ProgramFilesFolder" On="uninstall" />
-      </Component>
-      <Component Id="MainExecutable">
-        <File Id="OodHelperEXE" Name="OodHelper.exe" Source="$(var.OodHelper.net.TargetPath)" KeyPath="yes">
-          <Shortcut Id="StartMenuOodHelper" WorkingDirectory="INSTALLFOLDER" Directory="ProgramMenuFolder" Name="OodHelper" Advertise="yes" />
-          <Shortcut Id="DesktopOodHelper" WorkingDirectory="INSTALLFOLDER" Directory="DesktopFolder" Name="OodHelper" Advertise="yes" />
-        </File>
-      </Component>
-      <Component Id="MainAssembly">
-        <File Id="OodHelperDLL" Name="OodHelper.dll" Source="$(var.OodHelper.net.TargetDir)\OodHelper.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="RuntimeConfig">
-        <File Id="OodHelperRuntimeConfig" Name="OodHelper.runtimeconfig.json" Source="$(var.OodHelper.net.TargetDir)\OodHelper.runtimeconfig.json" KeyPath="yes" />
-      </Component>
-      <Component Id="DepsJson">
-        <File Id="OodHelperDepsJson" Name="OodHelper.deps.json" Source="$(var.OodHelper.net.TargetDir)\OodHelper.deps.json" KeyPath="yes" />
-      </Component>
-      <Component Id="OodHelperDllConfig">
-        <File Id="OodHelperDllConfig" Name="OodHelper.dll.config" Source="$(var.OodHelper.net.TargetDir)\OodHelper.dll.config" KeyPath="yes" />
-      </Component>
-      <Component Id="AzureCoreDLL">
-        <File Id="AzureCoreDLL" Name="Azure.Core.dll" Source="$(var.OodHelper.net.TargetDir)\Azure.Core.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="AzureIdentityDLL">
-        <File Id="AzureIdentityDLL" Name="Azure.Identity.dll" Source="$(var.OodHelper.net.TargetDir)\Azure.Identity.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="MicrosoftBclAsyncInterfacesDLL">
-        <File Id="MicrosoftBclAsyncInterfacesDLL" Name="Microsoft.Bcl.AsyncInterfaces.dll" Source="$(var.OodHelper.net.TargetDir)\Microsoft.Bcl.AsyncInterfaces.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="MicrosoftDataSqlClientDLL">
-        <File Id="MicrosoftDataSqlClientDLL" Name="Microsoft.Data.SqlClient.dll" Source="$(var.OodHelper.net.TargetDir)\Microsoft.Data.SqlClient.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="MicrosoftExtensionsDependencyInjectionAbstractionsDLL">
-        <File Id="MicrosoftExtensionsDependencyInjectionAbstractionsDLL" Name="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Source="$(var.OodHelper.net.TargetDir)\Microsoft.Extensions.DependencyInjection.Abstractions.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="MicrosoftExtensionsLoggingAbstractionsDLL">
-        <File Id="MicrosoftExtensionsLoggingAbstractionsDLL" Name="Microsoft.Extensions.Logging.Abstractions.dll" Source="$(var.OodHelper.net.TargetDir)\Microsoft.Extensions.Logging.Abstractions.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="MicrosoftIdentityClientDLL">
-        <File Id="MicrosoftIdentityClientDLL" Name="Microsoft.Identity.Client.dll" Source="$(var.OodHelper.net.TargetDir)\Microsoft.Identity.Client.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="MicrosoftIdentityClientExtensionsMsalDLL">
-        <File Id="MicrosoftIdentityClientExtensionsMsalDLL" Name="Microsoft.Identity.Client.Extensions.Msal.dll" Source="$(var.OodHelper.net.TargetDir)\Microsoft.Identity.Client.Extensions.Msal.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="MicrosoftIdentityModelAbstractionsDLL">
-        <File Id="MicrosoftIdentityModelAbstractionsDLL" Name="Microsoft.IdentityModel.Abstractions.dll" Source="$(var.OodHelper.net.TargetDir)\Microsoft.IdentityModel.Abstractions.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="MicrosoftIdentityModelJsonWebTokensDLL">
-        <File Id="MicrosoftIdentityModelJsonWebTokensDLL" Name="Microsoft.IdentityModel.JsonWebTokens.dll" Source="$(var.OodHelper.net.TargetDir)\Microsoft.IdentityModel.JsonWebTokens.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="MicrosoftIdentityModelLoggingDLL">
-        <File Id="MicrosoftIdentityModelLoggingDLL" Name="Microsoft.IdentityModel.Logging.dll" Source="$(var.OodHelper.net.TargetDir)\Microsoft.IdentityModel.Logging.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="MicrosoftIdentityModelProtocolsDLL">
-        <File Id="MicrosoftIdentityModelProtocolsDLL" Name="Microsoft.IdentityModel.Protocols.dll" Source="$(var.OodHelper.net.TargetDir)\Microsoft.IdentityModel.Protocols.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="MicrosoftIdentityModelProtocolsOpenIdConnectDLL">
-        <File Id="MicrosoftIdentityModelProtocolsOpenIdConnectDLL" Name="Microsoft.IdentityModel.Protocols.OpenIdConnect.dll" Source="$(var.OodHelper.net.TargetDir)\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="MicrosoftIdentityModelTokensDLL">
-        <File Id="MicrosoftIdentityModelTokensDLL" Name="Microsoft.IdentityModel.Tokens.dll" Source="$(var.OodHelper.net.TargetDir)\Microsoft.IdentityModel.Tokens.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="MicrosoftSqlServerServerDLL">
-        <File Id="MicrosoftSqlServerServerDLL" Name="Microsoft.SqlServer.Server.dll" Source="$(var.OodHelper.net.TargetDir)\Microsoft.SqlServer.Server.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="MySqlConnectorDLL">
-        <File Id="MySqlConnectorDLL" Name="MySqlConnector.dll" Source="$(var.OodHelper.net.TargetDir)\MySqlConnector.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="SystemClientModelDLL">
-        <File Id="SystemClientModelDLL" Name="System.ClientModel.dll" Source="$(var.OodHelper.net.TargetDir)\System.ClientModel.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="SystemDataOdbcDLL">
-        <File Id="SystemDataOdbcDLL" Name="System.Data.Odbc.dll" Source="$(var.OodHelper.net.TargetDir)\System.Data.Odbc.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="SystemIdentityModelTokensJwtDLL">
-        <File Id="SystemIdentityModelTokensJwtDLL" Name="System.IdentityModel.Tokens.Jwt.dll" Source="$(var.OodHelper.net.TargetDir)\System.IdentityModel.Tokens.Jwt.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="SystemMemoryDataDLL">
-        <File Id="SystemMemoryDataDLL" Name="System.Memory.Data.dll" Source="$(var.OodHelper.net.TargetDir)\System.Memory.Data.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="SystemRuntimeCachingDLL">
-        <File Id="SystemRuntimeCachingDLL" Name="System.Runtime.Caching.dll" Source="$(var.OodHelper.net.TargetDir)\System.Runtime.Caching.dll" KeyPath="yes" />
-      </Component>
-    </ComponentGroup>
+    <!-- Start-menu and desktop shortcuts to the harvested executable. Non-advertised shortcuts can
+         target the installed file by path, so they do not need to live in the file's (harvested)
+         component; a per-user registry value provides the component key path. -->
+    <Component Id="ApplicationShortcuts" Directory="INSTALLFOLDER" Guid="{B8F9A1C2-7E54-4D3A-9C61-2A6F0D4E1B77}">
+      <Shortcut Id="StartMenuOodHelper" Directory="ProgramMenuFolder" Name="OodHelper"
+                Target="[INSTALLFOLDER]OodHelper.exe" WorkingDirectory="INSTALLFOLDER" />
+      <Shortcut Id="DesktopOodHelper" Directory="DesktopFolder" Name="OodHelper"
+                Target="[INSTALLFOLDER]OodHelper.exe" WorkingDirectory="INSTALLFOLDER" />
+      <RegistryValue Root="HKCU" Key="Software\David Woakes\OodHelper" Name="installed"
+                     Type="integer" Value="1" KeyPath="yes" />
+    </Component>
+
+    <!-- Remove the (now empty) install folder on uninstall, since the harvested file components do
+         not author the root directory (SuppressRootDirectory). -->
+    <Component Id="CleanupInstallFolder" Directory="INSTALLFOLDER" Guid="{AA426A21-58BC-4DE5-89F7-21FC16A1CE11}">
+      <RemoveFolder Id="RemoveInstallFolder" On="uninstall" />
+      <RegistryValue Root="HKCU" Key="Software\David Woakes\OodHelper" Name="folder"
+                     Type="integer" Value="1" KeyPath="yes" />
+    </Component>
   </Fragment>
 </Wix>

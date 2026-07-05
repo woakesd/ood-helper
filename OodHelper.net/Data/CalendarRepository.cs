@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -92,6 +93,67 @@ namespace OodHelper.Data
                 //
                 ctx.Calendars.Where(c => c.Rid == rid).ExecuteDelete();
             }
+        }
+
+        public DateTime? GetLatestRaceDate(DateTime onOrBefore)
+        {
+            //
+            // Mirrors the legacy `SELECT MAX(start_date) FROM calendar WHERE is_race = 1
+            // AND start_date <= @today`; Max over an empty set yields null.
+            //
+            using (var ctx = _contextFactory.CreateDbContext())
+                return ctx.Calendars.AsNoTracking()
+                    .Where(c => c.IsRace == true && c.StartDate != null && c.StartDate <= onOrBefore)
+                    .Max(c => c.StartDate);
+        }
+
+        public IReadOnlyList<DateTime> GetRaceDays(string filter)
+        {
+            using (var ctx = _contextFactory.CreateDbContext())
+            {
+                IQueryable<Calendar> q = ctx.Calendars.AsNoTracking()
+                    .Where(c => c.IsRace == true && c.StartDate != null);
+                if (!string.IsNullOrWhiteSpace(filter))
+                {
+                    string pattern = $"%{filter.Trim()}%";
+                    q = q.Where(c => EF.Functions.Like(c.Event, pattern));
+                }
+
+                //
+                // Distinct race days (date only), ordered. Replaces the old DATEPART
+                // year/month/day grouping; EF translates .Date to CAST(... AS date).
+                //
+                return q.Select(c => c.StartDate.Value.Date)
+                    .Distinct()
+                    .OrderBy(d => d)
+                    .ToList();
+            }
+        }
+
+        public IReadOnlyList<Calendar> GetRacesOnDay(DateTime day)
+        {
+            DateTime start = day.Date;
+            DateTime end = start.AddDays(1);
+            using (var ctx = _contextFactory.CreateDbContext())
+                return ctx.Calendars.AsNoTracking()
+                    .Where(c => c.IsRace == true && c.StartDate >= start && c.StartDate < end)
+                    .OrderBy(c => c.StartDate)
+                    .ToList();
+        }
+
+        public IReadOnlyList<Calendar> GetUpcomingUnraced(DateTime from, int days)
+        {
+            //
+            // Mirrors the legacy `WHERE is_race = 1 AND raced = 0 AND start_date BETWEEN @today
+            // AND DATEADD(DAY, 10, @today)`; BETWEEN is inclusive, raced = 0 excludes nulls.
+            //
+            DateTime to = from.AddDays(days);
+            using (var ctx = _contextFactory.CreateDbContext())
+                return ctx.Calendars.AsNoTracking()
+                    .Where(c => c.IsRace == true && c.Raced == false
+                                && c.StartDate >= from && c.StartDate <= to)
+                    .OrderBy(c => c.StartDate)
+                    .ToList();
         }
 
         public void UpdateMemo(int rid, string memo)

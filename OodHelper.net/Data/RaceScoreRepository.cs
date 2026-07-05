@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using OodHelper.Data.Entities;
 
@@ -24,53 +22,45 @@ namespace OodHelper.Data
         public RaceScoreHeader GetHeader(int rid)
         {
             //
-            // Grouped header read ported verbatim from OpenHandicap: the time limit is resolved from
-            // the F/D type, and last_edit is the max across the race's rows.
+            // Header read ported from OpenHandicap: the time limit is resolved from the F/D type,
+            // and last_edit is the max across the race's rows.
             //
-            const string sql = @"
-SELECT c.racetype, c.standard_corrected_time, c.result_calculated, MAX(r.last_edit) AS last_edit,
-CASE c.time_limit_type
-    WHEN 'F' THEN c.time_limit_fixed
-    WHEN 'D' THEN DATEADD(SECOND, c.time_limit_delta, c.start_date)
-END AS time_limit, c.extension
-FROM calendar c LEFT JOIN races r ON c.rid = r.rid
-WHERE c.rid = @rid
-GROUP BY c.racetype, c.start_date, c.result_calculated, c.standard_corrected_time, CASE c.time_limit_type
-    WHEN 'F' THEN c.time_limit_fixed
-    WHEN 'D' THEN DATEADD(SECOND, c.time_limit_delta, c.start_date)
-END, c.extension";
-
             using (var ctx = _contextFactory.CreateDbContext())
             {
-                var conn = ctx.Database.GetDbConnection();
-                using (var cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = sql;
-                    cmd.Parameters.Add(new SqlParameter("@rid", rid));
-
-                    var mustOpen = conn.State != ConnectionState.Open;
-                    if (mustOpen) conn.Open();
-                    try
+                var c = ctx.Calendars.AsNoTracking()
+                    .Where(x => x.Rid == rid)
+                    .Select(x => new
                     {
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            if (!reader.Read())
-                                return null;
+                        x.Racetype,
+                        x.StandardCorrectedTime,
+                        x.ResultCalculated,
+                        x.TimeLimitType,
+                        x.TimeLimitFixed,
+                        x.TimeLimitDelta,
+                        x.StartDate,
+                        x.Extension
+                    })
+                    .FirstOrDefault();
+                if (c == null)
+                    return null;
 
-                            return new RaceScoreHeader(
-                                RaceType: reader.IsDBNull(0) ? null : reader.GetString(0),
-                                StandardCorrectedTime: reader.IsDBNull(1) ? (double?)null : Convert.ToDouble(reader.GetValue(1)),
-                                ResultCalculated: reader.IsDBNull(2) ? (DateTime?)null : reader.GetDateTime(2),
-                                MaxLastEdit: reader.IsDBNull(3) ? (DateTime?)null : reader.GetDateTime(3),
-                                TimeLimit: reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4),
-                                Extension: reader.IsDBNull(5) ? (int?)null : Convert.ToInt32(reader.GetValue(5)));
-                        }
-                    }
-                    finally
-                    {
-                        if (mustOpen) conn.Close();
-                    }
-                }
+                var maxLastEdit = ctx.Races.Where(r => r.Rid == rid).Max(r => (DateTime?)r.LastEdit);
+
+                DateTime? timeLimit;
+                if (c.TimeLimitType == "F")
+                    timeLimit = c.TimeLimitFixed;
+                else if (c.TimeLimitType == "D" && c.StartDate.HasValue && c.TimeLimitDelta.HasValue)
+                    timeLimit = c.StartDate.Value.AddSeconds(c.TimeLimitDelta.Value);
+                else
+                    timeLimit = null;
+
+                return new RaceScoreHeader(
+                    RaceType: c.Racetype,
+                    StandardCorrectedTime: c.StandardCorrectedTime,
+                    ResultCalculated: c.ResultCalculated,
+                    MaxLastEdit: maxLastEdit,
+                    TimeLimit: timeLimit,
+                    Extension: c.Extension);
             }
         }
 
@@ -89,44 +79,35 @@ END, c.extension";
         public IReadOnlyDictionary<int, int> GetPreviousNewRollingHandicaps(int rid)
         {
             //
-            // Batched form of the per-boat InitialiseFields lookup: each boat in the race paired
-            // with the new rolling handicap of its most recent prior race.
+            // For each boat in the race, the new rolling handicap of its most recent prior race
+            // (in-memory equivalent of the old grouped self-join). Boats whose prior race has a null
+            // new_rolling_handicap are omitted, so the caller falls back to the open handicap.
             //
-            const string sql = @"
-SELECT r1.bid, r3.new_rolling_handicap
-FROM races r1
-INNER JOIN races r2 ON r2.bid = r1.bid AND r2.start_date < r1.start_date
-INNER JOIN races r3 ON r3.bid = r1.bid
-WHERE r1.rid = @rid
-GROUP BY r1.bid, r3.start_date, r3.new_rolling_handicap
-HAVING r3.start_date = MAX(r2.start_date)";
-
             var result = new Dictionary<int, int>();
             using (var ctx = _contextFactory.CreateDbContext())
             {
-                var conn = ctx.Database.GetDbConnection();
-                using (var cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = sql;
-                    cmd.Parameters.Add(new SqlParameter("@rid", rid));
+                var ridRows = ctx.Races.AsNoTracking()
+                    .Where(r => r.Rid == rid)
+                    .Select(r => new { r.Bid, r.StartDate })
+                    .ToList();
+                if (ridRows.Count == 0)
+                    return result;
 
-                    var mustOpen = conn.State != ConnectionState.Open;
-                    if (mustOpen) conn.Open();
-                    try
-                    {
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                if (reader.IsDBNull(1)) continue; // null prior nrh -> caller falls back to open
-                                result[reader.GetInt32(0)] = Convert.ToInt32(reader.GetValue(1));
-                            }
-                        }
-                    }
-                    finally
-                    {
-                        if (mustOpen) conn.Close();
-                    }
+                var bids = ridRows.Select(r => r.Bid).Distinct().ToList();
+                var boatRaces = ctx.Races.AsNoTracking()
+                    .Where(r => bids.Contains(r.Bid))
+                    .Select(r => new { r.Bid, r.StartDate, r.NewRollingHandicap })
+                    .ToList()
+                    .ToLookup(r => r.Bid);
+
+                foreach (var r1 in ridRows)
+                {
+                    var latestPrior = boatRaces[r1.Bid]
+                        .Where(r => r.StartDate < r1.StartDate)
+                        .OrderByDescending(r => r.StartDate)
+                        .FirstOrDefault();
+                    if (latestPrior != null && latestPrior.NewRollingHandicap.HasValue)
+                        result[r1.Bid] = latestPrior.NewRollingHandicap.Value;
                 }
             }
             return result;
@@ -134,39 +115,29 @@ HAVING r3.start_date = MAX(r2.start_date)";
 
         public double? GetPriorPerformancePercent(int rid, int bid, DateTime beforeStart)
         {
-            const string sql = @"
-SELECT TOP(1) CONVERT(FLOAT,(achieved_handicap - open_handicap))/open_handicap * 100
-FROM races INNER JOIN calendar ON races.rid = calendar.rid
-WHERE bid = @bid
-AND races.rid != @rid
-AND place != 999
-AND standard_corrected_time <> 0
-AND races.start_date <= @bstart
-ORDER BY races.start_date DESC";
-
+            //
+            // The boat's most recent scored race (other than this one, on or before the given start)
+            // and its achieved-vs-open performance percentage. Null filters mirror the original SQL's
+            // three-valued logic (place/standard_corrected_time NULLs are excluded).
+            //
             using (var ctx = _contextFactory.CreateDbContext())
             {
-                var conn = ctx.Database.GetDbConnection();
-                using (var cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = sql;
-                    cmd.Parameters.Add(new SqlParameter("@bid", bid));
-                    cmd.Parameters.Add(new SqlParameter("@rid", rid));
-                    cmd.Parameters.Add(new SqlParameter("@bstart", beforeStart));
+                var top = ctx.Races.AsNoTracking()
+                    .Where(r => r.Bid == bid
+                                && r.Rid != rid
+                                && r.Place.HasValue && r.Place.Value != 999
+                                && r.StartDate <= beforeStart)
+                    .Join(ctx.Calendars, r => r.Rid, c => c.Rid, (r, c) => new { r, c })
+                    .Where(x => x.c.StandardCorrectedTime.HasValue && x.c.StandardCorrectedTime.Value != 0)
+                    .OrderByDescending(x => x.r.StartDate)
+                    .Select(x => new { x.r.AchievedHandicap, x.r.OpenHandicap })
+                    .FirstOrDefault();
 
-                    var mustOpen = conn.State != ConnectionState.Open;
-                    if (mustOpen) conn.Open();
-                    try
-                    {
-                        var result = cmd.ExecuteScalar();
-                        if (result == null || result == DBNull.Value) return null;
-                        return Convert.ToDouble(result);
-                    }
-                    finally
-                    {
-                        if (mustOpen) conn.Close();
-                    }
-                }
+                if (top == null || !top.AchievedHandicap.HasValue
+                    || !top.OpenHandicap.HasValue || top.OpenHandicap.Value == 0)
+                    return null;
+
+                return (top.AchievedHandicap.Value - top.OpenHandicap.Value) * 100.0 / top.OpenHandicap.Value;
             }
         }
 
@@ -177,9 +148,8 @@ ORDER BY races.start_date DESC";
         public void DeleteDidNotCompete(int rid)
         {
             using (var ctx = _contextFactory.CreateDbContext())
-                ctx.Database.ExecuteSqlRaw(
-                    "DELETE FROM races WHERE rid = @rid AND finish_code IN ('DNC', 'BAD')",
-                    new SqlParameter("@rid", rid));
+                ctx.Races.Where(r => r.Rid == rid && (r.FinishCode == "DNC" || r.FinishCode == "BAD"))
+                    .ExecuteDelete();
         }
 
         public void CommitRows(IEnumerable<Race> rows)
@@ -230,42 +200,38 @@ ORDER BY races.start_date DESC";
         public void UpdateCalendarSct(int rid, double sct)
         {
             using (var ctx = _contextFactory.CreateDbContext())
-                ctx.Database.ExecuteSqlRaw(
-                    "UPDATE calendar SET standard_corrected_time = @sct, raced = 1 WHERE rid = @rid",
-                    new SqlParameter("@sct", sct),
-                    new SqlParameter("@rid", rid));
+                ctx.Calendars.Where(c => c.Rid == rid)
+                    .ExecuteUpdate(s => s
+                        .SetProperty(c => c.StandardCorrectedTime, (double?)sct)
+                        .SetProperty(c => c.Raced, (bool?)true));
         }
 
         public void MarkResultCalculated(int rid)
         {
+            var now = DateTime.Now;
             using (var ctx = _contextFactory.CreateDbContext())
-                ctx.Database.ExecuteSqlRaw(
-                    "UPDATE calendar SET result_calculated = GETDATE(), raced = 1 WHERE rid = @rid",
-                    new SqlParameter("@rid", rid));
+                ctx.Calendars.Where(c => c.Rid == rid)
+                    .ExecuteUpdate(s => s
+                        .SetProperty(c => c.ResultCalculated, (DateTime?)now)
+                        .SetProperty(c => c.Raced, (bool?)true));
         }
 
         public void UpdateBoatRollingHandicaps(int rid, IEnumerable<(int bid, int newRollingHandicap)> handicaps)
         {
-            const string sql = @"
-UPDATE boats
-SET rolling_handicap = @new_rolling_handicap
-WHERE bid = @bid
-AND NOT EXISTS (SELECT 1
-    FROM races r1, races r2
-    WHERE r1.rid = @rid
-    AND r2.rid <> r1.rid
-    AND r2.bid = r1.bid
-    AND r1.bid = @bid
-    AND r2.start_date > r1.start_date)";
-
+            //
+            // Set the boat's rolling handicap, but only when this race is the boat's latest race —
+            // i.e. it has no later race than its entry in this race (the old NOT EXISTS guard).
+            //
             using (var ctx = _contextFactory.CreateDbContext())
             {
                 foreach (var (bid, nrh) in handicaps)
                 {
-                    ctx.Database.ExecuteSqlRaw(sql,
-                        new SqlParameter("@new_rolling_handicap", nrh),
-                        new SqlParameter("@bid", bid),
-                        new SqlParameter("@rid", rid));
+                    var thisStart = ctx.Races.Where(r => r.Rid == rid && r.Bid == bid)
+                        .Select(r => r.StartDate).FirstOrDefault();
+                    bool hasLater = ctx.Races.Any(r => r.Bid == bid && r.Rid != rid && r.StartDate > thisStart);
+                    if (!hasLater)
+                        ctx.Boats.Where(b => b.Bid == bid)
+                            .ExecuteUpdate(s => s.SetProperty(b => b.RollingHandicap, (int?)nrh));
                 }
             }
         }

@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections;
-using System.Data;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Microsoft.Extensions.DependencyInjection;
+using OodHelper.Data;
 
 namespace OodHelper
 {
@@ -22,31 +14,27 @@ namespace OodHelper
         public EntrySheet(int rid)
         {
             InitializeComponent();
-            Db c = new Db(@"SELECT event, class, start_date, ood, 
-                time_limit_type, time_limit_fixed, time_limit_delta, extension
-                FROM calendar
-                WHERE rid = @rid");
-            Hashtable p = new Hashtable();
-            p["rid"] = rid;
-            Hashtable d = c.GetHashtable(p);
-            EventName.Text = d["event"] as string;
-            ClassName.Text = d["class"] as string;
-            DateTime? dt = d["start_date"] as DateTime?;
+            // This page is not constructed through DI, so its repository is resolved from the
+            // container here, mirroring the other non-DI'd print screens.
+            var c = App.Services.GetRequiredService<ICalendarRepository>().Get(rid);
+            EventName.Text = c.Event;
+            ClassName.Text = c.Class;
+            DateTime? dt = c.StartDate;
             StartDate.Text = dt.Value.ToString("dd MMM yyyy");
             StartTime.Text = dt.Value.ToString("HH:mm");
-            switch (d["time_limit_type"] as string)
+            switch (c.TimeLimitType)
             {
                 case "F":
                     Fixed.Visibility = Visibility.Visible;
                     Delta.Visibility = Visibility.Collapsed;
-                    if (d["time_limit_fixed"] != DBNull.Value)
-                        TimeLimit.Text = ((DateTime)d["time_limit_fixed"]).ToString("HH:mm");
+                    if (c.TimeLimitFixed.HasValue)
+                        TimeLimit.Text = c.TimeLimitFixed.Value.ToString("HH:mm");
                     break;
                 case "D":
                     Fixed.Visibility = Visibility.Collapsed;
                     Delta.Visibility = Visibility.Visible;
-                    if (d["time_limit_delta"] != DBNull.Value)
-                        TimeLimit.Text = (new TimeSpan(0, 0, (int)d["time_limit_delta"])).ToString("hh\\:mm");
+                    if (c.TimeLimitDelta.HasValue)
+                        TimeLimit.Text = (new TimeSpan(0, 0, c.TimeLimitDelta.Value)).ToString("hh\\:mm");
                     break;
                 default:
                     Fixed.Visibility = Visibility.Collapsed;
@@ -54,11 +42,11 @@ namespace OodHelper
                     TimeLimit.Text = "No Time Limit";
                     break;
             }
-            if (d["extension"] != DBNull.Value)
-                Extension.Text = (new TimeSpan(0, 0, (int)d["extension"])).ToString("hh\\:mm");
+            if (c.Extension.HasValue)
+                Extension.Text = (new TimeSpan(0, 0, c.Extension.Value)).ToString("hh\\:mm");
             else
                 Extension.Text = "No Extension";
-            OOD.Text = d["ood"] as string;
+            OOD.Text = c.Ood;
         }
     }
 }
