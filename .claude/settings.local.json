@@ -24,7 +24,10 @@
       "Bash(find ~/.nuget/packages/wixtoolset.sdk -name \"*.targets\" 2>/dev/null | head; echo \"---PROPS---\"; grep -rl \"DefineConstants\" ~/.nuget/packages/wixtoolset.sdk/*/build 2>/dev/null | head)",
       "Read(//c/Users/david/.nuget/packages/wixtoolset.sdk/**)",
       "Bash(grep -n \"DefineConstants\\\\|CompileWix\\\\|<Target Name=\\\\\"Compile\\\\|Name=\\\\\"Compile\\\\|CoreCompile\\\\|WixBuild\\\\|BeforeTargets\" /c/Users/david/.nuget/packages/wixtoolset.sdk/4.0.5/tools/wix.targets | head -50)",
-      "Read(//c/Users/david/.nuget/packages/wixtoolset.sdk/4.0.5/tools/**)"
+      "Read(//c/Users/david/.nuget/packages/wixtoolset.sdk/4.0.5/tools/**)",
+      "Bash(dotnet build *)",
+      "Bash(powershell -NoProfile -Command \"\\(Get-Item 'C:\\\\Users\\\\david\\\\source\\\\repos\\\\ood-helper\\\\OodHelper.net\\\\bin\\\\Release\\\\net10.0-windows\\\\runtimes\\\\win-x64\\\\native\\\\e_sqlite3.dll'\\).VersionInfo.ProductVersion\")",
+      "Bash(mkdir -p /c/Users/david/AppData/Local/Temp/claude/c--Users-david-source-repos-ood-helper/9865a1d1-eeb7-4081-974e-9548087ed1cc/scratchpad/sqltest)"
     ],
     "additionalDirectories": [
       "C:\\Users\\david\\AppData\\Local\\Temp\\claude\\c--Users-david-source-repos-ood-helper\\6b4ab461-492a-4000-ae03-4728ea4af0d6\\scratchpad\\dbprobe"

@@ -22,6 +22,12 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.9" />
+    <!-- Pin SQLitePCLRaw to the 3.x line so the bundled native SQLite is 3.50.3, above the
+         GHSA-2m69-gcr7-jv3q vulnerable range (<= 2.1.11) that EF Core's transitive 2.1.11 falls in. -->
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.3" />
+    <PackageReference Include="SQLitePCLRaw.core" Version="3.0.3" />
+    <PackageReference Include="SQLitePCLRaw.provider.e_sqlite3" Version="3.0.3" />
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.50.3" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.9" />
     <PackageReference Include="MySqlConnector" Version="2.5.0" />
     <PackageReference Include="System.Data.Odbc" Version="8.0.0" />
