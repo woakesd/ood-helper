@@ -19,7 +19,7 @@ namespace OodHelper.Data
         // Reads
         // -------------------------------------------------------------------------------------
 
-        public Calendar GetCalendar(int rid)
+        public Calendar? GetCalendar(int rid)
         {
             using (var ctx = _contextFactory.CreateDbContext())
             {
@@ -316,7 +316,7 @@ namespace OodHelper.Data
         // Entry editing (SelectBoats)
         // -------------------------------------------------------------------------------------
 
-        public void AddRaceEntry(int rid, int bid, DateTime startDate, string handicapStatus,
+        public void AddRaceEntry(int rid, int bid, DateTime startDate, string? handicapStatus,
             int? openHandicap, int? rollingHandicap)
         {
             var row = new Race
@@ -391,8 +391,8 @@ namespace OodHelper.Data
             if (current == null)
                 return new List<int>();
 
-            string namePrefixSource = current.Event;
-            string raceClass = current.Class;
+            string? namePrefixSource = current.Event;
+            string? raceClass = current.Class;
 
             var query =
                 from cs1 in ctx.CalendarSeriesJoins

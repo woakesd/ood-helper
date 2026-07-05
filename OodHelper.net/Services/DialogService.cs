@@ -95,7 +95,7 @@ namespace OodHelper.Services
             };
         }
 
-        public int[] ShowRaceChooser()
+        public int[]? ShowRaceChooser()
         {
             var chooser = new RaceChooser();
             if (chooser.ShowDialog() != true) return null;
@@ -158,7 +158,7 @@ namespace OodHelper.Services
             return view.ShowDialog() == true ? vm.SelectedId : null;
         }
 
-        public string PickOpenFile(string filter)
+        public string? PickOpenFile(string filter)
         {
             var dlg = new Microsoft.Win32.OpenFileDialog { Filter = filter };
             return dlg.ShowDialog() == true ? dlg.FileName : null;

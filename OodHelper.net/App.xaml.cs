@@ -13,7 +13,7 @@ namespace OodHelper
     /// </summary>
     public partial class App
     {
-        public static IServiceProvider Services { get; private set; }
+        public static IServiceProvider Services { get; private set; } = null!;
 
         private static void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {

@@ -6,7 +6,7 @@
     <RootNamespace>OodHelper</RootNamespace>
     <AssemblyName>OodHelper</AssemblyName>
     <StartupObject>OodHelper.App</StartupObject>
-    <Nullable>disable</Nullable>
+    <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>

@@ -304,7 +304,7 @@ namespace OodHelper.Data
                 list.Add(new Series
                 {
                     Sid = ReqInt(r, "sid"),
-                    Sname = GetString(r, "sname"),
+                    Sname = GetString(r, "sname") ?? string.Empty,
                     Discards = GetString(r, "discards")
                 });
             }
@@ -333,7 +333,7 @@ namespace OodHelper.Data
                 {
                     Sid = ReqInt(r, "sid"),
                     Bid = ReqInt(r, "bid"),
-                    Division = GetString(r, "division"),
+                    Division = GetString(r, "division") ?? string.Empty,
                     Entered = GetInt(r, "entered"),
                     Gross = GetDouble(r, "gross"),
                     Nett = GetDouble(r, "nett"),
@@ -407,7 +407,7 @@ namespace OodHelper.Data
         //
         private static int ReqInt(DbDataReader r, string col) => Convert.ToInt32(r.GetValue(r.GetOrdinal(col)));
 
-        private static string GetString(DbDataReader r, string col)
+        private static string? GetString(DbDataReader r, string col)
         {
             var o = r.GetOrdinal(col);
             return r.IsDBNull(o) ? null : r.GetValue(o).ToString();
@@ -453,7 +453,7 @@ namespace OodHelper.Data
                 return g;
             if (v is byte[] b)
                 return new Guid(b);
-            return Guid.Parse(v.ToString());
+            return Guid.Parse(v.ToString()!);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace OodHelper.Sun
             _dataContext.SunRiseTable.Columns.Add("sunset", typeof (DateTime));
             InitializeComponent();
             var calc = new Sun(55.996700991558, -3.409237861633301);
-            var workDate = new DateTime(Int32.Parse((Year.SelectedItem as ComboBoxItem).Tag as string), 1, 1);
+            var workDate = new DateTime(Int32.Parse((Year.SelectedItem as ComboBoxItem)!.Tag as string ?? "0"), 1, 1);
             var endData = workDate.AddYears(1);
             while (workDate < endData)
             {
@@ -71,7 +71,7 @@ namespace OodHelper.Sun
 
         private class Data : NotifyPropertyChanged
         {
-            public DataTable SunRiseTable;
+            public DataTable SunRiseTable = new DataTable();
 
             public DataView SunDataView
             {

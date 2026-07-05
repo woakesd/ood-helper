@@ -23,7 +23,7 @@ namespace OodHelper.Maintain
 
         public string Keel
         {
-            get { return _boat.Keel; }
+            get { return _boat.Keel ?? string.Empty; }
             set { _boat.Keel = value; OnPropertyChanged("Keel"); }
         }
 
@@ -35,13 +35,13 @@ namespace OodHelper.Maintain
 
         public string HullType
         {
-            get { return _boat.Hulltype; }
+            get { return _boat.Hulltype ?? string.Empty; }
             set { _boat.Hulltype = value; OnPropertyChanged("HullType"); }
         }
 
         public string HandicapStatus
         {
-            get { return _boat.HandicapStatus; }
+            get { return _boat.HandicapStatus ?? string.Empty; }
             set { _boat.HandicapStatus = value; OnPropertyChanged("HandicapStatus"); }
         }
 
@@ -89,7 +89,7 @@ namespace OodHelper.Maintain
 
         public string EnginePropeller
         {
-            get { return _boat.EnginePropeller; }
+            get { return _boat.EnginePropeller ?? string.Empty; }
             set { _boat.EnginePropeller = value; OnPropertyChanged("EnginePropeller"); }
         }
 
@@ -100,31 +100,31 @@ namespace OodHelper.Maintain
 
         public string BoatName
         {
-            get { return _boat.Boatname; }
+            get { return _boat.Boatname ?? string.Empty; }
             set { _boat.Boatname = value; OnPropertyChanged("BoatName"); }
         }
 
         public string BoatClass
         {
-            get { return _boat.Boatclass; }
+            get { return _boat.Boatclass ?? string.Empty; }
             set { _boat.Boatclass = value; OnPropertyChanged("BoatClass"); }
         }
 
         public string SailNumber
         {
-            get { return _boat.Sailno; }
+            get { return _boat.Sailno ?? string.Empty; }
             set { _boat.Sailno = value; OnPropertyChanged("SailNumber"); }
         }
 
         public string Deviations
         {
-            get { return _boat.Deviations; }
+            get { return _boat.Deviations ?? string.Empty; }
             set { _boat.Deviations = value; OnPropertyChanged("Deviations"); }
         }
 
         public string BoatMemo
         {
-            get { return _boat.Boatmemo; }
+            get { return _boat.Boatmemo ?? string.Empty; }
             set { _boat.Boatmemo = value; OnPropertyChanged("BoatMemo"); }
         }
 

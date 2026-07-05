@@ -4,24 +4,24 @@ using System.Collections.Generic;
 namespace OodHelper.Data
 {
     /// <summary>Series header (display name + discard profile) read from the <c>series</c> table.</summary>
-    public sealed record SeriesResultHeader(string Name, string Discards);
+    public sealed record SeriesResultHeader(string Name, string? Discards);
 
     /// <summary>
     /// A race that belongs to the series and needs (re)scoring before the series is totalled.
     /// Mirrors the old grouped calendar/join/races SELECT in <c>RaceSeriesResult</c>.
     /// </summary>
-    public sealed record SeriesRaceToScore(int Rid, string RaceType, string Handicapping,
-        string EventName, string ClassName);
+    public sealed record SeriesRaceToScore(int Rid, string? RaceType, string? Handicapping,
+        string? EventName, string? ClassName);
 
     /// <summary>One boat's result row in one race of the series, used to build the per-class table.</summary>
-    public sealed record SeriesEntryRow(string ClassName, int Rid, DateTime StartDate, int Bid,
-        double? Points, double? OverridePoints, string FinishCode);
+    public sealed record SeriesEntryRow(string? ClassName, int Rid, DateTime StartDate, int Bid,
+        double? Points, double? OverridePoints, string? FinishCode);
 
     /// <summary>A computed boat standing to persist into <c>series_results</c>.</summary>
     public sealed record SeriesResultRow(int Bid, int Entered, double Gross, double Nett, int Place);
 
     /// <summary>Boat identity columns the results grid shows alongside the scores.</summary>
-    public sealed record BoatDisplayInfo(string Boatname, string Boatclass, string Sailno);
+    public sealed record BoatDisplayInfo(string? Boatname, string? Boatclass, string? Sailno);
 
     /// <summary>
     /// EF Core data access for the series scoring/display pass. Replaces the inline <c>Db</c> SQL that
@@ -32,7 +32,7 @@ namespace OodHelper.Data
     public interface ISeriesResultRepository
     {
         /// <summary>Series name + discard profile, or null when the sid is unknown.</summary>
-        SeriesResultHeader GetSeriesHeader(int sid);
+        SeriesResultHeader? GetSeriesHeader(int sid);
 
         /// <summary>
         /// The series' raced races (those with at least one race row), ordered by start date — the

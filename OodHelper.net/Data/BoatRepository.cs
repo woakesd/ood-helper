@@ -35,7 +35,7 @@ namespace OodHelper.Data
             }
         }
 
-        public Boat Get(int bid)
+        public Boat? Get(int bid)
         {
             using (var ctx = _contextFactory.CreateDbContext())
             {

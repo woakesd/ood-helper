@@ -36,10 +36,11 @@ namespace OodHelper.Helpers
             }
         }
         
-        static public List<childItem> FindVisualChild<childItem>(DependencyObject obj)
+        static public List<childItem> FindVisualChild<childItem>(DependencyObject? obj)
             where childItem : DependencyObject
         {
             List<childItem> ret = new List<childItem>();
+            if (obj == null) return ret;
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
             {
                 DependencyObject child = VisualTreeHelper.GetChild(obj, i);

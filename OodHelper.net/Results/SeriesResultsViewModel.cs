@@ -26,7 +26,7 @@ namespace OodHelper.Results
             _scoreRepo = scoreRepo;
         }
 
-        public string SeriesName { get; private set; }
+        public string? SeriesName { get; private set; }
 
         public IReadOnlyList<SeriesDisplayViewModel> Displays { get; private set; } =
             new List<SeriesDisplayViewModel>();
@@ -56,7 +56,7 @@ namespace OodHelper.Results
                 progress?.Report(new DownloadProgress(Percent(i, races.Count),
                     "Calculating " + race.EventName + " - " + race.ClassName));
 
-                IRaceScore scorer = null;
+                IRaceScore? scorer = null;
                 switch (raceType)
                 {
                     case CalendarModel.RaceTypes.AverageLap:
@@ -117,10 +117,11 @@ namespace OodHelper.Results
             var seriesData = new Dictionary<string, Dictionary<int, SeriesEvent>>();
             foreach (var re in entryRows)
             {
-                if (!seriesData.TryGetValue(re.ClassName, out var classData))
+                var className = re.ClassName ?? string.Empty;
+                if (!seriesData.TryGetValue(className, out var classData))
                 {
                     classData = new Dictionary<int, SeriesEvent>();
-                    seriesData[re.ClassName] = classData;
+                    seriesData[className] = classData;
                 }
                 if (!classData.TryGetValue(re.Rid, out var ev))
                 {
@@ -185,7 +186,7 @@ namespace OodHelper.Results
         private static int Percent(int index, int count) =>
             count <= 0 ? 0 : (int)(index * 100L / count);
 
-        private static int[] ParseDiscardProfile(string seriesDiscards)
+        private static int[] ParseDiscardProfile(string? seriesDiscards)
         {
             var discards = seriesDiscards;
             if (string.IsNullOrEmpty(discards))

@@ -29,7 +29,7 @@ namespace OodHelper.Results
         private readonly IBoatRepository _boatRepo;
         private readonly IRaceResultsRepository _raceRepo;
 
-        private Timer _timer;
+        private Timer? _timer;
 
         public SelectBoats(ResultsEditor[] raceEdits)
         {
@@ -67,7 +67,7 @@ namespace OodHelper.Results
                 var bts = new DataTable {TableName = "boats"};
                 bts.Columns.Add(new DataColumn("bid", typeof (int)));
                 var pk = new DataColumn[1];
-                pk[0] = bts.Columns["bid"];
+                pk[0] = bts.Columns["bid"]!;
                 bts.PrimaryKey = pk;
                 bts.Columns.Add(new DataColumn("boatname"));
                 bts.Columns.Add(new DataColumn("boatclass"));
@@ -128,7 +128,7 @@ namespace OodHelper.Results
             _timer.Start();
         }
 
-        private void TimerElapsed(object sender, ElapsedEventArgs e)
+        private void TimerElapsed(object? sender, ElapsedEventArgs e)
         {
             Dispatcher.Invoke(new DFilterBoats(FilterBoats), null);
         }
@@ -190,13 +190,13 @@ namespace OodHelper.Results
             {
                 var r = dt.NewRow();
                 r["bid"] = b.Bid;
-                r["boatname"] = (object) b.Boatname ?? DBNull.Value;
-                r["boatclass"] = (object) b.Boatclass ?? DBNull.Value;
-                r["sailno"] = (object) b.Sailno ?? DBNull.Value;
-                r["dinghy"] = (object) b.Dinghy ?? DBNull.Value;
-                r["handicap_status"] = (object) b.HandicapStatus ?? DBNull.Value;
-                r["open_handicap"] = (object) b.OpenHandicap ?? DBNull.Value;
-                r["rolling_handicap"] = (object) b.RollingHandicap ?? DBNull.Value;
+                r["boatname"] = (object?) b.Boatname ?? DBNull.Value;
+                r["boatclass"] = (object?) b.Boatclass ?? DBNull.Value;
+                r["sailno"] = (object?) b.Sailno ?? DBNull.Value;
+                r["dinghy"] = (object?) b.Dinghy ?? DBNull.Value;
+                r["handicap_status"] = (object?) b.HandicapStatus ?? DBNull.Value;
+                r["open_handicap"] = (object?) b.OpenHandicap ?? DBNull.Value;
+                r["rolling_handicap"] = (object?) b.RollingHandicap ?? DBNull.Value;
                 dt.Rows.Add(r);
             }
             dt.AcceptChanges();
@@ -225,7 +225,7 @@ namespace OodHelper.Results
                     var alreadySelected = false;
                     foreach (SelectedBoats selboat in _sbt)
                     {
-                        if (((DataView) selboat.Boats.ItemsSource).Table.Select("bid = " + rv["bid"]).Length > 0)
+                        if (((DataView) selboat.Boats.ItemsSource!).Table!.Select("bid = " + rv["bid"]).Length > 0)
                         {
                             alreadySelected = true;
                         }
@@ -236,7 +236,7 @@ namespace OodHelper.Results
                     var choices = _rules.Where(t => t.AppliesToBoat(rv)).ToList();
 
                     if (choices.Count == 1)
-                        AddBoat((SelectedBoats) _boatClasses[choices[0].Name], rv);
+                        AddBoat((SelectedBoats) _boatClasses[choices[0].Name!]!, rv);
                     else if (choices.Count > 1)
                     {
                         var rs = new RuleSelector(choices);
@@ -244,7 +244,7 @@ namespace OodHelper.Results
                         if (!val.HasValue || !val.Value) continue;
 
                         var rc = rs.RuleChoice.SelectedItem as BoatSelectRule;
-                        if (rc != null) AddBoat((SelectedBoats) _boatClasses[rc.Name], rv);
+                        if (rc != null) AddBoat((SelectedBoats) _boatClasses[rc.Name!]!, rv);
                     }
                     else
                     {
@@ -255,11 +255,11 @@ namespace OodHelper.Results
                             if (!val.HasValue || !val.Value) continue;
 
                             var rc = rs.RuleChoice.SelectedItem as BoatSelectRule;
-                            if (rc != null) AddBoat((SelectedBoats) _boatClasses[rc.Name], rv);
+                            if (rc != null) AddBoat((SelectedBoats) _boatClasses[rc.Name!]!, rv);
                         }
                         else
                         {
-                            AddBoat((SelectedBoats) _boatClasses[_rules.First().Name], rv);
+                            AddBoat((SelectedBoats) _boatClasses[_rules.First().Name!]!, rv);
                         }
                     }
                 }
@@ -268,7 +268,7 @@ namespace OodHelper.Results
 
         private void AddBoat(SelectedBoats sbt, DataRowView rv)
         {
-            DataRow dr = ((DataView) sbt.Boats.ItemsSource).Table.NewRow();
+            DataRow dr = ((DataView) sbt.Boats.ItemsSource!).Table!.NewRow();
             dr["bid"] = rv["bid"];
             dr["boatname"] = rv["boatname"];
             dr["boatclass"] = rv["boatclass"];
@@ -276,8 +276,8 @@ namespace OodHelper.Results
             dr["handicap_status"] = rv["handicap_status"];
             dr["open_handicap"] = rv["open_handicap"];
             dr["rolling_handicap"] = rv["rolling_handicap"];
-            ((DataView) sbt.Boats.ItemsSource).Table.Rows.Add(dr);
-            ((DataView) sbt.Boats.ItemsSource).Table.AcceptChanges();
+            ((DataView) sbt.Boats.ItemsSource).Table!.Rows.Add(dr);
+            ((DataView) sbt.Boats.ItemsSource).Table!.AcceptChanges();
             ((DataView) sbt.Boats.ItemsSource).Sort = "Boatname";
             Notify.Text = string.Format("Added {0} to {1}", new[] {dr["boatname"], sbt.FleetName.Content});
         }
@@ -289,7 +289,7 @@ namespace OodHelper.Results
             {
                 IReadOnlyList<ResultRowViewModel> resultModels = _reds[i].Rows;
                 int rid = _sbt[i].RaceId;
-                DataTable sb = ((DataView) _sbt[i].Boats.ItemsSource).Table;
+                DataTable sb = ((DataView) _sbt[i].Boats.ItemsSource!).Table!;
                 var selectedBids = new Hashtable();
                 //
                 // For each boat in selected boats check to see if it is in the race edit control,
@@ -389,22 +389,22 @@ namespace OodHelper.Results
 
             #region ICommand Members
 
-            public bool CanExecute(object parameter)
+            public bool CanExecute(object? parameter)
             {
                 return true;
             }
 
             // disable unused event warning
 #pragma warning disable 67
-            public event EventHandler CanExecuteChanged;
+            public event EventHandler? CanExecuteChanged;
 #pragma warning restore 67
 
-            public void Execute(object parameter)
+            public void Execute(object? parameter)
             {
                 foreach (var fleet in _fromGrid.SelectedItems)
                 {
                     var drv = fleet as DataRowView;
-                    var toTable = ((DataView) _toGrid.ItemsSource).Table;
+                    var toTable = ((DataView) _toGrid.ItemsSource!).Table!;
                     var n = toTable.NewRow();
                     if (drv != null)
                     {
@@ -418,8 +418,8 @@ namespace OodHelper.Results
                 {
                     var drv = _fromGrid.SelectedItems[0] as DataRowView;
                     if (drv == null) continue;
-                    drv.DataView.Table.Rows.Remove(drv.Row);
-                    drv.DataView.Table.AcceptChanges();
+                    drv.DataView.Table!.Rows.Remove(drv.Row);
+                    drv.DataView.Table!.AcceptChanges();
                 }
             }
 

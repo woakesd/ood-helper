@@ -13,10 +13,10 @@ namespace OodHelper.ViewModels
         private readonly BoatSelectRule _root;
 
         /// <summary>Raised when the dialog should close; argument is the DialogResult.</summary>
-        public event Action<bool> CloseRequested;
+        public event Action<bool>? CloseRequested;
 
         [ObservableProperty]
-        private string _ruleName;
+        private string? _ruleName;
 
         public ObservableCollection<SelectRuleNodeViewModel> Rules { get; }
 
@@ -26,7 +26,7 @@ namespace OodHelper.ViewModels
 
             if (id.HasValue)
             {
-                _root = repository.GetTree(id.Value);
+                _root = repository.GetTree(id.Value) ?? new BoatSelectRule { Application = Apply.Any };
                 RuleName = _root.Name;
             }
             else

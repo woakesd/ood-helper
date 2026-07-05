@@ -18,7 +18,7 @@ namespace OodHelper.Rules
             return new[] { string.Empty };
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object? ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             var strValue = value as string;
             if (strValue == null) return null;

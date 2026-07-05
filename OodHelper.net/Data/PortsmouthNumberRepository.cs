@@ -34,7 +34,7 @@ namespace OodHelper.Data
             }
         }
 
-        public PortsmouthNumber Get(Guid id)
+        public PortsmouthNumber? Get(Guid id)
         {
             using (var ctx = _contextFactory.CreateDbContext())
             {
@@ -46,7 +46,7 @@ namespace OodHelper.Data
         {
             using (var ctx = _contextFactory.CreateDbContext())
             {
-                PortsmouthNumber entity = pn.Id == Guid.Empty ? null : ctx.PortsmouthNumbers.Find(pn.Id);
+                PortsmouthNumber? entity = pn.Id == Guid.Empty ? null : ctx.PortsmouthNumbers.Find(pn.Id);
                 if (entity == null)
                 {
                     if (pn.Id == Guid.Empty) pn.Id = Guid.NewGuid();

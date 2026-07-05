@@ -95,28 +95,28 @@ namespace OodHelper.Results
 
             #region ICommand Members
 
-            public bool CanExecute(object parameter)
+            public bool CanExecute(object? parameter)
             {
                 return true;
             }
 
             // disable unused event warning
 #pragma warning disable 67
-            public event EventHandler CanExecuteChanged;
+            public event EventHandler? CanExecuteChanged;
 #pragma warning restore 67
 
-            public void Execute(object parameter)
+            public void Execute(object? parameter)
             {
                 bool reload = false;
-                ResultsEditor rr = (ResultsEditor) parameter;
+                ResultsEditor rr = (ResultsEditor) parameter!;
 
                 foreach (DataGridCellInfo inf in rr.Races.SelectedCells)
                 {
-                    ResultRowViewModel rv = inf.Item as ResultRowViewModel;
+                    ResultRowViewModel? rv = inf.Item as ResultRowViewModel;
                     if (rv == null) continue;
                     int bid = rv.Bid;
                     BoatView edit = new BoatView(bid);
-                    if (edit.ShowDialog().Value)
+                    if (edit.ShowDialog() == true)
                     {
                         _owner._vm.ApplyEditedBoatHandicaps(rr.Rid, bid);
                         reload = true;
@@ -143,24 +143,24 @@ namespace OodHelper.Results
 
             #region ICommand Members
 
-            public bool CanExecute(object parameter)
+            public bool CanExecute(object? parameter)
             {
                 return true;
             }
 
             // disable unused event warning
 #pragma warning disable 67
-            public event EventHandler CanExecuteChanged;
+            public event EventHandler? CanExecuteChanged;
 #pragma warning restore 67
 
-            public void Execute(object parameter)
+            public void Execute(object? parameter)
             {
-                DataGrid races = (DataGrid) parameter;
+                DataGrid races = (DataGrid) parameter!;
                 if (races.SelectedCells.Count > 0)
                 {
                     foreach (DataGridCellInfo inf in races.SelectedCells)
                     {
-                        ResultRowViewModel rv = inf.Item as ResultRowViewModel;
+                        ResultRowViewModel? rv = inf.Item as ResultRowViewModel;
                         if (rv == null) continue;
                         _owner._vm.MoveToFleet(_fromRid, _toRid, rv.Bid);
                     }
@@ -184,9 +184,9 @@ namespace OodHelper.Results
                     Working w = new Working(App.Current.MainWindow);
                     w.Show();
                     XpsDocumentWriter write = PrintQueue.CreateXpsDocumentWriter(pd.PrintQueue);
-                    VisualsToXpsDocument collator = write.CreateVisualsCollator() as VisualsToXpsDocument;
+                    VisualsToXpsDocument? collator = write.CreateVisualsCollator() as VisualsToXpsDocument;
                     Size ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
-                    collator.BeginBatchWrite();
+                    collator!.BeginBatchWrite();
                     System.Threading.Tasks.Task t = System.Threading.Tasks.Task.Factory.StartNew(() =>
                         {
                             w.SetRange(0, reds.Length);
@@ -195,7 +195,7 @@ namespace OodHelper.Results
                                 ResultsEditor red = reds[i];
                                 if (red.PrintInclude)
                                 {
-                                    string msg = null;
+                                    string msg = "";
                                     Dispatcher.Invoke(new Action(delegate()
                                     {
                                         msg = string.Format("Printing {0}", red.RaceName);
@@ -204,8 +204,8 @@ namespace OodHelper.Results
                                     System.Threading.Thread.Sleep(50);
                                     Dispatcher.Invoke(new Action(delegate()
                                     {
-                                        Page p = null;
-                                        IResultsPage rp = null;
+                                        Page? p = null;
+                                        IResultsPage? rp = null;
 
                                         switch (red.Handicap)
                                         {
@@ -217,13 +217,13 @@ namespace OodHelper.Results
                                                 break;
                                         }
                                         rp = p as IResultsPage;
-                                        p.Width = pd.PrintableAreaWidth;
+                                        p!.Width = pd.PrintableAreaWidth;
                                         p.Measure(ps);
                                         p.Arrange(new Rect(new Point(0, 0), ps));
                                         p.UpdateLayout();
 
                                         int pno = 1;
-                                        while (rp.PrintPage(collator, pno)) pno++;
+                                        while (rp!.PrintPage(collator, pno)) pno++;
                                     }));
                                 }
                             }
@@ -239,13 +239,13 @@ namespace OodHelper.Results
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
-            DockPanel d = Parent as DockPanel;
+            DockPanel? d = Parent as DockPanel;
             if (d != null)
                 d.Children.Remove(this);
             else
             {
-                TabItem t = Parent as TabItem;
-                TabControl tc = t.Parent as TabControl;
+                TabItem? t = Parent as TabItem;
+                TabControl? tc = t!.Parent as TabControl;
                 if (tc != null)
                     tc.Items.Remove(t);
                 t.Content = null;

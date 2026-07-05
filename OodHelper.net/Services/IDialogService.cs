@@ -9,7 +9,7 @@ namespace OodHelper.Services
     public sealed class BoatEditResult
     {
         public bool Accepted { get; set; }
-        public string BoatName { get; set; }
+        public string? BoatName { get; set; }
     }
 
     public interface IDialogService
@@ -26,7 +26,7 @@ namespace OodHelper.Services
         Task<bool> ShowProgressAsync(string title, Func<IProgress<DownloadProgress>, CancellationToken, Task> work);
         bool? ShowDialog<TWindow>() where TWindow : Window;
         BoatEditResult ShowBoatEditor(int bid);
-        int[] ShowRaceChooser();
+        int[]? ShowRaceChooser();
         int? ShowSeriesChooser();
         /// <summary>Opens the series editor (new series when sid is 0). Returns true if saved.</summary>
         bool ShowSeriesEditor(int sid);
@@ -43,6 +43,6 @@ namespace OodHelper.Services
         /// <summary>Opens the class picker. Returns the chosen class id, or null if cancelled.</summary>
         Guid? ShowClassPicker();
         /// <summary>Shows an open-file dialog with the given filter. Returns the path, or null if cancelled.</summary>
-        string PickOpenFile(string filter);
+        string? PickOpenFile(string filter);
     }
 }

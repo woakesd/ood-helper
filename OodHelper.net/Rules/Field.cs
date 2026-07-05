@@ -9,7 +9,7 @@ namespace OodHelper.Rules
     {
         public string Name { get; set; }
         public string Column { get; set; }
-        public IEnumerable<ConditionType> conditions { get; set; }
+        public IEnumerable<ConditionType> conditions { get; set; } = Array.Empty<ConditionType>();
         public Type FieldType { get; private set; }
 
         public Field(string name, string column, Type entityType)

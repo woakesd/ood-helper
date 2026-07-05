@@ -36,14 +36,14 @@ namespace OodHelper
             }
             for (int i = 0; i < Reds.Length; i++)
             {
-                IPrintSelectItem p = null;
+                IPrintSelectItem? p = null;
                 if (i > 0) p = Reds[i - 1];
                 IPrintSelectItem r = Reds[i];
                 if (r.PrintIncludeGroup == Group)
                     r.PrintInclude = true;
                 else
                     r.PrintInclude = false;
-                if (i > 0 && r.PrintIncludeGroup != p.PrintIncludeGroup)
+                if (i > 0 && r.PrintIncludeGroup != p!.PrintIncludeGroup)
                     r.PrintIncludeAllVisible = true;
                 else if (i > 0)
                     r.PrintIncludeAllVisible = false;
@@ -65,15 +65,15 @@ namespace OodHelper
 
         private void Include_All_Click(object sender, RoutedEventArgs e)
         {
-            CheckBox cb = e.Source as CheckBox;
+            CheckBox? cb = e.Source as CheckBox;
             if (cb != null)
             {
-                IPrintSelectItem r = cb.DataContext as IPrintSelectItem;
+                IPrintSelectItem? r = cb.DataContext as IPrintSelectItem;
                 foreach (IPrintSelectItem p in Reds)
                 {
-                    if (r.PrintIncludeGroup == r.PrintIncludeGroup)
+                    if (r!.PrintIncludeGroup == r.PrintIncludeGroup)
                     {
-                        p.PrintInclude = cb.IsChecked.Value;
+                        p.PrintInclude = cb.IsChecked!.Value;
                         p.OnPropertyChanged("PrintInclude");
                     }
                 }
@@ -82,14 +82,14 @@ namespace OodHelper
 
         private void Include_Click(object sender, RoutedEventArgs e)
         {
-            CheckBox cb = e.Source as CheckBox;
+            CheckBox? cb = e.Source as CheckBox;
             if (cb != null)
             {
-                IPrintSelectItem r = cb.DataContext as IPrintSelectItem;
+                IPrintSelectItem? r = cb.DataContext as IPrintSelectItem;
                 for (int i = 0; i < Reds.Length; i++)
                 {
                     IPrintSelectItem p = Reds[i];
-                    if (p.PrintIncludeGroup == r.PrintIncludeGroup
+                    if (p.PrintIncludeGroup == r!.PrintIncludeGroup
                         && p.PrintIncludeAllVisible
                         && cb.IsChecked == false)
                     {

@@ -15,11 +15,11 @@ namespace OodHelper.ViewModels
     {
         private readonly IPortsmouthNumberRepository _repository;
         private readonly IDialogService _dialogs;
-        private CancellationTokenSource _debounce;
+        private CancellationTokenSource? _debounce;
 
         internal int DebounceMilliseconds { get; set; } = 500;
 
-        internal Task FilterTask { get; private set; }
+        internal Task? FilterTask { get; private set; }
 
         public HandicapsViewModel(IPortsmouthNumberRepository repository, IDialogService dialogs)
         {
@@ -28,15 +28,15 @@ namespace OodHelper.ViewModels
         }
 
         [ObservableProperty]
-        private string _filterText;
+        private string? _filterText;
 
         [ObservableProperty]
-        private ObservableCollection<PortsmouthNumber> _rows;
+        private ObservableCollection<PortsmouthNumber>? _rows;
 
         [ObservableProperty]
-        private PortsmouthNumber _selectedRow;
+        private PortsmouthNumber? _selectedRow;
 
-        partial void OnFilterTextChanged(string value)
+        partial void OnFilterTextChanged(string? value)
         {
             FilterTask = DebouncedLoadAsync();
         }

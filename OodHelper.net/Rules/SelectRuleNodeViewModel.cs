@@ -22,7 +22,7 @@ namespace OodHelper.Rules
         {
         }
 
-        public SelectRuleNodeViewModel(BoatSelectRule rule, SelectRuleNodeViewModel parent)
+        public SelectRuleNodeViewModel(BoatSelectRule rule, SelectRuleNodeViewModel? parent)
         {
             _rule = rule;
             Parent = parent;
@@ -32,7 +32,7 @@ namespace OodHelper.Rules
 
         public BoatSelectRule Rule => _rule;
 
-        public SelectRuleNodeViewModel Parent { get; }
+        public SelectRuleNodeViewModel? Parent { get; }
 
         public ObservableCollection<SelectRuleNodeViewModel> Children { get; }
 
@@ -42,7 +42,7 @@ namespace OodHelper.Rules
             if (Parent == null) return;
 
             var b = new BoatSelectRule();
-            _rule.Parent.Add(b);
+            _rule.Parent!.Add(b);
             InsertSibling(new SelectRuleNodeViewModel(b, Parent));
         }
 
@@ -52,7 +52,7 @@ namespace OodHelper.Rules
             if (Parent == null) return;
 
             var b = new BoatSelectRule();
-            _rule.Parent.Add(b);
+            _rule.Parent!.Add(b);
             b.Add(new BoatSelectRule());
             InsertSibling(new SelectRuleNodeViewModel(b, Parent));
         }
@@ -69,7 +69,7 @@ namespace OodHelper.Rules
 
         private void InsertSibling(SelectRuleNodeViewModel sibling)
         {
-            int index = Parent.Children.IndexOf(this);
+            int index = Parent!.Children.IndexOf(this);
             Parent.Children.Insert(index + 1, sibling);
             Parent.NotifyStructureChanged();
         }
@@ -114,11 +114,11 @@ namespace OodHelper.Rules
             {
                 if (_rule.Field != null)
                     return _rule.Field.conditions;
-                return Enum.GetValues(typeof(ConditionType)) as IEnumerable<ConditionType>;
+                return Enum.GetValues(typeof(ConditionType)).Cast<ConditionType>();
             }
         }
 
-        public Field Field
+        public Field? Field
         {
             get => _rule.Field;
             set
@@ -157,7 +157,7 @@ namespace OodHelper.Rules
             set { _rule.Bound2 = value; OnPropertyChanged(); }
         }
 
-        public string StringValue
+        public string? StringValue
         {
             get => _rule.StringValue;
             set { _rule.StringValue = value; OnPropertyChanged(); }

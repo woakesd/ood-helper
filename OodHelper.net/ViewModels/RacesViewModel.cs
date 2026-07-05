@@ -19,11 +19,11 @@ namespace OodHelper.ViewModels
     {
         private readonly ICalendarRepository _repository;
         private readonly IDialogService _dialogs;
-        private CancellationTokenSource _debounce;
+        private CancellationTokenSource? _debounce;
 
         internal int DebounceMilliseconds { get; set; } = 500;
 
-        internal Task FilterTask { get; private set; }
+        internal Task? FilterTask { get; private set; }
 
         public RacesViewModel(ICalendarRepository repository, IDialogService dialogs)
         {
@@ -32,15 +32,15 @@ namespace OodHelper.ViewModels
         }
 
         [ObservableProperty]
-        private string _filterText;
+        private string? _filterText;
 
         [ObservableProperty]
-        private ObservableCollection<Calendar> _rows;
+        private ObservableCollection<Calendar>? _rows;
 
         [ObservableProperty]
-        private Calendar _selectedRow;
+        private Calendar? _selectedRow;
 
-        partial void OnFilterTextChanged(string value)
+        partial void OnFilterTextChanged(string? value)
         {
             FilterTask = DebouncedLoadAsync();
         }

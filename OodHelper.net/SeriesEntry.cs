@@ -5,7 +5,7 @@ namespace OodHelper
     public class SeriesEntry
     {
         public int bid;
-        public string code;
+        public string? code;
         public DateTime date;
         public bool discard = false;
         public double? override_points = null;

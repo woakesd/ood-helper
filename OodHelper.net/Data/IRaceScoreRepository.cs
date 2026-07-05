@@ -9,7 +9,7 @@ namespace OodHelper.Data
     /// old grouped header SELECT in <c>OpenHandicap</c> (racetype + the resolved F/D time limit).
     /// </summary>
     public sealed record RaceScoreHeader(
-        string RaceType,
+        string? RaceType,
         double? StandardCorrectedTime,
         DateTime? TimeLimit,
         int? Extension,
@@ -26,7 +26,7 @@ namespace OodHelper.Data
     public interface IRaceScoreRepository
     {
         // --- Reads -------------------------------------------------------------------------
-        RaceScoreHeader GetHeader(int rid);
+        RaceScoreHeader? GetHeader(int rid);
 
         /// <summary>Race rows to score (after <see cref="DeleteDidNotCompete"/>), as detached entities.</summary>
         IList<Race> GetScoringRows(int rid);

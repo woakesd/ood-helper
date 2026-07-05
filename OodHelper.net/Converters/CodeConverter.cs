@@ -9,7 +9,7 @@ namespace OodHelper.Converters
         {
             if (value != DBNull.Value && value != null)
             {
-                return value.ToString();
+                return value.ToString() ?? string.Empty;
             }
             else
             {
@@ -19,7 +19,7 @@ namespace OodHelper.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            string strValue = value as string;
+            string? strValue = value as string;
             if (strValue != null && strValue != string.Empty)
             {
                 strValue = strValue.ToUpper();

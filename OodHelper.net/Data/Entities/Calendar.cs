@@ -9,7 +9,7 @@ public partial class Calendar
 
     public DateTime? StartDate { get; set; }
 
-    public string TimeLimitType { get; set; }
+    public string?TimeLimitType { get; set; }
 
     public DateTime? TimeLimitFixed { get; set; }
 
@@ -17,27 +17,27 @@ public partial class Calendar
 
     public int? Extension { get; set; }
 
-    public string Class { get; set; }
+    public string?Class { get; set; }
 
-    public string Event { get; set; }
+    public string?Event { get; set; }
 
-    public string PriceCode { get; set; }
+    public string?PriceCode { get; set; }
 
-    public string Course { get; set; }
+    public string?Course { get; set; }
 
-    public string Ood { get; set; }
+    public string?Ood { get; set; }
 
-    public string Venue { get; set; }
+    public string?Venue { get; set; }
 
-    public string Racetype { get; set; }
+    public string?Racetype { get; set; }
 
-    public string Handicapping { get; set; }
+    public string?Handicapping { get; set; }
 
     public int? Visitors { get; set; }
 
-    public string Flag { get; set; }
+    public string?Flag { get; set; }
 
-    public string Memo { get; set; }
+    public string?Memo { get; set; }
 
     public bool? IsRace { get; set; }
 
@@ -45,13 +45,13 @@ public partial class Calendar
 
     public bool? Approved { get; set; }
 
-    public string CourseChoice { get; set; }
+    public string?CourseChoice { get; set; }
 
     public int? LapsCompleted { get; set; }
 
-    public string WindSpeed { get; set; }
+    public string?WindSpeed { get; set; }
 
-    public string WindDirection { get; set; }
+    public string?WindDirection { get; set; }
 
     public double? StandardCorrectedTime { get; set; }
 

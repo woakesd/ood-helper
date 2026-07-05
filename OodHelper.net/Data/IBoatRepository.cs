@@ -13,7 +13,7 @@ namespace OodHelper.Data
         /// </summary>
         IReadOnlyList<Boat> Search(string filter, bool? dinghy);
 
-        Boat Get(int bid);
+        Boat? Get(int bid);
 
         /// <summary>Inserts (when <c>Bid == 0</c>) or updates the boat.</summary>
         void Save(Boat boat);

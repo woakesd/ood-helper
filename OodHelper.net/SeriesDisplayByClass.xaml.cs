@@ -47,9 +47,9 @@ namespace OodHelper
                 Working w = new Working(App.Current.MainWindow);
                 w.Show();
                 XpsDocumentWriter write = PrintQueue.CreateXpsDocumentWriter(pd.PrintQueue);
-                VisualsToXpsDocument collator = write.CreateVisualsCollator() as VisualsToXpsDocument;
+                VisualsToXpsDocument? collator = write.CreateVisualsCollator() as VisualsToXpsDocument;
                 Size ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
-                collator.BeginBatchWrite();
+                collator!.BeginBatchWrite();
                 System.Threading.Tasks.Task t = System.Threading.Tasks.Task.Factory.StartNew(() =>
                     {
                         w.SetRange(0, sds.Count);
@@ -81,13 +81,13 @@ namespace OodHelper
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
-            DockPanel d = Parent as DockPanel;
+            DockPanel? d = Parent as DockPanel;
             if (d != null)
                 d.Children.Remove(this);
             else
             {
-                TabItem t = Parent as TabItem;
-                TabControl tc = t.Parent as TabControl;
+                TabItem? t = Parent as TabItem;
+                TabControl? tc = t!.Parent as TabControl;
                 if (tc != null)
                     tc.Items.Remove(t);
                 t.Content = null;

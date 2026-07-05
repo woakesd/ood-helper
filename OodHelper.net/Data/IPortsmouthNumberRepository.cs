@@ -8,7 +8,7 @@ namespace OodHelper.Data
     {
         /// <summary>All classes ordered by name, optionally filtered (substring, case-insensitive).</summary>
         IReadOnlyList<PortsmouthNumber> GetAll(string filter);
-        PortsmouthNumber Get(Guid id);
+        PortsmouthNumber? Get(Guid id);
         /// <summary>Insert or update a single class. Assigns a new id when the entity has none.</summary>
         void Save(PortsmouthNumber pn);
         void Delete(Guid id);

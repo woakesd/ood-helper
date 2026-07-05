@@ -95,7 +95,7 @@ ORDER BY date";
             string flow = "E";  // assume ebbing
             DataTable d = TideInfo.Data;
             if (d.Rows.Count > 0 && d.Rows[0]["flow"] != DBNull.Value)
-                flow = d.Rows[0]["flow"] as string;
+                flow = d.Rows[0]["flow"] as string ?? "E";
 
             for (int i = 1; i < d.Rows.Count; i++)
             {

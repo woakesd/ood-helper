@@ -13,7 +13,7 @@ namespace OodHelper.Data
     public interface IRaceResultsRepository
     {
         // --- Reads -------------------------------------------------------------------------
-        Calendar GetCalendar(int rid);
+        Calendar? GetCalendar(int rid);
         IReadOnlyList<Race> GetRaceRows(int rid);
 
         /// <summary>Mirrors the old "result not yet calculated, or edited since" check.</summary>
@@ -51,7 +51,7 @@ namespace OodHelper.Data
         // --- Entry editing (SelectBoats) ---------------------------------------------------
 
         /// <summary>Adds a boat to a race's entry list, stamping last_edit (SelectBoats).</summary>
-        void AddRaceEntry(int rid, int bid, DateTime startDate, string handicapStatus,
+        void AddRaceEntry(int rid, int bid, DateTime startDate, string? handicapStatus,
             int? openHandicap, int? rollingHandicap);
 
         /// <summary>Removes a boat from a race's entry list (SelectBoats).</summary>
@@ -73,10 +73,10 @@ namespace OodHelper.Data
     /// </summary>
     public sealed record RacePrintRow(
         string Boat,
-        string Class,
-        string SailNo,
+        string? Class,
+        string? SailNo,
         int? Hcap,
-        string FinishCode,
+        string? FinishCode,
         DateTime? FinishDate,
         int? Elapsed,
         int? Laps,
@@ -86,7 +86,7 @@ namespace OodHelper.Data
         int? AchievedHandicap,
         int? NewRollingHandicap,
         double? Percent,
-        string C,
-        string A,
-        string Py);
+        string? C,
+        string? A,
+        string? Py);
 }

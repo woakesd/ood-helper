@@ -15,8 +15,8 @@ namespace OodHelper
     {
         private readonly int[] _discardProfile;
         private readonly Dictionary<int, BoatSeriesResult> _resultsLookUp = new Dictionary<int, BoatSeriesResult>();
-        private IList<int> _bids;
-        private IList<int> _rids;
+        private IList<int> _bids = new List<int>();
+        private IList<int> _rids = new List<int>();
         public List<BoatSeriesResult> Results = new List<BoatSeriesResult>();
         public Dictionary<int, SeriesEvent> SeriesData;
 
@@ -37,7 +37,7 @@ namespace OodHelper
         {
         }
 
-        public string SeriesName { get; set; }
+        public string SeriesName { get; set; } = "";
         public int Sid { get; set; }
         public string Division { get; set; }
 
@@ -222,8 +222,10 @@ namespace OodHelper
 
         private class PreAverageComparer : IComparer<SeriesEntry>
         {
-            public int Compare(SeriesEntry x, SeriesEntry y)
+            public int Compare(SeriesEntry? x, SeriesEntry? y)
             {
+                if (x is null) return y is null ? 0 : -1;
+                if (y is null) return 1;
                 if (x.code != y.code)
                 {
                     if (x.code == "DNE")
@@ -247,9 +249,9 @@ namespace OodHelper
     {
         public int Bid;
         public int Count;
-        public List<SeriesEntry> DateSortedPoints;
+        public List<SeriesEntry> DateSortedPoints = new List<SeriesEntry>();
         public double Net;
-        public List<SeriesEntry> PerformanceSortedPoints;
+        public List<SeriesEntry> PerformanceSortedPoints = new List<SeriesEntry>();
         public int Place;
         public double Total;
 
@@ -264,8 +266,10 @@ namespace OodHelper
 
     internal class NettComparer : IComparer<BoatSeriesResult>
     {
-        public int Compare(BoatSeriesResult x, BoatSeriesResult y)
+        public int Compare(BoatSeriesResult? x, BoatSeriesResult? y)
         {
+            if (x is null) return y is null ? 0 : -1;
+            if (y is null) return 1;
             if (x.Bid == y.Bid) return 0;
 
             if (x.Net > y.Net)
@@ -301,8 +305,10 @@ namespace OodHelper
 
     internal class PerformanceComparer : IComparer<SeriesEntry>
     {
-        public int Compare(SeriesEntry x, SeriesEntry y)
+        public int Compare(SeriesEntry? x, SeriesEntry? y)
         {
+            if (x is null) return y is null ? 0 : -1;
+            if (y is null) return 1;
             if (x.Points > y.Points)
                 return 1;
             if (x.Points < y.Points)
@@ -317,8 +323,10 @@ namespace OodHelper
 
     internal class DateComparer : IComparer<SeriesEntry>
     {
-        public int Compare(SeriesEntry x, SeriesEntry y)
+        public int Compare(SeriesEntry? x, SeriesEntry? y)
         {
+            if (x is null) return y is null ? 0 : -1;
+            if (y is null) return 1;
             if (x.date > y.date)
                 return 1;
             if (x.date < y.date)

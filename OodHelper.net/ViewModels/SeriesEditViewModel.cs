@@ -18,15 +18,15 @@ namespace OodHelper.ViewModels
         private readonly IDialogService _dialogs;
 
         /// <summary>Raised when the dialog should close; argument is the DialogResult.</summary>
-        public event Action<bool> CloseRequested;
+        public event Action<bool>? CloseRequested;
 
         public int Sid { get; private set; }
 
         [ObservableProperty]
-        private string _sname;
+        private string? _sname;
 
         [ObservableProperty]
-        private string _discards;
+        private string? _discards;
 
         public ObservableCollection<SeriesRaceItem> Calendar { get; } = new ObservableCollection<SeriesRaceItem>();
 

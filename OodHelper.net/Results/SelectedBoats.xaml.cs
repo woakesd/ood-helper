@@ -38,7 +38,7 @@ namespace OodHelper.Results
             }
             foreach (var r in rows)
             {
-                ((DataView) Boats.ItemsSource).Table.Rows.Remove(r);
+                ((DataView) Boats.ItemsSource!).Table!.Rows.Remove(r);
             }
         }
     }

@@ -16,11 +16,11 @@ namespace OodHelper
             InitializeComponent();
             // This page is not constructed through DI, so its repository is resolved from the
             // container here, mirroring the other non-DI'd print screens.
-            var c = App.Services.GetRequiredService<ICalendarRepository>().Get(rid);
+            var c = App.Services.GetRequiredService<ICalendarRepository>().Get(rid)!;
             EventName.Text = c.Event;
             ClassName.Text = c.Class;
             DateTime? dt = c.StartDate;
-            StartDate.Text = dt.Value.ToString("dd MMM yyyy");
+            StartDate.Text = dt!.Value.ToString("dd MMM yyyy");
             StartTime.Text = dt.Value.ToString("HH:mm");
             switch (c.TimeLimitType)
             {

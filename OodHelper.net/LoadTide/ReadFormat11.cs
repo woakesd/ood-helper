@@ -9,7 +9,7 @@ namespace OodHelper.LoadTide
 {
     class ReadFormat11: NotifyPropertyChanged
     {
-        private DataTable _data;
+        private DataTable _data = new DataTable();
         public DataTable Data { get { return _data; } set { _data = value; OnPropertyChanged("Data"); } }
 
         private int _baseyear;
@@ -57,7 +57,7 @@ namespace OodHelper.LoadTide
             {
                 DateTime based = new DateTime(BaseYear - 1, 12, 31);
                 DateTime d = based;
-                string line;
+                string? line;
                 while ((line = sr.ReadLine()) != null)
                 {
                     if (line.Substring(4, 1) == ":")

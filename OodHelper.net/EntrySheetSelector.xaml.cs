@@ -34,7 +34,7 @@ namespace OodHelper
             }
             for (int i = 0; i < d.Rows.Count; i++)
             {
-                DataRow p = null;
+                DataRow? p = null;
                 if (i > 0) p = d.Rows[i-1];
                 DataRow r = d.Rows[i];
                 if (r["class"] as string == "Division 1")
@@ -42,11 +42,11 @@ namespace OodHelper
                 DateTime? start = r["start_date"] as DateTime?;
                 if (start.HasValue)
                 {
-                    if (start.Value.Date == NextDate.Value.Date)
+                    if (start.Value.Date == NextDate!.Value.Date)
                         r["print"] = true;
                     else
                         r["print"] = false;
-                    if (i > 0 && ((DateTime)r["start_date"]).Date != ((DateTime)p["start_date"]).Date)
+                    if (i > 0 && ((DateTime)r["start_date"]).Date != ((DateTime)p!["start_date"]).Date)
                         r["print_all_visible"] = true;
                     else if (i > 0)
                         r["print_all_visible"] = false;
@@ -75,9 +75,9 @@ namespace OodHelper
             {
                 DataRow r = d.NewRow();
                 r["rid"] = c.Rid;
-                r["start_date"] = (object)c.StartDate ?? DBNull.Value;
-                r["event"] = (object)c.Event ?? DBNull.Value;
-                r["class"] = (object)c.Class ?? DBNull.Value;
+                r["start_date"] = (object?)c.StartDate ?? DBNull.Value;
+                r["event"] = (object?)c.Event ?? DBNull.Value;
+                r["class"] = (object?)c.Class ?? DBNull.Value;
                 d.Rows.Add(r);
             }
             d.AcceptChanges();
@@ -88,10 +88,10 @@ namespace OodHelper
         {
             DialogResult = true;
 
-            DataView v = Races.ItemsSource as DataView;
+            DataView? v = Races.ItemsSource as DataView;
             if (v != null)
             {
-                DataRow[] rows = v.Table.Select("print = 1");
+                DataRow[] rows = v.Table!.Select("print = 1");
 
                 if (rows.Length == 0)
                 {
@@ -108,7 +108,7 @@ namespace OodHelper
                     w.Show();
                     Size ps = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
                     XpsDocumentWriter write = PrintQueue.CreateXpsDocumentWriter(pd.PrintQueue);
-                    VisualsToXpsDocument collator = write.CreateVisualsCollator() as VisualsToXpsDocument;
+                    VisualsToXpsDocument? collator = write.CreateVisualsCollator() as VisualsToXpsDocument;
 
                     System.Threading.Tasks.Task t = System.Threading.Tasks.Task.Factory.StartNew(() =>
                     {
@@ -116,7 +116,7 @@ namespace OodHelper
 
                         Dispatcher.Invoke(new Action(delegate()
                         {
-                            collator.BeginBatchWrite();
+                            collator!.BeginBatchWrite();
                         }));
 
                         for (int i = 0; i < rows.Length; i++)
@@ -136,12 +136,12 @@ namespace OodHelper
 
                                 int? copies = r["copies"] as int?;
                                 for (int c = 0; copies.HasValue && c < copies || c < 1; c++)
-                                    collator.Write(p, pd.PrintTicket);
+                                    collator!.Write(p, pd.PrintTicket);
                             }));
                         }
                         Dispatcher.Invoke(new Action(delegate()
                         {
-                            collator.EndBatchWrite();
+                            collator!.EndBatchWrite();
                         }));
                         w.CloseWindow();
                     });
@@ -159,12 +159,12 @@ namespace OodHelper
 
         private void Include_All_Click(object sender, RoutedEventArgs e)
         {
-            CheckBox cb = e.Source as CheckBox;
+            CheckBox? cb = e.Source as CheckBox;
             if (cb != null)
             {
-                DataRowView rv = cb.DataContext as DataRowView;
-                DataRow r = rv.Row;
-                DataTable d = rv.DataView.Table;
+                DataRowView? rv = cb.DataContext as DataRowView;
+                DataRow r = rv!.Row;
+                DataTable d = rv.DataView.Table!;
                 foreach (DataRow p in d.Rows)
                 {
                     if (((DateTime)p["start_date"]).Date == ((DateTime)r["start_date"]).Date)
@@ -175,12 +175,12 @@ namespace OodHelper
 
         private void Include_Click(object sender, RoutedEventArgs e)
         {
-            CheckBox cb = e.Source as CheckBox;
+            CheckBox? cb = e.Source as CheckBox;
             if (cb != null)
             {
-                DataRowView rv = cb.DataContext as DataRowView;
-                DataRow r = rv.Row;
-                DataTable d = rv.DataView.Table;
+                DataRowView? rv = cb.DataContext as DataRowView;
+                DataRow r = rv!.Row;
+                DataTable d = rv.DataView.Table!;
                 for (int i = 0; i < d.Rows.Count; i++)
                 {
                     DataRow p = d.Rows[i];

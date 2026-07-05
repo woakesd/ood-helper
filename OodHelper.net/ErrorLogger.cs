@@ -8,7 +8,7 @@ namespace OodHelper
     {
         private static readonly string FileFolder = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
 
-        private static readonly string FileName = Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().Location) + "-Errors.log";
+        private static readonly string FileName = Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly()!.Location) + "-Errors.log";
 
         private static readonly object Locker = new object();
 

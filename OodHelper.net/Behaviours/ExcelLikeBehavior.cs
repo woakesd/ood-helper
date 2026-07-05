@@ -30,7 +30,7 @@ namespace OodHelper.Behaviors
         {
             if ((bool)e.NewValue)
             {
-                DataGridCell _dgc = depObj as DataGridCell;
+                DataGridCell? _dgc = depObj as DataGridCell;
                 if (_dgc != null)
                 {
                     _dgc.PreviewMouseLeftButtonDown += _dgc_PreviewMouseLeftButtonDown;
@@ -40,7 +40,7 @@ namespace OodHelper.Behaviors
             }
             else
             {
-                DataGridCell _dgc = depObj as DataGridCell;
+                DataGridCell? _dgc = depObj as DataGridCell;
                 if (_dgc != null)
                 {
                     _dgc.PreviewMouseLeftButtonDown -= _dgc_PreviewMouseLeftButtonDown;
@@ -54,11 +54,11 @@ namespace OodHelper.Behaviors
         {
             if (e.Key == Key.Down || e.Key == Key.Up || e.Key == Key.Left || e.Key == Key.Right)
             {
-                DataGridCell cell = sender as DataGridCell;
+                DataGridCell? cell = sender as DataGridCell;
                 if (cell != null && !cell.IsEditing && !cell.IsReadOnly)
                 {
                     cell.Focus();
-                    DataGrid _dg = FindVisualParent<DataGrid>(cell);
+                    DataGrid? _dg = FindVisualParent<DataGrid>(cell);
                     if (_dg != null)
                         _dg.BeginEdit();
                 }
@@ -69,15 +69,15 @@ namespace OodHelper.Behaviors
         {
             if (e.Key == Key.Down || e.Key == Key.Up || e.Key == Key.Left || e.Key == Key.Right)
             {
-                DataGridCell cell = sender as DataGridCell;
+                DataGridCell? cell = sender as DataGridCell;
                 if (cell != null)
                 {
-                    TextBox c = cell.Content as TextBox;
+                    TextBox? c = cell.Content as TextBox;
                     if (c == null || ((e.Key != Key.Right || c.SelectionStart != 0 || c.Text.Length == 0)
                         && (e.Key != Key.Left && e.Key != Key.Right || c.SelectionStart == 0 || c.SelectionStart + c.SelectionLength >= c.Text.Length)
                         && (e.Key != Key.Left || c.SelectionStart + c.SelectionLength < c.Text.Length || c.Text.Length == 0)))
                     {
-                        DataGrid _dg = FindVisualParent<DataGrid>(cell);
+                        DataGrid? _dg = FindVisualParent<DataGrid>(cell);
                         if (_dg != null)
                             _dg.CommitEdit();
                         cell.IsEditing = false;
@@ -89,14 +89,14 @@ namespace OodHelper.Behaviors
 
         private static void _dgc_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            DataGridCell cell = sender as DataGridCell;
+            DataGridCell? cell = sender as DataGridCell;
             if (cell != null && !cell.IsEditing && !cell.IsReadOnly)
             {
                 if (!cell.IsFocused)
                 {
                     cell.Focus();
                     cell.IsSelected = true;
-                    DataGrid _dg = FindVisualParent<DataGrid>(cell);
+                    DataGrid? _dg = FindVisualParent<DataGrid>(cell);
                     if (_dg != null)
                         _dg.BeginEdit();
                     if (cell.Column.GetType() == typeof(DataGridCheckBoxColumn))
@@ -108,12 +108,12 @@ namespace OodHelper.Behaviors
             }
         }
 
-        private static T FindVisualParent<T>(UIElement element) where T : UIElement
+        private static T? FindVisualParent<T>(UIElement element) where T : UIElement
         {
-            UIElement parent = element;
+            UIElement? parent = element;
             while (parent != null)
             {
-                T correctlyTyped = parent as T;
+                T? correctlyTyped = parent as T;
                 if (correctlyTyped != null)
                 {
                     return correctlyTyped;

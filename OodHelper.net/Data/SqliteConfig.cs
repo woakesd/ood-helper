@@ -23,7 +23,7 @@ namespace OodHelper.Data
 
         static SqliteConfig()
         {
-            AssemblyName an = Assembly.GetAssembly(typeof(App)).GetName();
+            AssemblyName an = Assembly.GetAssembly(typeof(App))!.GetName();
             DatabaseFolder =
                 $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\{an.Name}\data";
             DataFileName = $@"{DatabaseFolder}\{DatabaseName}.db";
