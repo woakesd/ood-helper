@@ -1,0 +1,23 @@
+<Project ToolsVersion="15.0">
+  <!--
+    To update the version of Uno, you should instead update the Sdk version in the global.json file.
+
+    See https://aka.platform.uno/using-uno-sdk for more information.
+    See https://aka.platform.uno/using-uno-sdk#implicit-packages for more information regarding the Implicit Packages.
+  -->
+  <ItemGroup>
+    <!-- Data layer copied from the WPF app: EF Core code-first over SQLite. -->
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.9" />
+    <!-- Pin SQLitePCLRaw to the 3.x line (native SQLite 3.50.3), matching the WPF project, to stay
+         above the GHSA-2m69-gcr7-jv3q vulnerable range that EF Core's transitive 2.1.11 falls in.
+         The bundle ships the native e_sqlite3 for the desktop and mobile runtime identifiers. -->
+    <PackageVersion Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.3" />
+    <PackageVersion Include="SQLitePCLRaw.core" Version="3.0.3" />
+    <PackageVersion Include="SQLitePCLRaw.provider.e_sqlite3" Version="3.0.3" />
+    <PackageVersion Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.50.3" />
+
+    <!-- WinUI DataGrid for Uno (the Windows Community Toolkit 7.1.x DataGrid, forked for Uno). Used
+         by the Handicaps screen to replace the WPF DataGrid. XAML ns: using:CommunityToolkit.WinUI.UI.Controls -->
+    <PackageVersion Include="Uno.CommunityToolkit.WinUI.UI.Controls.DataGrid" Version="7.1.205" />
+  </ItemGroup>
+</Project>

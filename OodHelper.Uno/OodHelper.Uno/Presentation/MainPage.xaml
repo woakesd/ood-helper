@@ -1,0 +1,35 @@
+<Page x:Class="OodHelper.Uno.Presentation.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:OodHelper.Uno.Presentation"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
+      NavigationCacheMode="Required"
+      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <MenuBar Grid.Row="0">
+      <MenuBarItem Title="File">
+        <MenuFlyoutItem Text="Exit" Click="Exit_Click" />
+      </MenuBarItem>
+      <MenuBarItem Title="View">
+        <MenuFlyoutItem Text="Handicaps" Click="OpenHandicaps_Click" />
+        <MenuFlyoutItem Text="Series" Click="OpenSeries_Click" />
+        <MenuFlyoutItem Text="Pick a class (demo)" Click="PickClass_Click" />
+      </MenuBarItem>
+    </MenuBar>
+
+    <StackPanel Grid.Row="1" Margin="24" Spacing="8" VerticalAlignment="Top">
+      <TextBlock Text="OodHelper — Uno walking skeleton"
+                 Style="{ThemeResource SubtitleTextBlockStyle}" />
+      <TextBlock TextWrapping="Wrap"
+                 Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                 Text="Use the View menu to open the ported screens. Each opens as a modal dialog, matching the WPF app. Handicaps and Series are filterable list screens (DataGrid) with Add/Edit/Delete; editing a series opens the series form, which in turn opens the nested race-select dialog. Pick a class demonstrates the list picker dialog." />
+    </StackPanel>
+  </Grid>
+</Page>

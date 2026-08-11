@@ -1,0 +1,57 @@
+<UserControl x:Class="OodHelper.Uno.Presentation.SeriesRaceSelectView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="using:OodHelper.Uno.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
+  <UserControl.Resources>
+    <conv:ShortDateConverter x:Key="ShortDate" />
+  </UserControl.Resources>
+
+  <Grid Width="520" Height="520" Padding="12" RowSpacing="8">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8">
+      <TextBox Width="320"
+               Text="{Binding FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+               PlaceholderText="Filter races..." />
+      <Button Content="Select all" Command="{Binding SelectAllCommand}" />
+    </StackPanel>
+
+    <ListView Grid.Row="1"
+              ItemsSource="{Binding FilteredRaces}"
+              SelectionMode="None"
+              BorderThickness="1"
+              BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}">
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <Grid ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <CheckBox Grid.Column="0" IsChecked="{Binding Selected, Mode=TwoWay}" MinWidth="0" />
+            <TextBlock Grid.Column="1" Text="{Binding Event}" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="2" Text="{Binding EventClass}" VerticalAlignment="Center"
+                       Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
+            <TextBlock Grid.Column="3" VerticalAlignment="Center"
+                       Text="{Binding StartDate, Converter={StaticResource ShortDate}}"
+                       Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
+          </Grid>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
+
+    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+      <Button Content="Save" Command="{Binding SaveCommand}" Style="{ThemeResource AccentButtonStyle}" />
+      <Button Content="Cancel" Command="{Binding CancelCommand}" />
+    </StackPanel>
+  </Grid>
+</UserControl>
