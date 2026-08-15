@@ -20,10 +20,12 @@ namespace OodHelper.ViewModels
         private readonly IResultsDownloadService _download;
         private readonly IResultsUploadService _upload;
         private readonly IUpdateCheckService _updateCheck;
+        private readonly IRaceExportService _raceExport;
 
         public OodHelperWindowViewModel(IDialogService dialogs, INavigationService navigation,
             IDatabaseMaintenanceService dbMaintenance, IResultsDownloadService download,
-            IResultsUploadService upload, IUpdateCheckService updateCheck)
+            IResultsUploadService upload, IUpdateCheckService updateCheck,
+            IRaceExportService raceExport)
         {
             _dialogs = dialogs;
             _navigation = navigation;
@@ -31,6 +33,7 @@ namespace OodHelper.ViewModels
             _download = download;
             _upload = upload;
             _updateCheck = updateCheck;
+            _raceExport = raceExport;
         }
 
         //
@@ -218,9 +221,22 @@ namespace OodHelper.ViewModels
         }
 
         [RelayCommand]
-        private void ExportResults()
+        private async Task ExportRaceResults()
         {
-            // Not implemented; the old Click handler was empty too.
+            var path = _dialogs.PickSaveFile("Excel Workbook (*.xlsx)|*.xlsx",
+                $"races-{DateTime.Now:yyyy-MM-dd}.xlsx");
+            if (path == null)
+                return;
+            try
+            {
+                var count = await Task.Run(() => _raceExport.ExportRacesAsync(path));
+                _dialogs.ShowInformation($"Exported {count} races to\n{path}", "Export Complete");
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogException(ex);
+                _dialogs.ShowError("Export race results failed", "Failed");
+            }
         }
 
         [RelayCommand]

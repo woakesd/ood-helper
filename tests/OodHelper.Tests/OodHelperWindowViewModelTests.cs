@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using NSubstitute;
@@ -17,11 +18,12 @@ namespace OodHelper.Tests
         private readonly IResultsDownloadService _download = Substitute.For<IResultsDownloadService>();
         private readonly IResultsUploadService _upload = Substitute.For<IResultsUploadService>();
         private readonly IUpdateCheckService _updateCheck = Substitute.For<IUpdateCheckService>();
+        private readonly IRaceExportService _raceExport = Substitute.For<IRaceExportService>();
 
         private OodHelperWindowViewModel CreateViewModel()
         {
             return new OodHelperWindowViewModel(_dialogs, _navigation, _dbMaintenance, _download, _upload,
-                _updateCheck);
+                _updateCheck, _raceExport);
         }
 
         [Fact]
@@ -239,6 +241,45 @@ namespace OodHelper.Tests
             vm.RecreateDbCommand.Execute(null);
 
             _dbMaintenance.Received(1).RecreateDatabase();
+        }
+
+        [Fact]
+        public async Task ExportRaceResults_DoesNothing_WhenSaveCancelled()
+        {
+            _dialogs.PickSaveFile(Arg.Any<string>(), Arg.Any<string>()).Returns((string)null);
+            var vm = CreateViewModel();
+
+            await vm.ExportRaceResultsCommand.ExecuteAsync(null);
+
+            _ = _raceExport.DidNotReceive().ExportRacesAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+            _dialogs.DidNotReceive().ShowInformation(Arg.Any<string>(), Arg.Any<string>());
+        }
+
+        [Fact]
+        public async Task ExportRaceResults_ExportsToChosenPath_AndReportsRowCount()
+        {
+            _dialogs.PickSaveFile(Arg.Any<string>(), Arg.Any<string>()).Returns(@"C:\races.xlsx");
+            _raceExport.ExportRacesAsync(@"C:\races.xlsx", Arg.Any<CancellationToken>()).Returns(Task.FromResult(42));
+            var vm = CreateViewModel();
+
+            await vm.ExportRaceResultsCommand.ExecuteAsync(null);
+
+            _ = _raceExport.Received(1).ExportRacesAsync(@"C:\races.xlsx", Arg.Any<CancellationToken>());
+            _dialogs.Received(1).ShowInformation(Arg.Is<string>(m => m.Contains("42")), "Export Complete");
+        }
+
+        [Fact]
+        public async Task ExportRaceResults_ReportsError_WhenExportThrows()
+        {
+            _dialogs.PickSaveFile(Arg.Any<string>(), Arg.Any<string>()).Returns(@"C:\races.xlsx");
+            _raceExport.ExportRacesAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+                .Returns<Task<int>>(_ => throw new IOException("locked"));
+            var vm = CreateViewModel();
+
+            await vm.ExportRaceResultsCommand.ExecuteAsync(null);
+
+            _dialogs.Received(1).ShowError(Arg.Any<string>(), "Failed");
+            _dialogs.DidNotReceive().ShowInformation(Arg.Any<string>(), Arg.Any<string>());
         }
     }
 }

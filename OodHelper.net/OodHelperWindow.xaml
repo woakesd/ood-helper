@@ -52,7 +52,6 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Import _PY" Name="importPY" Command="{Binding ImportPyCommand}"  Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"/>
-                <MenuItem Header="_Export Results" Name="ExportResults" Command="{Binding ExportResultsCommand}" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"/>
                 <MenuItem Header="Logout" Name="Logout" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}" Command="{Binding LogoutCommand}">
                     <MenuItem.Icon>
                         <Image Source="/OodHelper;component/Images/Lock-Open-16.png" />
@@ -63,6 +62,9 @@
                         <Image Source="/OodHelper;component/Images/Lock-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Ex_port">
+                <MenuItem Header="Export _race results" Name="ExportRaceResults" Command="{Binding ExportRaceResultsCommand}"/>
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_About" Command="{Binding ShowAboutCommand}" >
