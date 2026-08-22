@@ -37,7 +37,9 @@ namespace OodHelper.Services
             }
             catch
             {
-                try { File.Delete(tempPath); } catch (IOException) { /* best effort */ }
+                // Best effort: whatever stops the temp file being deleted (a lock, an ACL, a path the
+                // OS rejects) must not replace the export failure the caller needs to see.
+                try { File.Delete(tempPath); } catch { }
                 throw;
             }
         }

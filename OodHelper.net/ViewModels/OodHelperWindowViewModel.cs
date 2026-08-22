@@ -158,7 +158,8 @@ namespace OodHelper.ViewModels
         private async Task RecalculateSeriesResults()
         {
             if (!_dialogs.Confirm(
-                    "This re-scores every series that has results and replaces its stored standings.\n" +
+                    "This re-totals every series that has results and replaces its stored standings.\n" +
+                    "Race results and handicaps are not changed.\n" +
                     "Click OK to confirm recalculating all series results",
                     "Confirm Recalculate"))
                 return;
