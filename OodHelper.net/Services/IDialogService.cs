@@ -44,5 +44,7 @@ namespace OodHelper.Services
         Guid? ShowClassPicker();
         /// <summary>Shows an open-file dialog with the given filter. Returns the path, or null if cancelled.</summary>
         string? PickOpenFile(string filter);
+        /// <summary>Shows a save-file dialog with the given filter and suggested name. Returns the path, or null if cancelled.</summary>
+        string? PickSaveFile(string filter, string defaultFileName);
     }
 }

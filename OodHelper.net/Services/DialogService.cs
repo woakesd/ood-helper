@@ -163,5 +163,16 @@ namespace OodHelper.Services
             var dlg = new Microsoft.Win32.OpenFileDialog { Filter = filter };
             return dlg.ShowDialog() == true ? dlg.FileName : null;
         }
+
+        public string? PickSaveFile(string filter, string defaultFileName)
+        {
+            var dlg = new Microsoft.Win32.SaveFileDialog
+            {
+                Filter = filter,
+                FileName = defaultFileName,
+                AddExtension = true
+            };
+            return dlg.ShowDialog() == true ? dlg.FileName : null;
+        }
     }
 }

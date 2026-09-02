@@ -20,10 +20,15 @@ namespace OodHelper.ViewModels
         private readonly IResultsDownloadService _download;
         private readonly IResultsUploadService _upload;
         private readonly IUpdateCheckService _updateCheck;
+        private readonly IRaceExportService _raceExport;
+        private readonly ISeriesResultExportService _seriesResultExport;
+        private readonly ISeriesRecalculationService _seriesRecalculation;
 
         public OodHelperWindowViewModel(IDialogService dialogs, INavigationService navigation,
             IDatabaseMaintenanceService dbMaintenance, IResultsDownloadService download,
-            IResultsUploadService upload, IUpdateCheckService updateCheck)
+            IResultsUploadService upload, IUpdateCheckService updateCheck,
+            IRaceExportService raceExport, ISeriesResultExportService seriesResultExport,
+            ISeriesRecalculationService seriesRecalculation)
         {
             _dialogs = dialogs;
             _navigation = navigation;
@@ -31,6 +36,9 @@ namespace OodHelper.ViewModels
             _download = download;
             _upload = upload;
             _updateCheck = updateCheck;
+            _raceExport = raceExport;
+            _seriesResultExport = seriesResultExport;
+            _seriesRecalculation = seriesRecalculation;
         }
 
         //
@@ -147,6 +155,47 @@ namespace OodHelper.ViewModels
         }
 
         [RelayCommand]
+        private async Task RecalculateSeriesResults()
+        {
+            if (!_dialogs.Confirm(
+                    "This re-totals every series that has results and replaces its stored standings.\n" +
+                    "Race results and handicaps are not changed.\n" +
+                    "Click OK to confirm recalculating all series results",
+                    "Confirm Recalculate"))
+                return;
+
+            try
+            {
+                SeriesRecalculationSummary? summary = null;
+                var completed = await _dialogs.ShowProgressAsync("Recalculating series results",
+                    async (progress, ct) =>
+                    {
+                        summary = await _seriesRecalculation.RecalculateAllAsync(progress, ct);
+                    });
+
+                if (!completed || summary == null)
+                {
+                    // Cancelling stops between series, so whatever ran before it is already saved.
+                    _dialogs.ShowInformation(
+                        "Recalculation cancelled; series already processed keep their new results",
+                        "Cancel");
+                    return;
+                }
+
+                var message = $"Recalculated {summary.Recalculated} series" +
+                              $"\n{summary.SkippedNoResults} with no results available were skipped";
+                if (summary.Failed > 0)
+                    message += $"\n{summary.Failed} failed - see the error log on your desktop";
+                _dialogs.ShowInformation(message, "Finished");
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogException(ex);
+                _dialogs.ShowError("Recalculate series results failed", "Failed");
+            }
+        }
+
+        [RelayCommand]
         private void RecreateDb()
         {
             _dbMaintenance.RecreateDatabase();
@@ -218,9 +267,35 @@ namespace OodHelper.ViewModels
         }
 
         [RelayCommand]
-        private void ExportResults()
+        private Task ExportRaceResults() =>
+            RunExportAsync("races", "race results", path => _raceExport.ExportRacesAsync(path));
+
+        [RelayCommand]
+        private Task ExportSeriesResults() =>
+            RunExportAsync("series-results", "series results",
+                path => _seriesResultExport.ExportSeriesResultsAsync(path));
+
+        //
+        // Shared by the export commands: prompts for a destination, runs the export off the UI thread
+        // (the workbook is built synchronously, so it would otherwise block the resumed continuation)
+        // and reports the outcome. Mirrors RunDownloadAsync/RunUploadAsync.
+        //
+        private async Task RunExportAsync(string fileNameStem, string itemLabel, Func<string, Task<int>> export)
         {
-            // Not implemented; the old Click handler was empty too.
+            var path = _dialogs.PickSaveFile("Excel Workbook (*.xlsx)|*.xlsx",
+                $"{fileNameStem}-{DateTime.Now:yyyy-MM-dd}.xlsx");
+            if (path == null)
+                return;
+            try
+            {
+                var count = await Task.Run(() => export(path));
+                _dialogs.ShowInformation($"Exported {count} {itemLabel} to\n{path}", "Export Complete");
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogException(ex);
+                _dialogs.ShowError($"Export {itemLabel} failed", "Failed");
+            }
         }
 
         [RelayCommand]

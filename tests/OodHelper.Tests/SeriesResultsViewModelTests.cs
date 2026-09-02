@@ -92,6 +92,85 @@ namespace OodHelper.Tests
         }
 
         [Fact]
+        public void Build_WithoutRescore_TotalsFromStoredRaceResults()
+        {
+            // The bulk recalculation totals stored race points: no race is looked up for re-scoring
+            // and the race-score repository is never touched, so handicaps stay as they were.
+            _repo.GetSeriesHeader(5).Returns(new SeriesResultHeader("Spring", "0,0"));
+            _repo.GetRacesToScore(5).Returns(new List<SeriesRaceToScore>
+            {
+                new SeriesRaceToScore(1, "AverageLap", "R", "Race 1", "Fast")
+            });
+            _repo.GetEntryRows(5).Returns(new List<SeriesEntryRow>
+            {
+                new SeriesEntryRow("Fast", 1, R1, 1, 1.0, null, null),
+                new SeriesEntryRow("Fast", 1, R1, 2, 2.0, null, null)
+            });
+            _repo.GetBoats(Arg.Any<IReadOnlyCollection<int>>())
+                .Returns(new Dictionary<int, BoatDisplayInfo>());
+
+            var vm = new SeriesResultsViewModel(_repo, _scoreRepo);
+            vm.Build(5, null, CancellationToken.None, rescoreRaces: false);
+
+            Assert.Single(vm.Displays);
+            _repo.Received(1).SaveSeriesResults(5, "Fast",
+                Arg.Is<IReadOnlyList<SeriesResultRow>>(rows => rows.Count == 2));
+            _repo.DidNotReceive().GetRacesToScore(Arg.Any<int>());
+            Assert.Empty(_scoreRepo.ReceivedCalls());
+        }
+
+        [Fact]
+        public void Build_CountsSaveFailures_ButStillBuildsDisplay()
+        {
+            // Persisting is best-effort: the screen still shows what it computed, but the failure is
+            // counted so the bulk recalculation can tell the standings never reached the database.
+            _repo.GetSeriesHeader(5).Returns(new SeriesResultHeader("Spring", "0,0"));
+            _repo.GetRacesToScore(5).Returns(new List<SeriesRaceToScore>());
+            _repo.GetEntryRows(5).Returns(new List<SeriesEntryRow>
+            {
+                new SeriesEntryRow("Fast", 1, R1, 1, 1.0, null, null)
+            });
+            _repo.GetBoats(Arg.Any<IReadOnlyCollection<int>>())
+                .Returns(new Dictionary<int, BoatDisplayInfo>());
+            _repo.When(r => r.SaveSeriesResults(5, "Fast", Arg.Any<IReadOnlyList<SeriesResultRow>>()))
+                .Do(_ => throw new InvalidOperationException("database locked"));
+
+            var vm = Build(5);
+
+            Assert.Single(vm.Displays);
+            Assert.Equal(1, vm.SaveFailures);
+        }
+
+        [Fact]
+        public void Build_ResetsSaveFailures_OnEachRun()
+        {
+            _repo.GetSeriesHeader(5).Returns(new SeriesResultHeader("Spring", "0,0"));
+            _repo.GetRacesToScore(5).Returns(new List<SeriesRaceToScore>());
+            _repo.GetEntryRows(5).Returns(new List<SeriesEntryRow>
+            {
+                new SeriesEntryRow("Fast", 1, R1, 1, 1.0, null, null)
+            });
+            _repo.GetBoats(Arg.Any<IReadOnlyCollection<int>>())
+                .Returns(new Dictionary<int, BoatDisplayInfo>());
+            // Only the first save fails, so the second Build must not inherit the first one's count.
+            var saves = 0;
+            _repo.When(r => r.SaveSeriesResults(5, "Fast", Arg.Any<IReadOnlyList<SeriesResultRow>>()))
+                .Do(_ =>
+                {
+                    if (saves++ == 0)
+                        throw new InvalidOperationException("database locked");
+                });
+
+            var vm = new SeriesResultsViewModel(_repo, _scoreRepo);
+            vm.Build(5, null, CancellationToken.None);
+            Assert.Equal(1, vm.SaveFailures);
+
+            vm.Build(5, null, CancellationToken.None);
+
+            Assert.Equal(0, vm.SaveFailures);
+        }
+
+        [Fact]
         public void Build_PrunesClassWithNoFinishers()
         {
             // Only coded (non-finishing) rows -> the event has zero finishers and is dropped, leaving

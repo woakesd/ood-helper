@@ -32,47 +32,37 @@ namespace OodHelper.Results
             new List<SeriesDisplayViewModel>();
 
         /// <summary>
+        /// How many divisions the last <see cref="Build"/> computed but could not persist. Saving is
+        /// best-effort - a persistence failure is logged and the screen still shows what it worked out -
+        /// so callers that need to know whether the standings actually stuck check this instead.
+        /// </summary>
+        public int SaveFailures { get; private set; }
+
+        /// <summary>
         /// Runs the full scoring/totalling pass for one series. Synchronous and self-contained so it
         /// can run on the thread pool behind the progress dialog; reports progress and honours
         /// cancellation between races.
         /// </summary>
-        public void Build(int sid, IProgress<DownloadProgress> progress, CancellationToken ct)
+        /// <param name="rescoreRaces">
+        /// When true (the screen's behaviour) each race in the series is re-scored - rewriting its
+        /// race points and rolling handicaps - before the standings are totalled. When false only the
+        /// series standings are re-totalled from the race points already stored.
+        /// </param>
+        public void Build(int sid, IProgress<DownloadProgress> progress, CancellationToken ct,
+            bool rescoreRaces = true)
         {
+            SaveFailures = 0;
+
             var header = _repo.GetSeriesHeader(sid);
             var seriesName = header?.Name;
             var seriesDiscards = header?.Discards;
 
             //
-            // 1. (Re)score every race in the series, exactly as the old screen did before totalling.
+            // 1. (Re)score every race in the series, exactly as the old screen did before totalling,
+            //    unless the caller only wants the standings re-totalled.
             //
-            var races = _repo.GetRacesToScore(sid);
-            for (int i = 0; i < races.Count; i++)
-            {
-                ct.ThrowIfCancellationRequested();
-                var race = races[i];
-                if (!Enum.TryParse<CalendarModel.RaceTypes>(race.RaceType, out var raceType))
-                    continue;
-
-                progress?.Report(new DownloadProgress(Percent(i, races.Count),
-                    "Calculating " + race.EventName + " - " + race.ClassName));
-
-                IRaceScore? scorer = null;
-                switch (raceType)
-                {
-                    case CalendarModel.RaceTypes.AverageLap:
-                    case CalendarModel.RaceTypes.FixedLength:
-                    case CalendarModel.RaceTypes.TimeGate:
-                    case CalendarModel.RaceTypes.HybridOld:
-                        switch ((race.Handicapping ?? string.Empty).ToUpper())
-                        {
-                            case "R": scorer = new HandicapScorer(_scoreRepo, HandicapMode.Rolling); break;
-                            case "O": scorer = new HandicapScorer(_scoreRepo, HandicapMode.Open); break;
-                        }
-                        break;
-                }
-
-                scorer?.Calculate(race.Rid);
-            }
+            if (rescoreRaces)
+                RescoreRaces(sid, progress, ct);
 
             //
             // 2. Read every result row and bucket by class into per-event entries.
@@ -109,6 +99,43 @@ namespace OodHelper.Results
 
             SeriesName = seriesName;
             Displays = displays;
+        }
+
+        //
+        // Re-runs the per-race scorer for every raced race in the series, rewriting each race's points
+        // and rolling handicaps. Only the Series Results screen does this; the bulk recalculation
+        // totals from the stored race points instead.
+        //
+        private void RescoreRaces(int sid, IProgress<DownloadProgress> progress, CancellationToken ct)
+        {
+            var races = _repo.GetRacesToScore(sid);
+            for (int i = 0; i < races.Count; i++)
+            {
+                ct.ThrowIfCancellationRequested();
+                var race = races[i];
+                if (!Enum.TryParse<CalendarModel.RaceTypes>(race.RaceType, out var raceType))
+                    continue;
+
+                progress?.Report(new DownloadProgress(Percent(i, races.Count),
+                    "Calculating " + race.EventName + " - " + race.ClassName));
+
+                IRaceScore? scorer = null;
+                switch (raceType)
+                {
+                    case CalendarModel.RaceTypes.AverageLap:
+                    case CalendarModel.RaceTypes.FixedLength:
+                    case CalendarModel.RaceTypes.TimeGate:
+                    case CalendarModel.RaceTypes.HybridOld:
+                        switch ((race.Handicapping ?? string.Empty).ToUpper())
+                        {
+                            case "R": scorer = new HandicapScorer(_scoreRepo, HandicapMode.Rolling); break;
+                            case "O": scorer = new HandicapScorer(_scoreRepo, HandicapMode.Open); break;
+                        }
+                        break;
+                }
+
+                scorer?.Calculate(race.Rid);
+            }
         }
 
         private static Dictionary<string, Dictionary<int, SeriesEvent>> BuildSeriesData(
@@ -153,8 +180,11 @@ namespace OodHelper.Results
             }
             catch (Exception e)
             {
-                // Matches the old SeriesResult.SaveResults: a persistence failure is logged, not thrown.
+                // Matches the old SeriesResult.SaveResults: a persistence failure is logged, not thrown,
+                // so one unsaveable division does not cost the user the rest of the screen. Counted so
+                // callers can tell "computed and stored" from "computed only" - see SaveFailures.
                 ErrorLogger.LogException(e);
+                SaveFailures++;
             }
         }
 
