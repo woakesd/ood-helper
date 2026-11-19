@@ -8,6 +8,11 @@ namespace OodHelper.Rules
     public class Field
     {
         public string Name { get; set; }
+
+        /// <summary>
+        /// The column this rule tests on the in-memory boat table built by
+        /// <c>SelectBoats.BuildBoatTable</c> — a Boat property name, not a database column.
+        /// </summary>
         public string Column { get; set; }
         public IEnumerable<ConditionType> conditions { get; set; } = Array.Empty<ConditionType>();
         public Type FieldType { get; private set; }

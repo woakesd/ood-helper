@@ -11,7 +11,7 @@ using OodHelper.Data;
 namespace OodHelper.Migrations
 {
     [DbContext(typeof(OodHelperContext))]
-    [Migration("20260630191302_InitialSqlite")]
+    [Migration("20260918193911_InitialSqlite")]
     partial class InitialSqlite
     {
         /// <inheritdoc />
@@ -28,28 +28,15 @@ namespace OodHelper.Migrations
                         .HasColumnName("bid")
                         .HasAnnotation("Sqlite:Autoincrement", true);
 
-                    b.Property<int?>("Beaten")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("beaten");
-
-                    b.Property<string>("Berth")
-                        .HasMaxLength(6)
-                        .HasColumnType("TEXT")
-                        .HasColumnName("berth");
-
-                    b.Property<string>("Boatclass")
+                    b.Property<string>("BoatClass")
                         .HasMaxLength(20)
                         .HasColumnType("TEXT")
-                        .HasColumnName("boatclass");
+                        .HasColumnName("boat_class");
 
-                    b.Property<string>("Boatmemo")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("boatmemo");
-
-                    b.Property<string>("Boatname")
+                    b.Property<string>("BoatName")
                         .HasMaxLength(20)
                         .HasColumnType("TEXT")
-                        .HasColumnName("boatname");
+                        .HasColumnName("boat_name");
 
                     b.Property<int?>("CrewSkillFactor")
                         .HasColumnType("INTEGER")
@@ -64,10 +51,6 @@ namespace OodHelper.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("dinghy");
 
-                    b.Property<int?>("Distance")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("distance");
-
                     b.Property<string>("EnginePropeller")
                         .HasMaxLength(3)
                         .HasColumnType("TEXT")
@@ -78,19 +61,19 @@ namespace OodHelper.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("handicap_status");
 
-                    b.Property<bool?>("Hired")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("hired");
-
-                    b.Property<string>("Hulltype")
+                    b.Property<string>("HullType")
                         .HasMaxLength(1)
                         .HasColumnType("TEXT")
-                        .HasColumnName("hulltype");
+                        .HasColumnName("hull_type");
 
                     b.Property<string>("Keel")
                         .HasMaxLength(2)
                         .HasColumnType("TEXT")
                         .HasColumnName("keel");
+
+                    b.Property<string>("Memo")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("memo");
 
                     b.Property<int?>("OpenHandicap")
                         .HasColumnType("INTEGER")
@@ -109,19 +92,14 @@ namespace OodHelper.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("s");
 
-                    b.Property<string>("Sailno")
+                    b.Property<string>("SailNo")
                         .HasMaxLength(8)
                         .HasColumnType("TEXT")
-                        .HasColumnName("sailno");
+                        .HasColumnName("sail_no");
 
                     b.Property<decimal?>("SmallCatHandicapRating")
                         .HasColumnType("TEXT")
                         .HasColumnName("small_cat_handicap_rating");
-
-                    b.Property<string>("Subscription")
-                        .HasMaxLength(26)
-                        .HasColumnType("TEXT")
-                        .HasColumnName("subscription");
 
                     b.Property<Guid?>("Uid")
                         .HasColumnType("TEXT")

@@ -63,10 +63,10 @@
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Boat name" Binding="{Binding Boatname}"/>
-                <DataGridTextColumn Header="Boat class" Binding="{Binding Boatclass}"/>
+                <DataGridTextColumn Header="Boat name" Binding="{Binding BoatName}"/>
+                <DataGridTextColumn Header="Boat class" Binding="{Binding BoatClass}"/>
                 <DataGridTextColumn Header="Entered" Binding="{Binding Entered}"/>
-                <DataGridTextColumn Header="Sail no" Binding="{Binding Sailno}"/>
+                <DataGridTextColumn Header="Sail no" Binding="{Binding SailNo}"/>
                 <DataGridTextColumn Header="Pos" Binding="{Binding Place}"/>
                 <DataGridTextColumn Header="Score" Binding="{Binding Score, StringFormat=#.#}"/>
                 <!--<DataGridTemplateColumn Header="R1">

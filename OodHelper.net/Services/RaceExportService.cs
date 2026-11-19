@@ -35,9 +35,9 @@ namespace OodHelper.Services
             Race Race,
             string? Event,
             string? Class,
-            string? Boatname,
-            string? Boatclass,
-            string? Sailno);
+            string? BoatName,
+            string? BoatClass,
+            string? SailNo);
 
         //
         // One entry per exported column, in sheet order: the race key, the descriptive calendar/boat
@@ -51,9 +51,9 @@ namespace OodHelper.Services
             ("bid", x => x.Race.Bid),
             ("event", x => x.Event),
             ("class", x => x.Class),
-            ("boatname", x => x.Boatname),
-            ("boatclass", x => x.Boatclass),
-            ("sailno", x => x.Sailno),
+            ("boat_name", x => x.BoatName),
+            ("boat_class", x => x.BoatClass),
+            ("sail_no", x => x.SailNo),
             ("start_date", x => x.Race.StartDate),
             ("finish_code", x => x.Race.FinishCode),
             ("finish_date", x => x.Race.FinishDate),
@@ -93,7 +93,7 @@ namespace OodHelper.Services
                 join b in ctx.Boats on r.Bid equals b.Bid into boats
                 from b in boats.DefaultIfEmpty()
                 orderby r.Rid, r.Bid
-                select new ExportRow(r, c.Event, c.Class, b.Boatname, b.Boatclass, b.Sailno))
+                select new ExportRow(r, c.Event, c.Class, b.BoatName, b.BoatClass, b.SailNo))
                 .ToListAsync(ct);
 
             ExcelWorkbookWriter.Write(filePath, "Races", Columns, rows);

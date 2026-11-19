@@ -57,8 +57,8 @@ namespace OodHelper.Tests
             Assert.Equal(2, display.Entries);
             Assert.Equal(2, display.RaceColumnCount);
 
-            var alpha = display.Rows.Single(r => r.Boatname == "Alpha");
-            var bravo = display.Rows.Single(r => r.Boatname == "Bravo");
+            var alpha = display.Rows.Single(r => r.BoatName == "Alpha");
+            var bravo = display.Rows.Single(r => r.BoatName == "Bravo");
             Assert.Equal(1, alpha.Place);
             Assert.Equal(2.0, alpha.Score);
             Assert.Equal(2, alpha.Cells.Count);

@@ -103,7 +103,7 @@ namespace OodHelper.Data
             {
                 return ctx.Boats.AsNoTracking()
                     .Where(b => set.Contains(b.Bid))
-                    .ToDictionary(b => b.Bid, b => new BoatDisplayInfo(b.Boatname, b.Boatclass, b.Sailno));
+                    .ToDictionary(b => b.Bid, b => new BoatDisplayInfo(b.BoatName, b.BoatClass, b.SailNo));
             }
         }
     }

@@ -47,49 +47,40 @@ public partial class OodHelperContext : DbContext
             // boats, enforced by reseeding sqlite_sequence after a website download
             // (DatabaseMaintenanceService.Reseed). AUTOINCREMENT is required so that sequence exists.
             entity.Property(e => e.Bid).HasColumnName("bid").HasAnnotation("Sqlite:Autoincrement", true);
-            entity.Property(e => e.Beaten).HasColumnName("beaten");
-            entity.Property(e => e.Berth)
-                .HasMaxLength(6)
-                .HasColumnName("berth");
-            entity.Property(e => e.Boatclass)
+            entity.Property(e => e.BoatClass)
                 .HasMaxLength(20)
-                .HasColumnName("boatclass");
-            entity.Property(e => e.Boatmemo).HasColumnName("boatmemo");
-            entity.Property(e => e.Boatname)
+                .HasColumnName("boat_class");
+            entity.Property(e => e.BoatName)
                 .HasMaxLength(20)
-                .HasColumnName("boatname");
+                .HasColumnName("boat_name");
             entity.Property(e => e.CrewSkillFactor).HasColumnName("crew_skill_factor");
             entity.Property(e => e.Deviations)
                 .HasMaxLength(30)
                 .HasColumnName("deviations");
             entity.Property(e => e.Dinghy).HasColumnName("dinghy");
-            entity.Property(e => e.Distance).HasColumnName("distance");
             entity.Property(e => e.EnginePropeller)
                 .HasMaxLength(3)
                 .HasColumnName("engine_propeller");
             entity.Property(e => e.HandicapStatus)
                 .HasMaxLength(2)
                 .HasColumnName("handicap_status");
-            entity.Property(e => e.Hired).HasColumnName("hired");
-            entity.Property(e => e.Hulltype)
+            entity.Property(e => e.HullType)
                 .HasMaxLength(1)
-                .HasColumnName("hulltype");
+                .HasColumnName("hull_type");
             entity.Property(e => e.Keel)
                 .HasMaxLength(2)
                 .HasColumnName("keel");
+            entity.Property(e => e.Memo).HasColumnName("memo");
             entity.Property(e => e.OpenHandicap).HasColumnName("open_handicap");
             entity.Property(e => e.P)
                 .HasMaxLength(1)
                 .HasColumnName("p");
             entity.Property(e => e.RollingHandicap).HasColumnName("rolling_handicap");
             entity.Property(e => e.S).HasColumnName("s");
-            entity.Property(e => e.Sailno)
+            entity.Property(e => e.SailNo)
                 .HasMaxLength(8)
-                .HasColumnName("sailno");
+                .HasColumnName("sail_no");
             entity.Property(e => e.SmallCatHandicapRating).HasColumnName("small_cat_handicap_rating");
-            entity.Property(e => e.Subscription)
-                .HasMaxLength(26)
-                .HasColumnName("subscription");
             entity.Property(e => e.Uid).HasColumnName("uid");
         });
 

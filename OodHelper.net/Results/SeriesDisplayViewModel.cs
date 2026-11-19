@@ -39,9 +39,9 @@ namespace OodHelper.Results
     public sealed class SeriesRowViewModel
     {
         public int Bid { get; set; }
-        public string? Boatname { get; set; }
-        public string? Boatclass { get; set; }
-        public string? Sailno { get; set; }
+        public string? BoatName { get; set; }
+        public string? BoatClass { get; set; }
+        public string? SailNo { get; set; }
         public int Entered { get; set; }
         public int Place { get; set; }
         public double Score { get; set; }

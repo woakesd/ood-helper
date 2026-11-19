@@ -7,17 +7,15 @@ public partial class Boat
 {
     public int Bid { get; set; }
 
-    public string? Boatname { get; set; }
+    public string? BoatName { get; set; }
 
-    public string? Boatclass { get; set; }
+    public string? BoatClass { get; set; }
 
-    public string? Sailno { get; set; }
+    public string? SailNo { get; set; }
 
     public bool? Dinghy { get; set; }
 
-    public string? Hulltype { get; set; }
-
-    public int? Distance { get; set; }
+    public string? HullType { get; set; }
 
     public int? OpenHandicap { get; set; }
 
@@ -35,21 +33,13 @@ public partial class Boat
 
     public string? Deviations { get; set; }
 
-    public string? Subscription { get; set; }
-
-    public string? Boatmemo { get; set; }
-
-    public string? Berth { get; set; }
-
-    public bool? Hired { get; set; }
+    public string? Memo { get; set; }
 
     public string? P { get; set; }
 
     public bool? S { get; set; }
 
-    public int? Beaten { get; set; }
-
     public Guid? Uid { get; set; }
 
-    public virtual ICollection<Race> Races { get; set; } = new List<Race>();
+    public virtual ICollection<Race> Races { get; set; } = [];
 }

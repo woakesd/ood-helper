@@ -62,20 +62,21 @@ namespace OodHelper.Data
 
             //
             // boats is the one table whose website column names differ from the local/EF names
-            // (dngy, h, ohp, ohstat, rhp, csf, eng, kl, subscriptn); the column list below is the
-            // website spelling, the value selector reads the matching EF property. The website
-            // boats table also has uid and a local-only `delete` column; uid is sent, delete is left
-            // to its default. Every other table shares its column names with the local schema.
+            // (boatname, boatclass, sailno, dngy, h, ohp, ohstat, rhp, csf, eng, kl, boatmemo); the
+            // column list below is the website spelling, the value selector reads the matching EF
+            // property. The website boats table also has uid and a local-only `delete` column; uid is
+            // sent, delete is left to its default. The website columns the local schema no longer
+            // carries (distance, subscriptn, beaten, berth, hired) are omitted so the website applies its own
+            // defaults. Every other table shares its column names with the local schema.
             //
             Report("Uploading boats");
             await ReplaceTableAsync(con, trn, "boats",
-                [ "boatname", "boatclass", "sailno", "dngy", "h", "bid", "distance", "ohp", "ohstat",
-                    "rhp", "csf", "eng", "kl", "deviations", "subscriptn", "p", "s", "boatmemo", "beaten",
-                    "berth", "hired", "uid" ],
+                [ "boatname", "boatclass", "sailno", "dngy", "h", "bid", "ohp", "ohstat",
+                    "rhp", "csf", "eng", "kl", "deviations", "p", "s", "boatmemo", "uid" ],
                 boats,
-                b => [ b.Boatname, b.Boatclass, b.Sailno, b.Dinghy, b.Hulltype, b.Bid, b.Distance,
+                b => [ b.BoatName, b.BoatClass, b.SailNo, b.Dinghy, b.HullType, b.Bid,
                     b.OpenHandicap, b.HandicapStatus, b.RollingHandicap, b.CrewSkillFactor, b.EnginePropeller,
-                    b.Keel, b.Deviations, b.Subscription, b.P, b.S, b.Boatmemo, b.Beaten, b.Berth, b.Hired, b.Uid ],
+                    b.Keel, b.Deviations, b.P, b.S, b.Memo, b.Uid ],
                 ct);
 
             Report("Uploading calendar");

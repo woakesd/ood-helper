@@ -39,9 +39,9 @@ namespace OodHelper.Services
         private sealed record ExportRow(
             SeriesResult Result,
             string? Sname,
-            string? Boatname,
-            string? Boatclass,
-            string? Sailno);
+            string? BoatName,
+            string? BoatClass,
+            string? SailNo);
 
         //
         // One entry per exported column, in sheet order: the key columns, the descriptive series/boat
@@ -53,9 +53,9 @@ namespace OodHelper.Services
             ("sid", x => x.Result.Sid),
             ("bid", x => x.Result.Bid),
             ("sname", x => x.Sname),
-            ("boatname", x => x.Boatname),
-            ("boatclass", x => x.Boatclass),
-            ("sailno", x => x.Sailno),
+            ("boat_name", x => x.BoatName),
+            ("boat_class", x => x.BoatClass),
+            ("sail_no", x => x.SailNo),
             ("division", x => x.Result.Division),
             ("entered", x => x.Result.Entered),
             ("gross", x => x.Result.Gross),
@@ -74,7 +74,7 @@ namespace OodHelper.Services
                 join b in ctx.Boats on sr.Bid equals b.Bid into boats
                 from b in boats.DefaultIfEmpty()
                 orderby sr.Sid, sr.Division, sr.Place, sr.Bid
-                select new ExportRow(sr, s.Sname, b.Boatname, b.Boatclass, b.Sailno))
+                select new ExportRow(sr, s.Sname, b.BoatName, b.BoatClass, b.SailNo))
                 .ToListAsync(ct);
 
             ExcelWorkbookWriter.Write(filePath, "Series Results", Columns, rows);

@@ -21,7 +21,7 @@ namespace OodHelper.Data
     public sealed record SeriesResultRow(int Bid, int Entered, double Gross, double Nett, int Place);
 
     /// <summary>Boat identity columns the results grid shows alongside the scores.</summary>
-    public sealed record BoatDisplayInfo(string? Boatname, string? Boatclass, string? Sailno);
+    public sealed record BoatDisplayInfo(string? BoatName, string? BoatClass, string? SailNo);
 
     /// <summary>
     /// EF Core data access for the series scoring/display pass. Replaces the inline <c>Db</c> SQL that

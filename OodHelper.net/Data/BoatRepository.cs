@@ -26,12 +26,12 @@ namespace OodHelper.Data
             using (var ctx = _contextFactory.CreateDbContext())
             {
                 var q = ctx.Boats
-                    .Where(b => EF.Functions.Like(b.Boatname, pattern)
-                                || EF.Functions.Like(b.Sailno, pattern)
-                                || EF.Functions.Like(b.Boatclass, pattern));
+                    .Where(b => EF.Functions.Like(b.BoatName, pattern)
+                                || EF.Functions.Like(b.SailNo, pattern)
+                                || EF.Functions.Like(b.BoatClass, pattern));
                 if (dinghy.HasValue)
                     q = q.Where(b => b.Dinghy == dinghy.Value);
-                return q.OrderBy(b => b.Boatname).ToList();
+                return q.OrderBy(b => b.BoatName).ToList();
             }
         }
 

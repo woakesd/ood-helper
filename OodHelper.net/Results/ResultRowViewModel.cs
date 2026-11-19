@@ -38,11 +38,11 @@ namespace OodHelper.Results
 
         public int Bid => _race.Bid;
 
-        public string? BoatName => _race.BidNavigation?.Boatname;
+        public string? BoatName => _race.BidNavigation?.BoatName;
 
-        public string? BoatClass => _race.BidNavigation?.Boatclass;
+        public string? BoatClass => _race.BidNavigation?.BoatClass;
 
-        public string? SailNo => _race.BidNavigation?.Sailno;
+        public string? SailNo => _race.BidNavigation?.SailNo;
 
         public DateTime? StartDate
         {

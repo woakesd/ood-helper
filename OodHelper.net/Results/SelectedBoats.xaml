@@ -14,13 +14,13 @@
         <DataGrid Grid.Column="1" Grid.Row="1" Margin="0,0,0,0" Name="Boats" xmlns:my="http://schemas.microsoft.com/wpf/2008/toolkit" MouseDoubleClick="Boats_MouseDoubleClick"
                   AutoGenerateColumns="False" CanUserDeleteRows="False" CanUserAddRows="False" SelectionMode="Extended" SelectionUnit="FullRow">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Bid" Binding="{Binding Path=bid}" IsReadOnly="True" Visibility="Collapsed"/>
-                <DataGridTextColumn Header="Boat Name" Binding="{Binding Path=boatname}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Class" Binding="{Binding Path=boatclass}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Sail no" Binding="{Binding Path=sailno}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Hcap Stat" Binding="{Binding Path=handicap_status}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Open Hcap" Binding="{Binding Path=open_handicap}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Roll Hcap" Binding="{Binding Path=rolling_handicap}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Bid" Binding="{Binding Path=Bid}" IsReadOnly="True" Visibility="Collapsed"/>
+                <DataGridTextColumn Header="Boat Name" Binding="{Binding Path=BoatName}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Class" Binding="{Binding Path=BoatClass}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Sail no" Binding="{Binding Path=SailNo}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Hcap Stat" Binding="{Binding Path=HandicapStatus}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Open Hcap" Binding="{Binding Path=OpenHandicap}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Roll Hcap" Binding="{Binding Path=RollingHandicap}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

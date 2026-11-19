@@ -65,28 +65,28 @@ namespace OodHelper.Results
 
                 IReadOnlyList<ResultRowViewModel> d = _reds[i].Rows;
                 var bts = new DataTable {TableName = "boats"};
-                bts.Columns.Add(new DataColumn("bid", typeof (int)));
+                bts.Columns.Add(new DataColumn("Bid", typeof (int)));
                 var pk = new DataColumn[1];
-                pk[0] = bts.Columns["bid"]!;
+                pk[0] = bts.Columns["Bid"]!;
                 bts.PrimaryKey = pk;
-                bts.Columns.Add(new DataColumn("boatname"));
-                bts.Columns.Add(new DataColumn("boatclass"));
-                bts.Columns.Add(new DataColumn("sailno"));
-                bts.Columns.Add(new DataColumn("handicap_status"));
-                bts.Columns.Add(new DataColumn("open_handicap", typeof (int)));
-                bts.Columns.Add(new DataColumn("rolling_handicap", typeof (int)));
+                bts.Columns.Add(new DataColumn("BoatName"));
+                bts.Columns.Add(new DataColumn("BoatClass"));
+                bts.Columns.Add(new DataColumn("SailNo"));
+                bts.Columns.Add(new DataColumn("HandicapStatus"));
+                bts.Columns.Add(new DataColumn("OpenHandicap", typeof (int)));
+                bts.Columns.Add(new DataColumn("RollingHandicap", typeof (int)));
                 if (d != null)
                 {
                     foreach (var r in d)
                     {
                         DataRow gr = bts.NewRow();
-                        gr["bid"] = r.Bid;
-                        gr["boatname"] = r.BoatName;
-                        gr["boatclass"] = r.BoatClass;
-                        gr["sailno"] = r.SailNo;
-                        gr["handicap_status"] = r.HandicapStatus;
-                        gr["open_handicap"] = r.OpenHandicap;
-                        gr["rolling_handicap"] = r.RollingHandicap;
+                        gr["Bid"] = r.Bid;
+                        gr["BoatName"] = r.BoatName;
+                        gr["BoatClass"] = r.BoatClass;
+                        gr["SailNo"] = r.SailNo;
+                        gr["HandicapStatus"] = r.HandicapStatus;
+                        gr["OpenHandicap"] = r.OpenHandicap;
+                        gr["RollingHandicap"] = r.RollingHandicap;
                         bts.Rows.Add(gr);
                     }
                 }
@@ -177,26 +177,33 @@ namespace OodHelper.Results
 
         private static DataTable BuildBoatTable(IReadOnlyList<Data.Entities.Boat> boats)
         {
+            //
+            // Columns are named for the Boat properties they carry, not for database columns: the rules
+            // in BoatSelectRule.Fields index rows of this table by name, so every field a rule can test
+            // (BoatClass, Dinghy, OpenHandicap, HullType) has to appear here.
+            //
             var dt = new DataTable {TableName = "boats"};
-            dt.Columns.Add(new DataColumn("bid", typeof (int)));
-            dt.Columns.Add(new DataColumn("boatname"));
-            dt.Columns.Add(new DataColumn("boatclass"));
-            dt.Columns.Add(new DataColumn("sailno"));
-            dt.Columns.Add(new DataColumn("dinghy", typeof (bool)));
-            dt.Columns.Add(new DataColumn("handicap_status"));
-            dt.Columns.Add(new DataColumn("open_handicap", typeof (int)));
-            dt.Columns.Add(new DataColumn("rolling_handicap", typeof (int)));
+            dt.Columns.Add(new DataColumn("Bid", typeof (int)));
+            dt.Columns.Add(new DataColumn("BoatName"));
+            dt.Columns.Add(new DataColumn("BoatClass"));
+            dt.Columns.Add(new DataColumn("SailNo"));
+            dt.Columns.Add(new DataColumn("Dinghy", typeof (bool)));
+            dt.Columns.Add(new DataColumn("HullType"));
+            dt.Columns.Add(new DataColumn("HandicapStatus"));
+            dt.Columns.Add(new DataColumn("OpenHandicap", typeof (int)));
+            dt.Columns.Add(new DataColumn("RollingHandicap", typeof (int)));
             foreach (var b in boats)
             {
                 var r = dt.NewRow();
-                r["bid"] = b.Bid;
-                r["boatname"] = (object?) b.Boatname ?? DBNull.Value;
-                r["boatclass"] = (object?) b.Boatclass ?? DBNull.Value;
-                r["sailno"] = (object?) b.Sailno ?? DBNull.Value;
-                r["dinghy"] = (object?) b.Dinghy ?? DBNull.Value;
-                r["handicap_status"] = (object?) b.HandicapStatus ?? DBNull.Value;
-                r["open_handicap"] = (object?) b.OpenHandicap ?? DBNull.Value;
-                r["rolling_handicap"] = (object?) b.RollingHandicap ?? DBNull.Value;
+                r["Bid"] = b.Bid;
+                r["BoatName"] = (object?) b.BoatName ?? DBNull.Value;
+                r["BoatClass"] = (object?) b.BoatClass ?? DBNull.Value;
+                r["SailNo"] = (object?) b.SailNo ?? DBNull.Value;
+                r["Dinghy"] = (object?) b.Dinghy ?? DBNull.Value;
+                r["HullType"] = (object?) b.HullType ?? DBNull.Value;
+                r["HandicapStatus"] = (object?) b.HandicapStatus ?? DBNull.Value;
+                r["OpenHandicap"] = (object?) b.OpenHandicap ?? DBNull.Value;
+                r["RollingHandicap"] = (object?) b.RollingHandicap ?? DBNull.Value;
                 dt.Rows.Add(r);
             }
             dt.AcceptChanges();
@@ -225,7 +232,7 @@ namespace OodHelper.Results
                     var alreadySelected = false;
                     foreach (SelectedBoats selboat in _sbt)
                     {
-                        if (((DataView) selboat.Boats.ItemsSource!).Table!.Select("bid = " + rv["bid"]).Length > 0)
+                        if (((DataView) selboat.Boats.ItemsSource!).Table!.Select("Bid = " + rv["Bid"]).Length > 0)
                         {
                             alreadySelected = true;
                         }
@@ -269,17 +276,17 @@ namespace OodHelper.Results
         private void AddBoat(SelectedBoats sbt, DataRowView rv)
         {
             DataRow dr = ((DataView) sbt.Boats.ItemsSource!).Table!.NewRow();
-            dr["bid"] = rv["bid"];
-            dr["boatname"] = rv["boatname"];
-            dr["boatclass"] = rv["boatclass"];
-            dr["sailno"] = rv["sailno"];
-            dr["handicap_status"] = rv["handicap_status"];
-            dr["open_handicap"] = rv["open_handicap"];
-            dr["rolling_handicap"] = rv["rolling_handicap"];
+            dr["Bid"] = rv["Bid"];
+            dr["BoatName"] = rv["BoatName"];
+            dr["BoatClass"] = rv["BoatClass"];
+            dr["SailNo"] = rv["SailNo"];
+            dr["HandicapStatus"] = rv["HandicapStatus"];
+            dr["OpenHandicap"] = rv["OpenHandicap"];
+            dr["RollingHandicap"] = rv["RollingHandicap"];
             ((DataView) sbt.Boats.ItemsSource).Table!.Rows.Add(dr);
             ((DataView) sbt.Boats.ItemsSource).Table!.AcceptChanges();
-            ((DataView) sbt.Boats.ItemsSource).Sort = "Boatname";
-            Notify.Text = string.Format("Added {0} to {1}", new[] {dr["boatname"], sbt.FleetName.Content});
+            ((DataView) sbt.Boats.ItemsSource).Sort = "BoatName";
+            Notify.Text = string.Format("Added {0} to {1}", new[] {dr["BoatName"], sbt.FleetName.Content});
         }
 
         private void Ok_Click(object sender, RoutedEventArgs e)
@@ -297,14 +304,14 @@ namespace OodHelper.Results
                 //
                 foreach (DataRow r in sb.Rows)
                 {
-                    int bid = (int) r["bid"];
+                    int bid = (int) r["Bid"];
                     if (resultModels != null &&
                         !resultModels.Any(rm => rm.Bid == bid && rm.Rid == rid))
                     {
                         _raceRepo.AddRaceEntry(rid, bid, _reds[i].StartDate,
-                            r["handicap_status"] as string,
-                            r["open_handicap"] == DBNull.Value ? (int?) null : (int) r["open_handicap"],
-                            r["rolling_handicap"] == DBNull.Value ? (int?) null : (int) r["rolling_handicap"]);
+                            r["HandicapStatus"] as string,
+                            r["OpenHandicap"] == DBNull.Value ? (int?) null : (int) r["OpenHandicap"],
+                            r["RollingHandicap"] == DBNull.Value ? (int?) null : (int) r["RollingHandicap"]);
                     }
                     selectedBids[bid] = true;
                 }

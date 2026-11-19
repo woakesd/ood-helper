@@ -35,8 +35,8 @@ namespace OodHelper.Maintain
 
         public string HullType
         {
-            get { return _boat.Hulltype ?? string.Empty; }
-            set { _boat.Hulltype = value; OnPropertyChanged("HullType"); }
+            get { return _boat.HullType ?? string.Empty; }
+            set { _boat.HullType = value; OnPropertyChanged("HullType"); }
         }
 
         public string HandicapStatus
@@ -100,20 +100,20 @@ namespace OodHelper.Maintain
 
         public string BoatName
         {
-            get { return _boat.Boatname ?? string.Empty; }
-            set { _boat.Boatname = value; OnPropertyChanged("BoatName"); }
+            get { return _boat.BoatName ?? string.Empty; }
+            set { _boat.BoatName = value; OnPropertyChanged("BoatName"); }
         }
 
         public string BoatClass
         {
-            get { return _boat.Boatclass ?? string.Empty; }
-            set { _boat.Boatclass = value; OnPropertyChanged("BoatClass"); }
+            get { return _boat.BoatClass ?? string.Empty; }
+            set { _boat.BoatClass = value; OnPropertyChanged("BoatClass"); }
         }
 
         public string SailNumber
         {
-            get { return _boat.Sailno ?? string.Empty; }
-            set { _boat.Sailno = value; OnPropertyChanged("SailNumber"); }
+            get { return _boat.SailNo ?? string.Empty; }
+            set { _boat.SailNo = value; OnPropertyChanged("SailNumber"); }
         }
 
         public string Deviations
@@ -122,10 +122,10 @@ namespace OodHelper.Maintain
             set { _boat.Deviations = value; OnPropertyChanged("Deviations"); }
         }
 
-        public string BoatMemo
+        public string Memo
         {
-            get { return _boat.Boatmemo ?? string.Empty; }
-            set { _boat.Boatmemo = value; OnPropertyChanged("BoatMemo"); }
+            get { return _boat.Memo ?? string.Empty; }
+            set { _boat.Memo = value; OnPropertyChanged("Memo"); }
         }
 
         public string CommitChanges()

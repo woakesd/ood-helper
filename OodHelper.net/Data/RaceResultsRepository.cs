@@ -365,8 +365,8 @@ namespace OodHelper.Data
                     double? percent = (r.AchievedHandicap.HasValue && r.OpenHandicap.HasValue && r.OpenHandicap.Value != 0)
                         ? Math.Round((r.AchievedHandicap.Value - r.OpenHandicap.Value) * 100.0 / r.OpenHandicap.Value, 1)
                         : (double?)null;
-                    string boat = b.Boatname + (r.RestrictedSail == true ? " (RS)" : string.Empty);
-                    return new RacePrintRow(boat, b.Boatclass, b.Sailno, hcap, r.FinishCode, r.FinishDate,
+                    string boat = b.BoatName + (r.RestrictedSail == true ? " (RS)" : string.Empty);
+                    return new RacePrintRow(boat, b.BoatClass, b.SailNo, hcap, r.FinishCode, r.FinishDate,
                         r.Elapsed, r.Laps, r.Corrected, r.Place, points, r.AchievedHandicap,
                         r.NewRollingHandicap, percent, r.C, r.A, r.HandicapStatus);
                 }).ToList();

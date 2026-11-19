@@ -198,9 +198,9 @@ namespace OodHelper.Results
                 return new SeriesRowViewModel
                 {
                     Bid = bsr.Bid,
-                    Boatname = bd?.Boatname,
-                    Boatclass = bd?.Boatclass,
-                    Sailno = bd?.Sailno,
+                    BoatName = bd?.BoatName,
+                    BoatClass = bd?.BoatClass,
+                    SailNo = bd?.SailNo,
                     Entered = bsr.Count,
                     Place = bsr.Place,
                     Score = bsr.Net,

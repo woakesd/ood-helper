@@ -22,7 +22,7 @@ namespace OodHelper.Tests
 
         private static IReadOnlyList<Boat> Boats(params (int Bid, string Name)[] boats)
         {
-            return boats.Select(b => new Boat { Bid = b.Bid, Boatname = b.Name }).ToList();
+            return boats.Select(b => new Boat { Bid = b.Bid, BoatName = b.Name }).ToList();
         }
 
         [Fact]

@@ -51,10 +51,10 @@ namespace OodHelper.Rules
     {
         public static List<Field> Fields = new List<Field>
         {
-            new Field("Boat class", "boatclass", typeof (string)),
-            new Field("Dinghy", "dinghy", typeof (bool)),
-            new Field("Open handicap", "open_handicap", typeof (int)),
-            new Field("Hull Type", "hulltype", typeof (string))
+            new Field("Boat class", "BoatClass", typeof (string)),
+            new Field("Dinghy", "Dinghy", typeof (bool)),
+            new Field("Open handicap", "OpenHandicap", typeof (int)),
+            new Field("Hull Type", "HullType", typeof (string))
         };
 
         private readonly List<BoatSelectRule> _children = new List<BoatSelectRule>();

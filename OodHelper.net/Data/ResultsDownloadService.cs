@@ -166,12 +166,12 @@ namespace OodHelper.Data
         private static async Task<List<Boat>> ReadBoatsAsync(MySqlConnection mcon, MySqlTransaction mtrn, CancellationToken ct)
         {
             const string sql = "SELECT `bid`, `boatname`, `boatclass`, `sailno`, " +
-                               "`dngy` dinghy, `h` hulltype, `distance`, " +
+                               "`dngy` dinghy, `h` hulltype, " +
                                "`ohp` open_handicap, `ohstat` handicap_status, " +
                                "`rhp` rolling_handicap, `csf` crew_skill_factor, " +
                                "`eng` engine_propeller, `kl` keel, `deviations`, " +
-                               "`subscriptn` subscription, `berth`, `boatmemo`, " +
-                               "`hired`, `p`, `s`, `beaten`, `uid` FROM boats";
+                               "`boatmemo`, " +
+                               "`p`, `s`, `uid` FROM boats";
             var list = new List<Boat>();
             await using var cmd = new MySqlCommand(sql, mcon, mtrn);
             await using var r = await cmd.ExecuteReaderAsync(ct);
@@ -180,12 +180,11 @@ namespace OodHelper.Data
                 list.Add(new Boat
                 {
                     Bid = ReqInt(r, "bid"),
-                    Boatname = GetString(r, "boatname"),
-                    Boatclass = GetString(r, "boatclass"),
-                    Sailno = GetString(r, "sailno"),
+                    BoatName = GetString(r, "boatname"),
+                    BoatClass = GetString(r, "boatclass"),
+                    SailNo = GetString(r, "sailno"),
                     Dinghy = GetBool(r, "dinghy"),
-                    Hulltype = GetString(r, "hulltype"),
-                    Distance = GetInt(r, "distance"),
+                    HullType = GetString(r, "hulltype"),
                     OpenHandicap = GetInt(r, "open_handicap"),
                     HandicapStatus = GetString(r, "handicap_status"),
                     RollingHandicap = GetInt(r, "rolling_handicap"),
@@ -193,13 +192,9 @@ namespace OodHelper.Data
                     EnginePropeller = GetString(r, "engine_propeller"),
                     Keel = GetString(r, "keel"),
                     Deviations = GetString(r, "deviations"),
-                    Subscription = GetString(r, "subscription"),
-                    Berth = GetString(r, "berth"),
-                    Boatmemo = GetString(r, "boatmemo"),
-                    Hired = GetBool(r, "hired"),
+                    Memo = GetString(r, "boatmemo"),
                     P = GetString(r, "p"),
                     S = GetBool(r, "s"),
-                    Beaten = GetInt(r, "beaten"),
                     Uid = GetGuid(r, "uid")
                 });
             }

@@ -93,7 +93,7 @@ namespace OodHelper.ViewModels
             foreach (var boat in selectedItems.Cast<Boat>().ToArray())
             {
                 bool? result = _dialogs.ConfirmYesNoCancel(
-                    "Are you sure you want to delete " + boat.Boatname + "?", "Confirm Delete");
+                    "Are you sure you want to delete " + boat.BoatName + "?", "Confirm Delete");
                 if (result == null) break;
                 if (result == true)
                 {

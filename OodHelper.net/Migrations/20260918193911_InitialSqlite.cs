@@ -17,12 +17,11 @@ namespace OodHelper.Migrations
                 {
                     bid = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    boatname = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
-                    boatclass = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
-                    sailno = table.Column<string>(type: "TEXT", maxLength: 8, nullable: true),
+                    boat_name = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
+                    boat_class = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
+                    sail_no = table.Column<string>(type: "TEXT", maxLength: 8, nullable: true),
                     dinghy = table.Column<bool>(type: "INTEGER", nullable: true),
-                    hulltype = table.Column<string>(type: "TEXT", maxLength: 1, nullable: true),
-                    distance = table.Column<int>(type: "INTEGER", nullable: true),
+                    hull_type = table.Column<string>(type: "TEXT", maxLength: 1, nullable: true),
                     open_handicap = table.Column<int>(type: "INTEGER", nullable: true),
                     handicap_status = table.Column<string>(type: "TEXT", maxLength: 2, nullable: true),
                     rolling_handicap = table.Column<int>(type: "INTEGER", nullable: true),
@@ -31,13 +30,9 @@ namespace OodHelper.Migrations
                     engine_propeller = table.Column<string>(type: "TEXT", maxLength: 3, nullable: true),
                     keel = table.Column<string>(type: "TEXT", maxLength: 2, nullable: true),
                     deviations = table.Column<string>(type: "TEXT", maxLength: 30, nullable: true),
-                    subscription = table.Column<string>(type: "TEXT", maxLength: 26, nullable: true),
-                    boatmemo = table.Column<string>(type: "TEXT", nullable: true),
-                    berth = table.Column<string>(type: "TEXT", maxLength: 6, nullable: true),
-                    hired = table.Column<bool>(type: "INTEGER", nullable: true),
+                    memo = table.Column<string>(type: "TEXT", nullable: true),
                     p = table.Column<string>(type: "TEXT", maxLength: 1, nullable: true),
                     s = table.Column<bool>(type: "INTEGER", nullable: true),
-                    beaten = table.Column<int>(type: "INTEGER", nullable: true),
                     uid = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
