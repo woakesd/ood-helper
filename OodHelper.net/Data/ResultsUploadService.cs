@@ -61,22 +61,19 @@ namespace OodHelper.Data
             void Report(string message) => progress?.Report(new DownloadProgress(step++ * 100 / totalSteps, message));
 
             //
-            // boats is the one table whose website column names differ from the local/EF names
-            // (boatname, boatclass, sailno, dngy, h, ohp, ohstat, rhp, csf, eng, kl, boatmemo); the
-            // column list below is the website spelling, the value selector reads the matching EF
-            // property. The website boats table also has uid and a local-only `delete` column; uid is
-            // sent, delete is left to its default. The website columns the local schema no longer
-            // carries (distance, subscriptn, beaten, berth, hired) are omitted so the website applies its own
-            // defaults. Every other table shares its column names with the local schema.
+            // Every website table written here shares its column names with the local schema. boats
+            // goes to boats_new (as calendar and races go to their _new tables), whose columns mirror
+            // the local boats table.
             //
             Report("Uploading boats");
-            await ReplaceTableAsync(con, trn, "boats",
-                [ "boatname", "boatclass", "sailno", "dngy", "h", "bid", "ohp", "ohstat",
-                    "rhp", "csf", "eng", "kl", "deviations", "p", "s", "boatmemo", "uid" ],
+            await ReplaceTableAsync(con, trn, "boats_new",
+                [ "bid", "boat_name", "boat_class", "sail_no", "dinghy", "hull_type", "open_handicap",
+                    "handicap_status", "rolling_handicap", "crew_skill_factor", "small_cat_handicap_rating",
+                    "engine_propeller", "keel", "deviations", "memo", "p", "s", "uid" ],
                 boats,
-                b => [ b.BoatName, b.BoatClass, b.SailNo, b.Dinghy, b.HullType, b.Bid,
-                    b.OpenHandicap, b.HandicapStatus, b.RollingHandicap, b.CrewSkillFactor, b.EnginePropeller,
-                    b.Keel, b.Deviations, b.P, b.S, b.Memo, b.Uid ],
+                b => [ b.Bid, b.BoatName, b.BoatClass, b.SailNo, b.Dinghy, b.HullType, b.OpenHandicap,
+                    b.HandicapStatus, b.RollingHandicap, b.CrewSkillFactor, b.SmallCatHandicapRating,
+                    b.EnginePropeller, b.Keel, b.Deviations, b.Memo, b.P, b.S, b.Uid ],
                 ct);
 
             Report("Uploading calendar");

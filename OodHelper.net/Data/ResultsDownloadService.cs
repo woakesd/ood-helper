@@ -160,18 +160,14 @@ namespace OodHelper.Data
 
         //
         // Per-table readers. Each opens an explicit-column SELECT against the website (back-ticked to
-        // dodge reserved words such as `event`/`condition`) and maps every row onto its EF entity,
-        // leaving local-only columns (e.g. boats.small_cat_handicap_rating) at their defaults.
+        // dodge reserved words such as `event`/`condition`) and maps every row onto its EF entity.
         //
         private static async Task<List<Boat>> ReadBoatsAsync(MySqlConnection mcon, MySqlTransaction mtrn, CancellationToken ct)
         {
-            const string sql = "SELECT `bid`, `boatname`, `boatclass`, `sailno`, " +
-                               "`dngy` dinghy, `h` hulltype, " +
-                               "`ohp` open_handicap, `ohstat` handicap_status, " +
-                               "`rhp` rolling_handicap, `csf` crew_skill_factor, " +
-                               "`eng` engine_propeller, `kl` keel, `deviations`, " +
-                               "`boatmemo`, " +
-                               "`p`, `s`, `uid` FROM boats";
+            const string sql = "SELECT `bid`, `boat_name`, `boat_class`, `sail_no`, `dinghy`, `hull_type`, " +
+                               "`open_handicap`, `handicap_status`, `rolling_handicap`, `crew_skill_factor`, " +
+                               "`small_cat_handicap_rating`, `engine_propeller`, `keel`, `deviations`, " +
+                               "`memo`, `p`, `s`, `uid` FROM boats_new";
             var list = new List<Boat>();
             await using var cmd = new MySqlCommand(sql, mcon, mtrn);
             await using var r = await cmd.ExecuteReaderAsync(ct);
@@ -180,19 +176,20 @@ namespace OodHelper.Data
                 list.Add(new Boat
                 {
                     Bid = ReqInt(r, "bid"),
-                    BoatName = GetString(r, "boatname"),
-                    BoatClass = GetString(r, "boatclass"),
-                    SailNo = GetString(r, "sailno"),
+                    BoatName = GetString(r, "boat_name"),
+                    BoatClass = GetString(r, "boat_class"),
+                    SailNo = GetString(r, "sail_no"),
                     Dinghy = GetBool(r, "dinghy"),
-                    HullType = GetString(r, "hulltype"),
+                    HullType = GetString(r, "hull_type"),
                     OpenHandicap = GetInt(r, "open_handicap"),
                     HandicapStatus = GetString(r, "handicap_status"),
                     RollingHandicap = GetInt(r, "rolling_handicap"),
                     CrewSkillFactor = GetInt(r, "crew_skill_factor"),
+                    SmallCatHandicapRating = GetDecimal(r, "small_cat_handicap_rating"),
                     EnginePropeller = GetString(r, "engine_propeller"),
                     Keel = GetString(r, "keel"),
                     Deviations = GetString(r, "deviations"),
-                    Memo = GetString(r, "boatmemo"),
+                    Memo = GetString(r, "memo"),
                     P = GetString(r, "p"),
                     S = GetBool(r, "s"),
                     Uid = GetGuid(r, "uid")
