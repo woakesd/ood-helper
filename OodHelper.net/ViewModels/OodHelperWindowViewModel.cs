@@ -196,9 +196,30 @@ namespace OodHelper.ViewModels
         }
 
         [RelayCommand]
-        private void RecreateDb()
+        private void ResetLocalDatabase()
         {
-            _dbMaintenance.RecreateDatabase();
+            if (!_dialogs.Confirm(
+                    "This deletes ALL local data (boats, calendar, races and series) and recreates an empty database.\n" +
+                    "The current database is copied to a .bak file first, replacing any earlier backup.\n" +
+                    "Click OK to confirm resetting the local database",
+                    "Confirm Reset"))
+                return;
+
+            try
+            {
+                _dbMaintenance.RecreateDatabase();
+                _dialogs.ShowInformation(
+                    "The local database has been reset.\nDownload from the website to reload boats, calendar and races.",
+                    "Finished");
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogException(ex);
+                _dialogs.ShowError(
+                    "Reset local database failed - see the error log on your desktop.\n" +
+                    "If the database was deleted, a copy of it is in the .bak file next to it.",
+                    "Failed");
+            }
         }
 
         [RelayCommand]

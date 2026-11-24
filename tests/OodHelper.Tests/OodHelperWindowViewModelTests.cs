@@ -236,13 +236,39 @@ namespace OodHelper.Tests
         }
 
         [Fact]
-        public void RecreateDb_DelegatesToMaintenanceService()
+        public void ResetLocalDatabase_Confirmed_DelegatesToMaintenanceService()
         {
+            _dialogs.Confirm(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
             var vm = CreateViewModel();
 
-            vm.RecreateDbCommand.Execute(null);
+            vm.ResetLocalDatabaseCommand.Execute(null);
 
             _dbMaintenance.Received(1).RecreateDatabase();
+            _dialogs.Received(1).ShowInformation(Arg.Any<string>(), "Finished");
+        }
+
+        [Fact]
+        public void ResetLocalDatabase_Failure_ShowsError()
+        {
+            _dialogs.Confirm(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            _dbMaintenance.When(m => m.RecreateDatabase()).Do(_ => throw new System.IO.IOException("locked"));
+            var vm = CreateViewModel();
+
+            vm.ResetLocalDatabaseCommand.Execute(null);
+
+            _dialogs.Received(1).ShowError(Arg.Any<string>(), "Failed");
+            _dialogs.DidNotReceive().ShowInformation(Arg.Any<string>(), Arg.Any<string>());
+        }
+
+        [Fact]
+        public void ResetLocalDatabase_Declined_DoesNothing()
+        {
+            _dialogs.Confirm(Arg.Any<string>(), Arg.Any<string>()).Returns(false);
+            var vm = CreateViewModel();
+
+            vm.ResetLocalDatabaseCommand.Execute(null);
+
+            _dbMaintenance.DidNotReceive().RecreateDatabase();
         }
 
         [Fact]

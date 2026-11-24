@@ -46,7 +46,7 @@
                         <Image Width="16" Height="16" Margin="1" Source="/OodHelper;component/Images/Spanner-16.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Create Results DB" Name="CreateResultsDB" Command="{Binding RecreateDbCommand}" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
+                <MenuItem Header="R_eset Local Database..." Name="ResetLocalDatabase" Command="{Binding ResetLocalDatabaseCommand}" Visibility="{Binding Path=ShowPrivilegedItems,Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
                     <MenuItem.Icon>
                         <Image Source="/OodHelper;component/Images/Database-16.png" />
                     </MenuItem.Icon>
