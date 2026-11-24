@@ -167,7 +167,7 @@ namespace OodHelper.Data
             const string sql = "SELECT `bid`, `boat_name`, `boat_class`, `sail_no`, `dinghy`, `hull_type`, " +
                                "`open_handicap`, `handicap_status`, `rolling_handicap`, `crew_skill_factor`, " +
                                "`small_cat_handicap_rating`, `engine_propeller`, `keel`, `deviations`, " +
-                               "`memo`, `p`, `s`, `uid` FROM boats_new";
+                               "`memo`, `uid` FROM boats_new";
             var list = new List<Boat>();
             await using var cmd = new MySqlCommand(sql, mcon, mtrn);
             await using var r = await cmd.ExecuteReaderAsync(ct);
@@ -190,8 +190,6 @@ namespace OodHelper.Data
                     Keel = GetString(r, "keel"),
                     Deviations = GetString(r, "deviations"),
                     Memo = GetString(r, "memo"),
-                    P = GetString(r, "p"),
-                    S = GetBool(r, "s"),
                     Uid = GetGuid(r, "uid")
                 });
             }
@@ -249,7 +247,7 @@ namespace OodHelper.Data
                                "`last_edit`, `finish_code`, `laps`, `elapsed`, `corrected`, `standard_corrected`, " +
                                "`handicap_status`, `open_handicap`, `rolling_handicap`, `achieved_handicap`, " +
                                "`new_rolling_handicap`, `place`, `points`, `override_points`, `performance_index`, " +
-                               "`a`, `c` FROM races_new";
+                               "`used_in_sct`, `limit_flag` FROM races_new";
             var list = new List<Race>();
             await using var cmd = new MySqlCommand(sql, mcon, mtrn);
             await using var r = await cmd.ExecuteReaderAsync(ct);
@@ -278,8 +276,8 @@ namespace OodHelper.Data
                     Points = GetDouble(r, "points"),
                     OverridePoints = GetDouble(r, "override_points"),
                     PerformanceIndex = GetInt(r, "performance_index"),
-                    A = GetString(r, "a"),
-                    C = GetString(r, "c")
+                    UsedInSct = GetBool(r, "used_in_sct"),
+                    LimitFlag = GetString(r, "limit_flag")
                 });
             }
             return list;

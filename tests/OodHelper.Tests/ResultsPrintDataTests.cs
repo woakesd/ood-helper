@@ -14,7 +14,7 @@ namespace OodHelper.Tests
             FinishCode: null, FinishDate: new DateTime(2026, 6, 1, 14, 30, 0),
             Elapsed: 3600, Laps: 4, Corrected: 3500.5, Place: 1,
             Points: 1.0, AchievedHandicap: 1080, NewRollingHandicap: 1090,
-            Percent: -1.8, C: "C", A: "A", Py: "PY");
+            Percent: -1.8, LimitFlag: "S", UsedInSct: false, Py: "PY");
 
         [Fact]
         public void BuildTable_ProducesExpectedColumnsInOrder()
@@ -51,7 +51,22 @@ namespace OodHelper.Tests
             Assert.Equal(1080, r["Achp"]);
             Assert.Equal(1090, r["nhcp"]);
             Assert.Equal(-1.8, r["%"]);
+            Assert.Equal("S", r["C"]);
+            Assert.Equal("N", r["A"]);
             Assert.Equal("PY", r["PY"]);
+        }
+
+        [Fact]
+        public void BuildTable_UsedInSct_PrintsBlankUnlessExcluded()
+        {
+            var dt = ResultsPrintData.BuildTable(new[]
+            {
+                SampleRow() with { UsedInSct = true },
+                SampleRow() with { UsedInSct = null }
+            });
+
+            Assert.Equal(DBNull.Value, dt.Rows[0]["A"]);
+            Assert.Equal(DBNull.Value, dt.Rows[1]["A"]);
         }
 
         [Fact]
@@ -62,7 +77,7 @@ namespace OodHelper.Tests
                 FinishCode: "DNF", FinishDate: null,
                 Elapsed: null, Laps: null, Corrected: null, Place: 999,
                 Points: null, AchievedHandicap: null, NewRollingHandicap: null,
-                Percent: null, C: null, A: null, Py: null);
+                Percent: null, LimitFlag: null, UsedInSct: null, Py: null);
 
             var dt = ResultsPrintData.BuildTable(new[] { row });
             DataRow r = dt.Rows[0];

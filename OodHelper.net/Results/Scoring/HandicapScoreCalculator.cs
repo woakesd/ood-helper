@@ -109,8 +109,8 @@ namespace OodHelper.Results.Scoring
                     r.NewRollingHandicap = newhc;
                     r.AchievedHandicap = r.RollingHandicap;
                     r.PerformanceIndex = null;
-                    r.C = null;
-                    r.A = "N";
+                    r.LimitFlag = null;
+                    r.UsedInSct = false;
 
                     //
                     // If average lap and the user enters a finish time but no laps, default to 1.
@@ -271,7 +271,7 @@ namespace OodHelper.Results.Scoring
                     {
                         if (row.StandardCorrected!.Value < avgSlowLimit)
                         {
-                            row.A = null;
+                            row.UsedInSct = true;
                             goodBoats++;
                             _sct += row.StandardCorrected!.Value;
                         }
@@ -367,11 +367,11 @@ namespace OodHelper.Results.Scoring
                         {
                             if (dr.StandardCorrected!.Value >= _slowLimit)
                             {
-                                dr.C = "s";
+                                dr.LimitFlag = "s";
                                 sperf = true;
                             }
                             else
-                                dr.C = "F";
+                                dr.LimitFlag = "F";
 
                             //
                             // Exceptional result: only allow the handicap to move if the previous
@@ -381,7 +381,7 @@ namespace OodHelper.Results.Scoring
                             if (p1.HasValue && p1.Value > 5)
                             {
                                 sperfover = true;
-                                dr.C = "S";
+                                dr.LimitFlag = "S";
                             }
                         }
 

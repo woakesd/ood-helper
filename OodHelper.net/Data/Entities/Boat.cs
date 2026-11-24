@@ -35,10 +35,6 @@ public partial class Boat
 
     public string? Memo { get; set; }
 
-    public string? P { get; set; }
-
-    public bool? S { get; set; }
-
     public Guid? Uid { get; set; }
 
     public virtual ICollection<Race> Races { get; set; } = [];

@@ -128,8 +128,8 @@ namespace OodHelper.Data
                 AchievedHandicap = row.AchievedHandicap,
                 NewRollingHandicap = row.NewRollingHandicap,
                 PerformanceIndex = row.PerformanceIndex,
-                A = row.A,
-                C = row.C
+                UsedInSct = row.UsedInSct,
+                LimitFlag = row.LimitFlag
             };
             using (var ctx = _contextFactory.CreateDbContext())
             {
@@ -368,7 +368,7 @@ namespace OodHelper.Data
                     string boat = b.BoatName + (r.RestrictedSail == true ? " (RS)" : string.Empty);
                     return new RacePrintRow(boat, b.BoatClass, b.SailNo, hcap, r.FinishCode, r.FinishDate,
                         r.Elapsed, r.Laps, r.Corrected, r.Place, points, r.AchievedHandicap,
-                        r.NewRollingHandicap, percent, r.C, r.A, r.HandicapStatus);
+                        r.NewRollingHandicap, percent, r.LimitFlag, r.UsedInSct, r.HandicapStatus);
                 }).ToList();
             }
         }

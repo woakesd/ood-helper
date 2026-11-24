@@ -69,11 +69,11 @@ namespace OodHelper.Data
             await ReplaceTableAsync(con, trn, "boats_new",
                 [ "bid", "boat_name", "boat_class", "sail_no", "dinghy", "hull_type", "open_handicap",
                     "handicap_status", "rolling_handicap", "crew_skill_factor", "small_cat_handicap_rating",
-                    "engine_propeller", "keel", "deviations", "memo", "p", "s", "uid" ],
+                    "engine_propeller", "keel", "deviations", "memo", "uid" ],
                 boats,
                 b => [ b.Bid, b.BoatName, b.BoatClass, b.SailNo, b.Dinghy, b.HullType, b.OpenHandicap,
                     b.HandicapStatus, b.RollingHandicap, b.CrewSkillFactor, b.SmallCatHandicapRating,
-                    b.EnginePropeller, b.Keel, b.Deviations, b.Memo, b.P, b.S, b.Uid ],
+                    b.EnginePropeller, b.Keel, b.Deviations, b.Memo, b.Uid ],
                 ct);
 
             Report("Uploading calendar");
@@ -95,12 +95,12 @@ namespace OodHelper.Data
                 [ "rid", "bid", "start_date", "finish_code", "finish_date", "interim_date",
                     "restricted_sail", "last_edit", "laps", "place", "points", "override_points", "elapsed",
                     "corrected", "standard_corrected", "handicap_status", "open_handicap", "rolling_handicap",
-                    "achieved_handicap", "new_rolling_handicap", "performance_index", "a", "c" ],
+                    "achieved_handicap", "new_rolling_handicap", "performance_index", "used_in_sct", "limit_flag" ],
                 races,
                 r => [ r.Rid, r.Bid, r.StartDate, r.FinishCode, r.FinishDate, r.InterimDate,
                     r.RestrictedSail, r.LastEdit, r.Laps, r.Place, r.Points, r.OverridePoints, r.Elapsed,
                     r.Corrected, r.StandardCorrected, r.HandicapStatus, r.OpenHandicap, r.RollingHandicap,
-                    r.AchievedHandicap, r.NewRollingHandicap, r.PerformanceIndex, r.A, r.C ],
+                    r.AchievedHandicap, r.NewRollingHandicap, r.PerformanceIndex, r.UsedInSct, r.LimitFlag ],
                 ct);
 
             Report("Uploading series");

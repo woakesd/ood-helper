@@ -187,8 +187,8 @@ namespace OodHelper.Data
                         AchievedHandicap = row.AchievedHandicap,
                         NewRollingHandicap = row.NewRollingHandicap,
                         PerformanceIndex = row.PerformanceIndex,
-                        A = row.A,
-                        C = row.C
+                        UsedInSct = row.UsedInSct,
+                        LimitFlag = row.LimitFlag
                     };
                     ctx.Races.Attach(clone);
                     ctx.Entry(clone).State = EntityState.Modified;

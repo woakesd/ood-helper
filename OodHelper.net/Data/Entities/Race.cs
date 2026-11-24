@@ -47,9 +47,18 @@ public partial class Race
 
     public int? PerformanceIndex { get; set; }
 
-    public string?A { get; set; }
+    /// <summary>
+    /// Whether this result counted towards the race's standard corrected time (SCT).
+    /// Printed in the "A" column as "N" when false.
+    /// </summary>
+    public bool? UsedInSct { get; set; }
 
-    public string?C { get; set; }
+    /// <summary>
+    /// Set when the result hit a handicap limit: "s" = slow for the first time (handicap
+    /// frozen), "S" = slow again (handicap moves, capped at +5%), "F" = fast (capped at -5%).
+    /// Printed in the "C" column.
+    /// </summary>
+    public string? LimitFlag { get; set; }
 
     public virtual Boat BidNavigation { get; set; } = null!;
 

@@ -253,9 +253,9 @@ namespace OodHelper.Results
 
         public string? HandicapStatus => _race.HandicapStatus;
 
-        public string? C => _race.C;
+        public string? LimitFlag => _race.LimitFlag;
 
-        public string? A => _race.A;
+        public bool? UsedInSct => _race.UsedInSct;
 
         public string PerformanceIndex => _race.PerformanceIndex.HasValue ? _race.PerformanceIndex.Value.ToString() : string.Empty;
 

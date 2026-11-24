@@ -31,8 +31,6 @@ namespace OodHelper.Migrations
                     keel = table.Column<string>(type: "TEXT", maxLength: 2, nullable: true),
                     deviations = table.Column<string>(type: "TEXT", maxLength: 30, nullable: true),
                     memo = table.Column<string>(type: "TEXT", nullable: true),
-                    p = table.Column<string>(type: "TEXT", maxLength: 1, nullable: true),
-                    s = table.Column<bool>(type: "INTEGER", nullable: true),
                     uid = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -183,8 +181,8 @@ namespace OodHelper.Migrations
                     achieved_handicap = table.Column<int>(type: "INTEGER", nullable: true),
                     new_rolling_handicap = table.Column<int>(type: "INTEGER", nullable: true),
                     performance_index = table.Column<int>(type: "INTEGER", nullable: true),
-                    a = table.Column<string>(type: "TEXT", maxLength: 1, nullable: true),
-                    c = table.Column<string>(type: "TEXT", maxLength: 1, nullable: true)
+                    used_in_sct = table.Column<bool>(type: "INTEGER", nullable: true),
+                    limit_flag = table.Column<string>(type: "TEXT", maxLength: 1, nullable: true)
                 },
                 constraints: table =>
                 {

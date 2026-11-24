@@ -114,8 +114,8 @@ namespace OodHelper.Tests
             Assert.Equal(1017, b.NewRollingHandicap);
             Assert.Equal(983, c.NewRollingHandicap);
             Assert.Equal(500, d.NewRollingHandicap);
-            Assert.Equal("s", d.C);
-            Assert.Null(a.C);
+            Assert.Equal("s", d.LimitFlag);
+            Assert.Null(a.LimitFlag);
         }
 
         [Fact]
@@ -137,7 +137,7 @@ namespace OodHelper.Tests
                     priorPerf: (bid, _) => bid == 4 ? 10.0 : (double?)null));
 
             var d = rows.Single(r => r.Bid == 4);
-            Assert.Equal("S", d.C);
+            Assert.Equal("S", d.LimitFlag);
             // achieved 1000, but clamped to +5% of open (Round(1.05*500)=525) before the 15% move:
             //   500 + (525-500)*.15 = Round(503.75) = 504.
             Assert.Equal(504, d.NewRollingHandicap);

@@ -72,11 +72,7 @@ public partial class OodHelperContext : DbContext
                 .HasColumnName("keel");
             entity.Property(e => e.Memo).HasColumnName("memo");
             entity.Property(e => e.OpenHandicap).HasColumnName("open_handicap");
-            entity.Property(e => e.P)
-                .HasMaxLength(1)
-                .HasColumnName("p");
             entity.Property(e => e.RollingHandicap).HasColumnName("rolling_handicap");
-            entity.Property(e => e.S).HasColumnName("s");
             entity.Property(e => e.SailNo)
                 .HasMaxLength(8)
                 .HasColumnName("sail_no");
@@ -182,14 +178,12 @@ public partial class OodHelperContext : DbContext
 
             entity.Property(e => e.Rid).HasColumnName("rid");
             entity.Property(e => e.Bid).HasColumnName("bid");
-            entity.Property(e => e.A)
-                .HasMaxLength(1)
-                .HasColumnName("a");
             entity.Property(e => e.AchievedHandicap).HasColumnName("achieved_handicap");
-            entity.Property(e => e.C)
-                .HasMaxLength(1)
-                .HasColumnName("c");
             entity.Property(e => e.Corrected).HasColumnName("corrected");
+            entity.Property(e => e.LimitFlag)
+                .HasMaxLength(1)
+                .HasColumnName("limit_flag");
+            entity.Property(e => e.UsedInSct).HasColumnName("used_in_sct");
             entity.Property(e => e.Elapsed).HasColumnName("elapsed");
             entity.Property(e => e.FinishCode)
                 .HasMaxLength(5)

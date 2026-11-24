@@ -55,8 +55,8 @@ namespace OodHelper.Results
                 dr["Achp"] = (object?)row.AchievedHandicap ?? DBNull.Value;
                 dr["nhcp"] = (object?)row.NewRollingHandicap ?? DBNull.Value;
                 dr["%"] = (object?)row.Percent ?? DBNull.Value;
-                dr["C"] = (object?)row.C ?? DBNull.Value;
-                dr["A"] = (object?)row.A ?? DBNull.Value;
+                dr["C"] = (object?)row.LimitFlag ?? DBNull.Value;
+                dr["A"] = row.UsedInSct == false ? "N" : DBNull.Value;
                 dr["PY"] = (object?)row.Py ?? DBNull.Value;
                 rd.Rows.Add(dr);
             }

@@ -86,7 +86,7 @@ namespace OodHelper.Data
         int? AchievedHandicap,
         int? NewRollingHandicap,
         double? Percent,
-        string? C,
-        string? A,
+        string? LimitFlag,
+        bool? UsedInSct,
         string? Py);
 }

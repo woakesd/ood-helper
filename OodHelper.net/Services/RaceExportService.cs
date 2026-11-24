@@ -73,8 +73,8 @@ namespace OodHelper.Services
             ("achieved_handicap", x => x.Race.AchievedHandicap),
             ("new_rolling_handicap", x => x.Race.NewRollingHandicap),
             ("performance_index", x => x.Race.PerformanceIndex),
-            ("a", x => x.Race.A),
-            ("c", x => x.Race.C),
+            ("used_in_sct", x => x.Race.UsedInSct),
+            ("limit_flag", x => x.Race.LimitFlag),
         };
 
         public async Task<int> ExportRacesAsync(string filePath, CancellationToken ct = default)

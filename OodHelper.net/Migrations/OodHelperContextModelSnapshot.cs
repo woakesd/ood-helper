@@ -76,18 +76,9 @@ namespace OodHelper.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("open_handicap");
 
-                    b.Property<string>("P")
-                        .HasMaxLength(1)
-                        .HasColumnType("TEXT")
-                        .HasColumnName("p");
-
                     b.Property<int?>("RollingHandicap")
                         .HasColumnType("INTEGER")
                         .HasColumnName("rolling_handicap");
-
-                    b.Property<bool?>("S")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("s");
 
                     b.Property<string>("SailNo")
                         .HasMaxLength(8)
@@ -312,19 +303,9 @@ namespace OodHelper.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("bid");
 
-                    b.Property<string>("A")
-                        .HasMaxLength(1)
-                        .HasColumnType("TEXT")
-                        .HasColumnName("a");
-
                     b.Property<int?>("AchievedHandicap")
                         .HasColumnType("INTEGER")
                         .HasColumnName("achieved_handicap");
-
-                    b.Property<string>("C")
-                        .HasMaxLength(1)
-                        .HasColumnType("TEXT")
-                        .HasColumnName("c");
 
                     b.Property<double?>("Corrected")
                         .HasColumnType("REAL")
@@ -359,6 +340,11 @@ namespace OodHelper.Migrations
                     b.Property<DateTime?>("LastEdit")
                         .HasColumnType("TEXT")
                         .HasColumnName("last_edit");
+
+                    b.Property<string>("LimitFlag")
+                        .HasMaxLength(1)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("limit_flag");
 
                     b.Property<int?>("NewRollingHandicap")
                         .HasColumnType("INTEGER")
@@ -399,6 +385,10 @@ namespace OodHelper.Migrations
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("TEXT")
                         .HasColumnName("start_date");
+
+                    b.Property<bool?>("UsedInSct")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("used_in_sct");
 
                     b.HasKey("Rid", "Bid");
 
